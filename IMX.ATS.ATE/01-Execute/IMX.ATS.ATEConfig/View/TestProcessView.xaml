@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="IMX.ATS.ATEConfig.TestProcessView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IMX.ATS.ATEConfig"
+             xmlns:Behavior="clr-namespace:IMX.ATS.Resource;assembly=IMX.ATS.Resource"
+             xmlns:Datagrid="clr-namespace:IMX.ATS.Resource;assembly=IMX.ATS.Resource" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             Name="Window"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.ATS.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <Binding Path="TestProcess"  Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+    
+    <i1:Interaction.Triggers>
+        <i1:EventTrigger EventName="Loaded">
+            <i1:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Window}"/>
+        </i1:EventTrigger>
+    </i1:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition  Height="6*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" FontSize="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="3.5*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="当前流程：" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" MinWidth="200" ItemsSource="{Binding SolutionNames}" SelectedValue="{Binding SolutionName}"/>
+                </Grid>
+                <Grid Grid.Column="1" Margin="20,0,20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="描述:" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" Text="{Binding SolutionDescription}"/>
+                </Grid>
+                <Grid Grid.Column="2">
+                    <StackPanel VerticalAlignment="Center">
+                        <Button Content="更新方案" Margin="0,0,0,5" Command="{Binding UpdataTestFlow}" Height="25" FontSize="15"/>
+                        <Button Content="方案另存为" Height="25" FontSize="15" Command="{Binding SaveAsTestFlow}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </GroupBox>
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="1" Style="{StaticResource ResourceKey=TitleGroup}" Header="03-详细配置" >
+                <ContentControl Content="{Binding ConfigContent}"/>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

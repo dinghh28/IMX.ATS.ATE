@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IMX.WPF.Resource</name>
+    </assembly>
+    <members>
+        <member name="M:IMX.WPF.Resource.WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(System.Windows.Window)">
+            <summary>
+            窗口移动事件注册
+            </summary>
+            <param name="window">窗口</param>
+        </member>
+        <member name="M:IMX.WPF.Resource.WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(System.Windows.Window)">
+            <summary>
+            窗口移动事件注销
+            </summary>
+            <param name="window">已注册该事件窗口</param>
+        </member>
+        <member name="P:IMX.WPF.Resource.DragDropRowBehavior.IsDragging">
+            <summary>
+            鼠标左键按下状态
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.DragDropRowBehavior.IsSelecting">
+            <summary>
+            表格选中行状态：第一次点击为选中，标识为false，第二次点击为拖动，标识为TRUE；
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.DragDropRowBehavior.ResetDragDrop">
+            <summary>
+            Initiates a drag action if the grid is not in edit mode.
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.UIHelpers.TryFindParent``1(System.Windows.DependencyObject)">
+            <summary>
+            Finds a parent of a given item on the visual tree.
+            </summary>
+            <typeparam name="T">The type of the queried item.</typeparam>
+            <param name="child">A direct or indirect child of the
+            queried item.</param>
+            <returns>The first parent item that matches the submitted
+            type parameter. If not matching item can be found, a null
+            reference is being returned.</returns>
+        </member>
+        <member name="M:IMX.WPF.Resource.UIHelpers.GetParentObject(System.Windows.DependencyObject)">
+            <summary>
+            This method is an alternative to WPF's
+            <see cref="M:System.Windows.Media.VisualTreeHelper.GetParent(System.Windows.DependencyObject)"/> method, which also
+            supports content elements. Do note, that for content element,
+            this method falls back to the logical tree of the element.
+            </summary>
+            <param name="child">The item to be processed.</param>
+            <returns>The submitted item's parent, if available. Otherwise
+            null.</returns>
+        </member>
+        <member name="M:IMX.WPF.Resource.UIHelpers.UpdateBindingSources(System.Windows.DependencyObject,System.Windows.DependencyProperty[])">
+            <summary>
+            Recursively processes a given dependency object and all its
+            children, and updates sources of all objects that use a
+            binding expression on a given property.
+            </summary>
+            <param name="obj">The dependency object that marks a starting
+            point. This could be a dialog window or a panel control that
+            hosts bound controls.</param>
+            <param name="properties">The properties to be updated if
+            <paramref name="obj"/> or one of its childs provide it along
+            with a binding expression.</param>
+        </member>
+        <member name="M:IMX.WPF.Resource.UIHelpers.TryFindFromPoint``1(System.Windows.UIElement,System.Windows.Point)">
+            <summary>
+            Tries to locate a given item within the visual tree,
+            starting with the dependency object at a given position. 
+            </summary>
+            <typeparam name="T">The type of the element to be found
+            on the visual tree of the element at the given location.</typeparam>
+            <param name="reference">The main element which is used to perform
+            hit testing.</param>
+            <param name="point">The position to be evaluated on the origin.</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:IMX.WPF.Resource.CustomControl1" -->
+        <member name="T:IMX.WPF.Resource.Properties.Resources">
+            <summary>
+              强类型资源类，用于查找本地化字符串等。
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.Properties.Resources.ResourceManager">
+            <summary>
+              返回此类使用的缓存 ResourceManager 实例。
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.Properties.Resources.Culture">
+            <summary>
+              重写当前线程的 CurrentUICulture 属性，对
+              使用此强类型资源类的所有资源查找执行重写。
+            </summary>
+        </member>
+    </members>
+</doc>

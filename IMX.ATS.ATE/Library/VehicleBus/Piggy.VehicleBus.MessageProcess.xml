@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Piggy.VehicleBus.MessageProcess</name>
+    </assembly>
+    <members>
+        <member name="T:Piggy.VehicleBus.MessageProcess.DBCFileLoader">
+            <summary>
+            DBC文件加载器
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.lstSkipCheckSignal">
+            <summary>
+            跳过检查信号
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.regDescription">
+            <summary>
+            描述匹配正则
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.regValueDescription">
+            <summary>
+            数值描述匹配正则
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.dicFrameFormatType">
+            <summary>
+            报文格式类型字典 [类型, 帧格式]
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.dicFrameFormatIndex">
+            <summary>
+            报文格式序号字典 [序号, 帧格式]
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.dicMessageFrameFormat">
+            <summary>
+            消息报文格式字典 [消息ID, 报文格式序号]
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.defaultCycleTime">
+            <summary>
+            默认报文周期
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.DBCFileLoader.defaultFrameFormatType">
+            <summary>
+            默认报文格式类型
+            </summary>
+        </member>
+        <member name="P:Piggy.VehicleBus.MessageProcess.DBCFileLoader.SupportFileFormat">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="logger">日志记录接口</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BO_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BO_ 消息 （BO_ message_id message_name ':' message_size transmitter {signal}）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.SG_(Piggy.VehicleBus.Common.Message,Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            SG_ 信号 （'SG_' signal_name multiplexer_indicator ':' start_bit '|' signal_size '@' byte_order value_type '(' factor ',' offset ')' '[' minimum '|' maximum ']' unit receiver {',' receiver}）
+            </summary>
+            <param name="message">所属信号</param>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.SIG_VALTYPE_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            SIG_VALTYPE_ 信号数据类型 （'SIG_VALTYPE_' message_id signal_name signal_extended_value_type ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.VAL_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            VAL_ 信号值描述 （'VAL_' message_id signal_name { value_description } ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.CM_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            CM_ 注释 （'CM_' (char_string | 'BU_' node_name char_string | 'BO_' message_id char_string | 'SG_' message_id signal_name char_string | 'EV_' env_var_name char_string) ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.CM_BO_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            CM_ BO_ 消息注释 （'CM_' 'BO_' message_id char_string ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.CM_SG_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            CM_ SG_ 信号注释 （'CM_' 'SG_' message_id signal_name char_string ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_ 属性值 （'BA_' attribute_name (attribute_value | 'BU_' node_name attribute_value | 'BO_' message_id attribute_value | 'SG_' message_id signal_name attribute_value | 'EV_' env_var_name attribute_value) ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_GenSigStartValue_SG_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_ "GenSigStartValue" SG_ 信号初始值属性值 （BA_ "GenSigStartValue" SG_ message_id signal_name attribute_value ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_GenMsgCycleTime_BO_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_ "GenMsgCycleTime" BO_ 报文周期属性值 （BA_ "GenMsgCycleTime" BO_ message_id attribute_value ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_VFrameFormat_BO_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_ "VFrameFormat" BO_ 报文格式属性值 （BA_ "VFrameFormat" BO_ message_id attribute_value ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_DEF_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_DEF_ 属性 （'BA_DEF_' object_type attribute_name attribute_value_type ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_DEF_BO_VFrameFormat(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_DEF_ BO_ "VFrameFormat" 报文格式属性 （'BA_DEF_' 'BO_' "VFrameFormat" attribute_value_type ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_DEF_DEF_(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_DEF_DEF_ 属性默认值 （'BA_DEF_DEF_' attribute_name attribute_value ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_DEF_DEF_GenMsgCycleTime(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_DEF_DEF_ "GenMsgCycleTime" 默认周期 （'BA_DEF_DEF_' "GenMsgCycleTime" attribute_value ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.BA_DEF_DEF_VFrameFormat(Piggy.VehicleBus.Common.MessageFileReader,System.String@)">
+            <summary>
+            BA_DEF_DEF_ "VFrameFormat" 默认报文格式 （'BA_DEF_DEF_' "VFrameFormat" attribute_value ';'）
+            </summary>
+            <param name="fileReader">文件读取器</param>
+            <param name="errMsg">[REF] 错误信息</param>
+            <returns>是否处理</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.InternalPaser(Piggy.VehicleBus.Common.MessageFileReader)">
+            <summary>
+            解析消息文件
+            </summary>
+            <param name="fileReader">消息文件读取器</param>
+            <returns></returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.ClearMessageSignal">
+            <summary>
+            清除消息信号
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.SetDefaultCycleTime">
+            <summary>
+            设置消息默认周期
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.SetFrameFormat">
+            <summary>
+            设置报文格式
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.SortMessageAndSignal">
+            <summary>
+            排列消息和信号
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.CheckData(System.String@)">
+            <summary>
+            校验数据正确性
+            </summary>
+            <param name="errMsg">[REF] 错误信息</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.Paser(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.Paser(System.String,System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.Paser(System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.Paser(System.Byte[],System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.Paser(System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.Paser(System.IO.Stream,System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.DBCFileLoader.Clean">
+            <inheritdoc/>
+        </member>
+        <member name="T:Piggy.VehicleBus.MessageProcess.MessageFileLoader">
+            <summary>
+            消息文件加载器抽象类
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.MessageFileLoader.dicMessageFileSuffix">
+            <summary>
+            消息文件后缀名字典 [后缀名, 消息文件加载器类型]
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.MessageProcess.MessageFileLoader.lstMessageFileLoaderType">
+            <summary>
+            消息文件加载器类型列表
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.InitMessageFileSuffixDictionary">
+            <summary>
+            初始化消息文件后缀名字典
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Create(System.String)">
+            <summary>
+            创建消息文件加载器
+            </summary>
+            <param name="suffix">后缀名（.ABC）</param>
+            <returns></returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Create(System.String,Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            创建消息文件加载器
+            </summary>
+            <param name="suffix">后缀名（.ABC）</param>
+            <param name="logger">日志记录接口</param>
+            <returns></returns>
+        </member>
+        <member name="P:Piggy.VehicleBus.MessageProcess.MessageFileLoader.FilePath">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.MessageProcess.MessageFileLoader.SupportFileFormat">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.MessageProcess.MessageFileLoader.MessageList">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.MessageProcess.MessageFileLoader.SignalList">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.MessageProcess.MessageFileLoader.MessageDic">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.MessageProcess.MessageFileLoader.DefaultCycleTime">
+            <summary>
+            <inheritdoc/>（-1 为不设置）
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.#ctor">
+            <summary>
+            无参构造函数
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="logger">日志记录接口</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.CalcStartBit(Piggy.VehicleBus.Common.Signal)">
+            <summary>
+            计算信号量的起始位转换
+            </summary>
+            <param name="signal">信号</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Paser(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Paser(System.String,System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Paser(System.Byte[])">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Paser(System.Byte[],System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Paser(System.IO.Stream)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Paser(System.IO.Stream,System.Text.Encoding)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.Clean">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.MessageProcess.MessageFileLoader.InternalDispose">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

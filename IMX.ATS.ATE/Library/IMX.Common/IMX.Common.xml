@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IMX.Common</name>
+    </assembly>
+    <members>
+        <member name="T:IMX.Common.ModDeviceReadData">
+            <summary>
+            设备数据类
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.DataInfo">
+            <summary>
+            读取信息
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.Unit">
+            <summary>
+            读取数据单位
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.Limits_Upper">
+            <summary>
+            上限
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.Limits_Lower">
+            <summary>
+            下限
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.IsInRange">
+            <summary>
+            是否在设定范围内
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.IsTrage">
+            <summary>
+            是否为触发值
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.IsEqual">
+            <summary>
+            是否相等触发(仅触发模式有效)
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.IsUse">
+            <summary>
+            是否参与保护
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.BelongTo">
+            <summary>
+            数据归属工位序号
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.DeviceTypename">
+            <summary>
+            数据所在设备类型
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModDeviceReadData.ProtectTriggerMaxCount">
+            <summary>
+            保护触发最大次数
+            </summary>
+        </member>
+        <member name="T:IMX.Common.ModTestDataInfo">
+            <summary>
+            数据库试验详细数据记录模型
+            </summary>
+        </member>
+        <member name="T:IMX.Common.ResultState">
+            <summary>
+            结果三态
+            </summary>
+        </member>
+        <member name="T:IMX.Common.XmlserializeEx">
+            <summary>
+            xml类型文件序列化类
+            </summary>
+        </member>
+        <member name="M:IMX.Common.XmlserializeEx.Serialize``1(``0)">
+            <summary>
+            序列化
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Common.XmlserializeEx.DeSerialize``1(System.String)">
+            <summary>
+            反序列化
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="xml"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

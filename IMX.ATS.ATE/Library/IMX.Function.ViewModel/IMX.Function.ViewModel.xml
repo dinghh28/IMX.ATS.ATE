@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IMX.Function.ViewModel</name>
+    </assembly>
+    <members>
+        <member name="T:IMX.Function.ViewModel.FunViewModel">
+            <summary>
+            试验配置方案界面详细操作抽象类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.IsInit">
+            <summary>
+            是否为初始化模板
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.Func">
+            <summary>
+            试验配置信息
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.SupportFuncitonType">
+            <summary>
+            支持的试验方法类型
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.SupportFuncitonString">
+            <summary>
+            支持的试验方法类型名称
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.OperateTypeList">
+            <summary>
+            设备开关操作
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.DeviceNameIndex">
+            <summary>
+            当前操作设备
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.OperateType">
+            <summary>
+            当前动作
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.FunViewModel.DelayAfterRun">
+            <summary>
+            流程执行后延时时间
+            </summary>
+        </member>
+        <member name="F:IMX.Function.ViewModel.FunViewModel.dicFunViewmodelSuffix">
+            <summary>
+            试验配置类型字典 [试验类型, 试验配置文件类型]
+            </summary>
+        </member>
+        <member name="F:IMX.Function.ViewModel.FunViewModel.lstFunViewmodelType">
+            <summary>
+            试验配置文件类型列表
+            </summary>
+        </member>
+        <member name="M:IMX.Function.ViewModel.FunViewModel.InitFuntionConfigSuffixDictionary">
+            <summary>
+            初始化消息文件后缀名字典
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.IFunViewModel.IsInit">
+            <summary>
+            是否为初始化模板
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.IFunViewModel.Func">
+            <summary>
+            试验配置信息
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.IFunViewModel.SupportFuncitonType">
+            <summary>
+            支持的试验方法类型
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.IFunViewModel.SupportFuncitonString">
+            <summary>
+            支持的试验方法类型
+            </summary>
+        </member>
+        <member name="T:IMX.Function.ViewModel.Model.FunctionInfo">
+            <summary>
+            试验时序信息
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.Step">
+            <summary>
+            试验步骤
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.ModType">
+            <summary>
+            模板类型
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.Model">
+            <summary>
+            试验界面模板类
+            </summary>
+        </member>
+    </members>
+</doc>

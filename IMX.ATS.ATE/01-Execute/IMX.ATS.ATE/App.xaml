@@ -1,0 +1,22 @@
+﻿<Application x:Class="IMX.ATS.ATE.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:IMX.ATS.ATE"
+             StartupUri="View/MainView.xaml">
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <local:ViewModelLocator x:Key="Locator"/>
+                </ResourceDictionary>
+                
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            
+        </ResourceDictionary>
+        
+    </Application.Resources>
+</Application>

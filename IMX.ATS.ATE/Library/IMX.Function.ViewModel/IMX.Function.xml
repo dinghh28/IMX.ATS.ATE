@@ -1,0 +1,416 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IMX.Function</name>
+    </assembly>
+    <members>
+        <member name="T:IMX.Function.TestFunction">
+            <summary>
+            试验方案类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.TestFunction.Step">
+            <summary>
+            运行步骤
+            </summary>
+        </member>
+        <member name="P:IMX.Function.TestFunction.Config">
+            <summary>
+            配置信息接口
+            </summary>
+        </member>
+        <member name="P:IMX.Function.TestFunction.Comments">
+            <summary>
+            备注
+            </summary>
+        </member>
+        <member name="M:IMX.Function.TestFunction.Create(IMX.Function.Base.IFuntionConfig)">
+            <summary>
+            创建方法
+            </summary>
+            <param name="config">流程配置参数</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Function.TestFunction.Create(IMX.Function.Base.FuncitonType)">
+            <summary>
+            创建方法
+            </summary>
+            <param name="type">配置流程类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Function.TestFunction.Create(Super.Zoo.Framework.Logger.ILogger,IMX.Function.Base.FuncitonType)">
+            <summary>
+            创建方法
+            </summary>
+            <param name="logger">日志记录器</param>
+            <param name="type">配置流程类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Function.TestFunction.#ctor(IMX.Function.Base.FuncitonType)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="type">配置流程类型</param>
+        </member>
+        <member name="M:IMX.Function.TestFunction.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Function.Base.FuncitonType)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志记录器</param>
+            <param name="type">配置流程类型</param>
+        </member>
+        <member name="M:IMX.Function.TestFunction.#ctor(IMX.Function.Base.IFuntionConfig)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="config">流程配置参数</param>
+        </member>
+        <member name="M:IMX.Function.TestFunction.Finalize">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Function.TestFunction.Dispose">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="T:IMX.Function.Base.FuncitonType">
+            <summary>
+            流程配置支持类型枚举
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.PRODUCT">
+            <summary>
+            产品下发指令模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.ACSOURCE">
+            <summary>
+            AC源操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.ACLODE">
+            <summary>
+            AC负载操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.DCLOAD">
+            <summary>
+            DC负载操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.ACDCINVERTER">
+            <summary>
+            双向源操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.DCSOURCE">
+            <summary>
+            高压直流源操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.APU">
+            <summary>
+            直流稳压源操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.RELAY">
+            <summary>
+            继电器操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.WATERBOX">
+            <summary>
+            水浴
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.TEMPBOX">
+            <summary>
+            温箱
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.DWELLTIME">
+            <summary>
+            设置驻留时间
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.ADCSYSTEAM">
+            <summary>
+            数字采样设备操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.BATTERYSIMULATOR">
+            <summary>
+            电池模拟器
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.TESTRESULT">
+            <summary>
+            结果获取模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.POPUP">
+            <summary>
+            弹窗模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.PROTECT">
+            <summary>
+            保护模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.GYROSCOPIC">
+            <summary>
+            旋变模拟器
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.SALTFOGBOX">
+            <summary>
+            盐雾箱
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.VIBRATIONTABLE">
+            <summary>
+            振动台
+            </summary>
+        </member>
+        <member name="T:IMX.Function.Base.SetOutPutState">
+            <summary>
+            试验输出操作枚举
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.SetOutPutState.Null">
+            <summary>
+            不操作
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.SetOutPutState.ON">
+            <summary>
+            打开设备
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.SetOutPutState.OFF">
+            <summary>
+            关闭设备
+            </summary>
+        </member>
+        <member name="T:IMX.Function.Base.Function_Config">
+            <summary>
+            流程配置信息抽象类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.Identify">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.Logger">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.OutterLogger">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.LastError">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.IsTestRunning">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.DelayAfterRun">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.OperateType">
+            <inheritdoc/>
+        </member>
+        <member name="F:IMX.Function.Base.Function_Config.dicFuntionConfigSuffix">
+            <summary>
+            试验配置类型字典 [试验类型, 试验配置文件类型]
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Function_Config.lstFuntionConfigType">
+            <summary>
+            试验配置文件类型列表
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Function_Config.systeampath">
+            <summary>
+            系统空间地址
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.#ctor">
+            <summary>
+            不带参构造
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            单参构造
+            </summary>
+            <param name="logger">日志注册器</param>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.Finalize">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.Dispose">
+            <summary>
+            析构
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.Create(IMX.Function.Base.FuncitonType)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="type">IFuntionConfig类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.Create(Super.Zoo.Framework.Logger.ILogger,IMX.Function.Base.FuncitonType)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志记录器</param>
+            <param name="type">IFuntionConfig类型</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.DeJson(IMX.Function.Base.FuncitonType,System.String)">
+            <summary>
+            IFuntionConfig反序列化
+            </summary>
+            <param name="type">IFuntionConfig类型</param>
+            <param name="config">序列化信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.SetError(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Config.ToJson">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.Base.IFuntionConfig">
+            <summary>
+            试验方案配置接口
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.IFuntionConfig.DeviceAddress">
+            <summary>
+            设备名称/地址
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.IFuntionConfig.OperateType">
+            <summary>
+            设备开关操作
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.IFuntionConfig.DelayAfterRun">
+            <summary>
+            方案运行后延时时间
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.IFuntionConfig.IsTestRunning">
+            <summary>
+            试验运行状态
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.IFuntionConfig.SupportFuncitonType">
+            <summary>
+            支持的试验方法类型
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Base.IFuntionConfig.Execute(System.Object)">
+            <summary>
+            试验执行方法
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Function.Base.IFuntionConfig.ToJson">
+            <summary>
+            Json序列化转换
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Funciton.DBCSendSignal">
+            <summary>
+            产品下发信号模型类
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.DBCSendSignal.IsSend">
+            <summary>
+            是否发送信号
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.DBCSendSignal.ID">
+            <summary>
+            序号
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.DBCSendSignal.MessageID">
+            <summary>
+            信号ID
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.DBCSendSignal.MessageName">
+            <summary>
+            消息名
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.DBCSendSignal.SignalName">
+            <summary>
+            信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.DBCSendSignal.CustomName">
+            <summary>
+            自定义信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.DBCSendSignal.SignalValue">
+            <summary>
+            发送值
+            </summary>
+        </member>
+        <member name="T:IMX.Funciton.FunConfig_Product">
+            <summary>
+            产品下发指令配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Funciton.FunConfig_Product.Identify">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Funciton.FunConfig_Product.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Funciton.FunConfig_Product.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Funciton.FunConfig_Product.SendSignals">
+            <summary>
+            产品发送列表
+            </summary>
+        </member>
+        <member name="M:IMX.Funciton.FunConfig_Product.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Funciton.FunConfig_Product.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Funciton.FunConfig_Product.Finalize">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Funciton.FunConfig_Product.Execute(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="operate"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

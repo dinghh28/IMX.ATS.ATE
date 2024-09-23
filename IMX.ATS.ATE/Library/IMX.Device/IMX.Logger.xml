@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IMX.Logger</name>
+    </assembly>
+    <members>
+        <member name="P:IMX.Logger.SuperDHHConsoleLogger.LastMessage">
+            <summary>
+            上次故障记录信息
+            </summary>
+        </member>
+        <member name="T:IMX.Logger.SuperDHHLoggerManager">
+            <summary>
+            丁某人的日志管理器
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHLoggerManager.TestLogger">
+            <summary>
+            试验日志接口
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHLoggerManager.FromLogger">
+            <summary>
+            窗口操作日志接口
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHLoggerManager.ProLogger">
+            <summary>
+            产品日志接口
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHLoggerManager.DeviceLogger">
+            <summary>
+            设备日志接口
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHLoggerManager.DBLogger">
+            <summary>
+            数据库日志接口
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHLoggerManager.ThreadLogger">
+            <summary>
+            界面线程日志接口
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHLoggerManager.ProtectLogger">
+            <summary>
+            保护信息日志接口
+            </summary>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.GetMessage(IMX.Logger.LoggerType)">
+            <summary>
+            获取Log最近记录信息
+            </summary>
+            <param name="type">log类型</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Logger.LoggerType">
+            <summary>
+            记录日志类型
+            </summary>
+        </member>
+        <member name="F:IMX.Logger.LoggerType.TESTLOG">
+            <summary>
+            试验日志
+            </summary>
+        </member>
+        <member name="F:IMX.Logger.LoggerType.FROMLOG">
+            <summary>
+            界面操作日志
+            </summary>
+        </member>
+        <member name="F:IMX.Logger.LoggerType.PRODUCTLOG">
+            <summary>
+            产品日志
+            </summary>
+        </member>
+        <member name="F:IMX.Logger.LoggerType.DEVICELOG">
+            <summary>
+            设备日志
+            </summary>
+        </member>
+        <member name="F:IMX.Logger.LoggerType.DBLOG">
+            <summary>
+            数据库日志
+            </summary>
+        </member>
+        <member name="F:IMX.Logger.LoggerType.THREAD">
+            <summary>
+            界面线程日志
+            </summary>
+        </member>
+        <member name="F:IMX.Logger.LoggerType.PROTECTLOG">
+            <summary>
+            保护信息日志
+            </summary>
+        </member>
+    </members>
+</doc>

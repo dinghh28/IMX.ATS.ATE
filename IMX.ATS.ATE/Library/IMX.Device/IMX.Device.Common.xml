@@ -1,0 +1,397 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IMX.Device.Common</name>
+    </assembly>
+    <members>
+        <member name="T:IMX.Device.Common.DeviceArgs">
+            <summary>
+            设备参数类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.DeviceType">
+            <summary>
+            设备类型
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.Name">
+            <summary>
+            设备型号\名称
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.Address">
+            <summary>
+            硬件地址
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.BelongTo">
+            <summary>
+            所属工位(-1则所有工位共享)
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.EnableMonitor">
+            <summary>
+            是否允许上报监控
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.RefreshTime">
+            <summary>
+            界面数据刷新时间
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.DataCollectionInterval">
+            <summary>
+            数据采集时间间隔
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.ProtectTriggerMaxCount">
+            <summary>
+            保护触发最大次数
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DeviceArgs.DriveConfig">
+            <summary>
+            设备支持驱动参数
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.DriveArgs">
+            <summary>
+            驱动参数类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.TimeoutMS">
+            <summary>
+            超时时间
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.BeforeReadDelayMS">
+            <summary>
+            写入之后延时多少毫秒再进行读取(默认50ms);
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.TerminationCharacterEnabled">
+            <summary>
+            是否识别单帧结束发送标识
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.BaudRate">
+            <summary>
+            波特率
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.CommunicationType">
+            <summary>
+            通讯类型
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.BusType">
+            <summary>
+            CAN设备类型
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.ResourceString">
+            <summary>
+            资源字符
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.DriveArgs.ConfigString">
+            <summary>
+            配置字符串
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.BaseConfig.StartupPath">
+            <summary>
+            启动目录
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.BaseConfig.XmlPath">
+            <summary>
+            文件路径
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Common.BaseConfig.GetSections``1(``0@)">
+            <summary>
+            读取节点信息
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.BaseConfig.GetSections``1">
+            <summary>
+            读取节点信息
+            </summary>
+            <typeparam name="T">节点类型</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.BaseConfig.WriteXml``1(``0)">
+            <summary>
+            写入节点信息
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Common.DriveHelper">
+            <summary>
+            驱动参数帮助类
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveHelper.Parity">
+            <summary>
+            奇偶性
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveHelper.DataBits">
+            <summary>
+            数据位
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveHelper.StopBits">
+            <summary>
+            停止位
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveHelper.FlowControl">
+            <summary>
+            流控制
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveHelper.Address">
+            <summary>
+            硬件地址;
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveHelper.UseSerial">
+            <summary>
+            是否使用原生串口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.DecodeResourceString(System.String,IMX.Device.Common.DriveType@,System.String@,System.String@,System.String@)">
+            <summary>
+            根据传入的完整的设备资源地址名称, 解析出通讯类型和对应参数;
+            <para>串口示例：ASRL1::INSTR (参数1 = 串口号)</para>
+            <para>GPIB示例：GPIB0::9::INSTR (参数1 = 地址号)</para>
+            <para>USB示例：USB0::0x2A8D::0x0101::MY57501899::INSTR (参数1 = 0x厂家ID, 参数2 = 0x产品ID, 参数3 = 设备编号)</para>
+            <para>TCPIP示例：TCPIP0::192.168.0.26::inst0::INSTR (参数1 = IP地址)</para>
+            <para>CANFD示例：ZLG_CANFD::USBCANFD_200U::0::INSTR</para>//CANFD::设备::设备ID=设备类型::设备型号::设备序号
+            </summary>
+            <param name="resourceString">完整的设备资源地址名称</param>
+            <param name="eType">解析得到的通讯类型</param>
+            <param name="strParam1">解析得到的参数1</param>
+            <param name="strParam2">解析得到的参数2</param>
+            <param name="strParam3">解析得到的参数3</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,Ivi.Visa.SerialParity@,System.Int32@,Ivi.Visa.SerialStopBitsMode@,Ivi.Visa.SerialFlowControlModes@,System.Int32@,System.Boolean@)">
+            <summary>
+            根据传入的配置字符串, 解析出对应配置参数;
+            <para>采用"配置名=某值"的方式 且 英文分号隔开</para>
+            <para>串口通讯示例：TimeoutMS=2000; BaudRate=9600; Parity=None; DataBits=8; StopBits=1; FlowControl=XOnXOff; Address=0;</para>
+            <para>其他通讯示例：TimeoutMS=2000; Address=0;</para>
+            </summary>
+            <param name="configString">配置字符串, 采用"配置名=某值"的方式 且 英文分号隔开</param>
+            <param name="ASRL_Parity">串口通讯_校验位</param>
+            <param name="ASRL_DataBits">串口通讯_数据位</param>
+            <param name="ASRL_StopBits">串口通讯_停止位</param>
+            <param name="ASRL_FlowControl">串口通讯_流控制</param>
+            <param name="ASRL_Address">串口通讯_地址</param>
+            <param name="IsUseSerial">串口通讯_是否使用原生串口</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,System.String@,System.String@,System.UInt32@)">
+            <summary>
+            根据传入的配置字符串, 解析出对应配置参数;
+            </summary>
+            <param name="configString">配置字符串, 采用"配置名=某值"的方式 且 英文分号隔开</param>
+            <param name="DataBaudrate">数据波特率</param>
+            <param name="CanfdSpeed">CANFD加速器</param>
+            <param name="ChannelIndex">通道地址</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,System.Int32@,System.String@,System.Int32@,System.Int32@,System.UInt32@)">
+            <summary>
+            根据传入的配置字符串, 解析出对应配置参数;
+            </summary>
+            <param name="configString"></param>
+            <param name="WorkMode">工作模式</param>
+            <param name="IP">IP地址</param>
+            <param name="LocalPort">本地端口（客户端模式失效）</param>
+            <param name="WorkPort">目标端口（服务器模式失效）</param>
+            <param name="ChannelIndex">通道地址</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,System.String@,System.String@,System.Int32@)">
+            <summary>
+            根据传入的配置字符串, 解析出对应配置参数;
+            </summary>
+            <param name="configString">配置字符串, 采用"配置名=某值"的方式 且 英文分号隔开</param>
+            <param name="DataBaudrate">数据波特率</param>
+            <param name="CanfdSpeed">CANFD加速器</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.EncryptedResourceString(System.String,System.UInt32,System.String@)">
+            <summary>
+            根据传入配置，生成资源字符串
+            </summary>
+            <param name="drive">CAN设备类型</param>
+            <param name="driveindex">CAN设备地址</param>
+            <returns>
+            <paramref name="resourcestring">CANFD示例：CANFD0::INSTR:(参数1 = IP地址)</paramref>
+            </returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.EncryptedConfigString(System.String,System.String,System.UInt32,System.String@)">
+            <summary>
+            根据传入配置，生成配置字符串
+            </summary>
+            <param name="CanfdSpeed">CANFD加速器</param>
+            <param name="DataBaudrate">数据波特率</param>
+            <param name="ChannelIndex">通道地址</param>
+            <param name="configString">配置字符串, 采用"配置名=某值"的方式 且 英文分号隔开</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.EncryptedConfigString(System.String,System.UInt32,System.String,System.String,System.Boolean,System.String@)">
+            <summary>
+            根据传入配置，生成配置字符串
+            </summary>
+            <param name="ASRL_Parity">串口通讯_校验位</param>
+            <param name="ASRL_DataBits">串口通讯_数据位</param>
+            <param name="ASRL_StopBits">串口通讯_停止位</param>
+            <param name="ASRL_FlowControl">串口通讯_流控制</param>
+            <param name="UseSerial">串口通讯_是否使用原始串口</param>
+            <param name="configString">配置字符串, 采用"配置名=某值"的方式 且 英文分号隔开</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.EncryptedConfigString(System.String,System.String,System.Int32,System.Int32,System.UInt32)">
+            <summary>
+            根据传入配置，生成配置字符串
+            </summary>
+            <param name="WorkMode">cannet工作模式</param>
+            <param name="IP">IP地址</param>
+            <param name="LocalPort">本地端口</param>
+            <param name="WorkPort">目标端口</param>
+            <param name="ChannelIndex">通道号</param>
+            <returns>CANNET适配配置字符</returns>
+        </member>
+        <member name="M:IMX.Device.Common.DriveHelper.EncryptedResourceString(IMX.Device.Common.DriveType,System.String,System.String,System.String)">
+            <summary>
+            根据传入配置，生成资源字符串
+            <para>串口示例：ASRL1::INSTR (参数1 = 串口号)</para>
+            <para>GPIB示例：GPIB0::9::INSTR (参数1 = 地址号)</para>
+            <para>USB示例：USB0::0x2A8D::0x0101::MY57501899::INSTR (参数1 = 0x厂家ID, 参数2 = 0x产品ID, 参数3 = 设备编号)</para>
+            <para>TCPIP示例：TCPIP0::192.168.0.26::inst0::INSTR (参数1 = IP地址)</para>
+            <para>CANFD示例：ZLG_CANFD::USBCANFD_200U::0::INSTR</para>//CANFD::设备::设备ID=设备类型::设备型号::设备序号
+            </summary>
+            <param name="type">驱动类型</param>
+            <param name="strParam1">解析的参数1</param>
+            <param name="strParam2">解析的参数2</param>
+            <param name="strParam3">解析的参数3</param>
+            <returns>驱动适配资源字符</returns>
+        </member>
+        <member name="T:IMX.Device.Common.DriveType">
+            <summary>
+            驱动类型接口
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.NULL">
+            <summary>
+            0-无驱动设备;
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.GPIB">
+            <summary>
+            1-GPIB
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.VXI">
+            <summary>
+            2-VXI
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.GPIBVXI">
+            <summary>
+            3-GPIBVXI
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.ASRL">
+            <summary>
+            4-ASRL串口
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.PXI">
+            <summary>
+            5-PXI
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.LAN">
+            <summary>
+            6-TCP
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.USB">
+            <summary>
+            7-USB
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.TCPIP">
+            <summary>
+            8-TCPIP
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.VehicleBus">
+            <summary>
+            9-汽车总线通讯
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.ADVANTECH">
+            <summary>
+            12-华研设备
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.DriveType.MQTT">
+            <summary>
+            13-MQTT通讯
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.EDeviceType">
+            <summary>
+            设备类型枚举
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.Unknow">
+            <summary>
+            未知设备
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.Product">
+            <summary>
+            产品
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.DCLoad">
+            <summary>
+            DCDC负载
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.Acquisition">
+            <summary>
+            采集系统
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.Relay">
+            <summary>
+            继电器控制板
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.SupportDeviceInfo">
+            <summary>
+            支持设备相关信息
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.SupportDeviceInfo.DeviceRecInfo">
+            <summary>
+            设备上报信息字典[设备型号,上报数据名称字符串]
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,1121 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Piggy.VehicleBus.OperateInterface</name>
+    </assembly>
+    <members>
+        <member name="T:Piggy.VehicleBus.OperateInterface.CustomMessageParameterExtension">
+            <summary>
+            自定义报文交互参数扩展方法
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.CustomMessageParameterExtension.SetCustomMessage(Piggy.VehicleBus.Common.ICustomMessageParameter,System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage},System.Boolean)">
+            <summary>
+            设置自定义报文
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="messages">自定义报文列表</param>
+            <param name="isInjectFrameFormat">是否根据DBC注入报文格式</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.CustomMessageParameterExtension.AddCustomMessage(Piggy.VehicleBus.Common.ICustomMessageParameter,Piggy.VehicleBus.Common.CustomMessage,System.Boolean,System.Boolean)">
+            <summary>
+            增加自定义报文
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="message">自定义报文</param>
+            <param name="isInjectFrameFormat">是否根据DBC注入报文格式</param>
+            <param name="isReplaceSameID">是否替换相同ID报文</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.CustomMessageParameterExtension.AddCustomMessage(Piggy.VehicleBus.Common.ICustomMessageParameter,System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage},System.Boolean,System.Boolean)">
+            <summary>
+            增加自定义报文
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="messages">自定义报文列表</param>
+            <param name="isInjectFrameFormat">是否根据DBC注入报文格式</param>
+            <param name="isReplaceSameID">是否替换相同ID报文</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.CustomMessageParameterExtension.DeleteCustomMessage(Piggy.VehicleBus.Common.ICustomMessageParameter,System.UInt32)">
+            <summary>
+            删除自定义报文
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.CustomMessageParameterExtension.DeleteCustomMessage(Piggy.VehicleBus.Common.ICustomMessageParameter,System.Collections.Generic.List{System.UInt32})">
+            <summary>
+            删除自定义报文
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="ids">消息ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.CustomMessageParameterExtension.ClearCustomMessage(Piggy.VehicleBus.Common.ICustomMessageParameter)">
+            <summary>
+            清空自定义报文
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="T:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension">
+            <summary>
+            DBC报文交互参数扩展方法
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String)">
+            <summary>
+            增加发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号名称</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.ValueTuple{System.UInt32,System.String})">
+            <summary>
+            增加发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号（(消息ID, 信号名称)）</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.String})">
+            <summary>
+            增加发送信号列表
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号名称列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <summary>
+            增加发送信号列表
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号（[(消息ID, 信号名称)]）列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String,System.Double)">
+            <summary>
+            增加发送信号并赋值
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号名称</param>
+            <param name="value">信号值</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.ValueTuple{System.UInt32,System.String},System.Double)">
+            <summary>
+            增加发送信号并赋值
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号（(消息ID, 信号名称)）</param>
+            <param name="value">信号值</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.Dictionary{System.String,System.Double})">
+            <summary>
+            增加发送信号列表并赋值
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号字典（[信号名称, 信号值]）</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.Dictionary{System.ValueTuple{System.UInt32,System.String},System.Double})">
+            <summary>
+            增加发送信号列表并赋值
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号（[(消息ID, 信号名称), 信号值]）列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String)">
+            <summary>
+            删除发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号名称</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.ValueTuple{System.UInt32,System.String})">
+            <summary>
+            删除发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号（(消息ID, 信号名称)）</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.String})">
+            <summary>
+            删除发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号名称列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <summary>
+            删除发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号（[(消息ID, 信号名称)]）列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32)">
+            <summary>
+            删除发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.UInt32})">
+            <summary>
+            删除发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="ids">消息ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.ClearSendSignal(Piggy.VehicleBus.Common.IDBCMessageParameter)">
+            <summary>
+            清空发送信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String)">
+            <summary>
+            增加读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号名称</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.ValueTuple{System.UInt32,System.String})">
+            <summary>
+            增加读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号（(消息ID, 信号名称)）</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.String})">
+            <summary>
+            增加读取信号列表
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号名称列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <summary>
+            增加读取信号列表
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号（[(消息ID, 信号名称)]）列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String)">
+            <summary>
+            删除读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号名称</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.ValueTuple{System.UInt32,System.String})">
+            <summary>
+            删除读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号（(消息ID, 信号名称)）</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.String})">
+            <summary>
+            删除读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号名称列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <summary>
+            删除读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signals">信号（[(消息ID, 信号名称)]）列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32)">
+            <summary>
+            删除读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.UInt32})">
+            <summary>
+            删除读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="ids">消息ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.ClearReadSignal(Piggy.VehicleBus.Common.IDBCMessageParameter)">
+            <summary>
+            清空读取信号
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32)">
+            <summary>
+            增加发送过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddSendSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.UInt32})">
+            <summary>
+            增加发送过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="ids">消息ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32)">
+            <summary>
+            删除发送过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteSendSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.UInt32})">
+            <summary>
+            删除发送过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="ids">消息ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.ClearSendSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter)">
+            <summary>
+            清空发送过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddReadSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32)">
+            <summary>
+            增加接收过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.AddReadSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.UInt32})">
+            <summary>
+            增加接收过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="ids">消息ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32)">
+            <summary>
+            删除接收过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteReadSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Collections.Generic.List{System.UInt32})">
+            <summary>
+            删除接收过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="ids">消息ID列表</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.ClearReadSkipMessage(Piggy.VehicleBus.Common.IDBCMessageParameter)">
+            <summary>
+            清空接收过滤消息
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.SetDataProcessor(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32,Piggy.VehicleBus.Common.IDataProcessor)">
+            <summary>
+            设置数据处理器
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <param name="dataProcessor">数据处理器</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.DeleteDataProcessor(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32)">
+            <summary>
+            删除数据处理器
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.ClearDataProcessor(Piggy.VehicleBus.Common.IDBCMessageParameter)">
+            <summary>
+            删除数据处理器
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.SetSendTimes(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32,System.Int32)">
+            <summary>
+            修改发送次数
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="id">消息ID</param>
+            <param name="count">
+            <description>发送次数</description>
+            <list type="bullet">
+                <item>
+                    <term>-1</term>
+                    <description>连续发送</description>
+                </item>
+                <item>
+                    <term>0</term>
+                    <description>不发送</description>
+                </item>
+                <item>
+                    <term>N</term>
+                    <description>发送 N 次</description>
+                </item>
+            </list>
+            </param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.SetSendTimes(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String,System.Int32)">
+            <summary>
+            修改发送次数
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="messagename">消息名称</param>
+            <param name="count">
+            <description>发送次数</description>
+            <list type="bullet">
+                <item>
+                    <term>-1</term>
+                    <description>连续发送</description>
+                </item>
+                <item>
+                    <term>0</term>
+                    <description>不发送</description>
+                </item>
+                <item>
+                    <term>N</term>
+                    <description>发送 N 次</description>
+                </item>
+            </list>
+            </param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.SetSignalValue(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String,System.Double)">
+            <summary>
+            修改下发信号值（多 消息ID 设置查询到的第一个）
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号名称</param>
+            <param name="value">信号值</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.SetSignalValue(Piggy.VehicleBus.Common.IDBCMessageParameter,System.ValueTuple{System.UInt32,System.String},System.Double)">
+            <summary>
+            修改下发信号值
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号（(消息ID, 信号名称)）</param>
+            <param name="value">信号值</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.GetSignalValue(Piggy.VehicleBus.Common.IDBCMessageParameter,System.String)">
+            <summary>
+             获取上报信号值（多 消息ID 返回查询到的第一个）
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号名称</param>
+            <returns>操作结果 @ 信号值</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.GetSignalValue(Piggy.VehicleBus.Common.IDBCMessageParameter,System.ValueTuple{System.UInt32,System.String})">
+            <summary>
+             获取上报信号值
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="signal">信号（(消息ID, 信号名称)）</param>
+            <returns>操作结果 @ 信号值</returns>
+        </member>
+        <member name="T:Piggy.VehicleBus.OperateInterface.MessageInteractor">
+            <summary>
+            报文交互器
+            <para>※※※※※※※※※※※ 注意 ※※※※※※※※※※※</para>
+            <description>修改完下发信号值后，需要调用 <see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.CalcMessageValue"/> 计算消息的发送值</description>
+            <para>※※※※※※※※※※ 调用顺序 ※※※※※※※※※※</para>
+            <description>
+                <list type="number">
+                    <item>
+                        <term>打开报文交互器</term>
+                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Open"/></description>
+                    </item>
+                    <item>
+                        <term>初始化</term>
+                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Initialize"/></description>
+                    </item>
+                    <item>
+                        <term>加载消息文件</term>
+                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFile(System.String)"/></description>
+                    </item>
+                    <item>
+                        <description>DBC报文交互参数修改</description>
+                        <list type="bullet">
+                            <item>
+                                <term>增加发送信号</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.String)"/></description>
+                            </item>
+                            <item>
+                                <term>增加读取信号</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSignal(System.String)"/></description>
+                            </item>
+                            <item>
+                                <term>增加发送过滤消息</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSkipMessage(System.UInt32)"/></description>
+                            </item>
+                            <item>
+                                <term>增加读取过滤消息</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSkipMessage(System.UInt32)"/></description>
+                            </item>
+                            <item>
+                                <term>设置数据处理器</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetDataProcessor(System.UInt32,Piggy.VehicleBus.Common.IDataProcessor)"/></description>
+                            </item>
+                        </list>
+                    </item>
+                    <item>
+                        <term>打开通讯</term>
+                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StartCommunication"/></description>
+                    </item>
+                    <item>
+                        <description>修改操作</description>
+                        <list type="bullet">
+                            <item>
+                                <term>修改发送次数</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSendCount(System.UInt32,System.Int32)"/></description>
+                            </item>
+                            <item>
+                                <term>修改下发信号值</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSignalValue(System.String,System.Double)"/></description>
+                            </item>
+                            <item>
+                                <term>计算下发报文数据</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.CalcMessageValue"/></description>
+                            </item>
+                            <item>
+                                <term>获取上报信号值</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetSignalValue(System.String)"/></description>
+                            </item>
+                            <item>
+                                <term>修改自定义报文</term>
+                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})"/></description>
+                            </item>
+                        </list>
+                    </item>
+                    <item>
+                        <term>关闭通讯</term>
+                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StopCommunication"/></description>
+                    </item>
+                </list>
+            </description>
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Create(Piggy.VehicleBus.Common.IVehicleBusDevice,Piggy.VehicleBus.Common.IVehicleBusChannel,Piggy.VehicleBus.Common.IRecorder,Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            创建报文交互器
+            </summary>
+            <param name="device">汽车总线设备</param>
+            <param name="channel">汽车总线通道</param>
+            <param name="recorder">报文录制器</param>
+            <param name="logger">日志记录器</param>
+            <returns>报文交互器</returns>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.threadSendMessageID">
+            <summary>
+            报文发送线程ID
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.threadSendMessage">
+            <summary>
+            报文发送线程
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.isSendMessageThreadRunning">
+            <summary>
+            报文发送线程结束状态
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.lstSendSignals">
+            <summary>
+            下发信号列表
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.lstSendMessages">
+            <summary>
+            下发消息列表
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.dicSendMessageData">
+            <summary>
+            下发消息数据
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.lstReadSignals">
+            <summary>
+            读取信号列表
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.dicReadSignals">
+            <summary>
+            读取信号字典
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.dicReadMessagesData">
+            <summary>
+            读取消息数据字典
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.dicReadMessagesTime">
+            <summary>
+            读取消息时间字典
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.sendDBCMessages">
+            <summary>
+            发送消息列表（DBC 报文）
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.sendDBCMessagesData">
+            <summary>
+            发送消息数据字典（DBC 报文）
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.sendCustomMessages">
+            <summary>
+            发送消息列表（自定义报文）
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.MessageInteractor.sendedCustomMessages">
+            <summary>
+            已经发送消息列表（自定义报文）
+            </summary>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.VehicleBusType">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.VehicleBusDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.VehicleBusDevice">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.VehicleBusChannel">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.TransmitChannel">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.RecordChannel">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsOperatorOpen">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsInteractorOpen">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsStartCommunication">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsSendData">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsSendDBCMessageData">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsSendCustomMessageData">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsReceiveData">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.IsJudgeDataValid">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.DataValidTime">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.DefaultCycleTime">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.DefaultNeedSendCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.DBCSendResultJudgmentMode">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.CustomSendResultJudgmentMode">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.MessageFileLoader">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.DBCMessageParameter">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.CustomMessageParameter">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.SendSignals">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.ReadSignals">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.SendMessageData">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.Recorder">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.MessageInteractor.OutterRecorder">
+            <inheritdoc/>
+        </member>
+        <member name="E:Piggy.VehicleBus.OperateInterface.MessageInteractor.ReceiveMessageEvent">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.#ctor(Piggy.VehicleBus.Common.IVehicleBusDevice,Piggy.VehicleBus.Common.IVehicleBusChannel,Piggy.VehicleBus.Common.IRecorder,Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="device">汽车总线设备</param>
+            <param name="channel">汽车总线通道</param>
+            <param name="recorder">报文录制器</param>
+            <param name="logger">日志记录器</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.InvokeReceiveDataEvent(Piggy.VehicleBus.Common.IVehicleBusDevice,Piggy.VehicleBus.Common.IVehicleBusMessageDataArgs)">
+            <summary>
+            调用接收数据事件
+            </summary>
+            <param name="device">汽车总线设备</param>
+            <param name="args">接收数据</param>
+            <returns>处理状态</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Open">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StartCommunication">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StopCommunication">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SendFrame(Piggy.VehicleBus.Common.FrameObject)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SendFrames(System.Collections.Generic.IEnumerable{Piggy.VehicleBus.Common.FrameObject})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearBuffer">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetBusState">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Initialize">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFile(System.Func{Piggy.VehicleBus.Common.IMessageFileLoader,Super.Zoo.Framework.OperateResult},System.String)">
+            <summary>
+            加载消息文件
+            </summary>
+            <param name="paser">加载方法</param>
+            <param name="suffix">后缀名（.ABC）</param>
+            <returns>操作结果 @ 消息文件加载器</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFileLoader(Piggy.VehicleBus.Common.IMessageFileLoader)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFile(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFile(System.Byte[],System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFile(System.IO.Stream,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LockMessages">
+            <summary>
+            构造DBC报文信号
+            </summary>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.ValueTuple{System.UInt32,System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.ValueTuple{System.UInt32,System.String},System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.Collections.Generic.List{System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.Collections.Generic.Dictionary{System.String,System.Double})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.Collections.Generic.Dictionary{System.ValueTuple{System.UInt32,System.String},System.Double})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteSendSignal(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteSendSignal(System.ValueTuple{System.UInt32,System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteSendSignal(System.Collections.Generic.List{System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteSendSignal(System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearSendSignal">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSignal(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSignal(System.ValueTuple{System.UInt32,System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSignal(System.Collections.Generic.List{System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSignal(System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteReadSignal(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteReadSignal(System.ValueTuple{System.UInt32,System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteReadSignal(System.Collections.Generic.List{System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteReadSignal(System.Collections.Generic.List{System.ValueTuple{System.UInt32,System.String}})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearReadSignal">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSkipMessage(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSkipMessage(System.Collections.Generic.List{System.UInt32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteSendSkipMessage(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteSendSkipMessage(System.Collections.Generic.List{System.UInt32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearSendSkipMessage">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSkipMessage(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSkipMessage(System.Collections.Generic.List{System.UInt32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteReadSkipMessage(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteReadSkipMessage(System.Collections.Generic.List{System.UInt32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearReadSkipMessage">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetDataProcessor(System.UInt32,Piggy.VehicleBus.Common.IDataProcessor)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteDataProcessor(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearDataProcessor">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSendCount(System.UInt32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSendCount(System.String,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSignalValue(System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSignalValue(System.ValueTuple{System.UInt32,System.String},System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.CalcMessageValue">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetMessageValue(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetMessageValueString(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetSignalValue(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetSignalValue(System.ValueTuple{System.UInt32,System.String})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteCustomMessage(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.DeleteCustomMessage(System.Collections.Generic.List{System.UInt32})">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearCustomMessage">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SendMessageLoop(System.Object)">
+            <summary>
+            报文发送循环
+            </summary>
+            <param name="args">参数</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SendDBCMessage(System.String)">
+            <summary>
+            发送DBC报文
+            </summary>
+            <returns>是否需要退出循环</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SendCustomMessage(System.String)">
+            <summary>
+            发送自定义报文
+            </summary>
+            <returns>是否需要退出循环</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ReceiveMessage(Piggy.VehicleBus.Common.IVehicleBusDevice,Piggy.VehicleBus.Common.IVehicleBusMessageDataArgs)">
+            <summary>
+            报文接收
+            </summary>
+            <param name="device">汽车总线设备</param>
+            <param name="args">参数</param>
+            <returns>处理状态</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ReceiveCommonMessage(Piggy.VehicleBus.Common.IVehicleBusMessageDataArgs)">
+            <summary>
+            接收通用报文
+            </summary>
+            <param name="args">参数</param>
+            <returns>处理状态</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.InternalDispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:Piggy.VehicleBus.OperateInterface.VehicleBusOperator">
+            <summary>
+            汽车总线控制器
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.interactorOperation">
+            <summary>
+            操作器操作锁对象
+            </summary>
+        </member>
+        <member name="F:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.dicInteractor">
+            <summary>
+            操作器字典
+            </summary>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.VehicleBusType">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.VehicleBusDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.VehicleBusDevice">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.IsOperatorOpen">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.IsReceiveThreadStart">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.IsReceiveErrorFrame">
+            <summary>
+            <inheritdoc/>（默认值: <see langword="false"/>）
+            </summary>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.InteractorList">
+            <inheritdoc/>
+        </member>
+        <member name="P:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.InteractorObjectList">
+            <inheritdoc/>
+        </member>
+        <member name="E:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.ReceiveMessageEvent">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.#ctor">
+            <summary>
+            无参构造函数
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="logger">日志记录接口</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.ExistInteractor(System.UInt32)">
+            <summary>
+            报文交互器存在状态
+            </summary>
+            <param name="index">报文交互器序号</param>
+            <returns>操作结果 @ 报文交互器存在状态</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.GetInteractorList">
+            <summary>
+            获取报文交互器序号列表
+            </summary>
+            <returns>操作结果 @ 报文交互器号列表</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.GetInteractorList(System.Func{Piggy.VehicleBus.Common.IMessageInteractor,System.Boolean})">
+            <summary>
+            获取报文交互器序号列表
+            </summary>
+            <param name="selector">选择器</param>
+            <returns>操作结果 @ 报文交互器序号列表</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.GetInteractorObject(System.UInt32)">
+            <summary>
+            获取报文交互器对象
+            </summary>
+            <param name="index">报文交互器序号</param>
+            <returns>操作结果 @ 报文交互器对象</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.GetInteractorObjectList">
+            <summary>
+            获取报文交互器对象列表
+            </summary>
+            <returns>操作结果 @ 报文交互器列表</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.GetInteractorObjectList(System.Func{Piggy.VehicleBus.Common.IMessageInteractor,System.Boolean})">
+            <summary>
+            获取报文交互器对象列表
+            </summary>
+            <param name="selector">选择器</param>
+            <returns>操作结果 @ 报文交互器对象列表</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.AddInteractor(Piggy.VehicleBus.Common.IMessageInteractor)">
+            <summary>
+            增加报文交互器
+            </summary>
+            <param name="interactor">报文交互器对象</param>
+            <returns>操作结果 @ 报文交互器对象</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.RemoveInteractor(System.UInt32)">
+            <summary>
+            移除报文交互器
+            </summary>
+            <param name="index">报文交互器序号</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.RemoveAllInteractor">
+            <summary>
+            移除所有报文交互器
+            </summary>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.InvokeReceiveDataEvent(Piggy.VehicleBus.Common.IVehicleBusDevice,Piggy.VehicleBus.Common.IVehicleBusMessageDataArgs)">
+            <summary>
+            调用接收数据事件
+            </summary>
+            <param name="device">汽车总线设备</param>
+            <param name="args">接收数据</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.Open``1(Piggy.VehicleBus.Common.IVehicleBusDeviceArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.Open(System.Type,Piggy.VehicleBus.Common.IVehicleBusDeviceArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.RegisterInteractor(Piggy.VehicleBus.Common.IVehicleBusChannelArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.RegisterInteractor(Piggy.VehicleBus.Common.IVehicleBusChannelArgs,Piggy.VehicleBus.Common.IRecorder)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.UnRegisterInteractor(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.FetchInteractor(System.UInt32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.StartReceive">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.StopReceive">
+            <inheritdoc/>
+        </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.InternalDispose">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

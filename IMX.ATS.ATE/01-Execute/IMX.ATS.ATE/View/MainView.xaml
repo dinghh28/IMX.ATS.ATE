@@ -1,0 +1,282 @@
+﻿<Window x:Class="IMX.ATS.ATE.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IMX.ATS.ATE" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        mc:Ignorable="d"
+        xmlns:converter="clr-namespace:IMX.ATS.ATE.Resource.Converter" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+        Title="MainView" Height="480" Width="800" 
+        FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
+        WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
+        ResizeMode="NoResize"  x:Name="Win">
+
+    <Window.DataContext>
+        <Binding Path="Main" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+                <ResourceDictionary>
+                    <converter:TestRunStateConverter x:Key="StateConverter"/>
+                    
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converter:ResultConverter x:Key="ResultToString"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border BorderThickness="1" BorderBrush="Black">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black"/>
+            <Grid Grid.Row="0" Margin="10,5">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label Content="功能测试平台" VerticalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                    <Label Content="{Binding ContentName}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Button Content="&#xe721;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMin}" CommandParameter="{Binding ElementName=Win}"/>
+                    <Button Content="&#xe720;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>
+                    <Button Content="&#xe71f;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Win}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <GroupBox Header="试验信息" Grid.Column="0" BorderBrush="Black">
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="60"/>
+                        </Grid.RowDefinitions>
+
+                        <WrapPanel Grid.Row="0" VerticalAlignment="Center" 
+                                   IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}">
+                            <Label Content="试验项目：" Margin="0,0,5,0"/>
+                            <ComboBox Width="200"/>
+                        </WrapPanel>
+
+                        <WrapPanel Grid.Row="1" VerticalAlignment="Center" 
+                                   IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}">
+                            <Label Content="产品SN码：" Margin="0,0,5,0"/>
+                            <TextBox Width="200" Text="{Binding ProductSN}"/>
+                        </WrapPanel>
+
+                        <Button Grid.Row="3" FontSize="16"
+                                Content="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='String'}" 
+                                Background="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Brush'}"
+                                Command="{Binding StartTest}"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="试验流程" Grid.Column="1" Margin="10,0,0,0"
+                          BorderBrush="Black">
+                    <Grid>
+                        <DataGrid 
+                            Background="Transparent"
+                            HorizontalContentAlignment="Stretch"
+                            IsReadOnly="True"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserResizeRows="False"
+                            AutoGenerateColumns="False"
+                            CanUserResizeColumns="False"
+                            CanUserSortColumns="False"
+                            CanUserReorderColumns="False"
+                            HeadersVisibility="Column"
+                            VerticalGridLinesBrush="Transparent"
+                            VirtualizingPanel.IsVirtualizing="True"
+                            ItemsSource="{Binding ATEExecuteInfos}">
+                            
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <!--<Setter Property="SeparatorBrush" Value="Transparent"/>-->
+                                    <!--<Setter Property="Background" Value="Transparent"/>-->
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <!--<Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>-->
+                                    <!--<Setter Property="Height" Value="30"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>-->
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+                                
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="Height" Value="45"/>
+                                    <!--<Setter Property="HorizontalAlignment" Value="Center"/>-->
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridCell">
+                                                <Border BorderBrush="Transparent" Background="Transparent" BorderThickness = "0">
+                                                    <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    
+                                    <!--<Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>-->
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="FontWeight" Value="Medium"/>
+                                    <!--<Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridRow">
+                                                <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Height="30">
+                                                    <DataGridCellsPresenter/>
+
+
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>-->
+                                </Style>
+                            </DataGrid.RowStyle>
+
+                            <DataGrid.RowDetailsTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <!--<DataGrid
+                                            Background="Transparent"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Stretch"
+                                            VerticalAlignment="Stretch"
+                                            HorizontalAlignment="Stretch"
+                                            IsReadOnly="True"
+                                            CanUserAddRows="False"
+                                            CanUserDeleteRows="False"
+                                            CanUserResizeRows="False"
+                                            AutoGenerateColumns="False"
+                                            CanUserResizeColumns="False"
+                                            CanUserSortColumns="False"
+                                            CanUserReorderColumns="False"
+                                            HeadersVisibility="Column"
+                                            VirtualizingPanel.IsVirtualizing="True"
+                                            ItemsSource="{Binding StepInfos}"
+                                            Width="{Binding DataContext.RowDetailsWidth, RelativeSource={RelativeSource AncestorType=DataGrid}}">
+                                            
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="序号"/>
+                                                <DataGridTextColumn Header="执行项目" Binding="{Binding StepName}" Width="*"/>
+                                                <DataGridTextColumn Header="下限值" Binding="{Binding Limit_Lower}" Width="*"/>
+                                                <DataGridTextColumn Header="上限值" Binding="{Binding Limit_Upper}" Width="*"/>
+                                                <DataGridTextColumn Header="结果" Binding="{Binding Result, Converter={StaticResource ResourceKey=ResultToString}}" Width="*"/>
+                                                <DataGridTextColumn Header="时间" Binding="{Binding ExecuteTime}" Width="*"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>-->
+                                        <ListBox ItemsSource="{Binding StepInfos}" 
+                                                 HorizontalAlignment="Stretch" 
+                                                 HorizontalContentAlignment="Stretch" 
+                                                 FontWeight="Light"
+                                                 VirtualizingPanel.IsVirtualizing="True">
+                                            <!--<ListBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <Grid/>
+                                                </ItemsPanelTemplate>
+                                            </ListBox.ItemsPanel>-->
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid Width="{Binding DataContext.RowDetailsWidth, RelativeSource={RelativeSource AncestorType=DataGrid}}">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="45"/>
+                                                            <ColumnDefinition Width="3*"/>
+                                                            <ColumnDefinition Width="1.5*"/>
+                                                            <ColumnDefinition Width="1.5*"/>
+                                                            <ColumnDefinition Width="1*"/>
+                                                            <ColumnDefinition Width="2*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Label Grid.Column="1" Content="{Binding StepName}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="2" Content="{Binding Limit_Lower}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="3" Content="{Binding Limit_Upper}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="4" Content="{Binding Result, Converter={StaticResource ResultToString}}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="5" Content="{Binding ExecuteTime}" HorizontalAlignment="Center"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="ListBoxItem">
+                                                    <Setter Property="IsSelected" Value="{Binding Content.IsSelected, Mode=TwoWay, RelativeSource={RelativeSource Self}}"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="ListBoxItem">
+                                                                <ContentPresenter/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="ListBoxItem.IsSelected" Value="True">
+                                                            <Setter Property="ListBoxItem.Background" Value="Transparent"/>
+                                                            <!--<Setter Property="ListBoxItem.Foreground" Value="Black"/>-->
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                            <!--<Style TargetType="ListBox">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>-->
+                                        </ListBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGrid.RowDetailsTemplate>
+                            <DataGrid.Columns>
+                                <!--<DataGridTemplateColumn Width="30">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="" Command="{Binding Show}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>-->
+                                <DataGridTextColumn Header="序号" Binding="{Binding Index}" Width="45"/>
+                                <DataGridTextColumn Header="执行项目" Binding="{Binding FunctionName}" Width="3*"/>
+                                <DataGridTextColumn Header="下限值" Binding="{Binding Limit_Lower}" Width="1.5*"/>
+                                <DataGridTextColumn Header="上限值" Binding="{Binding Limit_Upper}" Width="1.5*"/>
+                                <DataGridTextColumn Header="结果" Binding="{Binding Result,Converter={StaticResource  ResultToString}}" Width="1*"/>
+                                <DataGridTextColumn Header="开始时间" Binding="{Binding StartTime}" Width="2*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

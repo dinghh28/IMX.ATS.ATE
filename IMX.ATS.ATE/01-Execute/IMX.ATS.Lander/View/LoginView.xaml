@@ -1,0 +1,92 @@
+﻿<Window x:Class="IMX.ATS.Lander.LoginView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IMX.ATS.Lander"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:base="clr-namespace:IMX.ATS.Lander"
+        d:DataContext="{d:DesignInstance Type=local:LoginViewModel}"
+        mc:Ignorable="d"
+        x:Name="Window"
+        Background="Transparent" FontWeight="ExtraLight" ResizeMode="NoResize" FontFamily="Microsoft YaHei"
+        WindowStyle="None" AllowsTransparency="True" WindowStartupLocation="CenterScreen" Title="系统登录" >
+    <Window.DataContext>
+        <Binding Path="Login" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Key="Enter"  Command="{Binding LoginCommand }" CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}"/>
+    </Window.InputBindings>
+    <Window.Resources>
+        <ResourceDictionary>
+            <!--<local:ViewModelLocator x:Key="Login"/>-->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Window}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid Width="740" Margin=" 5" Background="Transparent" Height=" 370">
+
+        <Border Background="#F7F9FA" Margin="0,6" HorizontalAlignment="Right" Width="330" BorderBrush="#DDD" BorderThickness="0.5"  
+                CornerRadius="3" MouseLeftButtonDown="Border_MouseLeftButtonDown" >
+            <Grid>
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" >
+                    <Button Content="&#xe71f;" Width="40" Height="40" Style="{StaticResource ControlButtonStyle}" Background="#FFE63535" Tag="White"
+                        Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Window}"/>
+                </StackPanel>
+                <Grid Margin="60,0,20,20" Height=" 370">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                        <RowDefinition  Height="auto"/>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="1" Background="Transparent" >
+                        <TextBlock Text="统仪" FontSize="30" FontWeight="Bold" Margin="0,0,15,0" VerticalAlignment="Center">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Gray" Direction="0" ShadowDepth="0.5"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBlock Text="老化测试平台" FontSize="25" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Gray" Direction="0" ShadowDepth="0.5"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <!--<TextBlock Text="老化测试管理平台" FontSize="15" VerticalAlignment="Center"/>-->
+                    </StackPanel>
+
+                    <!--用户名-->
+                    <TextBox Grid.Row="3" Style="{StaticResource UserNameTextBoxStyle}" Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+                    <PasswordBox Grid.Row="4" Style="{StaticResource PasswordBoxStyle}"  Margin="0,8"  FontSize="14" Width="200" 
+                              base:PassWordBoxHelper.Password ="{Binding Password, Mode=OneWayToSource ,UpdateSourceTrigger=PropertyChanged}"
+                              base:PassWordBoxHelper.Attach="True" />
+
+                    <Button Content="立 即 登 录" Foreground="Black" Grid.Row="6" Height="35" BorderThickness="0" Width="200"
+                        Command="{Binding LoginCommand }"
+                        CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" />
+                    <Label Content="{Binding ErrorMessage}" Foreground="Red" Grid.Row="5"   Width="200"  FontWeight="Bold" />
+
+                </Grid>
+            </Grid>
+        </Border>
+        <Polygon Points="0 0,420,0,450 200 420 400 0 400"  HorizontalAlignment="Left" MouseLeftButtonDown="Border_MouseLeftButtonDown" Stroke="Gray">
+            <Polygon.Fill>
+                <ImageBrush ImageSource="pack://application:,,,/IMX.ATS.Lander;component/Resource/Image/公司log（无字）.png"/>
+            </Polygon.Fill >
+            <Polygon.Effect>
+                <DropShadowEffect Color="Black" ShadowDepth="1" BlurRadius="10" Opacity="1"/>
+            </Polygon.Effect>
+            
+        </Polygon>
+    </Grid>
+</Window>

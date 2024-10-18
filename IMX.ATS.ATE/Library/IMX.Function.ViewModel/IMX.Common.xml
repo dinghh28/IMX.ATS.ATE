@@ -69,6 +69,21 @@
             数据库试验详细数据记录模型
             </summary>
         </member>
+        <member name="P:IMX.Common.ModTestDataInfo.Name">
+            <summary>
+            数据名称
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModTestDataInfo.Value">
+            <summary>
+            读取值
+            </summary>
+        </member>
+        <member name="T:IMX.Common.ResultState">
+            <summary>
+            结果三态
+            </summary>
+        </member>
         <member name="T:IMX.Common.XmlserializeEx">
             <summary>
             xml类型文件序列化类

@@ -84,50 +84,43 @@ namespace IMX.ATS.Lander
 
         private Window Win = null;
 
-        public Dictionary<string, bool> dicViewopen = new Dictionary<string, bool>()
-        {
-            //{ "ProjectConfig.PCProjectSelectView", false },
-            //{ "UserManage.UserMainView",false },
-            //{ "TestOperate.TODeviceInitView", false },
-            //{ "DataOperate.ADOMainView", false},
-            { "ProjectConfig", false },
-            { "UserManage",false },
-            { "BIS", false },
-            { "DIOS", false},
-        };
+        //public Dictionary<string, bool> dicViewopen = new Dictionary<string, bool>()
+        //{
+        //    //{ "ProjectConfig.PCProjectSelectView", false },
+        //    //{ "UserManage.UserMainView",false },
+        //    //{ "TestOperate.TODeviceInitView", false },
+        //    //{ "DataOperate.ADOMainView", false},
+        //    { "ProjectConfig", false },
+        //    { "UserManage",false },
+        //    { "BIS", false },
+        //    { "DIOS", false},
+        //};
 
         private Dictionary<string, string> dicViewname = new Dictionary<string, string>()
         {
-            //{ "ProjectConfig.PCProjectSelectView", "项目信息配置" },
-            //{ "UserManage.UserMainView", "用户管理" },
-            //{ "TestOperate.TODeviceInitView", "测试管理" },
-            //{ "DataOperate.ADOMainView", "数据管理" },
-
-            { "ProjectConfig", "项目信息配置" },
+            { "ATEConfig", "项目信息配置" },
             { "UserManage", "用户管理" },
-            { "BIS", "测试管理" },
+            { "ATE", "测试管理" },
             { "DIOS", "数据管理" },
         };
 
 
-        private Dictionary<string, string> dicIconURL = new Dictionary<string, string>()
-        {
-            //{ "ProjectConfig.PCProjectSelectView", "软件升级.png" },
-            //{ "UserManage.UserMainView", "无权限.png" },
-            //{ "TestOperate.TODeviceInitView", "错误.png" },
-            //{ "DataOperate.ADOMainView", "统计.png" },
+        //private Dictionary<string, string> dicIconURL = new Dictionary<string, string>()
+        //{
+        //    { "ATEConfig", "软件升级.png" },
+        //    { "UserManage", "无权限.png" },
+        //    { "ATE", "错误.png" },
+        //    { "DIOS", "统计.png" },
+        //};
 
-            { "ProjectConfig", "软件升级.png" },
-            { "UserManage", "无权限.png" },
-            { "BIS", "错误.png" },
-            { "DIOS", "统计.png" },
-        };
-
+        /// <summary>
+        /// 软件AESKey字典
+        /// </summary>
         private Dictionary<string, string> dicAESKey = new Dictionary<string, string>() 
         {
-            { "ProjectConfig", "UHJvamVjdENvbmZpZw ==" },
+            { "ATEConfig", "QVRFQ29uZmln" },
             { "UserManage", "VXNlck1hbmFnZQ==" },
-            { "BIS", "QklT" },
+            { "ATE", "QVRF" },
             { "DIOS", "" },
         };
 
@@ -138,9 +131,9 @@ namespace IMX.ATS.Lander
             //{ "TestOperate.TODeviceInitView", Visibility.Visible },
             //{ "DataOperate.ADOMainView",(GlobalModel.UserInfo.Privilege & 4) == 4? Visibility.Visible : Visibility.Collapsed },
 
-            { "ProjectConfig", (GlobalModel.UserInfo.Privilege & 2) == 2? Visibility.Visible : Visibility.Collapsed },
+            { "ATEConfig", (GlobalModel.UserInfo.Privilege & 2) == 2? Visibility.Visible : Visibility.Collapsed },
             { "UserManage",Visibility.Visible },// (GlobalModel.UserInfo.Privilege & 8) == 8 ? Visibility.Visible : Visibility.Collapsed },
-            { "BIS", Visibility.Visible },
+            { "ATE", Visibility.Visible },
             { "DIOS",(GlobalModel.UserInfo.Privilege & 4) == 4? Visibility.Visible : Visibility.Collapsed },
         };
 
@@ -165,7 +158,7 @@ namespace IMX.ATS.Lander
             {
                 FunModules.Add(new FunModule 
                 { 
-                    ViewmodeName = item.Key, 
+                    ViewmodeName = item.Key,
                     FunModuleName = item.Value, 
                     FunModuleVisibility = dicVisibility[item.Key], 
                     ExeAESKey = dicAESKey[item.Key],

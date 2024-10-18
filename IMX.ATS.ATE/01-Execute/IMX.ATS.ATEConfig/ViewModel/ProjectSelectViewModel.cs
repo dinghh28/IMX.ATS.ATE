@@ -113,7 +113,7 @@ namespace IMX.ATS.ATEConfig
                 viewmodel.ProjectInfo = new Test_ProjectInfo();
                 viewmodel.DBCFileInfo = new Test_DBCFileInfo();
                 viewmodel.DBCConfig = new Test_DBCConfig();
-                viewmodel.FunctionInfo = new Test_Function();
+                //viewmodel.FunctionInfo = new Test_Function();
             }
             else
             {
@@ -129,9 +129,9 @@ namespace IMX.ATS.ATEConfig
                 DBOperate.Default.GetDBCConfig_ByProjectID(SelectedInfo.Info.Id).AttachIfSucceed(result => viewmodel.DBCConfig = result.Data);
                 //if (SelectedInfo.Info.IsUseDDBC)
                 //{
-                DBOperate.Default.GetFile_ByID(viewmodel.DBCConfig.DBCFileID).AttachIfSucceed(result => viewmodel.DBCFileInfo = result.Data);
+                //DBOperate.Default.GetFile_ByID(viewmodel.DBCConfig.DBCFileID).AttachIfSucceed(result => viewmodel.DBCFileInfo = result.Data);
                 //}
-                DBOperate.Default.SelectedFunction_ByProId(SelectedInfo.Info.Id).AttachIfSucceed(result => viewmodel.FunctionInfo = result.Data);
+                //DBOperate.Default.SelectedFunction_ByProId(SelectedInfo.Info.Id).AttachIfSucceed(result => viewmodel.FunctionInfo = result.Data);
 
             }
 
@@ -246,13 +246,6 @@ namespace IMX.ATS.ATEConfig
             {
                 SearchProjectInfos.Add(LsProductInfos[i]);
             }
-            //SearchProductInfos.Add("1111");
-            //SearchProductInfos.Add("1121");
-            //SearchProductInfos.Add("1211");
-            //SearchProductInfos.Add("1112");
-            //SearchProductInfos.Add("13331");
-            //SearchProductInfos.Add("1114");
-            //base.WindowLoadedExecute(obj);
         }
 
         //private void Win_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

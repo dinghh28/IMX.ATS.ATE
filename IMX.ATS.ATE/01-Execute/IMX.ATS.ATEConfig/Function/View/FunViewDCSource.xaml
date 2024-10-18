@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="IMX.ATS.ATEConfig.Function.FunViewDCSource"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IMX.ATS.ATEConfig.Function"
+             xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <Binding Path="FunDCSource" Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+    
+    <Grid>
+        <GroupBox Header="高压直流源配置">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="1.5*"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="01-运行状态" Grid.Row="0" Margin="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="设置运行状态："  VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            <ComboBox Grid.Column="1"  Height="35" Width="200"  ItemsSource="{Binding OperateList, Converter={StaticResource EnumValue}}" SelectedValue="{Binding OperateType, Converter={StaticResource EnumValue}}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            </ComboBox>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="02-参数设置" Grid.Row="1" Margin="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="90"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="输出电压：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBox Grid.Column="1"  Text="{Binding SetOutputVol}"  Height="35" Width="80" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                <Label  Grid.Column="2" Content="V" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            </Grid>
+
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="90"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="输出电流：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <TextBox Grid.Column="1" Text="{Binding SetOutputCur}" Height="35" Width="80"/>
+                                <Label  Grid.Column="2" Content="A" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            </Grid>
+
+                        </Grid>
+
+                    </GroupBox>
+                </Grid>
+
+                <GroupBox Header="模板执行完成后延时设置" Grid.Row="1" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="延时时间：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBox Grid.Column="1"  Text="{Binding  DelayAfterRun}"  Height="35" Width="80" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label  Grid.Column="2" Content="毫秒" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IMX.Function.Base;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,10 +26,12 @@ namespace IMX.ATS.ATEConfig
         /// <summary>
         /// 支持的自动试验配置字典[设备类型, 设备型号]
         /// </summary>
-        public static Dictionary<string, string> DicTestFlowItems { get; } = new Dictionary<string, string>
+        public static Dictionary<FuncitonType, Type> DicTestFlowItems { get; } = new Dictionary<FuncitonType, Type>
         {
             //{ "Equip", "工装设备配置"},
-            { "Product" , "产品指令操作"},
+            //{  FuncitonType.PRODUCT , },
         };
+
+
     }
 }

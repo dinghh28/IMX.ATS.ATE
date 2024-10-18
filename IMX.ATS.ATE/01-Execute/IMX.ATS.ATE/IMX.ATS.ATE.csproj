@@ -264,6 +264,10 @@
       <Project>{9AE13287-0976-4264-8210-0DC86E77FDE9}</Project>
       <Name>IMX.DB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\03-Common\IMX.ATE.Common\IMX.ATE.Common.csproj">
+      <Project>{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}</Project>
+      <Name>IMX.ATE.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

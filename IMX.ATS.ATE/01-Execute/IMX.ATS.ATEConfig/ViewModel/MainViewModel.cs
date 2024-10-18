@@ -25,6 +25,8 @@
 
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
+using IMX.ATE.Common;
+using IMX.DB.Model;
 using IMX.WPF.Resource;
 using Super.Zoo.Framework;
 using System;
@@ -36,7 +38,7 @@ using System.Windows;
 
 namespace IMX.ATS.ATEConfig
 {
-    public class MainViewModel : ExtendViewModelBase
+    public class MainViewModel : WindowViewModelBaseEx
     {
 
 
@@ -82,43 +84,53 @@ namespace IMX.ATS.ATEConfig
             get => flowconfigvisbility;
             set => Set(nameof(FlowConfigVisbility), ref flowconfigvisbility, value);
         }
+
+        /// <summary>
+        /// 当前登陆用户
+        /// </summary>
+        public string UserName=>GlobalModel.UserInfo?.UserName;
+
+        /// <summary>
+        /// 软件版本信息
+        /// </summary>
+        public string SoftwareVersion => SysteamInfo.SoftwareVersion;
         #endregion
 
         #region 界面绑定指令
 
         public RelayCommand<object> NavChangeCommand => new RelayCommand<object>(DoNavChanged);
 
-        public RelayCommand<object> WindowMin => new RelayCommand<object>((object o) =>
-        {
-            if (!(o is Window win))
-            {
-                return;
-            }
+        //public RelayCommand<object> WindowMin => new RelayCommand<object>((object o) =>
+        //{
+        //    if (!(o is Window win))
+        //    {
+        //        return;
+        //    }
 
-            win.WindowState = WindowState.Minimized;
-        });
+        //    win.WindowState = WindowState.Minimized;
+        //});
 
-        public RelayCommand<object> WindowMax => new RelayCommand<object>((object o) =>
-        {
-            if (!(o is Window win))
-            {
-                return;
-            }
+        //public RelayCommand<object> WindowMax => new RelayCommand<object>((object o) =>
+        //{
+        //    if (!(o is Window win))
+        //    {
+        //        return;
+        //    }
 
-            if (win.WindowState == WindowState.Normal)
-            {
-                win.WindowState = WindowState.Maximized;
-                win.Width = 900;
-                win.Height = 600;
-            }
-            else
-            {
-                win.WindowState = WindowState.Normal;
-                win.MaxHeight = SystemParameters.WorkArea.Size.Height;
-                win.MaxWidth = SystemParameters.WorkArea.Size.Width;
-            }
-            //win.WindowState = win.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
-        });
+        //    if (win.WindowState == WindowState.Normal)
+        //    {
+        //        win.WindowState = WindowState.Maximized;
+        //        win.Width = 900;
+        //        win.Height = 600;
+        //    }
+        //    else
+        //    {
+        //        win.WindowState = WindowState.Normal;
+        //        win.MaxHeight = SystemParameters.WorkArea.Size.Height;
+        //        win.MaxWidth = SystemParameters.WorkArea.Size.Width;
+        //    }
+        //    //win.WindowState = win.WindowState == WindowState.Normal ? WindowState.Maximized : WindowState.Normal;
+        //});
         #endregion
 
         /// <summary>
@@ -141,10 +153,10 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public Test_DBCConfig DBCConfig { get; set; } = null;
 
-        /// <summary>
-        /// 试验流程
-        /// </summary>
-        public Test_Function FunctionInfo { get; set; } = null;
+        ///// <summary>
+        ///// 试验流程
+        ///// </summary>
+        //public Test_Function FunctionInfo { get; set; } = null;
         #endregion
 
         #region 私有变量

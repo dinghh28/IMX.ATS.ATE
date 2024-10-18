@@ -59,10 +59,33 @@
             试验配置文件类型列表
             </summary>
         </member>
+        <member name="M:IMX.Function.ViewModel.FunViewModel.Create(System.Type)">
+            <summary>
+            创建步骤界面模板
+            </summary>
+            <param name="functionviewmodel"></param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Function.ViewModel.FunViewModel.InitFuntionConfigSuffixDictionary">
             <summary>
             初始化消息文件后缀名字典
             </summary>
+        </member>
+        <member name="M:IMX.Function.ViewModel.FunViewModel.Dispose">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Function.ViewModel.FunViewModel.#ctor">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="M:IMX.Function.ViewModel.FunViewModel.#ctor(IMX.Function.TestFunction)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="function"></param>
         </member>
         <member name="P:IMX.Function.ViewModel.IFunViewModel.IsInit">
             <summary>
@@ -84,6 +107,46 @@
             支持的试验方法类型
             </summary>
         </member>
+        <member name="T:IMX.Function.ViewModel.Model.DBCSendSignal">
+            <summary>
+            产品下发信号模型类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.DBCSendSignal.IsSend">
+            <summary>
+            是否发送信号
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.DBCSendSignal.ID">
+            <summary>
+            序号
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.DBCSendSignal.MessageID">
+            <summary>
+            信号ID
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.DBCSendSignal.MessageName">
+            <summary>
+            消息名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.DBCSendSignal.SignalName">
+            <summary>
+            信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.DBCSendSignal.CustomName">
+            <summary>
+            自定义信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.DBCSendSignal.SignalValue">
+            <summary>
+            发送值
+            </summary>
+        </member>
         <member name="T:IMX.Function.ViewModel.Model.FunctionInfo">
             <summary>
             试验时序信息
@@ -94,6 +157,21 @@
             试验步骤
             </summary>
         </member>
+        <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.FunctionName">
+            <summary>
+            试验步骤名称(模板类型)
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.CutomFuncName">
+            <summary>
+            自定义步骤名称(模板类型对应中文名称)
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.Content">
+            <summary>
+            备注(用户自定义信息)
+            </summary>
+        </member>
         <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.ModType">
             <summary>
             模板类型
@@ -102,6 +180,26 @@
         <member name="P:IMX.Function.ViewModel.Model.FunctionInfo.Model">
             <summary>
             试验界面模板类
+            </summary>
+        </member>
+        <member name="T:IMX.Function.ViewModel.Model.TestFlowItem">
+            <summary>
+            试验模板信息
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.TestFlowItem.Name">
+            <summary>
+            步骤模板名称
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.TestFlowItem.Tag">
+            <summary>
+            界面模型类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.TestFlowItem.Selcted">
+            <summary>
+            执行命令
             </summary>
         </member>
     </members>

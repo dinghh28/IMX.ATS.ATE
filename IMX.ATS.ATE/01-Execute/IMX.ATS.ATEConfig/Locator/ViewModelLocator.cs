@@ -1,6 +1,7 @@
 ﻿using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
 using H.WPF.Framework;
+using IMX.ATS.ATEConfig.Function;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,13 +30,13 @@ namespace IMX.ATS.ATEConfig
             SimpleIoc.Default.Register<DBCConfigViewModel>();
             ContentControlManager.Regiter<DBCConfigView>();
 
-            ////DBC文件上传
-            //SimpleIoc.Default.Register<PCDBCFileUploadViewModel>();
-            //ContentControlManager.Regiter<PCDBCFileUploadView>();
+            //DBC文件上传
+            SimpleIoc.Default.Register<DBCFileUploadViewModel>();
+            ContentControlManager.Regiter<DBCFileUploadView>();
 
-            ////DBC文件变更
-            //SimpleIoc.Default.Register<PCDBCFileChangeViewModel>();
-            //ContentControlManager.Regiter<PCDBCFileChangeView>();
+            //DBC文件变更
+            SimpleIoc.Default.Register<DBCFileChangeViewModel>();
+            ContentControlManager.Regiter<DBCFileChangeView>();
 
             ////试验保护配置
             //SimpleIoc.Default.Register<PCProtectConfigViewModel>();
@@ -46,12 +47,26 @@ namespace IMX.ATS.ATEConfig
             SimpleIoc.Default.Register<TestProcessViewModel>();
             ContentControlManager.Regiter<TestProcessView>();
 
+            //试验步骤配置
+            SimpleIoc.Default.Register<NewTestProcessViewModel>();
+            ContentControlManager.Regiter<NewTestProcessView>();
+
             ////工装设备操作模板
             //SimpleIoc.Default.Register<FunViewModelEquip>();
             //ContentControlManager.Regiter<FunViewEquip>();
 
             //SimpleIoc.Default.Register<FunViewModelProduct>();
             //ContentControlManager.Regiter<FunViewProduct>();
+
+            #region 流程步骤配置
+            //直流稳压源配置
+            SimpleIoc.Default.Register<FunViewModelAPU>();
+            ContentControlManager.Regiter<FunViewAPU>();
+
+            //高压直流压源配置
+            SimpleIoc.Default.Register<FunViewModelDCSource>();
+            ContentControlManager.Regiter<FunViewDCSource>();
+            #endregion
         }
 
         //#region PC-项目配置
@@ -75,15 +90,15 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public DBCConfigViewModel DBCConfig => ServiceLocator.Current.GetInstance<DBCConfigViewModel>();
 
-        ///// <summary>
-        ///// DBC文件上传
-        ///// </summary>
-        //public PCDBCFileUploadViewModel DBCFileUpload => ServiceLocator.Current.GetInstance<PCDBCFileUploadViewModel>();
+        /// <summary>
+        /// DBC文件上传
+        /// </summary>
+        public DBCFileUploadViewModel DBCFileUpload => ServiceLocator.Current.GetInstance<DBCFileUploadViewModel>();
 
-        ///// <summary>
-        ///// DBC文件变更
-        ///// </summary>
-        //public PCDBCFileChangeViewModel DBCFileChange => ServiceLocator.Current.GetInstance<PCDBCFileChangeViewModel>();
+        /// <summary>
+        /// DBC文件变更
+        /// </summary>
+        public DBCFileChangeViewModel DBCFileChange => ServiceLocator.Current.GetInstance<DBCFileChangeViewModel>();
 
         ///// <summary>
         ///// 试验保护配置
@@ -95,9 +110,14 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public TestProcessViewModel TestProcess => ServiceLocator.Current.GetInstance<TestProcessViewModel>();
 
+        /// <summary>
+        /// 新建试验流程
+        /// </summary>
+        public NewTestProcessViewModel NewTestProcess => ServiceLocator.Current.GetInstance<NewTestProcessViewModel>();
+
         //#endregion
 
-        //#region FUN
+        #region FUN
 
         ////工装设备操作模板
         //public FunViewModelEquip FunEquip => ServiceLocator.Current.GetInstance<FunViewModelEquip>();
@@ -105,7 +125,16 @@ namespace IMX.ATS.ATEConfig
         ////产品指令操作模版
         //public FunViewModelProduct FunEroduct => ServiceLocator.Current.GetInstance<FunViewModelProduct>();
 
-        //#endregion
+        /// <summary>
+        /// 稳压直流源配置模板
+        /// </summary>
+        public FunViewModelAPU FunAPU=> ServiceLocator.Current.GetInstance<FunViewModelAPU>();
+
+        /// <summary>
+        /// 高压直流源配置模板
+        /// </summary>
+        public FunViewModelDCSource FunDCSource => ServiceLocator.Current.GetInstance<FunViewModelDCSource>();
+        #endregion
 
     }
 }

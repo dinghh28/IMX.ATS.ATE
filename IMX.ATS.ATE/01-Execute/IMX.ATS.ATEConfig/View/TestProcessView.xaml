@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig"
-             xmlns:Behavior="clr-namespace:IMX.ATS.Resource;assembly=IMX.ATS.Resource"
-             xmlns:Datagrid="clr-namespace:IMX.ATS.Resource;assembly=IMX.ATS.Resource" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:Datagrid="clr-namespace:IMX.WPF.Resource;assembly=IMX.WPF.Resource" 
+             xmlns:i1="http://schemas.microsoft.com/xaml/behaviors" d:DataContext="{d:DesignInstance Type=local:TestProcessViewModel}"
              mc:Ignorable="d" 
              Name="Window"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/IMX.ATS.Resource;component/DefaultStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -45,7 +45,9 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="0" Content="当前流程：" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" MinWidth="200" ItemsSource="{Binding SolutionNames}" SelectedValue="{Binding SolutionName}"/>
+                    <ComboBox Grid.Column="1" MinWidth="200" 
+                              ItemsSource="{Binding SolutionNames}" 
+                              SelectedValue="{Binding SolutionName}"/>
                 </Grid>
                 <Grid Grid.Column="1" Margin="20,0,20,0">
                     <Grid.ColumnDefinitions>
@@ -70,6 +72,95 @@
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
 
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+                <GroupBox Grid.Row="0" Header="01-操作模板" 
+                          Style="{StaticResource ResourceKey=TitleGroup}">
+                    <ListBox ScrollViewer.VerticalScrollBarVisibility="Visible"
+                             Background="Transparent"
+                             ItemsSource="{Binding TestFlowItems}"
+                             SelectedItem="{Binding SelectedTestFlowItem}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <DockPanel LastChildFill="True"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border>
+                                    <!--<Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>-->
+                                    <Label Content="{Binding Name}" Width="200">
+                                        <i1:Interaction.Triggers>
+                                            <i1:EventTrigger EventName="MouseDoubleClick">
+                                                <i1:InvokeCommandAction Command="{Binding Selcted}" CommandParameter="{Binding Tag}"/>
+                                            </i1:EventTrigger>
+                                        </i1:Interaction.Triggers>
+                                    </Label>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        
+                    </ListBox>
+                </GroupBox>
+                
+                <GroupBox Grid.Row="1" Header="02-操作步骤" 
+                          Style="{StaticResource ResourceKey=TitleGroup}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Content="上移" FontSize="12" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Command="{Binding ChangeFunInfos}" CommandParameter="UP"/>
+                            <Button Grid.Column="1" Content="下移" FontSize="12" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Command="{Binding ChangeFunInfos}" CommandParameter="DOWN"/>
+                            <Button Grid.Column="2" Content="插入" FontSize="12" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Command="{Binding ChangeFunInfos}" CommandParameter="INSERT"/>
+                            <Button Grid.Column="3" Content="删除" FontSize="12" Width="35" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                    Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
+                        </Grid>
+                        
+                        <DataGrid Grid.Row="1" Background="Transparent" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                                  SelectedIndex="{Binding FunctionInfoIndex}" 
+                                  ItemsSource="{Binding FunctionInfos}" 
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False" 
+                                  CanUserSortColumns="False"
+                                  Datagrid:DragDropRowBehavior.Enabled="True">
+                            <DataGrid.InputBindings>
+                                <KeyBinding Key="Delete" Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
+                            </DataGrid.InputBindings>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="上移此行" Command="{Binding ChangeFunInfos}" CommandParameter="UP"/>
+                                    <MenuItem Header="下移此行" Command="{Binding ChangeFunInfos}" CommandParameter="DOWN"/>
+                                    <MenuItem Header="删除此行" Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="序号" Binding="{Binding Step}" Width="auto" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="试验操作模板"  Binding="{Binding CutomFuncName}" Width="auto" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="备注" Width="2*" Binding="{Binding Content}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+            
             <GroupBox Grid.Column="1" Style="{StaticResource ResourceKey=TitleGroup}" Header="03-详细配置" >
                 <ContentControl Content="{Binding ConfigContent}"/>
             </GroupBox>

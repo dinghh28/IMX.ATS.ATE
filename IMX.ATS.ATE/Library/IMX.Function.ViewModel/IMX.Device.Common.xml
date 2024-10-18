@@ -288,6 +288,21 @@
             <param name="strParam3">解析的参数3</param>
             <returns>驱动适配资源字符</returns>
         </member>
+        <member name="T:IMX.Device.Common.Enumerations.DeviceOutPutState">
+            <summary>
+            设备输出枚举类
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.DeviceOutPutState.OFF">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.DeviceOutPutState.ON">
+            <summary>
+            开启
+            </summary>
+        </member>
         <member name="T:IMX.Device.Common.DriveType">
             <summary>
             驱动类型接口
@@ -381,6 +396,21 @@
         <member name="F:IMX.Device.Common.EDeviceType.Relay">
             <summary>
             继电器控制板
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.APU">
+            <summary>
+            直流稳压源
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.ACSource">
+            <summary>
+            交流源
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.HVDCSource">
+            <summary>
+            高压直流源
             </summary>
         </member>
         <member name="T:IMX.Device.Common.SupportDeviceInfo">

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace IMX.ATS.Lander
+namespace IMX.ATS.ATEConfig.Function
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// FunViewAPU.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class FunViewAPU : UserControl
     {
-        public MainWindow()
+        public FunViewAPU()
         {
             InitializeComponent();
         }

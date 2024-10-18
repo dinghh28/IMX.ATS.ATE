@@ -23,17 +23,24 @@ namespace IMX.ATS.ATEConfig
         {
             //MessageBox.Show("进入Main函数体了（参数：" + args.Length + "）");
 
-            //if (args.Length < 1)
-            //{
-            //    MessageBox.Show("进入Main函数体了（参数不可为空）");
-            //    return;
-            //}
+#if DEBUG
+            var info = JsonConvert.DeserializeObject<UserInfo>("""{"UserName":"丁慧慧","Password":null,"Privilege":15,"Id":1,"CreateTime":"2024-09-03T18:13:07.1761652+08:00","UpdateTime":"0001-01-01T00:00:00","IsDeleted":false,"Sort":0}""");
+#else
+                if (args.Length < 1)
+                {
+                    MessageBox.Show("进入Main函数体了（参数不可为空）");
+                     return;
+                }
+
+            string arg = AES.Decrypt(args[0], "QVRFQ29uZmln");
+
+            var info = JsonConvert.DeserializeObject<UserInfo>(arg);
+#endif
+
 
             //MessageBox.Show($"进入Main函数体了（参数:{args[0]}）");
 
-            //string arg = AES.Decrypt(args[0], "QklT");
-            var info = JsonConvert.DeserializeObject<UserInfo>("""{"UserName":"丁慧慧","Password":null,"Privilege":15,"Id":1,"CreateTime":"2024-09-03T18:13:07.1761652+08:00","UpdateTime":"0001-01-01T00:00:00","IsDeleted":false,"Sort":0}""");
-            //var info = JsonConvert.DeserializeObject<UserInfo>(arg);
+
             if (info == null)
             {
                 MessageBox.Show("当前用户权限异常，无法使用该功能");

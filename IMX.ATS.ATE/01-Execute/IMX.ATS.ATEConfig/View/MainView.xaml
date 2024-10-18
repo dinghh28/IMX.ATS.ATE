@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IMX.ATS.ATEConfig" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:IMX.ATS.ATEConfig" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800"
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
@@ -39,30 +40,27 @@
                         <!--<GradientStop Color="#FF2424BB" Offset="0.333"/>-->
                     </LinearGradientBrush>
                 </Grid.Background>
-                <Grid.RowDefinitions>
+                <!--<Grid.RowDefinitions>
                     <RowDefinition Height="90"  />
                     <RowDefinition/>
                     <RowDefinition Height="100"/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="1" VerticalAlignment="Center">
+                </Grid.RowDefinitions>-->
+                <StackPanel Grid.Row="0" VerticalAlignment="Center">
                     <RadioButton Content="&#xe6a6;" IsChecked="True" Style="{StaticResource LeftMenuItemButtonStlye}" ToolTip="主页面"
                        Command="{Binding NavChangeCommand}" CommandParameter="ProjectInfo">
                     </RadioButton>
-                    <RadioButton Content="&#xe948;"  Style="{StaticResource LeftMenuItemButtonStlye}" 
+                    <RadioButton Content="&#xe62a;"  Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="DBC配置"
                        Command="{Binding NavChangeCommand}" CommandParameter="DBCConfig" Visibility="{Binding DBCConfigVisbility}"/>
-                    <!--<RadioButton Content="&#xe620;" Style="{StaticResource LeftMenuItemButtonStlye}" ToolTip="数据监控及设备操作"
-                       Command="{Binding NavChangeCommand}" CommandParameter="RealtimeDataView" />-->
-                    <!--Command="{Binding NavChangeCommand}" CommandParameter="MonitorView" />-->
-                    <RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
+                    <!--<RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="示波器参数配置" 
                        Command="{Binding NavChangeCommand}" CommandParameter="TestProcess"
-                             Visibility="{Binding FlowConfigVisbility}"/>
-                    <RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
+                             Visibility="{Binding FlowConfigVisbility}"/>-->
+                    <RadioButton Content="&#xe636;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="试验步骤配置" 
                        Command="{Binding NavChangeCommand}" CommandParameter="TestProcess"
                              Visibility="{Binding FlowConfigVisbility}"/>
-                    <RadioButton Content="&#xe60e;" Style="{StaticResource LeftMenuItemButtonStlye}" 
+                    <RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="试验方案配置"
                        Command="{Binding NavChangeCommand}" CommandParameter="FunctionConfig" 
                              Visibility="{Binding FlowConfigVisbility}"/>
@@ -91,6 +89,14 @@
 
                 <ContentControl Grid.Row="1" Content="{Binding MainContent}"/>
 
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="{Binding SoftwareVersion}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0">
+                    <Label Content="当前登陆用户：" Margin="0,0,10,0"/>
+                    <Label Content="{Binding UserName}"/>
+                </StackPanel>
             </Grid>
 
         </Grid>

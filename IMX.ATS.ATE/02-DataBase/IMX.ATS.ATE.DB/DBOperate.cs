@@ -348,6 +348,558 @@ namespace IMX.DB
         }
         #endregion
 
+        #region 项目信息操作
+        /// <summary>
+        /// 获取所有项目信息
+        /// </summary>
+        /// <returns>项目信息列表</returns>
+        public OperateResult<List<Test_ProjectInfo>> SelectedProjectInfo_All()
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SelectedProjectInfo_All), LastError);
+                return OperateResult<List<Test_ProjectInfo>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_ProjectInfo>().ToList();
+                return OperateResult<List<Test_ProjectInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SelectedProjectInfo_All), LastError);
+                return OperateResult<List<Test_ProjectInfo>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新项目信息
+        /// </summary>
+        /// <param name="projectInfo"></param>
+        /// <returns></returns>
+        public OperateResult UpdataProjectInfo(Test_ProjectInfo projectInfo)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateUserPassword), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+                projectInfo.Update();
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateUserPassword), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 添加项目信息
+        /// </summary>
+        /// <param name="projectInfo"></param>
+        /// <returns></returns>
+        public OperateResult InsertProjectInfo(Test_ProjectInfo projectInfo)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateUserPassword), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+                int count = Test_ProjectInfo.Where(a => a.ProjectSN == projectInfo.ProjectSN).ToList().Count;
+                if (count > 0)
+                {
+                    LastError = $"项目编号已存在，请重新输出项目编号！";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateUserPassword), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+                projectInfo.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateUserPassword), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取所有项目名称
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult<List<string>> GetProjectNames()
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                return OperateResult<List<string>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_ProjectInfo>().Distinct().ToList(x => x.ProjectName);
+                return OperateResult<List<string>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取项目详细信息(通过项目名称)
+        /// </summary>
+        /// <param name="name">项目名称</param>
+        /// <returns></returns>
+        public OperateResult<Test_ProjectInfo> GetProjectInfo_ByName(string name)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                return OperateResult<Test_ProjectInfo>.Failed(null, LastError);
+            }
+
+            try
+            {
+                var items = Test_ProjectInfo.Where(x => x.ProjectName == name).ToOne();
+
+                return OperateResult<Test_ProjectInfo>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                return OperateResult<Test_ProjectInfo>.Excepted(null, ex);
+            }
+        }
+
+
+        #endregion
+
+        #region DBC文件操作
+        public OperateResult InsertDBCFile(Test_DBCFileInfo fileInfo)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertDBCFile), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+                if (fileInfo == null)
+                {
+                    LastError = $"DBC文件信息不存在";
+                    Logger.Error(nameof(DBOperate), nameof(InsertDBCFile), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                fileInfo.Insert();
+                //int row = Sqlite.Insert(fileInfo).ExecuteAffrows();
+
+                //if (row < 1)
+                //{
+                //    LastError = $"DBC文件未实际发生存储";
+                //    Logger.Error(nameof(DBOperate), nameof(AddNewUser), LastError);
+                //    return OperateResult.Failed(LastError);
+                //}
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertDBCFile), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        public OperateResult<List<Test_DBCFileInfo>> GetFiles()
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetFiles), LastError);
+                return OperateResult<List<Test_DBCFileInfo>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_DBCFileInfo>().ToList();
+
+                return OperateResult<List<Test_DBCFileInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetFiles), LastError);
+                return OperateResult<List<Test_DBCFileInfo>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取DBC文件信息（通过DBC文件库ID）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public OperateResult<Test_DBCFileInfo> GetFile_ByID(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetFiles), LastError);
+                return OperateResult<Test_DBCFileInfo>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Test_DBCFileInfo.Find(id);
+
+                return OperateResult<Test_DBCFileInfo>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetFiles), LastError);
+                return OperateResult<Test_DBCFileInfo>.Excepted(null, ex);
+            }
+        }
+        #endregion
+
+        #region DBC配置信息操作
+        /// <summary>
+        /// 更新DBC配置所关联的DBC文件
+        /// </summary>
+        /// <param name="configid">DBC配置id</param>
+        /// <param name="fileid">DBC文件ID</param>
+        /// <returns></returns>
+        public OperateResult UpdateDBCFile(int configid, int fileid)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                var item = Test_DBCConfig.Find(configid);
+
+                if (item == null)
+                {
+                    new Test_DBCConfig { DBCFileID = fileid }.Save();
+                }
+
+                //int row = Sqlite.Update<Test_DBCConfig>(configid).Set(x => x.DBCFileID, fileid).ExecuteAffrows();
+
+                //if (row < 1)
+                //{
+                //    LastError = $"DBC文件未实际发生变更";
+                //    Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
+                //    return OperateResult.Failed(LastError);
+                //}
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 保存DBC配置
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public OperateResult SaveDBCConfig(Test_DBCConfig config)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SaveDBCConfig), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                config.Save();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SaveDBCConfig), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新DBC配置
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public OperateResult UpdateDBCConfig(Test_DBCConfig config)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SaveDBCConfig), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                config.Update();
+
+                //var repo = Sqlite.GetRepository<Test_DBCConfig>(); //可以从 IOC 容器中获取
+                //var item = repo.Where(a => a.Id == config.Id).First();  //此时快照 item
+                //item.UpdateTime = DateTime.Now;
+                //item.Test_DBCReceiveSignals = config.Test_DBCReceiveSignals;
+                //item.Test_DBCSendSignals = config.Test_DBCSendSignals;
+                //repo.Update(item);
+
+                // config.UpdateTime = DateTime.Now;
+                // Sqlite.Update<Test_DBCConfig>(config.Id).Set(x=>x.Test_DBCReceiveSignals, config.Test_DBCReceiveSignals);
+                //bool reslut= config.Update();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SaveDBCConfig), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+        /// <summary>
+        /// 插入DBC配置
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public OperateResult InsertDBCConfig(Test_DBCConfig config)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertDBCConfig), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                config.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertDBCConfig), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取DBC配置信息(通过项目ID)
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<Test_DBCConfig> GetDBCConfig_ByProjectID(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetDBCConfig_ByProjectID), LastError);
+                return OperateResult<Test_DBCConfig>.Failed(null, LastError);
+            }
+
+            try
+            {
+                var items = Sqlite.Select<Test_DBCConfig>().Where(x => x.ProjectID == id).ToOne();
+
+                return OperateResult<Test_DBCConfig>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetDBCConfig_ByProjectID), LastError);
+                return OperateResult<Test_DBCConfig>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取DBC上报信息(通过项目ID)
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<List<Test_DBCInfo>> GetDBCReceiveSignals(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetDBCReceiveSignals), LastError);
+                return OperateResult<List<Test_DBCInfo>>.Failed(null, LastError);
+            }
+
+            try
+            {
+
+                var items = Sqlite.Select<Test_DBCConfig>().Where(x => x.ProjectID == id).ToOne(x => x.Test_DBCReceiveSignals);
+
+                return OperateResult<List<Test_DBCInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetDBCReceiveSignals), LastError);
+                return OperateResult<List<Test_DBCInfo>>.Excepted(null, ex);
+            }
+        }
+        #endregion
+
+        #region 项目流程操作
+        /// <summary>
+        /// 插入试验流程
+        /// </summary>
+        /// <param name="function">试验流程</param>
+        /// <returns></returns>
+        public OperateResult InsertTestProccess(Test_Process function) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                function.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取流程名字
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<List<string>> GetProcessName(int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult<List<string>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id).ToList(x=>x.FunctionName);
+
+                return OperateResult<List<string>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取流程步骤
+        /// </summary>
+        /// <param name="funcname">流程名称</param>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<List<ModTestProcess>> GetFlowsByNameID(string funcname, int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<List<ModTestProcess>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id && x.FunctionName == funcname).ToOne(x => x.Test_Flows) ?? new List<ModTestProcess>();
+
+                return OperateResult<List<ModTestProcess>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<List<ModTestProcess>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新当前流程试验步骤
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <param name="funcname">流程名称</param>
+        /// <param name="processes">试验步骤</param>
+        /// <returns></returns>
+        public OperateResult UpdateProcess(int id, string funcname, List<ModTestProcess> processes) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+
+                int row = Sqlite.Update<Test_Process>()
+                            .Where(x => x.ProjectID == id && x.FunctionName == funcname)
+                            .Set(X => X.Test_Flows, processes)
+                            .Set(x => x.UpdateTime, DateTime.Now)
+                            .ExecuteAffrows();
+
+                if (row < 1)
+                {
+                    LastError = $"测试流程 【{funcname}】 未实际发生变更";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+        #endregion
+
         public void SetError(string error) => LastError = error;
 
         #endregion

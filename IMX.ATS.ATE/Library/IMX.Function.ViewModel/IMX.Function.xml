@@ -4,6 +4,151 @@
         <name>IMX.Function</name>
     </assembly>
     <members>
+        <member name="T:IMX.Function.FunConfig_ACSource">
+            <summary>
+            AC交流源试验配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_ACSource.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_ACSource.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_ACSource.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_APU">
+            <summary>
+            文雅支流元试验步骤配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_APU.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_APU.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_APU.OperateRange">
+            <summary>
+            设置电压挡位
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_APU.Set_Vol">
+            <summary>
+            设置电压
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_APU.Set_Cur">
+            <summary>
+            设置电流
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_APU.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_APU.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_APU.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_HVDCSource">
+            <summary>
+            高压直流源试验步骤配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_HVDCSource.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_HVDCSource.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_HVDCSource.Set_Vol">
+            <summary>
+            设置电压
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_HVDCSource.Set_Cur">
+            <summary>
+            设置电流
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_HVDCSource.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_HVDCSource.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_HVDCSource.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_Product">
+            <summary>
+            产品下发指令配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_Product.Identify">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_Product.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_Product.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_Product.SendSignals">
+            <summary>
+            产品发送列表
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_Product.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_Product.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_Product.Finalize">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_Product.Execute(System.Object)">
+            <summary>
+            
+            </summary>
+            <param name="device"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Function.Config.FunConfig_Relay">
+            <summary>
+            继电器板试验流程配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_Relay.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_Relay.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_Relay.Set_OutPutStates">
+            <summary>
+            继电器输出状态
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_Relay.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_Relay.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
         <member name="T:IMX.Function.TestFunction">
             <summary>
             试验方案类

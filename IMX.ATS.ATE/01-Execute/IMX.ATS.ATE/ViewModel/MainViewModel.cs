@@ -26,6 +26,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
+using IMX.ATE.Common;
 using IMX.Common;
 using IMX.WPF.Resource;
 using System;
@@ -40,7 +41,7 @@ using System.Windows.Media;
 
 namespace IMX.ATS.ATE
 {
-    public class MainViewModel : ExtendViewModelBase
+    public class MainViewModel : WindowViewModelBaseEx
     {
 
         #region 公共属性
@@ -117,6 +118,15 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ATEExecuteInfos), ref ateexecuteinfos, value);
         }
 
+        /// <summary>
+        /// 当前登陆用户
+        /// </summary>
+        public string UserName => GlobalModel.UserInfo?.UserName;
+
+        /// <summary>
+        /// 软件版本信息
+        /// </summary>
+        public string SoftwareVersion => SysteamInfo.SoftwareVersion;
 
         #endregion
 
@@ -124,53 +134,53 @@ namespace IMX.ATS.ATE
         public RelayCommand StartTest => new RelayCommand(StartedTest);
 
         #region 系统窗口指令
-        /// <summary>
-        /// 窗口最大化指令
-        /// </summary>
-        public RelayCommand<object> WindowMax => new RelayCommand<object>((o) =>
-        {
-            if (!(o is Window win))
-            {
-                return;
-            }
-            if (win.WindowState == WindowState.Maximized)
-            {
-                win.WindowState = WindowState.Normal;
-                win.Width = 1000;
-                win.Height = 600;
-            }
-            else if (win.WindowState == WindowState.Normal)
-            {
-                //double screenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-                //double screenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+        ///// <summary>
+        ///// 窗口最大化指令
+        ///// </summary>
+        //public RelayCommand<object> WindowMax => new RelayCommand<object>((o) =>
+        //{
+        //    if (!(o is Window win))
+        //    {
+        //        return;
+        //    }
+        //    if (win.WindowState == WindowState.Maximized)
+        //    {
+        //        win.WindowState = WindowState.Normal;
+        //        win.Width = 1000;
+        //        win.Height = 600;
+        //    }
+        //    else if (win.WindowState == WindowState.Normal)
+        //    {
+        //        //double screenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+        //        //double screenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
 
-                win.WindowState = WindowState.Maximized;
+        //        win.WindowState = WindowState.Maximized;
 
-                //win.Height = SystemParameters.WorkArea.Size.Height;
-                //win.Width = SystemParameters.WorkArea.Size.Width;
-
-
-                //this.MaxWidth = screenWidth * 0.5; // 设置为屏幕宽度的80%
-                //this.MaxHeight = screenHeight * 0.48; // 设置为屏幕高度的80%
-                //this.MaxWidth = screenWidth; // 设置为屏幕宽度的80%
-                //this.MaxHeight = screenHeight; // 设置为屏幕高度的80%
+        //        //win.Height = SystemParameters.WorkArea.Size.Height;
+        //        //win.Width = SystemParameters.WorkArea.Size.Width;
 
 
-                //SystemCommands.MaximizeWindow(win);
-            }
-        });
+        //        //this.MaxWidth = screenWidth * 0.5; // 设置为屏幕宽度的80%
+        //        //this.MaxHeight = screenHeight * 0.48; // 设置为屏幕高度的80%
+        //        //this.MaxWidth = screenWidth; // 设置为屏幕宽度的80%
+        //        //this.MaxHeight = screenHeight; // 设置为屏幕高度的80%
 
-        /// <summary>
-        /// 窗口最小化指令
-        /// </summary>
-        public RelayCommand<object> WindowMin => new RelayCommand<object>((o) =>
-        {
-            if (!(o is Window win))
-            {
-                return;
-            }
-            win.WindowState = WindowState.Minimized;
-        });
+
+        //        //SystemCommands.MaximizeWindow(win);
+        //    }
+        //});
+
+        ///// <summary>
+        ///// 窗口最小化指令
+        ///// </summary>
+        //public RelayCommand<object> WindowMin => new RelayCommand<object>((o) =>
+        //{
+        //    if (!(o is Window win))
+        //    {
+        //        return;
+        //    }
+        //    win.WindowState = WindowState.Minimized;
+        //});
         #endregion
 
         #endregion

@@ -26,6 +26,11 @@ namespace IMX.DB.Model
         public string ProjectName { get; set; }
 
         /// <summary>
+        /// 是否使用DBC
+        /// </summary>
+        public bool IsUseDDBC { get; set; } = false;
+
+        /// <summary>
         /// 标定电压
         /// </summary>
         public uint RatedVol { get; set; }
@@ -72,6 +77,11 @@ namespace IMX.DB.Model
         /// </summary>
         [Column(StringLength = -1)]
         public byte[] FileContent { get; set; }
+
+        /// <summary>
+        /// 文件上传人员
+        /// </summary>
+        public string Operator { get; set; }
     }
 
     /// <summary>
@@ -100,6 +110,11 @@ namespace IMX.DB.Model
         /// </summary>
         [JsonMap]
         public List<Test_DBCInfo> Test_DBCReceiveSignals { get; set; } = new List<Test_DBCInfo>();
+
+        /// <summary>
+        /// 上次更新人员
+        /// </summary>
+        public string UpdateOperator { get; set; }
     }
 
     /// <summary>
@@ -132,10 +147,9 @@ namespace IMX.DB.Model
         /// </summary>
         public string SignalInitValue { get; set; }
     }
-
     #endregion
 
-    public class Test_Function : BaseEntity<Test_Function, int>
+    public class Test_Process : BaseEntity<Test_Process, int>
     {
 
         //public int FunctionID { get; set; }
@@ -154,13 +168,18 @@ namespace IMX.DB.Model
         /// 试验流程
         /// </summary>
         [JsonMap]
-        public List<ModTestFunction> Test_Flows { get; set; }
+        public List<ModTestProcess> Test_Flows { get; set; }
+
+        /// <summary>
+        /// 上次更新人员
+        /// </summary>
+        public string UpdateOperator { get; set; }
     }
 
     /// <summary>
     /// 实验流程操作存储模版类
     /// </summary>
-    public class ModTestFunction
+    public class ModTestProcess
     {
         /// <summary>
         /// 步骤

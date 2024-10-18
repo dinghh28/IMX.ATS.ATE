@@ -54,6 +54,11 @@ namespace IMX.DB.Model
         public ResultState Result { get; set; } = ResultState.UNACCOMPLISHED;
 
         /// <summary>
+        /// 操作人员
+        /// </summary>
+        public string Operator { get; set; } = "amdin";
+
+        /// <summary>
         /// 故障信息
         /// </summary>
         public string ErrorInfo { get; set; } = string.Empty;

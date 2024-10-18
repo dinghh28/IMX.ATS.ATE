@@ -1,10 +1,10 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
-using IMX.ATS.Common;
-using IMX.ATS.DB;
-using IMX.ATS.DB.Model;
-using IMX.ATS.Logger;
+using IMX.Common;
+using IMX.DB;
+using IMX.DB.Model;
+using IMX.Logger;
 using OfficeOpenXml;
 using Super.Zoo.Framework;
 using System;
@@ -279,32 +279,32 @@ namespace IMX.ATS.DIOS
                 //    //SuperDHHLoggerManager.Error(LoggerType.DBLOG, nameof(QueryTestITemData), nameof(DBOperate.Default.GetTestInfoByTestSN), idresult.Message);
                 //}
 
-                OperateResult<List<Test_ItemInfo>> Testidresult = DBOperate.Default.GetTestItems(dicProjectInfo[SearchTestText].Id, TestStartTime, TestEndTime.AddDays(1));// : DBOperate.Default.GetTestItemByIDandTime(Product_SN, TestStartTime, TestEndTime);
+                //OperateResult<List<Test_ItemInfo>> Testidresult = DBOperate.Default.GetTestItems(dicProjectInfo[SearchTestText].Id, TestStartTime, TestEndTime.AddDays(1));// : DBOperate.Default.GetTestItemByIDandTime(Product_SN, TestStartTime, TestEndTime);
 
 
-                if (!Testidresult)
-                {
-                    System.Windows.Forms.MessageBox.Show($"数据库查询项目信息异常：{Testidresult.Message}");
-                    //SuperDHHLoggerManager.Error(LoggerType.DBLOG, nameof(QueryTestITemData), nameof(DBOperate.Default.GetTetsItemByTestID), Testidresult.Message); 
-                    return;
-                }
+                //if (!Testidresult)
+                //{
+                //    System.Windows.Forms.MessageBox.Show($"数据库查询项目信息异常：{Testidresult.Message}");
+                //    //SuperDHHLoggerManager.Error(LoggerType.DBLOG, nameof(QueryTestITemData), nameof(DBOperate.Default.GetTetsItemByTestID), Testidresult.Message); 
+                //    return;
+                //}
 
-                TestItemDataTable.Clear();
-                foreach (Test_ItemInfo item in Testidresult.Data)
-                {
-                    TestItemDataTable.Add(new TestItem
-                    {
-                        IsSelect = false,
-                        Test_ID = item.ProjectID,
-                        TestItem_ID = item.Id,
-                        Pro_SN = item.ProductSN,
-                        Result = item.Result,
-                        ErrorInfo = item.ErrorInfo,
-                        Test_ActTime = item.ActualRunTime,
-                        Test_StartTime = item.CreateTime,
-                        Test_EndTime = item.UpdateTime,
-                    });
-                }
+                //TestItemDataTable.Clear();
+                //foreach (Test_ItemInfo item in Testidresult.Data)
+                //{
+                //    TestItemDataTable.Add(new TestItem
+                //    {
+                //        IsSelect = false,
+                //        Test_ID = item.ProjectID,
+                //        TestItem_ID = item.Id,
+                //        Pro_SN = item.ProductSN,
+                //        Result = item.Result,
+                //        ErrorInfo = item.ErrorInfo,
+                //        Test_ActTime = item.ActualRunTime,
+                //        Test_StartTime = item.CreateTime,
+                //        Test_EndTime = item.UpdateTime,
+                //    });
+                //}
                 //TestItemDataTable = Testidresult.Data.Clone();
                 //TestItemDataTable = Testidresult.Data;
 
@@ -638,17 +638,18 @@ namespace IMX.ATS.DIOS
                 DateTime stoptime = Convert.ToDateTime(TestItemDataTable[Convert.ToInt32(Index)].Test_EndTime);
                 string prosn = TestItemDataTable[Convert.ToInt32(Index)].Pro_SN;
 
-                // 从数据库获取数据的方法  
-                //Testdataresult = DBOperate.Default.GetTestData(testitemid, $"{prosn}_{time.Ticks}");
-                Testdataresult = DBOperate.Default.GetTestData(testitemid, Starttime, stoptime);
-                if (!Testdataresult)
-                { 
-                    SuperDHHLoggerManager.Error(LoggerType.DBLOG, nameof(DIOS), nameof(GetTestData), Testdataresult.Message);
-                    return OperateResult<DataTable>.Failed(null, Testdataresult.Message);
-                }
+                //// 从数据库获取数据的方法  
+                ////Testdataresult = DBOperate.Default.GetTestData(testitemid, $"{prosn}_{time.Ticks}");
+                //Testdataresult = DBOperate.Default.GetTestData(testitemid, Starttime, stoptime);
+                //if (!Testdataresult)
+                //{ 
+                //    SuperDHHLoggerManager.Error(LoggerType.DBLOG, nameof(DIOS), nameof(GetTestData), Testdataresult.Message);
+                //    return OperateResult<DataTable>.Failed(null, Testdataresult.Message);
+                //}
 
-                DataTable item = JsonToDataTableConverter(Testdataresult.Data);
-                return OperateResult<DataTable>.Succeed(item);
+                //DataTable item = JsonToDataTableConverter(Testdataresult.Data);
+                //return OperateResult<DataTable>.Succeed(item);
+                return OperateResult<DataTable>.Succeed(new DataTable());
             }
             catch (Exception ex)
             {

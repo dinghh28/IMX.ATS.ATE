@@ -4,6 +4,292 @@
         <name>IMX.Device</name>
     </assembly>
     <members>
+        <member name="T:IMX.Device.Acquisition.Acquisition_AN87330_Operate">
+            <summary>
+            艾诺87330功率分析仪操作类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.Acquisition_AN87330_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Acquisition.Acquisition_AN87330_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Acquisition.Acquisition_AN87330_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Warp.Device_ReadAll">
+            <summary>
+            单次扫描读取所有数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Warp.ModbusCheck_03(System.Collections.Generic.IList{System.Byte})">
+            <summary>
+            modbus_03功能码校验
+            </summary>
+            <param name="value">待校验报文</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Acquisition.AN87330Data">
+            <summary>
+            艾诺8733分析仪读取数据类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87330Data.EffectiveVol1">
+            <summary>
+            1通道有效电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87330Data.EffectiveVol2">
+            <summary>
+            2通道有效电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87330Data.EffectiveVol3">
+            <summary>
+            3通道有效电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87330Data.EffectiveCur1">
+            <summary>
+            1通道有效电流值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87330Data.EffectiveCur2">
+            <summary>
+            2通道有效电流值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87330Data.EffectiveCur3">
+            <summary>
+            3通道有效电流值
+            </summary>
+        </member>
+        <member name="T:IMX.Device.ACSource.ACSource_ANFH010S_Operate">
+            <summary>
+            艾诺ANFH010S系列交流源
+            </summary>
+        </member>
+        <member name="P:IMX.Device.ACSource.ACSource_ANFH010S_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.ACSource.ACSource_ANFH010S_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.ACSource.ACSource_ANFH010S_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.SetValue_Singel(System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="F:IMX.Device.ACSource.ACSource_ANFH010S_Warp.HEADER">
+            <summary>
+            帧头
+            </summary>
+        </member>
+        <member name="F:IMX.Device.ACSource.ACSource_ANFH010S_Warp.END">
+            <summary>
+            帧尾
+            </summary>
+        </member>
+        <member name="F:IMX.Device.ACSource.ACSource_ANFH010S_Warp.IsOn">
+            <summary>
+            设备运行状态
+            </summary>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Warp.SetGroupParameters(System.Double,System.Double)">
+            <summary>
+            艾诺组参数设置
+            </summary>
+            <param name="vol">电压</param>
+            <param name="frq">频率</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Warp.ReadElectrical">
+            <summary>
+            读取电气测量值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.APU.APU_IT6800_Operate">
+            <summary>
+            IT6800系列直流稳压源操作类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.APU.APU_IT6800_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.APU.APU_IT6800_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.APU.APU_IT6800_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.SetValue(System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="F:IMX.Device.APU.APU_IT6800_Warp.HEADER">
+            <summary>
+            帧头
+            </summary>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Warp.SetRemote(System.Boolean)">
+            <summary>
+            远程模式设置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Warp.Set_Value(System.Double,System.Double)">
+            <summary>
+            电压电流参数设置
+            </summary>
+            <param name="Vvalue">启动电压</param>
+            <param name="Ivalue">启动电流</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Warp.ReadElectrical">
+            <summary>
+            读取电气信息
+            </summary>
+            <returns>操作结果@双精度浮点数列表</returns>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Warp.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Warp.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate">
+            <summary>
+            艾诺AN50300高压直流源操作类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetValue(System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="F:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.HEADER">
+            <summary>
+            帧头
+            </summary>
+        </member>
+        <member name="F:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.END">
+            <summary>
+            帧尾
+            </summary>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.Set_Value(System.Double,System.Double)">
+            <summary>
+            电压电流参数设置
+            </summary>
+            <param name="Vvalue">启动电压</param>
+            <param name="Ivalue">启动电流</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.ReadOutPutVol">
+            <summary>
+            查询输出电压
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.ReadOutPutCur">
+            <summary>
+            查询输出电压
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Product.Product_CAN_Operate">
+            <summary>
+            CAN通讯类型产品操作类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Product.Product_CAN_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Product.Product_CAN_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Product.Product_CAN_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Device.Product.Product_CAN_Operate.DicMessage">
             <summary>
             消息字典
@@ -24,6 +310,34 @@
             是否已加载DBC文件
             </summary>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.LoadMessageFile(System.String)">
+            <summary>
+            加载文件交互器
+            </summary>
+            <param name="path">文件地址</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.LoadMessageFile(Piggy.VehicleBus.Common.IMessageFileLoader)">
+            <summary>
+            加载文件交互器
+            </summary>
+            <param name="fileLoader">文件交互器</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.LoadMessageFile(System.Byte[],System.String)">
+            <summary>
+            加载文件交互器
+            </summary>
+            <param name="fileData"></param>
+            <param name="suffix"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.Initialize">
+            <summary>
+            初始化
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.StartCommunication">
             <summary>
             启动交互器通讯
@@ -38,6 +352,12 @@
         <member name="M:IMX.Device.Product.Product_CAN_Operate.SetReceiveState(System.Boolean)">
             <summary>
             更改报文接收状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.LockMessages">
+            <summary>
+            锁定接收发送信号
             </summary>
             <returns></returns>
         </member>
@@ -149,6 +469,27 @@
             </summary>
             <param name="messages"></param>
             <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.#ctor">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志交互器</param>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志交互器</param>
+            <param name="drive">驱动接口</param>
         </member>
         <member name="P:IMX.Device.Product.Product_CAN_Warp.MessageInteractor">
             <summary>
@@ -325,7 +666,7 @@
             <summary>
             开始消息发送
             </summary>
-            <param name="message">消息名称</param>
+            <param name="messageId">消息名称</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.StartMessageSend(System.Collections.Generic.List{System.UInt32})">
@@ -384,6 +725,168 @@
             <param name="messages"></param>
             <returns></returns>
         </member>
+        <member name="T:IMX.Device.Relay.Relay_ZS_Operate">
+            <summary>
+            中盛继电器操作类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_ZS_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_ZS_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_ZS_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Device_Set(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Device_SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Device_SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Warp.SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
+            <summary>
+            设备全操作
+            </summary>
+            <param name="value">0表示输入关，1 表示开。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Warp.SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备全操作
+            </summary>
+            <param name="value">0表示输入关，1 表示开。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Warp.Set_Value(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            单继电器控制
+            </summary>
+            <param name="channel">对应寄存器地址（从1开始算）</param>
+            <param name="value">输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Warp.Set_Value(System.String)">
+            <summary>
+            全通道设置
+            </summary>
+            <param name="value">bit字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Warp.ReadAllInfo">
+            <summary>
+            读取所有通道状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.DeviceInerfaces.IAcquisition">
+            <summary>
+            采样系统操作接口
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Base.IACSource">
+            <summary>
+            交流源操作接口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.IACSource.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭设备
+            </summary>
+            <param name="value">设备输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IACSource.SetValue_Singel(System.Double,System.Double)">
+            <summary>
+            单通道设备设置（默认第一通路起效）
+            </summary>
+            <param name="vol">设置电压</param>
+            <param name="frq">设置频率</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.IAPU">
+            <summary>
+            直流稳压源操作接口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.IAPU.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭设备
+            </summary>
+            <param name="value">设备输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IAPU.SetValue(System.Double,System.Double)">
+            <summary>
+            电压电流参数设置
+            </summary>
+            <param name="Vvalue">电压</param>
+            <param name="Ivalue">电流</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.IHVDCSource">
+            <summary>
+            高压直流源操作接口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.IHVDCSource.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭设备
+            </summary>
+            <param name="value">设备输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IHVDCSource.SetValue(System.Double,System.Double)">
+            <summary>
+            电压电流参数设置
+            </summary>
+            <param name="Vvalue">电压</param>
+            <param name="Ivalue">电流</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.IRelay">
+            <summary>
+            继电器板设备操作接口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.IRelay.Device_Set(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            单继电器控制
+            </summary>
+            <param name="channel">继电器通道号(从1开始算)</param>
+            <param name="value">输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IRelay.Device_SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
+            <summary>
+            全通道控制
+            </summary>
+            <param name="Values">输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IRelay.Device_SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            全通道统一状态控制
+            </summary>
+            <param name="value">输出状态</param>
+            <returns></returns>
+        </member>
         <member name="P:IMX.Device.Base.Device_Config.Device_Name">
             <summary>
             设备名称
@@ -411,6 +914,24 @@
             设备操作抽象类
             </summary>
         </member>
+        <member name="P:IMX.Device.Base.Device_Operate.Identify">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.IsInitOK">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.Config">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.DeviceConfig">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Device.Base.Device_Operate.DeviceName">
             <summary>
             设备名称
@@ -420,6 +941,27 @@
             <summary>
             设备操作
             </summary>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.Logger">
+            <summary>
+            日志注册器
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.OutterLogger">
+            <summary>
+            外部日志注册器入驻标志
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.LastError">
+            <summary>
+            最后一次故障信息
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.ReadInfos">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.DicReadInfo">
+            <inheritdoc/>
         </member>
         <member name="F:IMX.Device.Base.Device_Operate.outtercom">
             <summary>
@@ -435,6 +977,27 @@
             <summary>
             设备操作类型列表
             </summary>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Init(IMX.Device.Base.Device_Config,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Init(IMX.Device.Base.Device_Config)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.UnInit">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.SetError(System.String)">
+            <summary>
+            设置错误信息
+            </summary>
+            <param name="error">异常信息</param>
         </member>
         <member name="M:IMX.Device.Base.Device_Operate.Create(IMX.Device.Common.EDeviceType,System.String)">
             <summary>
@@ -456,10 +1019,84 @@
             初始化Visa驱动字典
             </summary>
         </member>
+        <member name="M:IMX.Device.Base.Device_Operate.#ctor">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志注册器</param>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志注册器</param>
+            <param name="drive">驱动接口</param>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Finalize">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Dispose">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Base.DeviceOperate.Device_Warp">
+            <summary>
+            设备通讯协议层抽象类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.Identify">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.Version">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.IsInitOK">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.Config">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.Drive">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.OutterLogger">
+            <summary>
+            外部日志注册器注入标志
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.LastError">
+            <summary>
+            上次故障信息
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.Logger">
+            <summary>
+            日志注册器
+            </summary>
+        </member>
         <member name="F:IMX.Device.Base.DeviceOperate.Device_Warp.OutterDrive">
             <summary>
             使用传入驱动
             </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.#ctor">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志注册器</param>
         </member>
         <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.CreatDrive(IMX.Device.Common.DriveArgs)">
             <summary>
@@ -467,6 +1104,36 @@
             </summary>
             <param name="config">设备配置信息</param>
             <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.Device_Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.Device_Uinit">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.Device_Uinit(System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.SetError(System.String)">
+            <summary>
+            故障信息注入
+            </summary>
+            <param name="error">故障信息</param>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.Finalize">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceOperate.Device_Warp.Dispose">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Base.IDeviceOperate">
+            <summary>
+            设备操作接口
+            </summary>
         </member>
         <member name="P:IMX.Device.Base.IDeviceOperate.IsInitOK">
             <summary>
@@ -517,6 +1184,8 @@
             <summary>
             设备初始化
             </summary>
+            <param name="obj">初始化参数(xml文件)</param>
+            <param name="drive">驱动操作句柄</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Base.IDeviceOperate.Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">
@@ -538,6 +1207,11 @@
             读取设备信息
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.IDeviceWarp">
+            <summary>
+            设备协议层接口
+            </summary>
         </member>
         <member name="P:IMX.Device.Base.IDeviceWarp.Version">
             <summary>
@@ -1059,9 +1733,81 @@
             当前设备对象
             </summary>
         </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.GetConfig(IMX.Device.Common.DriveArgs)">
+            <summary>
+            解析驱动配置信息
+            </summary>
+            <param name="config">驱动配置</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Close">
+            <summary>
+            关闭驱动
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.ClearBuffer">
+            <summary>
+            清除驱动当前缓存字节
+            </summary>
+            <returns></returns>
+        </member>
         <member name="F:IMX.Device.Base.DriveOperate.VisaOprate._strLastWriteCmd">
             <summary>
             上次发送的命令字符串;
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Write(System.String)">
+            <summary>
+            字符串写入
+            </summary>
+            <param name="writeValue">待发送字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Write_ByteArray(System.Byte[])">
+            <summary>
+            写入字节
+            </summary>
+            <param name="writeValue">待写入字节数组</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Read_ByteArray(System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Read_String">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Read_StringExisting">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.WriteRead_ByteArray(System.Byte[],System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.WriteRead_ByteArray(System.Byte[],System.Int32,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.WriteRead_String(System.String,System.Int32,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.#ctor">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="logger">日志注册器</param>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Finalize">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.VisaOprate.Dispose">
+            <summary>
+            析构方法
             </summary>
         </member>
     </members>

@@ -40,7 +40,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>..\..\bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -144,7 +144,12 @@
     <Reference Include="IMX.Common">
       <HintPath>..\..\Library\IMX.Common\IMX.Common.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Function">
+    <Reference Include="IMX.Device.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Library\IMX.Device.Common\IMX.Device.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="IMX.Function, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Function.ViewModel\IMX.Function.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Function.ViewModel">
@@ -206,13 +211,23 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Function\ViewModel\FunViewModelAPU.cs" />
-    <Compile Include="Function\ViewModel\FunViewModelDCSource.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelDCLoad.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelHVDCSource.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelPOPUP.cs" />
     <Compile Include="Function\View\FunViewAPU.xaml.cs">
       <DependentUpon>FunViewAPU.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Function\View\FunViewDCSource.xaml.cs">
-      <DependentUpon>FunViewDCSource.xaml</DependentUpon>
+    <Compile Include="Function\View\FunViewDCLoad.xaml.cs">
+      <DependentUpon>FunViewDCLoad.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Function\View\FunViewHVDCSource.xaml.cs">
+      <DependentUpon>FunViewHVDCSource.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewPOPUP.xaml.cs">
+      <DependentUpon>FunViewPOPUP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resource\Converter\ShortSatetConverter.cs" />
+    <Compile Include="Resource\Converter\UseDBCConverter.cs" />
     <Compile Include="ViewModel\DBCConfigViewModel.cs" />
     <Compile Include="ViewModel\DBCFileChangeViewModel.cs" />
     <Compile Include="ViewModel\DBCFileUploadViewModel.cs" />
@@ -245,7 +260,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Function\View\FunViewDCSource.xaml">
+    <Page Include="Function\View\FunViewDCLoad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewHVDCSource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewPOPUP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

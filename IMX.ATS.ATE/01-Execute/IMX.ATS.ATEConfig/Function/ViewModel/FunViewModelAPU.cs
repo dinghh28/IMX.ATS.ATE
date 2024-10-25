@@ -52,6 +52,13 @@ namespace IMX.ATS.ATEConfig.Function
 
         #region 界面绑定属性
 
+        public override List<SetOutPutState> OperateTypeList { get; set; } = new List<SetOutPutState>
+        {
+            SetOutPutState.ON,
+            SetOutPutState.OFF,
+            SetOutPutState.Null
+        };
+
         private double setOutputVol = 0;
         /// <summary>
         /// 设置拉载电压

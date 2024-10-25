@@ -1,4 +1,5 @@
-﻿using IMX.Function.Base;
+﻿using IMX.ATS.ATEConfig.Function;
+using IMX.Function.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +29,9 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public static Dictionary<FuncitonType, Type> DicTestFlowItems { get; } = new Dictionary<FuncitonType, Type>
         {
+            {FuncitonType.APU, typeof(FunViewModelAPU) },
+            {FuncitonType.HVDCSource, typeof(FunViewModelHVDCSource) },
+            {FuncitonType.POPUP, typeof(FunViewModelPOPUP) },
             //{ "Equip", "工装设备配置"},
             //{  FuncitonType.PRODUCT , },
         };

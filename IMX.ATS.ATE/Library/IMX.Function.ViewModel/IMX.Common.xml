@@ -59,6 +59,11 @@
             数据所在设备类型
             </summary>
         </member>
+        <member name="P:IMX.Common.ModDeviceReadData.IsStepConditions">
+            <summary>
+            是否为步进条件变量
+            </summary>
+        </member>
         <member name="P:IMX.Common.ModDeviceReadData.ProtectTriggerMaxCount">
             <summary>
             保护触发最大次数

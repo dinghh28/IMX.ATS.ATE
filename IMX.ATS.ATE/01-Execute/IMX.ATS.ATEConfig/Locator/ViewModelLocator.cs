@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -18,9 +19,9 @@ namespace IMX.ATS.ATEConfig
             SimpleIoc.Default.Register<ProjectSelectViewModel>();
             ContentControlManager.Regiter<ProjectSelectView>();
 
-            ////项目选择
-            //SimpleIoc.Default.Register<PCProjectInfoViewModel>();
-            //ContentControlManager.Regiter<PCProjectInfoView>();
+            //项目选择
+            SimpleIoc.Default.Register<ProjectInfoViewModel>();
+            ContentControlManager.Regiter<ProjectInfoView>();
 
             //项目配置主界面
             SimpleIoc.Default.Register<MainViewModel>();
@@ -64,8 +65,16 @@ namespace IMX.ATS.ATEConfig
             ContentControlManager.Regiter<FunViewAPU>();
 
             //高压直流压源配置
-            SimpleIoc.Default.Register<FunViewModelDCSource>();
-            ContentControlManager.Regiter<FunViewDCSource>();
+            SimpleIoc.Default.Register<FunViewModelHVDCSource>();
+            ContentControlManager.Regiter<FunViewHVDCSource>();
+
+            //弹窗配置
+            SimpleIoc.Default.Register<FunViewModelPOPUP>();
+            ContentControlManager.Regiter<FunViewPOPUP>();
+
+            //直流负载配置
+            SimpleIoc.Default.Register<FunViewModelDCLoad>();
+            ContentControlManager.Regiter<FunViewDCLoad>();
             #endregion
         }
 
@@ -75,10 +84,10 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public ProjectSelectViewModel ProjectSelect => ServiceLocator.Current.GetInstance<ProjectSelectViewModel>();
 
-        ///// <summary>
-        ///// 项目信息展示配置页
-        ///// </summary>
-        //public PCProjectInfoViewModel ProjectInfo => ServiceLocator.Current.GetInstance<PCProjectInfoViewModel>();
+        /// <summary>
+        /// 项目信息展示配置页
+        /// </summary>
+        public ProjectInfoViewModel ProjectInfo => ServiceLocator.Current.GetInstance<ProjectInfoViewModel>();
 
         /// <summary>
         /// 项目配置主界面
@@ -133,7 +142,17 @@ namespace IMX.ATS.ATEConfig
         /// <summary>
         /// 高压直流源配置模板
         /// </summary>
-        public FunViewModelDCSource FunDCSource => ServiceLocator.Current.GetInstance<FunViewModelDCSource>();
+        public FunViewModelHVDCSource FunHVDCSource => ServiceLocator.Current.GetInstance<FunViewModelHVDCSource>();
+
+        /// <summary>
+        /// 弹窗配置模板
+        /// </summary>
+        public FunViewModelPOPUP FunPOPUP => ServiceLocator.Current.GetInstance<FunViewModelPOPUP>();
+
+        /// <summary>
+        /// 直流负载配置模板
+        /// </summary>
+        public FunViewModelDCLoad FunDCLoad => ServiceLocator.Current.GetInstance<FunViewModelDCLoad>();
         #endregion
 
     }

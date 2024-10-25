@@ -35,7 +35,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="设置运行状态："  VerticalAlignment="Center" HorizontalAlignment="Center" />
-                        <ComboBox Grid.Column="1"  Height="35" Width="200"  ItemsSource="{Binding OperateList, Converter={StaticResource EnumValue}}" SelectedValue="{Binding OperateType, Converter={StaticResource EnumValue}}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <ComboBox Grid.Column="1"  Height="35" Width="200"  ItemsSource="{Binding OperateTypeList, Converter={StaticResource EnumValue}}" SelectedValue="{Binding OperateType, Converter={StaticResource EnumValue}}" VerticalAlignment="Center" HorizontalAlignment="Center">
                         </ComboBox>
                     </Grid>
                 </GroupBox>

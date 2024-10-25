@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.ATEConfig" 
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" d:DataContext="{d:DesignInstance Type=local:DBCFileChangeViewModel}"
         mc:Ignorable="d"
         Title="PCDBCFileChangeViewModel" Height="500" Width="450"    
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
@@ -78,6 +78,7 @@
                         <DataGridTextColumn Header="文件大小" Binding="{Binding FileSize}" />
                         <DataGridTextColumn Header="文件后缀" Binding="{Binding FileExtension}"/>
                         <DataGridTextColumn Header="文件描述" Binding="{Binding FileDescription}"/>
+                        <DataGridTextColumn Header="上传人员" Binding="{Binding Operator}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <Button Grid.Row="2" Content="选择文件" Command="{Binding Submit}"/>

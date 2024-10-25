@@ -56,13 +56,13 @@
                 </Grid.RowDefinitions>
                 <WrapPanel Grid.Row="0">
                     <Label Content="项目信息检索："/>
-                    <TextBox MinWidth="240" Text="{Binding SearchStr,UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox MinWidth="240" Text="{Binding SearchStr,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource SearchTextBoxStyle}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="TextChanged">
                                 <i:InvokeCommandAction Command="{Binding Search}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <TextBox.Style>
+                        <!--<TextBox.Style>
                             <Style TargetType="TextBox" >
                                 <Setter Property="IsReadOnly" Value="False"/>
                                 <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -76,7 +76,7 @@
                                                         <ColumnDefinition/>
                                                     </Grid.ColumnDefinitions>
                                                     <Label Content="&#xe6b4;" />
-                                                    <!--<TextBlock Grid.Column="1" Text="{TemplateBinding Text}" VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
+                                                    --><!--<TextBlock Grid.Column="1" Text="{TemplateBinding Text}" VerticalAlignment="Center" HorizontalAlignment="Left"/>--><!--
                                                     <ScrollViewer x:Name="PART_ContentHost" Focusable="False"
                                                    HorizontalScrollBarVisibility="Hidden"
                                                    VerticalScrollBarVisibility="Hidden"
@@ -113,7 +113,7 @@
                                 </Setter>
 
                             </Style>
-                        </TextBox.Style>
+                        </TextBox.Style>-->
                     </TextBox>
                 </WrapPanel>
 

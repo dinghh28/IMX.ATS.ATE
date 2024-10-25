@@ -1,0 +1,231 @@
+﻿<UserControl x:Class="IMX.ATS.ATEConfig.Function.FunViewDCLoad"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework" 
+             xmlns:stateconverter ="clr-namespace:IMX.ATS.ATEConfig.Resource.Converter"
+             xmlns:local="clr-namespace:IMX.ATS.ATEConfig.Function" 
+             d:DataContext="{d:DesignInstance Type=local:FunViewModelDCLoad}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+                </ResourceDictionary>
+                
+                <ResourceDictionary>
+                    <stateconverter:ShortSatetConverter x:Key="State"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        
+    </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <Binding Path="FunDCLoad" Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+    <Grid>
+        <GroupBox Header="直流负载配置">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <GroupBox Header="01-运行状态" Grid.Row="1" Margin="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="设置运行状态："  VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <ComboBox Grid.Column="1"  Height="35" Width="100"  
+                                          ItemsSource="{Binding OperateTypeList, Converter={StaticResource EnumValue}}" 
+                                          SelectedValue="{Binding OperateType, Converter={StaticResource EnumValue}}" 
+                                          VerticalAlignment="Center" HorizontalAlignment="Center">
+                                </ComboBox>
+                            </Grid>
+                        </GroupBox>
+
+                        <GroupBox Header="02-运行模式" Grid.Column="1" Margin="5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="设置运行模式："  VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <ComboBox Grid.Column="1"  Height="35" Width="100"  
+                                          VerticalAlignment="Center" HorizontalAlignment="Center"
+                                          ItemsSource="{Binding Models}" 
+                                          SelectedValue="{Binding Set_Model}">
+                                </ComboBox>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                    
+                    <GroupBox Header="03-参数设置" Grid.Row="1" Margin="5">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="0.4*"/>
+                                    <ColumnDefinition Width="0.4*"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="0">
+                                    <CheckBox Content="短路模式" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                              IsChecked="{Binding Set_ShortState,Mode=TwoWay,Converter={StaticResource State}}"/>
+                                </Grid>
+
+                                <Grid Grid.Column="1" IsEnabled="{Binding EnableSetLoadValue}">
+                                    <CheckBox Content="步进模式" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Grid>
+
+                                <Grid Grid.Column="2" IsEnabled="{Binding EnableSetLoadValue}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="拉载值：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SetOutputCur}" Height="35" Width="80"/>
+                                    <Label  Grid.Column="2" Content="A" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="1" IsEnabled="{Binding EnableSetStepValue}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                
+                                <Grid Grid.Column="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="起始值：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SetOutputCur}" Height="35" Width="80"/>
+                                    <Label  Grid.Column="2" Content="A" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </Grid>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="步幅：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SetOutputCur}" Height="35" Width="80"/>
+                                    <Label  Grid.Column="2" Content="A" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </Grid>
+
+                                <Grid Grid.Column="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="90"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Content="步频：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SetOutputCur}" Height="35" Width="80"/>
+                                    <Label  Grid.Column="2" Content="毫秒" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                </Grid>
+                            </Grid>
+
+                            <!--<Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="运行模式：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <ComboBox Grid.Column="1"  Height="35" Width="200" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                --><!--<TextBox Grid.Column="1"  Text="{Binding SetOutputVol}"  Height="35" Width="80" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                                <Label  Grid.Column="2" Content="V" VerticalAlignment="Center" HorizontalAlignment="Left"/>--><!--
+                            </Grid>-->
+
+
+
+                        </Grid>
+                        
+                    </GroupBox>
+                </Grid>
+
+                <GroupBox Header="步进跳出条件" Grid.Row="1" Margin="5" IsEnabled="{Binding EnableSetStepValue}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <WrapPanel Grid.Row="0" Orientation="Horizontal">
+                            <Button Content="新增条件" Margin="10,0,0,0" Command="{Binding AddCondition}"/>
+                            <Button Content="删除条件" Margin="10,0,0,0" Command="{Binding DeletCondition}"/>
+                            <WrapPanel Margin="10,0,0,0">
+                                <Label Content="条件间判定逻辑:"/>
+                                <ComboBox Width="80" 
+                                          ItemsSource="{Binding Conditions, Converter={StaticResource EnumValue}}" 
+                                          SelectedValue="{Binding Condition, Converter={StaticResource EnumValue}}"/>
+                            </WrapPanel>
+                        </WrapPanel>
+                        
+                        <ListBox Grid.Row="1" 
+                                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                 ItemsSource="{Binding StepValues}"
+                                 SelectedIndex="{Binding  SelectedValueIndex}"
+                                 >
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <WrapPanel>
+                                        <Label Content="判定变量:"/>
+                                        <ComboBox Margin="0,0,0,10"/>
+                                        <Label Content="判定条件"/>
+                                        <ComboBox/>
+                                        <Label Content="判定值:"/>
+                                        <TextBox Text="111"/>
+                                    </WrapPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="模板执行完成后延时设置" Grid.Row="3" Margin="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="延时时间：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBox Grid.Column="1"  Text="{Binding  DelayAfterRun}"  Height="35" Width="80" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label  Grid.Column="2" Content="毫秒" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

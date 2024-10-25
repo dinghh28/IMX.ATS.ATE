@@ -16,6 +16,64 @@
             </summary>
             <param name="window">已注册该事件窗口</param>
         </member>
+        <member name="T:IMX.WPF.Resource.DragDropRowBehavior">
+            <summary>
+            拖拽单元行行为类
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.DragDropRowBehavior.DraggedItem">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.DragDropRowBehavior.DraggedItems">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.DragDropRowBehavior.GetPopupControl(System.Windows.DependencyObject)">
+            <summary>
+            获取弹窗控件
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.WPF.Resource.DragDropRowBehavior.SetPopupControl(System.Windows.DependencyObject,System.Windows.Controls.Primitives.Popup)">
+            <summary>
+            设置弹窗控件
+            </summary>
+            <param name="obj"></param>
+            <param name="value"></param>
+        </member>
+        <member name="F:IMX.WPF.Resource.DragDropRowBehavior.PopupControlProperty">
+            <summary>
+            弹窗控件
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.DragDropRowBehavior.GetEnabled(System.Windows.DependencyObject)">
+            <summary>
+            获取当前使用状态
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.WPF.Resource.DragDropRowBehavior.SetEnabled(System.Windows.DependencyObject,System.Boolean)">
+            <summary>
+            设置使用状态
+            </summary>
+            <param name="obj"></param>
+            <param name="value"></param>
+        </member>
+        <member name="F:IMX.WPF.Resource.DragDropRowBehavior.EnabledProperty">
+            <summary>
+            使用状态使能
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.DragDropRowBehavior.IsEditing">
+            <summary>
+            是否正在编辑
+            </summary>
+        </member>
         <member name="P:IMX.WPF.Resource.DragDropRowBehavior.IsDragging">
             <summary>
             鼠标左键按下状态
@@ -78,6 +136,26 @@
             <param name="point">The position to be evaluated on the origin.</param>
         </member>
         <!-- Badly formed XML comment ignored for member "T:IMX.WPF.Resource.CustomControl1" -->
+        <member name="T:IMX.WPF.Resource.CustomDataGrid">
+            <summary>
+            自定义表格（可拖拽换行）
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.CustomDataGrid.#ctor">
+            <summary>
+            构造方法
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.CustomDataGrid.SelectedItemsList">
+            <summary>
+            可供选择子类列表
+            </summary>
+        </member>
+        <member name="F:IMX.WPF.Resource.CustomDataGrid.SelectedItemsListProperty">
+            <summary>
+            可供选择子类列表
+            </summary>
+        </member>
         <member name="T:IMX.WPF.Resource.Properties.Resources">
             <summary>
               强类型资源类，用于查找本地化字符串等。

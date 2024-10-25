@@ -157,6 +157,32 @@ namespace IMX.ATS.ATEConfig
         //    }
         //}
 
+        /// <summary>
+        /// CAN支持波特率列表
+        /// </summary>
+        public List<string> BaudRates => new List<string> { "5Kbps", "10Kbps", "20Kbps", "50Kbps", "100Kbps", "125Kbps", "250Kbps", "500Kbps", "800Kbps", "1000Kbps" };
+
+        private string baudrate;
+        /// <summary>
+        /// 仲裁波特率
+        /// </summary>
+        public string BaudRate
+        {
+            get => baudrate;
+            set => Set(nameof(BaudRate), ref baudrate, value);
+        }
+
+
+        private string databaudrate;
+        /// <summary>
+        /// 数据域波特率
+        /// </summary>
+        public string DataBaudRate
+        {
+            get => databaudrate;
+            set => Set(nameof(DataBaudRate), ref databaudrate, value);
+        }
+
         #endregion
 
         #region 界面绑定指令
@@ -195,6 +221,8 @@ namespace IMX.ATS.ATEConfig
             ProjectInfo.RatedCur = RatedCur;
             ProjectInfo.RatedVol = RatedVol;
             ProjectInfo.RatedPow = RatedPow;
+            ProjectInfo.BaudRate = BaudRate;
+            ProjectInfo.DataBaudrate = DataBaudRate;
 
             //ProjectInfo.EnableProtect = EnableProtect;
             if (isnew)

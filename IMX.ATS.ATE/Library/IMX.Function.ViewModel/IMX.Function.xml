@@ -15,6 +15,16 @@
         <member name="P:IMX.Function.FunConfig_ACSource.DeviceAddress">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.Set_Vol">
+            <summary>
+            设置电压
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.Set_Frequency">
+            <summary>
+            设置频率
+            </summary>
+        </member>
         <member name="M:IMX.Function.FunConfig_ACSource.Execute(System.Object)">
             <inheritdoc/>
         </member>
@@ -58,6 +68,101 @@
         </member>
         <member name="M:IMX.Function.FunConfig_APU.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_DCLoad">
+            <summary>
+            直流负载试验配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Set_ShortState">
+            <summary>
+            短路模式设置
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Set_Model">
+            <summary>
+            运行模式
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Set_LoadValue">
+            <summary>
+            设置拉载值(拉载起步值)
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.EnableStepping">
+            <summary>
+            步进使能标志
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.StartLoadValue">
+            <summary>
+            开始拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Stride">
+            <summary>
+            步进步幅
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.StepFrequency">
+            <summary>
+            步进步频
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.EndLoadValue">
+            <summary>
+            结束拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.StepCondition">
+            <summary>
+            步进各条件判定综合判定条件
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.ConditionalValues">
+            <summary>
+            步进允许判定变量列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Values">
+            <summary>
+            步进变量判定参数列表
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_DCLoad.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_DCLoad.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_DCLoad.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.StepConditionValue">
+            <summary>
+            步进变量判定参数类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.StepConditionValue.Value">
+            <summary>
+            变量
+            </summary>
+        </member>
+        <member name="P:IMX.Function.StepConditionValue.StepValueCondition">
+            <summary>
+            逻辑条件
+            </summary>
+        </member>
+        <member name="P:IMX.Function.StepConditionValue.ConditionValue">
+            <summary>
+            判定值
+            </summary>
         </member>
         <member name="T:IMX.Function.FunConfig_HVDCSource">
             <summary>
@@ -124,6 +229,41 @@
             <param name="device"></param>
             <returns></returns>
         </member>
+        <member name="T:IMX.Function.Config.FunConfig_POPUP">
+            <summary>
+            弹窗（手动确认试验结果）配置模板类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_POPUP.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_POPUP.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_POPUP.Title">
+            <summary>
+            弹窗标题
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_POPUP.Description">
+            <summary>
+            弹窗内容
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_POPUP.IsResult">
+            <summary>
+            是否允许弹窗结果作为试验结果判定
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_POPUP.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_POPUP.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_POPUP.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
         <member name="T:IMX.Function.Config.FunConfig_Relay">
             <summary>
             继电器板试验流程配置类
@@ -148,6 +288,11 @@
         </member>
         <member name="M:IMX.Function.Config.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.IFunction_Result">
+            <summary>
+            测试结果模板接口
+            </summary>
         </member>
         <member name="T:IMX.Function.TestFunction">
             <summary>
@@ -225,32 +370,42 @@
             流程配置支持类型枚举
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.PRODUCT">
+        <member name="F:IMX.Function.Base.FuncitonType.NONE">
+            <summary>
+            未知类型模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.Product">
             <summary>
             产品下发指令模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.ACSOURCE">
+        <member name="F:IMX.Function.Base.FuncitonType.ACSource">
             <summary>
             AC源操作模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.ACLODE">
+        <member name="F:IMX.Function.Base.FuncitonType.ACLode">
             <summary>
             AC负载操作模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.DCLOAD">
+        <member name="F:IMX.Function.Base.FuncitonType.DCLoad">
             <summary>
             DC负载操作模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.ACDCINVERTER">
+        <member name="F:IMX.Function.Base.FuncitonType.ACDCInverter">
             <summary>
             双向源操作模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.DCSOURCE">
+        <member name="F:IMX.Function.Base.FuncitonType.DCSource">
+            <summary>
+            直流源操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.HVDCSource">
             <summary>
             高压直流源操作模板
             </summary>
@@ -260,37 +415,37 @@
             直流稳压源操作模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.RELAY">
+        <member name="F:IMX.Function.Base.FuncitonType.Relay">
             <summary>
             继电器操作模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.WATERBOX">
+        <member name="F:IMX.Function.Base.FuncitonType.Waterbox">
             <summary>
             水浴
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.TEMPBOX">
+        <member name="F:IMX.Function.Base.FuncitonType.Tempbox">
             <summary>
             温箱
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.DWELLTIME">
+        <member name="F:IMX.Function.Base.FuncitonType.Dwelltime">
             <summary>
             设置驻留时间
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.ADCSYSTEAM">
+        <member name="F:IMX.Function.Base.FuncitonType.ADCSysteam">
             <summary>
             数字采样设备操作模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.BATTERYSIMULATOR">
+        <member name="F:IMX.Function.Base.FuncitonType.Batterysimulator">
             <summary>
             电池模拟器
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.TESTRESULT">
+        <member name="F:IMX.Function.Base.FuncitonType.TestResult">
             <summary>
             结果获取模板
             </summary>
@@ -300,24 +455,34 @@
             弹窗模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.PROTECT">
+        <member name="F:IMX.Function.Base.FuncitonType.Protect">
             <summary>
             保护模板
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.GYROSCOPIC">
+        <member name="F:IMX.Function.Base.FuncitonType.Gyroscopic">
             <summary>
             旋变模拟器
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.SALTFOGBOX">
+        <member name="F:IMX.Function.Base.FuncitonType.Saltfogbox">
             <summary>
             盐雾箱
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.FuncitonType.VIBRATIONTABLE">
+        <member name="F:IMX.Function.Base.FuncitonType.Vibrationtable">
             <summary>
             振动台
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.ProductResult">
+            <summary>
+            产品上报结果
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.EquipmentResult">
+            <summary>
+            工装上报结果
             </summary>
         </member>
         <member name="T:IMX.Function.Base.SetOutPutState">
@@ -338,6 +503,46 @@
         <member name="F:IMX.Function.Base.SetOutPutState.OFF">
             <summary>
             关闭设备
+            </summary>
+        </member>
+        <member name="T:IMX.Function.Base.Enumerations.StepConditions">
+            <summary>
+            步进大判断条件
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Enumerations.StepConditions.AND">
+            <summary>
+            和判断
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Enumerations.StepConditions.OR">
+            <summary>
+            或判断
+            </summary>
+        </member>
+        <member name="T:IMX.Function.Base.Enumerations.StepValueConditions">
+            <summary>
+            步进变量值判定条件
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Enumerations.StepValueConditions.GREATERTHAN">
+            <summary>
+            大于
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Enumerations.StepValueConditions.LESSTHAN">
+            <summary>
+            小于
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Enumerations.StepValueConditions.EQUALTO">
+            <summary>
+            等于
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.Enumerations.StepValueConditions.NOTEQUALTO">
+            <summary>
+            不等于
             </summary>
         </member>
         <member name="T:IMX.Function.Base.Function_Config">

@@ -190,6 +190,8 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show($"界面跳转失败:{ex.GetMessage()}");
                 return;
             }
+
+            LastView = obj.ToString();
         }
         #endregion
 

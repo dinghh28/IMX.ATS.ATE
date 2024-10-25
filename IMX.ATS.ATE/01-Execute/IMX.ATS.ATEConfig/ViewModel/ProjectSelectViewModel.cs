@@ -259,7 +259,6 @@ namespace IMX.ATS.ATEConfig
             WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(Win);
 
             base.WindowClosedExecute(obj);
-
         }
         #endregion
 

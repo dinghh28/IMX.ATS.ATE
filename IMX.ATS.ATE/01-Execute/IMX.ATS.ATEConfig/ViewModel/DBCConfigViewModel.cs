@@ -173,14 +173,13 @@ namespace IMX.ATS.ATEConfig
 
                 if (viewstr == "UPLOAD")
                 {
-                    //Application.Current.Dispatcher.Invoke(new Action(() =>
-                    //{
-                    //    if (((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        if (((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
 
-                    //    Window DBCfilewindow = ContentControlManager.GetWindow<DBCFileUploadView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload);
-                    //    DBCfilewindow.Show();
-                    //}));
-
+                        Window DBCfilewindow = ContentControlManager.GetWindow<DBCFileUploadView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload);
+                        DBCfilewindow.Show();
+                    }));
                 }
                 else if (viewstr == "CHANGE")
                 {
@@ -188,10 +187,10 @@ namespace IMX.ATS.ATEConfig
 
                     if (result == MessageBoxResult.No) { return; }
 
-                    //if (((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
+                    if (((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
 
-                    //Window mainwindow = ContentControlManager.GetWindow<DBCFileChangeView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange);
-                    //mainwindow.Show();
+                    Window mainwindow = ContentControlManager.GetWindow<DBCFileChangeView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange);
+                    mainwindow.Show();
 
                     //清空上报配置
                     SignalConfigPages[0].SignalConfigs.Clear();
@@ -203,7 +202,7 @@ namespace IMX.ATS.ATEConfig
                     //重新导入DBC文件信号
                     isloadFile = true;
                     //重新加载DBC配置信号
-                    AddFixedSignal();
+                    //AddFixedSignal();
                 }
             }
             catch (Exception ex)
@@ -447,10 +446,9 @@ namespace IMX.ATS.ATEConfig
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"添加系统固定信号异常", "异常", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"添加系统固定信号异常：{ex.GetMessage()}", "异常", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
         }
 
         #region 信号选中处理
@@ -601,6 +599,7 @@ namespace IMX.ATS.ATEConfig
                     }
                 }
 
+                DBCConfig.UpdateOperator = GlobalModel.UserInfo.UserName;
 
                 if (isnew)
                 {

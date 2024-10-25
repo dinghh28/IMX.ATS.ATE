@@ -18,9 +18,9 @@ namespace IMX.ATS.ATEConfig.Function
     /// <summary>
     /// FunViewDCSource.xaml 的交互逻辑
     /// </summary>
-    public partial class FunViewDCSource : UserControl
+    public partial class FunViewHVDCSource : UserControl
     {
-        public FunViewDCSource()
+        public FunViewHVDCSource()
         {
             InitializeComponent();
         }

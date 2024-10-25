@@ -194,6 +194,8 @@ namespace IMX.ATS.ATEConfig
                     DBCFileInfos.Add(result.Data[i]);
                 }
             });
+
+            IsOpen = true;
             //base.WindowLoadedExecute(obj);
         }
 

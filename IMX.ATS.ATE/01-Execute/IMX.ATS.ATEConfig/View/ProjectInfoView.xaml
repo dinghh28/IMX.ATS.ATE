@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework"
+             xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework" 
+             xmlns:dbcconverter="clr-namespace:IMX.ATS.ATEConfig.Resource.Converter"
+             d:DataContext="{d:DesignInstance Type=local:ProjectInfoViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"    
              FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
@@ -15,6 +17,9 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <dbcconverter:UseDBCConverter x:Key="UseDBCV"/>
                 </ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -130,9 +135,31 @@
 
         </Grid>-->
         <StackPanel Grid.Row="4" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <CheckBox Content="使用DBC通讯" Margin="-10,0,0,20"
+            <CheckBox Content="使用DBC通讯" Margin="0,0,0,20"
                       IsChecked="{Binding UseDBC,Mode=TwoWay}"/>
         </StackPanel>
+        <Grid Grid.Row="3"  Visibility="{Binding UseDBC, Converter={StaticResource UseDBCV}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="仲裁波特率" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding BaudRates}" SelectedItem="{Binding  BaudRate}" IsReadOnly="True"/>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="数据域波特率" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,0" />
+                <ComboBox Grid.Column="1" ItemsSource="{Binding BaudRates}" SelectedItem="{Binding  DataBaudRate}" IsReadOnly="True"/>
+            </Grid>
+        </Grid>
         <Grid Grid.Row="5">
             <Button Content="保存当前项目信息" 
                     Width="120" Height="40"

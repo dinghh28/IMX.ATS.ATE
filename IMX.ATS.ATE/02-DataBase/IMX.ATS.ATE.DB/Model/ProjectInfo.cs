@@ -26,11 +26,6 @@ namespace IMX.DB.Model
         public string ProjectName { get; set; }
 
         /// <summary>
-        /// 是否使用DBC
-        /// </summary>
-        public bool IsUseDDBC { get; set; } = false;
-
-        /// <summary>
         /// 标定电压
         /// </summary>
         public uint RatedVol { get; set; }
@@ -44,6 +39,21 @@ namespace IMX.DB.Model
         /// 标定功率
         /// </summary>
         public uint RatedPow { get; set; }
+
+        /// <summary>
+        /// 是否使用DBC
+        /// </summary>
+        public bool IsUseDDBC { get; set; } = false;
+
+        /// <summary>
+        /// 仲裁波特率
+        /// </summary>
+        public string BaudRate { get; set; } = "500Kbps";
+
+        /// <summary>
+        /// 数据域波特率
+        /// </summary>
+        public string DataBaudrate { get; set; } = "500Kbps";
     }
 
     #region DBC

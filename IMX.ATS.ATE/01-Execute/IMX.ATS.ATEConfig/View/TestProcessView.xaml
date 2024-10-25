@@ -85,23 +85,24 @@
                              SelectedItem="{Binding SelectedTestFlowItem}">
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <DockPanel LastChildFill="True"/>
+                                <StackPanel/>
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Border>
-                                    <!--<Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>-->
-                                    <Label Content="{Binding Name}" Width="200">
+                                <Grid>
+                                    <Label Content="{Binding Name}" Width="500">
                                         <i1:Interaction.Triggers>
                                             <i1:EventTrigger EventName="MouseDoubleClick">
                                                 <i1:InvokeCommandAction Command="{Binding Selcted}" CommandParameter="{Binding Tag}"/>
                                             </i1:EventTrigger>
                                         </i1:Interaction.Triggers>
                                     </Label>
-                                </Border>
+                                </Grid>
+                                <!--<Border>
+                                    
+                                    
+                                </Border>-->
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                         

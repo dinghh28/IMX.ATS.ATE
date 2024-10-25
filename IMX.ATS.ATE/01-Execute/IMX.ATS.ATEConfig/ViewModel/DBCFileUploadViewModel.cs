@@ -166,7 +166,8 @@ namespace IMX.ATS.ATEConfig
                     FileContent = fileContent,
                     FileSize = fileContent.Length,
                     FileExtension = dbcfileextension,
-                    FileDescription = DBCFileDescription
+                    FileDescription = DBCFileDescription,
+                    Operator = GlobalModel.UserInfo.UserName,
                 }).AttachIfSucceed(result=>
                 { MessageBox.Show($"文件上传成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information); })
                 .AttachIfFailed(result=> { MessageBox.Show($"文件上传：{result.Message}！", "失败", MessageBoxButtons.OK, MessageBoxIcon.Error); })
@@ -226,7 +227,7 @@ namespace IMX.ATS.ATEConfig
 
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
             if (win != null) { Win = win; Win.Drop += ExecuteDrop; }
-
+            IsOpen = true;
             
             //var window = (obj as Window);
             //if (window != null)

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.ATEConfig" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:mvvm="http://www.galasoft.ch/mvvmlight"
+        xmlns:mvvm="http://www.galasoft.ch/mvvmlight" d:DataContext="{d:DesignInstance Type=local:DBCFileUploadViewModel}"
         mc:Ignorable="d"
         Title="PCDBCFileUploadView" Height="450" Width="480"
          FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"

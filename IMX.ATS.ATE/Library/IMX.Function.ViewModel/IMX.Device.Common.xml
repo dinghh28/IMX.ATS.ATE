@@ -99,6 +99,11 @@
             配置字符串
             </summary>
         </member>
+        <member name="T:IMX.Device.Common.BaseConfig">
+            <summary>
+            配置文件基础类
+            </summary>
+        </member>
         <member name="F:IMX.Device.Common.BaseConfig.StartupPath">
             <summary>
             启动目录
@@ -108,6 +113,12 @@
             <summary>
             文件路径
             </summary>
+        </member>
+        <member name="M:IMX.Device.Common.BaseConfig.#ctor(System.String)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="path">文件路径</param>
         </member>
         <member name="M:IMX.Device.Common.BaseConfig.GetSections``1(``0@)">
             <summary>

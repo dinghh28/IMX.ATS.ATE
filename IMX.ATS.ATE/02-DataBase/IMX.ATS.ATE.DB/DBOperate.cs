@@ -122,7 +122,7 @@ namespace IMX.DB
             catch (Exception ex)
             {
                 IsInitOK = false;
-
+                sqliteLazy = null;
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(Init), LastError);
                 return OperateResult.Excepted(ex);

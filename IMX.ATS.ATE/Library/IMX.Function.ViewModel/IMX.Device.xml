@@ -30,6 +30,16 @@
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.#ctor">
             <inheritdoc/>
         </member>
+        <member name="F:IMX.Device.Acquisition.Acquisition_AN87330_Warp.HEADER">
+            <summary>
+            帧头
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Acquisition.Acquisition_AN87330_Warp.END">
+            <summary>
+            帧尾
+            </summary>
+        </member>
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Warp.Device_ReadAll">
             <summary>
             单次扫描读取所有数据
@@ -215,6 +225,169 @@
         </member>
         <member name="M:IMX.Device.APU.APU_IT6800_Warp.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
+        </member>
+        <member name="T:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte">
+            <summary>
+            艾诺AN23600E系列直流负载操作类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetCurrSLEW_POSitive(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetCurrSLEW_NEGative(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetModelAndValue(System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetLoadValue(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetModel(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Device.DCLoad.DCLoad_AN23600E_Warp">
+            <summary>
+            艾诺AN23600E系列直流负载通讯类
+            </summary>
+        </member>
+        <member name="F:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.SetModel">
+            <summary>
+            设置模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.SetShortState">
+            <summary>
+            短路模式
+            </summary>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭负载
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetRespond_Volt(System.Int32)">
+            <summary>
+            设置电压回复速度
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.GetModel(System.String)">
+            <summary>
+            获取兼容的拉载模式
+            </summary>
+            <param name="eModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelNum(System.String)">
+            <summary>
+            设置拉载模式（斯康达模态）
+            </summary>
+            <param name="eModel">拉载方式</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetValue(System.Double)">
+            <summary>
+            设置拉载值(外部谨慎调用，因为必须先调用Device_SetModel且设置成功才可以调用本方法)
+            </summary>
+            <param name="value">拉载值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetValue_Volt(System.Double)">
+            <summary>
+            设置CV模式下.拉载电压值
+            </summary>
+            <param name="value">拉载电压值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetValue_Curr(System.Double)">
+            <summary>
+            设置CC模式下.拉载电流值
+            </summary>
+            <param name="value">拉载电流值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetValue_Res(System.Double)">
+            <summary>
+            设置CR模式下.拉载电阻值
+            </summary>
+            <param name="value">拉载电阻值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelAndValue(System.String,System.Double,System.Boolean)">
+            <summary>
+            设置拉载模式和拉载值
+            </summary>
+            <param name="eModel"></param>
+            <param name="value"></param>
+            <param name="bIsFirstOff">true-会先调用停止命令, fasle-不调用停止命令</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetShortONOFF(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            开启/关闭负载短路模式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetCurrSLEW_POSitive(System.Double)">
+            <summary>
+            设置电流上升速率(A/μs)
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetCurrSLEW_NEGative(System.Double)">
+            <summary>
+            设置电流下降速率(A/μs)
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.DCLoad.DCLoad_Model">
+            <summary>
+            DC负载拉载模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.DCLoad.DCLoad_Model.CC">
+            <summary>
+            恒电流模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.DCLoad.DCLoad_Model.CV">
+            <summary>
+            恒电压模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.DCLoad.DCLoad_Model.CR">
+            <summary>
+            恒电阻模式
+            </summary>
         </member>
         <member name="T:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate">
             <summary>
@@ -725,6 +898,36 @@
             <param name="messages"></param>
             <returns></returns>
         </member>
+        <member name="T:IMX.Device.Relay.LightType">
+            <summary>
+            指示灯指示类型
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Relay.LightType.DEFALT">
+            <summary>
+            常规状态
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Relay.LightType.RUNING">
+            <summary>
+            运行状态
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Relay.LightType.ERROR">
+            <summary>
+            故障状态
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Relay.LightType.BUZZER_CLR">
+            <summary>
+            清除蜂鸣器
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Relay.LightType.ERROR_CLR">
+            <summary>
+            故障状态清除
+            </summary>
+        </member>
         <member name="T:IMX.Device.Relay.Relay_ZS_Operate">
             <summary>
             中盛继电器操作类
@@ -749,6 +952,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Device_SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS_Operate.#ctor">
@@ -789,7 +995,90 @@
             <param name="value">bit字符串</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Warp.Set_Led(IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            
+            </summary>
+            <param name="value1">黄灯</param>
+            <param name="value2">绿灯</param>
+            <param name="value3">红灯</param>
+            <param name="value4">蜂鸣器</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Relay.Relay_ZS_Warp.ReadAllInfo">
+            <summary>
+            读取所有通道状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Relay.Relay_ZS4Bit_Operate">
+            <summary>
+            中盛继电器操作类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_ZS4Bit_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_ZS4Bit_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_ZS4Bit_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Device_Set(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Device_SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Device_SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Warp.SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
+            <summary>
+            设备全操作
+            </summary>
+            <param name="value">0表示输入关，1 表示开。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Warp.SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备全操作
+            </summary>
+            <param name="value">0表示输入关，1 表示开。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Warp.Set_Value(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            单继电器控制
+            </summary>
+            <param name="channel">对应寄存器地址（从1开始算）</param>
+            <param name="value">输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Warp.Set_Value(System.String)">
+            <summary>
+            全通道设置
+            </summary>
+            <param name="value">bit字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Warp.ReadAllInfo">
             <summary>
             读取所有通道状态
             </summary>
@@ -799,6 +1088,54 @@
             <summary>
             采样系统操作接口
             </summary>
+        </member>
+        <member name="T:IMX.Device.Base.DeviceInerfaces.IDCLoad">
+            <summary>
+            直流负载操作接口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            短路模式设置
+            </summary>
+            <param name="state">短路模式输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetCurrSLEW_POSitive(System.Double)">
+            <summary>
+            设置电流上升速率(A/μs)
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetCurrSLEW_NEGative(System.Double)">
+            <summary>
+            设置电流下降速率(A/μs)
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModelAndValue(System.String,System.Double)">
+            <summary>
+            设置拉载模式和拉载值
+            </summary>
+            <param name="eModel">拉载模式</param>
+            <param name="value">拉载值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetLoadValue(System.Double)">
+            <summary>
+            设置拉载值
+            </summary>
+            <param name="value">拉载值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModel(System.String)">
+            <summary>
+            设置拉载模式
+            </summary>
+            <param name="eModel">模式</param>
+            <returns></returns>
         </member>
         <member name="T:IMX.Device.Base.IACSource">
             <summary>
@@ -885,6 +1222,13 @@
             全通道统一状态控制
             </summary>
             <param name="value">输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IRelay.SateLedContrcl(IMX.Device.Relay.LightType)">
+            <summary>
+            指示灯控制逻辑
+            </summary>
+            <param name="light">指示灯输出状态</param>
             <returns></returns>
         </member>
         <member name="P:IMX.Device.Base.Device_Config.Device_Name">

@@ -39,15 +39,15 @@ namespace IMX.ATS.ATEConfig.Function
     /// <summary>
     /// 高压直流源流程配置模板类
     /// </summary>
-    public class FunViewModelDCSource : FunViewModel
+    public class FunViewModelHVDCSource : FunViewModel
     {
         #region 公共属性
 
-        public override TestFunction Func { get; set; } = TestFunction.Create(FuncitonType.DCSOURCE);
+        public override TestFunction Func { get; set; } = TestFunction.Create(FuncitonType.HVDCSource);
 
-        public override FuncitonType SupportFuncitonType => FuncitonType.DCSOURCE;
+        public override FuncitonType SupportFuncitonType => FuncitonType.HVDCSource;
 
-        public override string SupportFuncitonString => "DCSource";
+        public override string SupportFuncitonString => "HVDCSource";
 
         #region 界面绑定属性
 
@@ -63,6 +63,7 @@ namespace IMX.ATS.ATEConfig.Function
                 if (Set(nameof(SetOutputVol), ref setOutputVol, value))
                 {
                     (Func.Config as FunConfig_HVDCSource).Set_Vol = value;
+                    OperateType = SetOutPutState.ON;
                 }
             }
         }
@@ -111,7 +112,7 @@ namespace IMX.ATS.ATEConfig.Function
 
 
         #region 构造方法
-        public FunViewModelDCSource() { }
+        public FunViewModelHVDCSource() { }
         #endregion
 
     }

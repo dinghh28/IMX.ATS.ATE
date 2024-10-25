@@ -59,6 +59,11 @@
             数据所在设备类型
             </summary>
         </member>
+        <member name="P:IMX.Common.ModDeviceReadData.IsStepConditions">
+            <summary>
+            是否为步进条件变量
+            </summary>
+        </member>
         <member name="P:IMX.Common.ModDeviceReadData.ProtectTriggerMaxCount">
             <summary>
             保护触发最大次数
@@ -67,6 +72,21 @@
         <member name="T:IMX.Common.ModTestDataInfo">
             <summary>
             数据库试验详细数据记录模型
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModTestDataInfo.Name">
+            <summary>
+            数据名称
+            </summary>
+        </member>
+        <member name="P:IMX.Common.ModTestDataInfo.Value">
+            <summary>
+            读取值
+            </summary>
+        </member>
+        <member name="T:IMX.Common.ResultState">
+            <summary>
+            结果三态
             </summary>
         </member>
         <member name="T:IMX.Common.XmlserializeEx">

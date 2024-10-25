@@ -349,7 +349,7 @@ namespace IMX.ATS.ATEConfig
                 //string winname = SupportConfig.DicTestFlowItems.First(x => x.Value == FunctionInfos[index].FunctionName).Key;
                 string winname = functionInfos[index].FunctionName;
 
-                Type win = Type.GetType($"IMX.ATS.MCU.Function.FunView{winname}");
+                Type win = Type.GetType($"IMX.ATS.ATEConfig.Function.FunView{winname}");
 
                 ConfigContent = ContentControlManager.GetControl(win, FunctionInfos[index].Model);
             }

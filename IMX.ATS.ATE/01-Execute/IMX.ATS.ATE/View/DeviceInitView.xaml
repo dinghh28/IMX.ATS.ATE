@@ -3,10 +3,103 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:IMX.ATS.ATE"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:IMX.ATS.ATE" 
+        xmlns:converter="clr-namespace:IMX.ATS.ATE.Resource.Converter" d:DataContext="{d:DesignInstance Type=local:DeviceInitViewModel}"
         mc:Ignorable="d"
-        Title="DeviceInitView" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="DeviceInitView"  Height="500" Width="450"
+         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
+        WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
+        ResizeMode="NoResize"  x:Name="Win">
+
+    <Window.DataContext>
+        <Binding Path="Init" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+                <ResourceDictionary>
+                    <converter:InitStateToIconConverter x:Key="IconConverter"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border BorderThickness="1" BorderBrush="Black">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black"/>
+            <Grid Grid.Row="0">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label Content="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <DataGrid Background="Transparent" FontSize="13"
+                          HeadersVisibility="Column"
+                          RowHeight="25"
+                    IsReadOnly="True"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    CanUserSortColumns="False"
+                    AutoGenerateColumns="False"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                    ItemsSource="{Binding InitInfos}">
+                    
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border BorderBrush="Transparent" Background="Transparent">
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="Foreground" Value="Black"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.CellStyle>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="" Binding="{Binding Describe}" Width="4*"/>
+                        <DataGridTextColumn Header="设备型号" Binding="{Binding DeviceModel}" Width="2*"/>
+                        <DataGridTemplateColumn Header="状态" Width="1*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label
+                                VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
+                                Content="{Binding DeviceSate, Converter={StaticResource IconConverter}}" 
+                                Foreground="{Binding DeviceSate, Converter={StaticResource IconConverter}, ConverterParameter='Foreground'}"
+                                FontFamily="{StaticResource iconfont}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

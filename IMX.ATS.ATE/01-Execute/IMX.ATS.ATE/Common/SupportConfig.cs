@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IMX.ATS.ATE.Common
+namespace IMX.ATS.ATE
 {
     /// <summary>
     /// 系统支持配置类

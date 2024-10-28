@@ -285,6 +285,12 @@
             短路模式
             </summary>
         </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.ReadElectrical">
+            <summary>
+            读取电气信息
+            </summary>
+            <returns>操作结果@双精度浮点数列表</returns>
+        </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             打开/关闭负载

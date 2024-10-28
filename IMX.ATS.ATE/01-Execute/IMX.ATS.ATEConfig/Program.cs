@@ -24,7 +24,9 @@ namespace IMX.ATS.ATEConfig
             //MessageBox.Show("进入Main函数体了（参数：" + args.Length + "）");
 
 #if DEBUG
-            var info = JsonConvert.DeserializeObject<UserInfo>("""{"UserName":"丁慧慧","Password":null,"Privilege":15,"Id":1,"CreateTime":"2024-09-03T18:13:07.1761652+08:00","UpdateTime":"0001-01-01T00:00:00","IsDeleted":false,"Sort":0}""");
+            var info = JsonConvert.DeserializeObject<UserInfo>("""{"UserName":"Admin","Password":null,"Privilege":15,"Id":1,"CreateTime":"2024-09-03T18:13:07.1761652+08:00","UpdateTime":"0001-01-01T00:00:00","IsDeleted":false,"Sort":0}""");
+            //var info = JsonConvert.DeserializeObject<UserInfo>("{\"UserName\":\"Admin\",\"Password\":null,\"Privilege\":15,\"Id\":1,\"CreateTime\":\"2024-09-03T18:13:07.1761652+08:00\",\"UpdateTime\":\"0001-01-01T00:00:00\",\"IsDeleted\":false,\"Sort\":0}");
+
 #else
                 if (args.Length < 1)
                 {

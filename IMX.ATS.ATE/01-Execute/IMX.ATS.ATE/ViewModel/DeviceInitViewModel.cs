@@ -25,12 +25,12 @@
 
 using GalaSoft.MvvmLight;
 using H.WPF.Framework;
-using IMX.ATS.ATE.Common;
 using IMX.Common;
 using IMX.Device.Base;
 using IMX.Device.Base.DriveOperate;
 using IMX.Device.Common;
 using IMX.Function.Base;
+using IMX.Logger;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;
@@ -38,6 +38,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -99,9 +100,16 @@ namespace IMX.ATS.ATE
         /// 系统支持设备列表
         /// </summary>
         private BaseConfig SupportDeviceConfigXml = new BaseConfig(BaseConfig.StartupPath + string.Format("Config\\Systeam\\SupportDeviceConfig.xml"));
+
+        /// <summary>
+        /// 初始化信息字典[设备名称, 初始化参数信息]
+        /// </summary>
+        private Dictionary<string, InitInfo> dicInitInfo = new Dictionary<string, InitInfo>();
         #endregion
 
         #region 私有方法
+
+        #region 设备信息读取
         /// <summary>
         /// 设备配置初始化
         /// </summary>
@@ -122,11 +130,12 @@ namespace IMX.ATS.ATE
                 for (int i = 0; i < config?.Count; i++)
                 {
                     var device = config[i];
-                    if (device.EnableDriveInit)
-                    {
+                    //if (device.EnableDriveInit)
+                    //{
                         //SupportConfig.DicSupportDevice.Add(device.DeviceType, device.TypeName);
                         SupportConfig.DicSysteamDeviceConfigs.Add(device.Description, device);
-                    }
+                        GlobalModel.DicDeviceInfo.Add(device.Description, new DeviceInfo_ALL { Config = device });
+                    //}
                     //if (device.EnableFlow)
                     //{
                     //    SupportConfig.DicTestFlowItems.Add(device.Description, device.FuncitonType.GetDescription());
@@ -143,6 +152,7 @@ namespace IMX.ATS.ATE
 
         }
 
+        
         /// <summary>
         /// 系统设备配置文件写入
         /// </summary>
@@ -153,10 +163,122 @@ namespace IMX.ATS.ATE
             {
                 Directory.CreateDirectory(BaseConfig.StartupPath + string.Format("Config\\Systeam"));
             }
+            
+            new BaseConfig(BaseConfig.StartupPath + string.Format("Config\\ConfigDevice\\ACSource_0.xml"))
+                .WriteXml(new DeviceArgs 
+                {
+                    Address = 1,
+                    DeviceType = EDeviceType.ACSource,
+                    Name = "ANFH010S",
+                    DriveConfig = new DriveArgs 
+                    {
+                         BaudRate = "38400",
+                         ResourceString = "ASRL2::INSTR",
+                         CommunicationType = Device.Common.DriveType.ASRL,
+                         ConfigString = "Parity=None;DataBits=8;StopBits=One;FlowControl=XOnXOff;Address=1;UseSerial=false",
+                         TimeoutMS = 500,
+                         BeforeReadDelayMS = 200,
+                         TerminationCharacterEnabled = false,
+                         BusType = Piggy.VehicleBus.Common.VehicleBusType.Unknow,
+                    },
+                });
+
+            new BaseConfig(BaseConfig.StartupPath + string.Format("Config\\ConfigDevice\\APU_0.xml"))
+                .WriteXml(new DeviceArgs
+                {
+                    Address = 1,
+                    DeviceType = EDeviceType.APU,
+                    Name = "IT6832",
+                    DriveConfig = new DriveArgs
+                    {
+                        BaudRate = "9600",
+                        ResourceString = "USB0::0x2A8D::0x0101::MY57501899::INSTR",
+                        CommunicationType = Device.Common.DriveType.USB,
+                        ConfigString = "Parity=None;DataBits=8;StopBits=One;FlowControl=XOnXOff;Address=1;UseSerial=false",
+                        TimeoutMS = 500,
+                        BeforeReadDelayMS = 200,
+                        TerminationCharacterEnabled = true,
+                        BusType = Piggy.VehicleBus.Common.VehicleBusType.Unknow,
+                    },
+                });
+
+            new BaseConfig(BaseConfig.StartupPath + string.Format("Config\\ConfigDevice\\HVDCSource_0.xml"))
+            .WriteXml(new DeviceArgs
+            {
+                Address = 1,
+                DeviceType = EDeviceType.HVDCSource,
+                Name = "AN50300",
+                DriveConfig = new DriveArgs
+                {
+                    BaudRate = "38400",
+                    ResourceString = "ASRL3::INSTR",
+                    CommunicationType = Device.Common.DriveType.ASRL,
+                    ConfigString = "Parity=None;DataBits=8;StopBits=One;FlowControl=XOnXOff;Address=1;UseSerial=false",
+                    TimeoutMS = 500,
+                    BeforeReadDelayMS = 200,
+                    TerminationCharacterEnabled = true,
+                    BusType = Piggy.VehicleBus.Common.VehicleBusType.Unknow,
+                },
+            });
+
+            new BaseConfig(BaseConfig.StartupPath + string.Format("Config\\ConfigDevice\\DCLoad_0.xml"))
+            .WriteXml(new DeviceArgs
+            {
+                Address = 1,
+                DeviceType = EDeviceType.DCLoad,
+                Name = "AN23600E",
+                DriveConfig = new DriveArgs
+                {
+                    ResourceString = "TCPIP0::192.168.0.10::2101::SOCKET",
+                    CommunicationType = Device.Common.DriveType.LAN,
+                    ConfigString = "Parity=None;DataBits=8;StopBits=One;FlowControl=XOnXOff;Address=1;UseSerial=false",
+                    TimeoutMS = 500,
+                    BeforeReadDelayMS = 200,
+                    TerminationCharacterEnabled = true,
+                    BusType = Piggy.VehicleBus.Common.VehicleBusType.Unknow,
+                },
+            });
+
+            new BaseConfig(BaseConfig.StartupPath + string.Format("Config\\ConfigDevice\\Acquisition_0.xml"))
+            .WriteXml(new DeviceArgs
+            {
+                Address = 1,
+                DeviceType = EDeviceType.Acquisition,
+                Name = "AN87330",
+                DriveConfig = new DriveArgs
+                {
+                    ResourceString = "TCPIP0::192.168.0.10:520::SOCKET",
+                    CommunicationType = Device.Common.DriveType.LAN,
+                    ConfigString = "Parity=None;DataBits=8;StopBits=One;FlowControl=XOnXOff;Address=1;UseSerial=false",
+                    TimeoutMS = 500,
+                    BeforeReadDelayMS = 200,
+                    TerminationCharacterEnabled = true,
+                    BusType = Piggy.VehicleBus.Common.VehicleBusType.Unknow,
+                },
+            });
+
+            new BaseConfig(BaseConfig.StartupPath + string.Format("Config\\ConfigDevice\\Product_0.xml"))
+           .WriteXml(new DeviceArgs
+           {
+               Address = 1,
+               DeviceType = EDeviceType.Product,
+               Name = "CAN",
+               DriveConfig = new DriveArgs
+               {
+                   BaudRate = "500Kbps",
+                   ResourceString = "ZLG_CANFD::USBCANFD_200U::0::INSTR",
+                   CommunicationType = Device.Common.DriveType.LAN,
+                   ConfigString = "canfdspeed=否;DataBaudrate=500Kbps;ChannelIndex=0",
+                   TimeoutMS = 100,
+                   BeforeReadDelayMS = 20,
+                   TerminationCharacterEnabled = true,
+                   BusType = Piggy.VehicleBus.Common.VehicleBusType.CAN,
+               },
+           });
 
             return SupportDeviceConfigXml.WriteXml(new List<SysteamSupportDeviceConfigInfo>
             {
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Product,  DeviceNum = 1, Description = "Product",DeviceModel = "Product_CAN", TypeName = "Product_CAN", FuncitonType = FuncitonType.Product, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Product,  DeviceNum = 1, Description = "Product",DeviceModel = "Product_CAN", TypeName = "Product_CAN", FuncitonType = FuncitonType.Product, EnableFlow = true, EnableDriveInit = false, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Unknow,  DeviceNum = 0, Description = "未知设备",DeviceModel = "未知设备", TypeName = "未知设备", FuncitonType = FuncitonType.ProductResult, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Acquisition,  DeviceNum = 1, Description = "Acquisition", DeviceModel = "MCx", TypeName = "MCx", FuncitonType = FuncitonType.EquipmentResult, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.DCLoad,  DeviceNum = 1, Description = "DCLoad", DeviceModel = "AN23600E", TypeName = "AN23600E", FuncitonType = FuncitonType.DCLoad, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
@@ -169,7 +291,7 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 读取配置信息
         /// </summary>
-        private void ReadConfig()
+        private OperateResult ReadConfig()
         {
             string folderPath = $@"{AppDomain.CurrentDomain.BaseDirectory}\Config\ConfigDevice";
             if (!Directory.Exists(folderPath))
@@ -177,77 +299,82 @@ namespace IMX.ATS.ATE
                 Directory.CreateDirectory(folderPath);
             }
 
-            FileInfo[] files = new DirectoryInfo(folderPath).GetFiles();
-
-            foreach (FileInfo file in files)
+            try
             {
-                //    var device = DeviceTypes.Find(x => file.Name.Split('_')[0].Contains(x.Type.ToString()));
-                //    if (device != null)
-                //    {
-                string pathname = file.Name.Split('.')[0];
-                string num = pathname[pathname.Length - 1].ToString();
+                FileInfo[] files = new DirectoryInfo(folderPath).GetFiles();
 
-                //系统支持当前设备数量判断
-                if (Convert.ToInt32(num) >= SupportConfig.DicSysteamDeviceConfigs[pathname].DeviceNum)
+                foreach (FileInfo file in files)
                 {
-                    continue;
+                    string pathname = file.Name.Split('.')[0];
+                    string name = file.Name.Split('_')[0];
+                    string num = pathname[pathname.Length - 1].ToString();
+
+                    if (!SupportConfig.DicSysteamDeviceConfigs.TryGetValue(name, out SysteamSupportDeviceConfigInfo deviceconfiginfo))
+                    {
+                        continue;
+                    }
+
+                    //系统支持当前设备数量判断
+                    if (Convert.ToInt32(num) >= deviceconfiginfo.DeviceNum)
+                    {
+                        continue;
+                    }
+
+                    Device_Config deviceconfig = new Device_Config(pathname);
+
+                    if (GlobalModel.DicDeviceArgs.ContainsKey(name))
+                    {
+                        GlobalModel.DicDeviceArgs.Remove(name);
+                    }
+
+                    deviceconfig.GetSections<DeviceArgs>();
+                   var x =  deviceconfig.DeviceConfig;
+
+                    GlobalModel.DicDeviceArgs.Add(name, deviceconfig.DeviceConfig);
+                    
+                    if (GlobalModel.DicDeviceInfo.ContainsKey(name))
+                    {
+                        GlobalModel.DicDeviceInfo[name].Args = deviceconfig.DeviceConfig;
+                    }
+                    
+
+                    if (!deviceconfiginfo.EnableDriveInit)
+                    {
+                        continue;
+                    }
+
+                    if (dicInitInfo.ContainsKey(name))
+                    {
+                        continue;
+                    }
+
+                    InitInfo info = new InitInfo
+                    {
+                        Describe = deviceconfig.DeviceConfig.DeviceType.GetDescription(),
+                        DeviceModel = deviceconfig.DeviceConfig.Name,
+                        DeviceSate = ResultState.UNACCOMPLISHED,
+                    };
+
+                    dicInitInfo.Add(name, info);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        InitInfos.Add(info);
+                    });
+
+                    Thread.Sleep(100);
                 }
-
-                //        Device_Config deviceconfig = new Device_Config(pathname);
-                //        var config = deviceconfig.DeviceConfig;
-
-                //        DeviceConfigInfo deviceinfo = new DeviceConfigInfo
-                //        {
-                //            Config = config,
-                //            Drive = config.DriveConfig.CommunicationType,
-                //            PathName = pathname,
-                //            Name = $"{config.DeviceType.GetDescription()}-{num}",
-                //            BaudRate = SupportConfig.DicSupportBaudRate[config.DriveConfig.CommunicationType],
-                //        };
-
-                //        if (deviceinfo.Drive == DriveType.CAN)
-                //        {
-                //            DriveType eType = DriveType.NULL;
-                //            string strParam1 = string.Empty;
-                //            string strParam2 = string.Empty;
-                //            string strParam3 = "0";
-
-                //            DeviceResourceHelper
-                //                .DecodeResourceString(deviceinfo.Config.DriveConfig.ResourceString, ref eType, ref strParam1, ref strParam2, ref strParam3)
-                //                .And(DeviceResourceHelper
-                //                .DecodeConfigString(deviceinfo.Config.DriveConfig.ConfigString,
-                //             out string canfdacceler, out string databaudrate, out uint channelindex));
-
-                //            //OperateResult rlt = DeviceResourceHelper.DecodeConfigString(deviceinfo.Config.DriveConfig.ConfigString,
-                //            // out string canfdacceler, out string databaudrate, out uint channelindex);
-                //            deviceinfo.CANDrive = strParam2;
-                //            deviceinfo.DriveIndex = Convert.ToUInt32(strParam3);
-                //            deviceinfo.SelectedCANFDacceler = canfdacceler;
-                //            deviceinfo.SelectedDatabaudRate = databaudrate;
-                //            deviceinfo.ChanneIndex = channelindex;
-                //        }
-
-                //        if (deviceinfo.Drive == DriveType.ASRL)
-                //        {
-                //            SerialParity ASRL_Parity = SerialParity.None;                               // 串口通讯_校验位;
-                //            int ASRL_DataBits = 8;                                                      // 串口通讯_数据位;
-                //            SerialStopBitsMode ASRL_StopBits = SerialStopBitsMode.One;                  // 串口通讯_停止位;
-                //            SerialFlowControlModes ASRL_FlowControl = SerialFlowControlModes.None;   // 串口通讯_流控制; 
-                //            int ASRL_Address = 0;
-                //            bool isuser = false;
-                //            DeviceResourceHelper.DecodeConfigString(deviceinfo.Config.DriveConfig.ConfigString, ref ASRL_Parity, ref ASRL_DataBits, ref ASRL_StopBits, ref ASRL_FlowControl, ref ASRL_Address, ref isuser);
-                //            deviceinfo.SelectSerialParitys = ASRL_Parity.ToString();
-                //            deviceinfo.DataBits = (uint)ASRL_DataBits;
-                //            deviceinfo.SelectStopBitsMode = ASRL_StopBits.ToString();
-                //            deviceinfo.SelectFlowControl = ASRL_FlowControl.ToString();
-                //            deviceinfo.UseSerial = isuser;
-                //        }
-
-                //        device.DevieConfigs.Add(deviceinfo);
-
-                //    }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetMessage(),"系统配置文件获取异常");
+                SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, nameof(DeviceInitViewModel), nameof(ReadConfig), ex);
+                return OperateResult.Excepted(ex);
+            }
+
+            return OperateResult.Succeed();
         }
+        #endregion
+
 
 
         private readonly object objLock = new object();
@@ -276,6 +403,63 @@ namespace IMX.ATS.ATE
                      .ThenAnd(result => result.Data.Init(config, drive.Drive).ConvertTo(result.Data));
             }
         }
+
+
+        private void CabinetInit()
+        {
+            if (GlobalModel.DicDeviceInfo.Count<1)
+            {
+                return;
+            }
+
+            try
+            {
+                foreach (var item in GlobalModel.DicDeviceInfo)
+                {
+                    if (item.Value.Config.EnableDriveInit)
+                    {
+                        var result = DeviceInit(item.Value.Args)
+                       .ThenAnd(result => result.Data.Device_ReadAll()
+                       .ConvertTo(result.Data))
+                       .AttachIfSucceed(result => {
+                           item.Value.DeviceOperate = result.Data;
+                           item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
+                           Thread.Sleep(10);
+                           Application.Current.Dispatcher.Invoke(() =>
+                           {
+                               dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                           });
+                       })
+                       .AttachIfFailed(result =>
+                       {
+                           ErrorStr += $"{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result.Message}\r\n";
+                           GlobalModel.CabinetSate = false;
+                           Thread.Sleep(10);
+                           Application.Current.Dispatcher.Invoke(() =>
+                           {
+                               dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
+                           });
+                       });
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                GlobalModel.CabinetSate = false;
+                ErrorStr += ex.GetMessage();
+            }
+
+            Thread.Sleep(1000);
+
+            WindowClosedExecute(window);
+
+        }
+
+        private void CabinetUnInit()
+        {
+
+        }
         #endregion
 
         #region 保护方法
@@ -290,7 +474,30 @@ namespace IMX.ATS.ATE
 
             Title = IsInit ? "功能测试平台上电初始化" : "功能测试平台下电复原";
 
+            if (IsInit)
+            {
+                InitInfos.Clear();
+                dicInitInfo.Clear();
+
+                OperateResult result =  DeviceConfigInit().And(ReadConfig());
+                if (!result)
+                {
+
+                    ErrorStr = result.Message;
+                    GlobalModel.CabinetSate=false;
+                    WindowClosedExecute(obj);
+                    return;
+                }
+                new Thread(CabinetInit) { IsBackground = true }.Start();
+            }
+            else
+            {
+                new Thread(CabinetUnInit) { IsBackground = true }.Start();
+            }
+
+
             //base.WindowLoadedExecute(obj);
+
         }
 
         protected override void WindowClosedExecute(object obj)
@@ -320,7 +527,10 @@ namespace IMX.ATS.ATE
 
 
         #region 构造方法
-        public DeviceInitViewModel() { }
+        public DeviceInitViewModel() 
+        {
+            //WriteSupportDeviceConfig();
+        }
         #endregion
 
     }

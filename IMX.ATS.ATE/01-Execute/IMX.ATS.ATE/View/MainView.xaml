@@ -47,7 +47,7 @@
             <Grid Grid.Row="0" Margin="10,5">
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
                     <Label Content="功能测试平台" VerticalAlignment="Center" FontWeight="Bold" FontSize="15"/>
-                    <Label Content="{Binding ContentName}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="{Binding ContentName}" Margin="20,0,0,0" VerticalAlignment="Center" Foreground="{Binding ContentColor}"/>
                 </StackPanel>
 
                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
@@ -62,7 +62,7 @@
                     <ColumnDefinition Width="300"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <GroupBox Header="试验信息" Grid.Column="0" BorderBrush="Black">
+                <GroupBox Header="试验信息" Grid.Column="0" BorderBrush="Black" IsEnabled="{Binding EnableRunTest}">
                     <Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition/>

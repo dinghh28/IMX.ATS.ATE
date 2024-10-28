@@ -42,7 +42,7 @@ namespace IMX.ATS.ATE.Resource.Converter
             switch (parameter.ToString())
             {
                 case "String":
-                    return isuse ? "试验运行中..." : "开始试验";
+                    return isuse ? "停止试验" : "开始试验";
                 case "Brush":
                     return isuse ? Brushes.Red : Brushes.Green;
                 case "Bool":

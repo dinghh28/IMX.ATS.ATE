@@ -187,6 +187,28 @@ namespace IMX.DB.Model
     }
 
     /// <summary>
+    /// 试验方案信息库表
+    /// </summary>
+    public class Test_Programme : BaseEntity<Test_Programme, int> 
+    {
+        /// <summary>
+        /// 对应项目ID
+        /// </summary>
+        public int ProjectID { get; set; }
+
+        /// <summary>
+        /// 试验流程名称
+        /// </summary>
+        [JsonMap]
+        public List<string> Test_FlowNames { get; set; }
+
+        /// <summary>
+        /// 上次更新人员
+        /// </summary>
+        public string UpdateOperator { get; set; }
+    }
+
+    /// <summary>
     /// 实验流程操作存储模版类
     /// </summary>
     public class ModTestProcess

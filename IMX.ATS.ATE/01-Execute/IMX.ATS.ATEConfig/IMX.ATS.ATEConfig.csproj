@@ -235,6 +235,7 @@
     <Compile Include="ViewModel\ProjectInfoViewModel.cs" />
     <Compile Include="ViewModel\ProjectSelectViewModel.cs" />
     <Compile Include="ViewModel\TestProcessViewModel.cs" />
+    <Compile Include="ViewModel\TestProgrammeViewModel.cs" />
     <Compile Include="View\DBCConfigView.xaml.cs">
       <DependentUpon>DBCConfigView.xaml</DependentUpon>
     </Compile>
@@ -255,6 +256,9 @@
     </Compile>
     <Compile Include="View\TestProcessView.xaml.cs">
       <DependentUpon>TestProcessView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TestProgrammeView.xaml.cs">
+      <DependentUpon>TestProgrammeView.xaml</DependentUpon>
     </Compile>
     <Page Include="Function\View\FunViewAPU.xaml">
       <SubType>Designer</SubType>
@@ -313,6 +317,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TestProcessView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\TestProgrammeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

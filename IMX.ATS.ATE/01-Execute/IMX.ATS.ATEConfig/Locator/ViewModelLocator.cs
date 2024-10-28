@@ -52,6 +52,10 @@ namespace IMX.ATS.ATEConfig
             SimpleIoc.Default.Register<NewTestProcessViewModel>();
             ContentControlManager.Regiter<NewTestProcessView>();
 
+            //试验方案配置
+            SimpleIoc.Default.Register<TestProgrammeViewModel>();
+            ContentControlManager.Regiter<TestProgrammeView>();
+
             ////工装设备操作模板
             //SimpleIoc.Default.Register<FunViewModelEquip>();
             //ContentControlManager.Regiter<FunViewEquip>();
@@ -123,6 +127,11 @@ namespace IMX.ATS.ATEConfig
         /// 新建试验流程
         /// </summary>
         public NewTestProcessViewModel NewTestProcess => ServiceLocator.Current.GetInstance<NewTestProcessViewModel>();
+
+        /// <summary>
+        /// 试验方案配置
+        /// </summary>
+        public TestProgrammeViewModel TestProgramme => ServiceLocator.Current.GetInstance<TestProgrammeViewModel>();
 
         //#endregion
 

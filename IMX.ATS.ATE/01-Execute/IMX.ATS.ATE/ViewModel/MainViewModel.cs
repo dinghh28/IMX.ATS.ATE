@@ -28,6 +28,8 @@ using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
 using IMX.ATE.Common;
 using IMX.Common;
+using IMX.Function;
+using IMX.Logger;
 using IMX.WPF.Resource;
 using System;
 using System.Collections.Generic;
@@ -35,6 +37,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -77,6 +80,15 @@ namespace IMX.ATS.ATE
             get => contentname;
             set => Set(nameof(ContentName), ref contentname, value);
         }
+
+        private SolidColorBrush contentcolor = Brushes.Green;
+
+        public SolidColorBrush ContentColor
+        {
+            get => contentcolor;
+            set => Set(nameof(ContentColor), ref contentcolor, value);
+        }
+
 
         private ObservableCollection<string> prodectnames;
         /// <summary>
@@ -128,10 +140,15 @@ namespace IMX.ATS.ATE
         /// </summary>
         public string SoftwareVersion => SysteamInfo.SoftwareVersion;
 
+        /// <summary>
+        /// 是否允许运行试验
+        /// </summary>
+        public bool EnableRunTest => GlobalModel.CabinetSate;
+
         #endregion
 
         #region 界面绑定指令
-        public RelayCommand StartTest => new RelayCommand(StartedTest);
+        public RelayCommand Test => new RelayCommand(DoTest);
 
         #region 系统窗口指令
         ///// <summary>
@@ -193,15 +210,70 @@ namespace IMX.ATS.ATE
 
         #region 私有方法
 
-        private void StartedTest()
+        private void DoTest()
         {
-            IsTestRuning = !IsTestRuning;
+            if (!GlobalModel.CabinetSate)
+            {
+                MessageBox.Show("当前工装存在故障设备，不支持开启试验","工装异常");
+                return;
+            }
 
+            if (IsTestRuning)
+            {
+                if (MessageBox.Show("是否暂停试验?", "试验停止确认", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+                TestStop();
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(SelectedProductName))
+                {
+                    MessageBox.Show("试验项目不可为空，请选择需运行项目", "试验开启失败");
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(ProductSN))
+                {
+                    MessageBox.Show("项目编码不可为空，请填写产品对应编码", "试验开启失败");
+                    return;
+                }
+
+                if (MessageBox.Show("是否开始试验?", "试验开始确认", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+
+                TestStart();
+            }
             //EnableTestInfoChange =! EnableTestInfoChange;
         }
 
+        /// <summary>
+        /// 开始试验
+        /// </summary>
+        private void TestStart() 
+        {
+            IsTestRuning = true;
+        }
 
+        private void TestRun(object sender) 
+        {
+            if (sender == null)
+            {
+                SuperDHHLoggerManager.Error(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), $"线程参数不可为空");
+                return;
+            }
+        }
 
+        /// <summary>
+        /// 结束试验
+        /// </summary>
+        private void TestStop() 
+        {
+            IsTestRuning = false;
+        }
         #endregion
 
         #region 保护方法
@@ -225,6 +297,13 @@ namespace IMX.ATS.ATE
             }
 
             WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(win);
+
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                Window mainwindow = ContentControlManager.GetWindow<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
+                mainwindow.Show();
+            }));
+
             base.WindowClosedExecute(obj);
         }
         #endregion
@@ -233,67 +312,72 @@ namespace IMX.ATS.ATE
         #region 构造方法
         public MainViewModel() 
         {
-            ATEExecuteInfos.Add(new ExecuteInfo 
+            if (!GlobalModel.CabinetSate)
             {
-                Index = 1,
-                FunctionName = "TEST1",
-                Result = ResultState.UNACCOMPLISHED,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> { 
-                    new ExecuteStepInfo {
-                        StepName = "test1",
-                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                        Limit_Lower = string.Empty,
-                        Limit_Upper = string.Empty,
-                        Result = ResultState.SUCCESS,
-                    },
-                    new ExecuteStepInfo {
-                        StepName = "test2",
-                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                        Limit_Lower = "1",
-                        Limit_Upper = "3",
-                        Result = ResultState.SUCCESS,
-                    },
-                     new ExecuteStepInfo {
-                        StepName = "test3",
-                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                        Limit_Lower = string.Empty,
-                        Limit_Upper = string.Empty,
-                        Result = ResultState.FAIL,
-                    },
-                }
-            });
+                ContentName = "系统设备存在故障，无法运行";
+                ContentColor = Brushes.Red;
+            }
+            //ATEExecuteInfos.Add(new ExecuteInfo 
+            //{
+            //    Index = 1,
+            //    FunctionName = "TEST1",
+            //    Result = ResultState.UNACCOMPLISHED,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> { 
+            //        new ExecuteStepInfo {
+            //            StepName = "test1",
+            //            ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //            Limit_Lower = string.Empty,
+            //            Limit_Upper = string.Empty,
+            //            Result = ResultState.SUCCESS,
+            //        },
+            //        new ExecuteStepInfo {
+            //            StepName = "test2",
+            //            ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //            Limit_Lower = "1",
+            //            Limit_Upper = "3",
+            //            Result = ResultState.SUCCESS,
+            //        },
+            //         new ExecuteStepInfo {
+            //            StepName = "test3",
+            //            ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //            Limit_Lower = string.Empty,
+            //            Limit_Upper = string.Empty,
+            //            Result = ResultState.FAIL,
+            //        },
+            //    }
+            //});
 
-            ATEExecuteInfos.Add(new ExecuteInfo
-            {
-                Index = 2,
-                FunctionName = "TEST2",
-                Result = ResultState.UNACCOMPLISHED,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                    new ExecuteStepInfo {
-                        StepName = "test1",
-                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                        Limit_Lower = string.Empty,
-                        Limit_Upper = string.Empty,
-                        Result = ResultState.SUCCESS,
-                    },
-                    new ExecuteStepInfo {
-                        StepName = "test2",
-                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                        Limit_Lower = "1",
-                        Limit_Upper = "3",
-                        Result = ResultState.SUCCESS,
-                    },
-                     new ExecuteStepInfo {
-                        StepName = "test3",
-                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                        Limit_Lower = string.Empty,
-                        Limit_Upper = string.Empty,
-                        Result = ResultState.FAIL,
-                    },
-                }
-            });
+            //ATEExecuteInfos.Add(new ExecuteInfo
+            //{
+            //    Index = 2,
+            //    FunctionName = "TEST2",
+            //    Result = ResultState.UNACCOMPLISHED,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+            //        new ExecuteStepInfo {
+            //            StepName = "test1",
+            //            ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //            Limit_Lower = string.Empty,
+            //            Limit_Upper = string.Empty,
+            //            Result = ResultState.SUCCESS,
+            //        },
+            //        new ExecuteStepInfo {
+            //            StepName = "test2",
+            //            ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //            Limit_Lower = "1",
+            //            Limit_Upper = "3",
+            //            Result = ResultState.SUCCESS,
+            //        },
+            //         new ExecuteStepInfo {
+            //            StepName = "test3",
+            //            ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //            Limit_Lower = string.Empty,
+            //            Limit_Upper = string.Empty,
+            //            Result = ResultState.FAIL,
+            //        },
+            //    }
+            //});
         }
         #endregion
 
@@ -375,5 +459,43 @@ namespace IMX.ATS.ATE
         /// 开始时间
         /// </summary>
         public string ExecuteTime { get; set; }
+    }
+
+    public class MonitorThread 
+    {
+        /// <summary>
+        /// 试验名称
+        /// </summary>
+        public string ThreadName { get; set; }
+
+        /// <summary>
+        /// 线程Guid
+        /// </summary>
+        public string ThreadID { get; set; }
+
+        /// <summary>
+        /// 运行线程
+        /// </summary>
+        public Thread OprateThread { get; set; }
+
+        /// <summary>
+        /// 线程是否继续运行
+        /// </summary>
+        public bool IsStartThread { get; set; } = true;
+
+        /// <summary>
+        /// 线程运行状态
+        /// </summary>
+        public bool IsRunning { get; set; } = false;
+
+        /// <summary>
+        /// 试验运行流程
+        /// </summary>
+        public Dictionary<string, List<TestFunction>> TestFlowsFunction = new Dictionary<string, List<TestFunction>>();
+
+        /// <summary>
+        /// CAN下发列表
+        /// </summary>
+        public Dictionary<string, string> DicSendSignals_CAN { get; set; }
     }
 }

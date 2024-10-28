@@ -34,6 +34,9 @@ using System.Threading.Tasks;
 
 namespace IMX.ATS.ATEConfig.Function
 {
+    /// <summary>
+    /// 弹窗配置模板
+    /// </summary>
     public class FunViewModelPOPUP : FunViewModel
     {
         #region 公共属性
@@ -50,7 +53,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// <summary>
         /// 弹窗标题
         /// </summary>
-        public string Title
+        public string Title 
         {
             get => title = (Func.Config as FunConfig_POPUP).Title;
             set

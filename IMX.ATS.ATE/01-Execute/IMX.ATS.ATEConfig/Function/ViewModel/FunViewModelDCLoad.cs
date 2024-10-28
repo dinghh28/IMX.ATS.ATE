@@ -43,6 +43,10 @@ using Super.Zoo.Framework;
 
 namespace IMX.ATS.ATEConfig.Function
 {
+
+    /// <summary>
+    /// 直流负载配置模板
+    /// </summary>
     public class FunViewModelDCLoad : FunViewModel
     {
         #region 公共属性
@@ -308,7 +312,7 @@ namespace IMX.ATS.ATEConfig.Function
         {
             if (SelectedValueIndex == -1)
             {
-                MessageBox.Show("请选择要删除的条件","条件删除异常");
+                MessageBox.Show("请选择要删除的条件", "条件删除异常");
                 return;
             }
 
@@ -357,8 +361,8 @@ namespace IMX.ATS.ATEConfig.Function
         /// <summary>
         /// 变量判定条件列表
         /// </summary>
-        public List<StepValueConditions> ValueConditions { get; } = new List<StepValueConditions> 
-        {  
+        public List<StepValueConditions> ValueConditions { get; } = new List<StepValueConditions>
+        {
             StepValueConditions.GREATERTHAN, StepValueConditions.LESSTHAN, StepValueConditions.EQUALTO, StepValueConditions.NOTEQUALTO
         };
 

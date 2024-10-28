@@ -135,6 +135,11 @@ namespace IMX.ATS.ATEConfig
         //public FunViewModelProduct FunEroduct => ServiceLocator.Current.GetInstance<FunViewModelProduct>();
 
         /// <summary>
+        /// 交流源配置模板
+        /// </summary>
+        public FunViewModelACSource FunACSource=>ServiceLocator.Current.GetInstance<FunViewModelACSource>();
+
+        /// <summary>
         /// 稳压直流源配置模板
         /// </summary>
         public FunViewModelAPU FunAPU=> ServiceLocator.Current.GetInstance<FunViewModelAPU>();
@@ -153,6 +158,11 @@ namespace IMX.ATS.ATEConfig
         /// 直流负载配置模板
         /// </summary>
         public FunViewModelDCLoad FunDCLoad => ServiceLocator.Current.GetInstance<FunViewModelDCLoad>();
+
+        /// <summary>
+        /// 产品指令配置模板
+        /// </summary>
+        public FunViewModelProduct FunProduct=>ServiceLocator.Current.GetInstance<FunViewModelProduct>();
         #endregion
 
     }

@@ -344,6 +344,7 @@ namespace IMX.ATS.ATEConfig
             MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
             projectid = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
             ProcessNames.Clear();
+                DBOperate.Default.GetProcessName(GlobalModel.Test_ProjectInfo.Id)
                 .AttachIfSucceed(result => {
                     for (int i = 0; i < result.Data.Count; i++)
                     {

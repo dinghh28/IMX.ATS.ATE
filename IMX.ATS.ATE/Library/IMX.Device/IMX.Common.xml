@@ -34,6 +34,11 @@
             是否在设定范围内
             </summary>
         </member>
+        <member name="P:IMX.Common.ModDeviceReadData.Judgment">
+            <summary>
+            结果判定条件
+            </summary>
+        </member>
         <member name="P:IMX.Common.ModDeviceReadData.IsTrage">
             <summary>
             是否为触发值
@@ -82,6 +87,26 @@
         <member name="P:IMX.Common.ModTestDataInfo.Value">
             <summary>
             读取值
+            </summary>
+        </member>
+        <member name="T:IMX.Common.ResultJudgment">
+            <summary>
+            结果判定条件
+            </summary>
+        </member>
+        <member name="F:IMX.Common.ResultJudgment.RANGE">
+            <summary>
+            范围
+            </summary>
+        </member>
+        <member name="F:IMX.Common.ResultJudgment.EQUALTO">
+            <summary>
+            等于
+            </summary>
+        </member>
+        <member name="F:IMX.Common.ResultJudgment.NOTEQUALTO">
+            <summary>
+            不等于
             </summary>
         </member>
         <member name="T:IMX.Common.ResultState">

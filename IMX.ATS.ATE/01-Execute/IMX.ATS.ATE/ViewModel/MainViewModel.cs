@@ -681,13 +681,14 @@ namespace IMX.ATS.ATE
                         ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
                         Limit_Lower = data.Limits_Lower.ToString(),
                         Limit_Upper = data.Limits_Upper.ToString(),
+                        ValueConditions = data.Judgment.GetDescription(),
                     };
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
 
                     if (!config.Datas[i].IsInRange)
                     {
                         step.Result = ResultState.FAIL;
-                        errorstring += $"{data.DataInfo.Name}当前读取值【{data.DataInfo.Value}】（判定条件{data.DataInfo}），不符合要求：{data.Limits_Lower} - {data.Limits_Upper}\r\n";
+                        errorstring += $"{data.DataInfo.Name}当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]），不符合要求：{data.Limits_Lower} - {data.Limits_Upper}\r\n";
                     }
                     else
                     {
@@ -750,6 +751,7 @@ namespace IMX.ATS.ATE
                         ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
                         Limit_Lower = data.Limits_Lower.ToString(),
                         Limit_Upper = data.Limits_Upper.ToString(),
+                        ValueConditions = data.Judgment.GetDescription(),
                     };
 
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
@@ -757,7 +759,7 @@ namespace IMX.ATS.ATE
                     if (!config.Datas[i].IsInRange)
                     {
                         step.Result = ResultState.FAIL;
-                        errorstring += $"{data.DataInfo.Name}当前读取值【{data.DataInfo.Value}】（判定条件{data.DataInfo}），不符合要求：{data.Limits_Lower} - {data.Limits_Upper}\r\n";
+                        errorstring += $"{data.DataInfo.Name}当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]），不符合要求：{data.Limits_Lower} - {data.Limits_Upper}\r\n";
                     }
                     else
                     {

@@ -229,64 +229,104 @@
             <param name="device"></param>
             <returns></returns>
         </member>
-        <member name="T:IMX.Function.Config.FunConfig_POPUP">
+        <member name="T:IMX.Function.DBCSendSignal">
+            <summary>
+            产品下发信号模型类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.IsSend">
+            <summary>
+            是否发送信号
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.ID">
+            <summary>
+            序号
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.MessageID">
+            <summary>
+            信号ID
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.MessageName">
+            <summary>
+            消息名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.SignalName">
+            <summary>
+            信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.CustomName">
+            <summary>
+            自定义信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.SignalValue">
+            <summary>
+            发送值
+            </summary>
+        </member>
+        <member name="T:IMX.Function.FunConfig_POPUP">
             <summary>
             弹窗（手动确认试验结果）配置模板类
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.SupportFuncitonType">
+        <member name="P:IMX.Function.FunConfig_POPUP.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.DeviceAddress">
+        <member name="P:IMX.Function.FunConfig_POPUP.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.Title">
+        <member name="P:IMX.Function.FunConfig_POPUP.Title">
             <summary>
             弹窗标题
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.Description">
+        <member name="P:IMX.Function.FunConfig_POPUP.Description">
             <summary>
             弹窗内容
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.IsResult">
+        <member name="P:IMX.Function.FunConfig_POPUP.IsResult">
             <summary>
             是否允许弹窗结果作为试验结果判定
             </summary>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_POPUP.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_POPUP.Execute(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_POPUP.#ctor">
+        <member name="M:IMX.Function.FunConfig_POPUP.#ctor">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_POPUP.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+        <member name="M:IMX.Function.FunConfig_POPUP.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
-        <member name="T:IMX.Function.Config.FunConfig_Relay">
+        <member name="T:IMX.Function.FunConfig_Relay">
             <summary>
             继电器板试验流程配置类
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_Relay.SupportFuncitonType">
+        <member name="P:IMX.Function.FunConfig_Relay.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_Relay.DeviceAddress">
+        <member name="P:IMX.Function.FunConfig_Relay.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_Relay.Set_OutPutStates">
+        <member name="P:IMX.Function.FunConfig_Relay.Set_OutPutStates">
             <summary>
             继电器输出状态
             </summary>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_Relay.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_Relay.Execute(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_Relay.#ctor">
+        <member name="M:IMX.Function.FunConfig_Relay.#ctor">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+        <member name="M:IMX.Function.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.IFunction_Result">
@@ -360,7 +400,7 @@
             析构方法
             </summary>
         </member>
-        <member name="M:IMX.Function.TestFunction.Dispose">
+        <member name="M:IMX.Function.TestFunction.InternalDispose">
             <summary>
             析构方法
             </summary>
@@ -685,81 +725,6 @@
             <summary>
             Json序列化转换
             </summary>
-            <returns></returns>
-        </member>
-        <member name="T:IMX.Funciton.DBCSendSignal">
-            <summary>
-            产品下发信号模型类
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.IsSend">
-            <summary>
-            是否发送信号
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.ID">
-            <summary>
-            序号
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.MessageID">
-            <summary>
-            信号ID
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.MessageName">
-            <summary>
-            消息名
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.SignalName">
-            <summary>
-            信号名
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.CustomName">
-            <summary>
-            自定义信号名
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.SignalValue">
-            <summary>
-            发送值
-            </summary>
-        </member>
-        <member name="T:IMX.Funciton.FunConfig_Product">
-            <summary>
-            产品下发指令配置类
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.Identify">
-            <inheritdoc/>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.SupportFuncitonType">
-            <inheritdoc/>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.DeviceAddress">
-            <inheritdoc/>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.SendSignals">
-            <summary>
-            产品发送列表
-            </summary>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.#ctor">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.#ctor(Super.Zoo.Framework.Logger.ILogger)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.Finalize">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.Execute(System.Object)">
-            <summary>
-            
-            </summary>
-            <param name="operate"></param>
             <returns></returns>
         </member>
     </members>

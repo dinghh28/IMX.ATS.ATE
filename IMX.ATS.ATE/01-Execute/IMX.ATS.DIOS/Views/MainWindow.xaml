@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.DIOS" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" 
         d:DataContext="{d:DesignInstance Type=local:MainWindowModel}"
         mc:Ignorable="d"
         Title="数据查询" Height="450" Width="800" Name="Win" WindowStyle="None">
@@ -188,11 +187,12 @@
         </Style>
 
     </Window.Resources>
+    
     <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" >
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="60"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="280"/>
             <RowDefinition/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -202,8 +202,15 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Border Margin="20 0 0 0" Width="100" HorizontalAlignment="Left">
-                <Label Content="查 询 数 据"  FontSize="18" HorizontalAlignment="Left" Width="100" FontWeight="Bold" Foreground="#555" />
+            <Border Margin="20 0 0 0"  HorizontalAlignment="Left">
+                <WrapPanel VerticalAlignment="Center">
+                    <Label Content="查 询 数 据"  FontSize="18" 
+                           HorizontalAlignment="Left" VerticalAlignment="Center" 
+                           Width="100" FontWeight="Bold" 
+                           Foreground="#555" />
+                    <Label Content="{Binding SoftwareVersion}" FontSize="15" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                </WrapPanel>
+
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Orientation="Horizontal">
                 <Button Content="&#xe721;" Style="{StaticResource ControlButtonStyle}" Background="#11000000" Tag="#333"
@@ -217,13 +224,18 @@
         <Border BorderBrush="#EEE" BorderThickness="0,0,0,1"/>
         <WrapPanel Grid.Row="1" VerticalAlignment="Center">
             <Label Content="开始时间" FontSize="15" Margin="20 0 0 0" Width="auto" HorizontalContentAlignment="Left"/>
-            <DatePicker Margin="10 0 0 0" Height="30" FontSize="15"   Text="{Binding TestStartTime}"/>
+            <DatePicker Margin="10 0 0 0" Height="30" FontSize="15"   Text="{Binding TestStartTime, Mode=TwoWay}"/>
             <Label Content="结束时间" FontSize="15" Margin="20 0 0 0" Width="auto" HorizontalContentAlignment="Left"/>
-            <DatePicker Margin="10 0 0 0" Height="30" FontSize="15"   Text="{Binding TestEndTime}"/>
+            <DatePicker Margin="10 0 0 0" Height="30" FontSize="15"   Text="{Binding TestEndTime, Mode=TwoWay}"/>
             <Label Content="项目编号" FontSize="15" Margin="20 0 0 0" Width="auto" HorizontalContentAlignment="Left"/>
-            <ComboBox Name="CBName" SelectedValue="{Binding SearchTestText,Mode=TwoWay}" ItemsSource="{Binding Product_Tests}"  FontSize="15" Margin="10 0 0 0" HorizontalAlignment="Left" 
-Width="165" Height="30"  IsTextSearchEnabled="False" Style="{StaticResource DefaultComboBoxStyle}"  >
-                <!--<i:Interaction.Triggers>
+            <ComboBox Name="CBName" FontSize="15" Margin="10 0 0 0" HorizontalAlignment="Left" 
+                      Width="165" Height="30"  
+                      IsTextSearchEnabled="False" 
+                      Style="{StaticResource DefaultComboBoxStyle}"
+                      SelectedValue="{Binding SearchTestText,Mode=TwoWay}" 
+                      ItemsSource="{Binding Product_Tests}"  />
+
+            <!--<i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding SelectTestCommand}" />
                     </i:EventTrigger>
@@ -231,20 +243,32 @@ Width="165" Height="30"  IsTextSearchEnabled="False" Style="{StaticResource Defa
                         <i:InvokeCommandAction Command="{Binding DelectTestCommand}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>-->
-            </ComboBox>
+
+
+            <Label Content="产品编号" FontSize="15" Margin="20 0 0 0" Width="auto" HorizontalContentAlignment="Left"/>
+            <TextBox FontSize="15" Margin="10 0 0 0" HorizontalAlignment="Left" Width="165" Height="30" Text="{Binding SearchTestSN}" 
+                     InputMethod.IsInputMethodEnabled="False"/>
+
             <!--<Label Content="样品编号" FontSize="15" Margin="20 0 0 0" Width="auto" HorizontalContentAlignment="Left"/>
             <ComboBox ItemsSource="{Binding Products}" SelectedValue="{Binding Product_SN}" FontSize="15" Margin="10 0 0 0" HorizontalAlignment="Left" 
                       Width="150" Height="30" Style="{StaticResource DefaultComboBoxStyle}"/>-->
             <Button Content="查 询" Width="50" Height="30" BorderThickness="0"  FontSize="15" Margin="20 0 0 0" Command="{Binding SelectTestDataCommand}"/>
             <Button Content="导出数据" Width="100" Height="30" BorderThickness="0"  FontSize="15" Margin="20 0 0 0" Command="{Binding SelectTestDataToSave}" CommandParameter="{Binding ElementName=ItemdataGrid,Path=SelectedIndex}"/>
         </WrapPanel>
-        <Grid Grid.Row="2" Height="140" VerticalAlignment="Top">
+        <Grid Grid.Row="2" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1067*"/>
                 <!--<ColumnDefinition Width="31*"/>-->
             </Grid.ColumnDefinitions>
-            <DataGrid  Name="ItemdataGrid" Height="140"  ItemsSource="{Binding  TestItemDataTable}"   CanUserAddRows="False" ColumnWidth="*" IsReadOnly="True" AutoGenerateColumns="False"
-                             ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.ColumnSpan="2"  SelectedIndex="{Binding ItemIDSelectindex}">
+            <DataGrid  Name="ItemdataGrid"  ItemsSource="{Binding  TestItemDataTable}"
+                       Height="270"
+                       CanUserAddRows="False" 
+                       ColumnWidth="*" 
+                       IsReadOnly="True" 
+                       AutoGenerateColumns="False"
+                       ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                       Grid.ColumnSpan="2"  
+                       SelectedIndex="{Binding ItemIDSelectindex}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.Header>
@@ -293,12 +317,15 @@ CommandParameter="{Binding .}">-->
                     </DataGridCheckBoxColumn>-->
 
                     <DataGridTextColumn Width="4*"  Header="样机编号" Binding="{Binding Pro_SN}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="3*" Header="机柜编号" Binding="{Binding CabinetID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="3*" Header="工位" Binding="{Binding StationID}" IsReadOnly="True"/>
                     <!--<DataGridTextColumn Width="4*"  Header="循环数" Binding="{Binding Test_CycleNum}" IsReadOnly="True"/>-->
-                    <DataGridTextColumn Width="6*"  Header="实际运行时间(秒)" Binding="{Binding Test_ActTime}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="4*" Header="起始时间" Binding="{Binding Test_StartTime}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="4*" Header="结束时间" Binding="{Binding Test_EndTime}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="4*" Header="试验结果" Binding="{Binding Result}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="4*"  Header="实际运行时间" Binding="{Binding Test_ActTime}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="4*" Header="起始时间" Binding="{Binding Test_StartTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="4*" Header="结束时间" Binding="{Binding Test_EndTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="3*" Header="试验结果" Binding="{Binding Result, Converter={StaticResource IconConverter}}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="6*" Header="故障信息" Binding="{Binding ErrorInfo}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="3*" Header="操作人员" Binding="{Binding Operator}" IsReadOnly="True"/>
                 </DataGrid.Columns>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
@@ -315,16 +342,12 @@ CommandParameter="{Binding .}">-->
 
         </Grid>
 
-        <Grid Grid.Row="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <DataGrid  Name="TestdataGrid" ItemsSource="{Binding  TestDataTable}"  CanUserAddRows="False"  IsReadOnly="True"  FrozenColumnCount="1"
+        <!--<Grid Grid.Row="3">-->
+        <DataGrid Grid.Row="3" Name="TestdataGrid" ItemsSource="{Binding  TestDataTable}"  CanUserAddRows="False"  IsReadOnly="True"  FrozenColumnCount="1"
                              ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
 
-            </DataGrid>
-            <Grid Margin="20" Grid.Column="1">
+        </DataGrid>
+        <!--<Grid Margin="20" Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
                     <RowDefinition/>
@@ -357,11 +380,29 @@ CommandParameter="{Binding .}">-->
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
-            </Grid>
-        </Grid>
+            </Grid>-->
+        <!--</Grid>-->
         <Grid Grid.Row="4">
-            <ProgressBar Name="progressBar" Width="200" Height="20" IsIndeterminate="True" Minimum="0"  ToolTip="{Binding ProBarText}" 
-             Value="{Binding ProBarValue}" Visibility="{Binding ProBarVisily}" Maximum="{Binding ProBarMaxValue}"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition  Width="2*" />
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <WrapPanel Grid.Column="0">
+                <Label Content="当前页行数:" Margin="5 0 0 0"/>
+                <Label Content="{Binding TestDataCount}" />
+                <Label Content="当前页/总页数:" Margin="5 0 0 0"/>
+                <Label Content="{Binding TestDataSelectPage}" Margin="5 0 0 0"/>
+                <Label Content="/"/>
+                <Label Content="{Binding TestDataALLPage}"/>
+                <Button Content="第一页" Margin="5 0 0 0" BorderThickness="0" Background="Transparent" Command="{Binding SelectNextDataCommand}" CommandParameter="第一页"/>
+                <Button Content="上一页" Margin="5 0 0 0" BorderThickness="0" Background="Transparent" Command="{Binding SelectNextDataCommand}" CommandParameter="上一页"/>
+                <Button Content="下一页" Margin="5 0 0 0" BorderThickness="0" Background="Transparent" Command="{Binding SelectNextDataCommand}" CommandParameter="下一页"/>
+                <Button Content="最后一页" Margin="5 0 0 0" BorderThickness="0" Background="Transparent" Command="{Binding SelectNextDataCommand}" CommandParameter="最后一页"/>
+            </WrapPanel>
+            <ProgressBar Grid.Column="1" Width="300" Height="20" IsIndeterminate="True" Minimum="0"  ToolTip="{Binding ProBarText}" 
+       Value="{Binding ProBarValue}" Visibility="{Binding ProBarVisily}" Maximum="{Binding ProBarMaxValue}"/>
+            <TextBlock  Grid.Column="2" Text="{Binding ProBarText}" Visibility="{Binding ProBarVisily}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
         </Grid>
     </Grid>
 </Window>

@@ -662,7 +662,7 @@ namespace IMX.ATS.ATEConfig
                 LoadFile(path);
             }
 
-            AddFixedSignal();
+            //AddFixedSignal();
             base.WindowLoadedExecute(obj);
         }
 

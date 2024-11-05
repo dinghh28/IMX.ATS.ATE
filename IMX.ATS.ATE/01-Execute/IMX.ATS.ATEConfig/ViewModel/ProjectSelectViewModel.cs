@@ -129,7 +129,10 @@ namespace IMX.ATS.ATEConfig
 
                 DBOperate.Default.GetDBCConfig_ByProjectID(SelectedInfo.Info.Id).AttachIfSucceed(result => viewmodel.DBCConfig = result.Data);
 
-
+                if (viewmodel.DBCConfig != null)
+                {
+                    DBOperate.Default.GetFile_ByID(viewmodel.DBCConfig.DBCFileID).AttachIfSucceed(result => viewmodel.DBCFileInfo = result.Data);
+                }
                 //if (SelectedInfo.Info.IsUseDDBC)
                 //{
                 //DBOperate.Default.GetFile_ByID(viewmodel.DBCConfig.DBCFileID).AttachIfSucceed(result => viewmodel.DBCFileInfo = result.Data);

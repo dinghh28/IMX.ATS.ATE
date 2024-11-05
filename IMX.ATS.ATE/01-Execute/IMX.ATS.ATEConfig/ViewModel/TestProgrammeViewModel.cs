@@ -290,16 +290,33 @@ namespace IMX.ATS.ATEConfig
                     return;
                 }
             }
-
-            DBOperate.Default.UpdateProgram(projectid, listProcessNames, EPowerOffProcessNames.ToList())
+            Test_Programme program = new Test_Programme()
+            {
+                ProjectID = projectid,
+                //ProjectName = NewProgramName,
+                Test_FlowNames = listProcessNames,
+                TestOff_FlowNames = EPowerOffProcessNames.ToList(),
+                UpdateOperator = GlobalModel.UserInfo.UserName,
+            };
+            DBOperate.Default.ExistProgram(projectid)
                 .AttachIfSucceed(result =>
                 {
-                    MessageBox.Show($"试验方案保存成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                })
-                .AttachIfFailed(result =>
-                {
-                    MessageBox.Show($"试验方案保存失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (result.Data == null)
+                    {
+                        DBOperate.Default.InsertTestProgramme(program)
+                        .AttachIfSucceed(result =>{ MessageBox.Show($"试验方案保存成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);})
+                        .AttachIfFailed(result =>{MessageBox.Show($"试验方案保存失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information);});
+                    }
+                    else
+                    {
+                        DBOperate.Default.UpdateProgram(projectid, listProcessNames, EPowerOffProcessNames.ToList())
+                        .AttachIfSucceed(result => { MessageBox.Show($"试验方案保存成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);  })
+                        .AttachIfFailed(result => { MessageBox.Show($"试验方案保存失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information); });
+                    }
+
                 });
+
+
         }
 
         //private void SaveAs()
@@ -336,6 +353,7 @@ namespace IMX.ATS.ATEConfig
         //            MessageBox.Show($"试验方案另存为失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information);
         //        });
         //}
+
         #endregion
 
         #region 保护方法
@@ -344,16 +362,17 @@ namespace IMX.ATS.ATEConfig
             MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
             projectid = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
             ProcessNames.Clear();
-                DBOperate.Default.GetProcessName(GlobalModel.Test_ProjectInfo.Id)
-                .AttachIfSucceed(result => {
-                    for (int i = 0; i < result.Data.Count; i++)
-                    {
-                        ProcessNames.Add(result.Data[i]);
-                    }
-                }).AttachIfFailed(result => 
+            DBOperate.Default.GetProcessName(projectid)
+            .AttachIfSucceed(result =>
+            {
+                for (int i = 0; i < result.Data.Count; i++)
                 {
-                    MessageBox.Show($"无法获取当前项目流程：\r\n{result.Message}", "项目流程获取异常");
-                });
+                    ProcessNames.Add(result.Data[i]);
+                }
+            }).AttachIfFailed(result =>
+            {
+                MessageBox.Show($"无法获取当前项目流程：\r\n{result.Message}", "项目流程获取异常");
+            });
 
             if (!viewmodel.IsNewProject)
             {

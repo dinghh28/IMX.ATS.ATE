@@ -13,6 +13,7 @@ using System.Linq.Expressions;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using static FreeSql.Internal.GlobalFilter;
 
 namespace IMX.DB
 {
@@ -849,9 +850,9 @@ namespace IMX.DB
                 Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
                 return OperateResult.Failed(LastError);
             }
+
             try
             {
-
                 int row = Sqlite.Update<Test_Programme>()
                             .Where(x => x.ProjectID == id )
                             .Set(X => X.Test_FlowNames, testprocess)
@@ -875,6 +876,37 @@ namespace IMX.DB
                 return OperateResult.Excepted(ex);
             }
         }
+
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <param name="funcname">流程名称</param>
+        /// <param name="processes">试验步骤</param>
+        /// <returns></returns>
+        public OperateResult<Test_Programme> ExistProgram(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(ExistProgram), LastError);
+                return OperateResult<Test_Programme>.Failed(null,LastError);
+            }
+
+            try
+            {
+                Test_Programme items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne();
+
+                return OperateResult<Test_Programme>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
+                return OperateResult<Test_Programme>.Excepted(null, ex);
+            }
+        }
+
 
         /// <summary>
         /// 插入试验流程

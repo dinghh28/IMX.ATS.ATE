@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-Common", "03-Common", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMX.ATE.Common", "03-Common\IMX.ATE.Common\IMX.ATE.Common.csproj", "{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IMX.Function", "..\..\..\IMX.Extend\IMX.Extend\IMX.Extend\03-Function\IMX.Function\IMX.Function.csproj", "{7CD98983-6220-4EDB-899E-D8869091089D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,14 @@ Global
 		{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}.Release|Any CPU.Build.0 = Release|Any CPU
 		{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}.Release|x64.ActiveCfg = Release|Any CPU
 		{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}.Release|x64.Build.0 = Release|Any CPU
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Debug|x64.ActiveCfg = Debug|x64
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Debug|x64.Build.0 = Debug|x64
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Release|x64.ActiveCfg = Release|x64
+		{7CD98983-6220-4EDB-899E-D8869091089D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -91,5 +101,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {50759023-307B-4E23-B837-F472866C7988}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\..\IMX.Extend\IMX.Extend\IMX.Extend\03-Function\IMX.Function.Base\IMX.Function.Base.projitems*{7cd98983-6220-4edb-899e-d8869091089d}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

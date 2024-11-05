@@ -132,7 +132,7 @@ namespace IMX.ATS.ATEConfig
         {
             if (SelectedDBCIndex == -1)
             {
-                MessageBox.Show("请先选择DBC文件","变更提交异常");
+                MessageBox.Show("请先选择DBC文件", "变更提交异常");
                 return;
             }
 
@@ -147,7 +147,7 @@ namespace IMX.ATS.ATEConfig
                     Directory.CreateDirectory(SupportConfig.DBCFileDownPath);
                 }
 
-                 path = Path.Combine(SupportConfig.DBCFileDownPath, info.FileName+info.FileExtension);
+                path = Path.Combine(SupportConfig.DBCFileDownPath, info.FileName + info.FileExtension);
 
                 File.WriteAllBytes(path, info.FileContent);
             }
@@ -159,8 +159,10 @@ namespace IMX.ATS.ATEConfig
 
             DBOperate.Default.UpdateDBCFile(ConfigID, info.Id);
 
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig.DBCFileID= info.Id;
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCFileInfo.FileName= DBCFileInfos[SelectedDBCIndex].FileName;
+            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig = new Test_DBCConfig();
+
+            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig.DBCFileID = info.Id;
+            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCFileInfo.FileName = DBCFileInfos[SelectedDBCIndex].FileName;
 
             ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.DBCFileName = DBCFileInfos[SelectedDBCIndex].FileName;
             ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.LoadFile(path);
@@ -186,7 +188,7 @@ namespace IMX.ATS.ATEConfig
             DBCFileInfos.Clear();
             SearchStr = string.Empty;
 
-            DBOperate.Default.GetFiles().AttachIfSucceed(result => 
+            DBOperate.Default.GetFiles().AttachIfSucceed(result =>
             {
                 fileinfos = result.Data;
                 for (int i = 0; i < result.Data.Count; i++)

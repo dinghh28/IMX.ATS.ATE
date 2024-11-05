@@ -26,7 +26,6 @@
 using H.WPF.Framework;
 using IMX.Function;
 using IMX.Function.Base;
-using IMX.Function.Config;
 using IMX.Function.ViewModel;
 using System;
 using System.Collections.Generic;

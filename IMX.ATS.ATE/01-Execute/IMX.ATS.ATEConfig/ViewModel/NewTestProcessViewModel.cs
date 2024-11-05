@@ -46,7 +46,7 @@ namespace IMX.ATS.ATEConfig
         #region 公共属性
 
         #region 界面绑定属性
-        private string schemeName;
+        private string schemeName = "";
         /// <summary>
         /// 试验流程名称
         /// </summary>
@@ -56,7 +56,7 @@ namespace IMX.ATS.ATEConfig
             set => Set(nameof(SchemeName), ref schemeName, value);
         }
 
-        private string schemeDescribe;
+        private string schemeDescribe = "";
         /// <summary>
         /// 试验流程描述
         /// </summary>
@@ -132,8 +132,8 @@ namespace IMX.ATS.ATEConfig
                     FunctionName = SchemeName,
                     Test_Flows = mod,
                     UpdateOperator = GlobalModel.UserInfo?.UserName,
-                }) ;
-               
+                });
+
                 if (!DbRtl)
                 {
                     MessageBox.Show($"配置信息存储失败:{DbRtl.Message}");
@@ -164,6 +164,8 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            SchemeName = "";
+            SchemeDescribe = "";
             //base.WindowLoadedExecute(obj);
         }
 

@@ -32,8 +32,9 @@ namespace IMX.ATS.ATEConfig
             {FuncitonType.APU, typeof(FunViewModelAPU) },
             {FuncitonType.HVDCSource, typeof(FunViewModelHVDCSource) },
             {FuncitonType.POPUP, typeof(FunViewModelPOPUP) },
-            //{ "Equip", "工装设备配置"},
-            //{  FuncitonType.PRODUCT , },
+            {FuncitonType.Product , typeof(FunViewModelProduct)},
+            {FuncitonType.ACSource , typeof(FunViewModelACSource)},
+            {FuncitonType.DCLoad , typeof(FunViewModelDCLoad)},
         };
 
 

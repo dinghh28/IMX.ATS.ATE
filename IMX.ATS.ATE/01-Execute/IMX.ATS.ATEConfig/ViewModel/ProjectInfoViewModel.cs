@@ -213,10 +213,12 @@ namespace IMX.ATS.ATEConfig
 
         private void SavedConfig()
         {
-            if ( string.IsNullOrEmpty(ProjectName)) { MessageBox.Show($"项目名称不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-            if ( string.IsNullOrEmpty(ProjectSN)) { MessageBox.Show($"项目SN不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+            if (string.IsNullOrEmpty(ProjectName)) { MessageBox.Show($"项目名称不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+            if (string.IsNullOrEmpty(ProjectSN)) { MessageBox.Show($"项目SN不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+
             //ProjectInfo.InputVol = SelectedVol;
             //ProjectInfo.RunTime = RunTime;
+
             ProjectInfo.IsUseDDBC = UseDBC;
             ProjectInfo.RatedCur = RatedCur;
             ProjectInfo.RatedVol = RatedVol;
@@ -238,7 +240,7 @@ namespace IMX.ATS.ATEConfig
                     mainviewmodel.ProjectName = ProjectName;
                     mainviewmodel.ProjectInfo.Id = ProjectInfo.Id;
                     EnableEdite = true;
-                    MessageBox.Show("项目信息保存成功!", "[新建]",MessageBoxButton.OK,MessageBoxImage.Information);
+                    MessageBox.Show("项目信息保存成功!", "[新建]", MessageBoxButton.OK, MessageBoxImage.Information);
                 })
                     .AttachIfFailed(result =>
                     {
@@ -279,6 +281,9 @@ namespace IMX.ATS.ATEConfig
                 ProjectName = mainviewmodel.ProjectInfo.ProjectName;
                 ProjectSN = mainviewmodel.ProjectInfo.ProjectSN;
                 UseDBC = mainviewmodel.ProjectInfo.IsUseDDBC;
+                RatedPow = mainviewmodel.ProjectInfo.RatedPow;
+                BaudRate = mainviewmodel.ProjectInfo.BaudRate;
+                DataBaudRate= mainviewmodel.ProjectInfo.DataBaudrate ;
             }
             //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectSelect.WindowClose.Execute("ProjectSelect");
         }

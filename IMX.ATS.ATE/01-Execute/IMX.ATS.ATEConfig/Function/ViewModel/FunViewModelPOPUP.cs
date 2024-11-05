@@ -24,7 +24,6 @@
 #endregion << 版 本 注 释 >>
 using IMX.Function;
 using IMX.Function.Base;
-using IMX.Function.Config;
 using IMX.Function.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -34,6 +33,9 @@ using System.Threading.Tasks;
 
 namespace IMX.ATS.ATEConfig.Function
 {
+    /// <summary>
+    /// 弹窗配置模板
+    /// </summary>
     public class FunViewModelPOPUP : FunViewModel
     {
         #region 公共属性
@@ -46,11 +48,11 @@ namespace IMX.ATS.ATEConfig.Function
 
         #region 界面绑定属性
 
-        private string title;
+        private string title="";
         /// <summary>
         /// 弹窗标题
         /// </summary>
-        public string Title
+        public string Title 
         {
             get => title = (Func.Config as FunConfig_POPUP).Title;
             set

@@ -56,12 +56,7 @@ namespace IMX.ATS.ATEConfig
             SimpleIoc.Default.Register<TestProgrammeViewModel>();
             ContentControlManager.Regiter<TestProgrammeView>();
 
-            ////工装设备操作模板
-            //SimpleIoc.Default.Register<FunViewModelEquip>();
-            //ContentControlManager.Regiter<FunViewEquip>();
-
-            //SimpleIoc.Default.Register<FunViewModelProduct>();
-            //ContentControlManager.Regiter<FunViewProduct>();
+            
 
             #region 流程步骤配置
             //直流稳压源配置
@@ -79,6 +74,14 @@ namespace IMX.ATS.ATEConfig
             //直流负载配置
             SimpleIoc.Default.Register<FunViewModelDCLoad>();
             ContentControlManager.Regiter<FunViewDCLoad>();
+
+            //交流负载配置
+            SimpleIoc.Default.Register<FunViewModelACSource>();
+            ContentControlManager.Regiter<FunViewACSource>();
+
+            //产品指令配置
+            SimpleIoc.Default.Register<FunViewModelProduct>();
+            ContentControlManager.Regiter<FunViewProduct>();
             #endregion
         }
 
@@ -140,8 +143,11 @@ namespace IMX.ATS.ATEConfig
         ////工装设备操作模板
         //public FunViewModelEquip FunEquip => ServiceLocator.Current.GetInstance<FunViewModelEquip>();
 
-        ////产品指令操作模版
-        //public FunViewModelProduct FunEroduct => ServiceLocator.Current.GetInstance<FunViewModelProduct>();
+
+        /// <summary>
+        /// 交流源配置模板
+        /// </summary>
+        public FunViewModelACSource FunACSource=>ServiceLocator.Current.GetInstance<FunViewModelACSource>();
 
         /// <summary>
         /// 稳压直流源配置模板
@@ -162,6 +168,11 @@ namespace IMX.ATS.ATEConfig
         /// 直流负载配置模板
         /// </summary>
         public FunViewModelDCLoad FunDCLoad => ServiceLocator.Current.GetInstance<FunViewModelDCLoad>();
+
+        /// <summary>
+        /// 产品指令配置模板
+        /// </summary>
+        public FunViewModelProduct FunProduct=>ServiceLocator.Current.GetInstance<FunViewModelProduct>();
         #endregion
 
     }

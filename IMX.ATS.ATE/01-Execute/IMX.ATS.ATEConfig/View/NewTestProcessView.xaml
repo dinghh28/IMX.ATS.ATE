@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             d:DataContext="{d:DesignInstance Type=local:NewTestProcessViewModel}"
              mc:Ignorable="d" Height="250" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FFF6F7FC" 
-            WindowStyle="None" AllowsTransparency="True" FontSize="15" BorderBrush="Gray" BorderThickness="1">
+            WindowStyle="None" AllowsTransparency="True" FontSize="15" BorderBrush="Gray" BorderThickness="1" x:Name="Win">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,6 +18,11 @@
     <Window.DataContext>
         <Binding Path="NewTestProcess" Source="{StaticResource Locator}"/>
     </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.5*"/>
@@ -41,10 +48,10 @@
                 </WrapPanel>
                 <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">
                     <TextBlock Text="流程描述："/>
-                    <TextBox Width="200" Height="80" Text="{Binding SchemeDescribe}" />
+                    <TextBox Width="200" Height="75" Text="{Binding SchemeDescribe}" TextWrapping="Wrap" />
                 </WrapPanel>
             </Grid>
         </GroupBox>
-        <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Height="35" Content="保 存 流 程" FontWeight="Normal" Command="{Binding SaveSchemeCommannd}"  CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}"/>
+        <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Height="35" Content="保 存 流 程" FontWeight="Normal" Command="{Binding SaveSchemeCommannd}"  CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Width="100"/>
     </Grid>
 </Window>

@@ -257,7 +257,7 @@ namespace IMX.ATS.ATE
         {
             if (!GlobalModel.CabinetSate)
             {
-                MessageBox.Show("当前工装存在故障设备，不支持开启试验","工装异常");
+                MessageBox.Show("当前工装存在故障设备，不支持开启试验", "工装异常");
                 return;
             }
 
@@ -296,7 +296,7 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 开始试验
         /// </summary>
-        private void TestStart() 
+        private void TestStart()
         {
             var rlt = DBOperate.Default.GetProjectInfo_ByName(SelectedProductName);
             if (!rlt)
@@ -419,6 +419,7 @@ namespace IMX.ATS.ATE
             IsTestRuning = true;
         }
 
+        
         private string TestErrorString = string.Empty;
 
         private void TestRun(object sender) 
@@ -1110,7 +1111,8 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 结束试验
         /// </summary>
-        private void TestStop() 
+       
+        private void TestStop()
         {
             TestErrorString = "手动停止试验";
             if (monitor!=null)
@@ -1185,74 +1187,205 @@ namespace IMX.ATS.ATE
 
 
         #region 构造方法
-        public MainViewModel() 
+        
+        public MainViewModel()
         {
             if (!GlobalModel.CabinetSate)
             {
-                ContentName = "系统设备存在故障，无法运行";
+                //ContentName = "系统设备存在故障，无法运行";
                 ContentColor = Brushes.Red;
             }
-            //ATEExecuteInfos.Add(new ExecuteInfo 
-            //{
-            //    Index = 1,
-            //    FunctionName = "TEST1",
-            //    Result = ResultState.UNACCOMPLISHED,
-            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
-            //    StepInfos = new ObservableCollection<ExecuteStepInfo> { 
-            //        new ExecuteStepInfo {
-            //            StepName = "test1",
-            //            ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-            //            Limit_Lower = string.Empty,
-            //            Limit_Upper = string.Empty,
-            //            Result = ResultState.SUCCESS,
-            //        },
-            //        new ExecuteStepInfo {
-            //            StepName = "test2",
-            //            ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-            //            Limit_Lower = "1",
-            //            Limit_Upper = "3",
-            //            Result = ResultState.SUCCESS,
-            //        },
-            //         new ExecuteStepInfo {
-            //            StepName = "test3",
-            //            ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-            //            Limit_Lower = string.Empty,
-            //            Limit_Upper = string.Empty,
-            //            Result = ResultState.FAIL,
-            //        },
-            //    }
-            //});
+#if DEBUG
+            SelectedProductName = "OBC测试800W";
+            ProductSN = "35L2024091101020S";
+            ATEExecuteInfos.Add(new ExecuteInfo
+            {
+                Index = 1,
+                FunctionName = "硬件唤醒测试",
+                Result = ResultState.FAIL,
+                StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                StepInfos = new ObservableCollection<ExecuteStepInfo> {
+                    new ExecuteStepInfo {
+                        StepName = "KL30上电",
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        Limit_Lower = "11",
+                        Limit_Upper = "12.5",
+                        Result = ResultState.FAIL,
+                    },
+                    new ExecuteStepInfo {
+                        StepName = "KL15导通",
+                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+                        Limit_Lower = "1",
+                        Limit_Upper = "1",
+                        Result = ResultState.FAIL,
+                    },
+                     new ExecuteStepInfo {
+                        StepName = "样品通讯上报",
+                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.FAIL,
+                    },
+                }
 
-            //ATEExecuteInfos.Add(new ExecuteInfo
-            //{
-            //    Index = 2,
-            //    FunctionName = "TEST2",
-            //    Result = ResultState.UNACCOMPLISHED,
-            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
-            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
-            //        new ExecuteStepInfo {
-            //            StepName = "test1",
-            //            ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-            //            Limit_Lower = string.Empty,
-            //            Limit_Upper = string.Empty,
-            //            Result = ResultState.SUCCESS,
-            //        },
-            //        new ExecuteStepInfo {
-            //            StepName = "test2",
-            //            ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-            //            Limit_Lower = "1",
-            //            Limit_Upper = "3",
-            //            Result = ResultState.SUCCESS,
-            //        },
-            //         new ExecuteStepInfo {
-            //            StepName = "test3",
-            //            ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-            //            Limit_Lower = string.Empty,
-            //            Limit_Upper = string.Empty,
-            //            Result = ResultState.FAIL,
-            //        },
-            //    }
-            //});
+            });
+
+            ATEExecuteInfos.Add(new ExecuteInfo
+            {
+                Index = 2,
+                FunctionName = "CC唤醒测试",
+                Result = ResultState.SUCCESS,
+                StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                StepInfos = new ObservableCollection<ExecuteStepInfo> {
+                    new ExecuteStepInfo {
+                        StepName = "test1",
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.SUCCESS,
+                    },
+                    new ExecuteStepInfo {
+                        StepName = "test2",
+                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+                        Limit_Lower = "1",
+                        Limit_Upper = "3",
+                        Result = ResultState.SUCCESS,
+                    },
+                     new ExecuteStepInfo {
+                        StepName = "test3",
+                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.FAIL,
+                    },
+                }
+            });
+
+            ATEExecuteInfos.Add(new ExecuteInfo
+            {
+                Index = 2,
+                FunctionName = "CP唤醒测试",
+                Result = ResultState.UNACCOMPLISHED,
+                StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                StepInfos = new ObservableCollection<ExecuteStepInfo> {
+                    new ExecuteStepInfo {
+                        StepName = "test1",
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.SUCCESS,
+                    },
+                    new ExecuteStepInfo {
+                        StepName = "test2",
+                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+                        Limit_Lower = "1",
+                        Limit_Upper = "3",
+                        Result = ResultState.SUCCESS,
+                    },
+                     new ExecuteStepInfo {
+                        StepName = "test3",
+                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.FAIL,
+                    },
+                }
+            });
+
+            ATEExecuteInfos.Add(new ExecuteInfo
+            {
+                Index = 2,
+                FunctionName = "额定功率",
+                Result = ResultState.UNACCOMPLISHED,
+                StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                StepInfos = new ObservableCollection<ExecuteStepInfo> {
+                    new ExecuteStepInfo {
+                        StepName = "test1",
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.SUCCESS,
+                    },
+                    new ExecuteStepInfo {
+                        StepName = "test2",
+                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+                        Limit_Lower = "1",
+                        Limit_Upper = "3",
+                        Result = ResultState.SUCCESS,
+                    },
+                     new ExecuteStepInfo {
+                        StepName = "test3",
+                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.FAIL,
+                    },
+                }
+            });
+
+            ATEExecuteInfos.Add(new ExecuteInfo
+            {
+                Index = 2,
+                FunctionName = "输出电压过压保护",
+                Result = ResultState.UNACCOMPLISHED,
+                StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                StepInfos = new ObservableCollection<ExecuteStepInfo> {
+                    new ExecuteStepInfo {
+                        StepName = "test1",
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.SUCCESS,
+                    },
+                    new ExecuteStepInfo {
+                        StepName = "test2",
+                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+                        Limit_Lower = "1",
+                        Limit_Upper = "3",
+                        Result = ResultState.SUCCESS,
+                    },
+                     new ExecuteStepInfo {
+                        StepName = "test3",
+                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.FAIL,
+                    },
+                }
+            });
+
+            ATEExecuteInfos.Add(new ExecuteInfo
+            {
+                Index = 2,
+                FunctionName = "输出电压欠压保护",
+                Result = ResultState.UNACCOMPLISHED,
+                StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                StepInfos = new ObservableCollection<ExecuteStepInfo> {
+                    new ExecuteStepInfo {
+                        StepName = "test1",
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.SUCCESS,
+                    },
+                    new ExecuteStepInfo {
+                        StepName = "test2",
+                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+                        Limit_Lower = "1",
+                        Limit_Upper = "3",
+                        Result = ResultState.SUCCESS,
+                    },
+                     new ExecuteStepInfo {
+                        StepName = "test3",
+                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+                        Limit_Lower = string.Empty,
+                        Limit_Upper = string.Empty,
+                        Result = ResultState.FAIL,
+                    },
+                }
+            });
+#endif
+
         }
         #endregion
 
@@ -1341,7 +1474,8 @@ namespace IMX.ATS.ATE
         public string ExecuteTime { get; set; }
     }
 
-    public class MonitorThread 
+
+    public class MonitorThread
     {
         /// <summary>
         /// 试验名称
@@ -1367,6 +1501,10 @@ namespace IMX.ATS.ATE
         /// 线程运行状态
         /// </summary>
         public bool IsRunning { get; set; } = false;
+
+        /// <summary>
+        /// 试验运行流程
+        /// </summary>
 
         /// <summary>
         /// 项目信息

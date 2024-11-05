@@ -38,16 +38,17 @@ namespace IMX.ATS.ATEConfig.Resource.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            bool result = (bool)value;
+            DeviceOutPutState state = (DeviceOutPutState)value;
 
-            return result ? DeviceOutPutState.ON : DeviceOutPutState.OFF;
+            return state == DeviceOutPutState.ON;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            DeviceOutPutState state = (DeviceOutPutState)value;
+             bool result = (bool)value;
 
-            return state == DeviceOutPutState.ON;
+            return result ? DeviceOutPutState.ON : DeviceOutPutState.OFF;
+          
         }
     }
 }

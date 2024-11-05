@@ -101,6 +101,46 @@
   <PropertyGroup>
     <StartupObject>IMX.ATS.ATEConfig.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'BIS|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\BIS\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ATE|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\ATE\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CommonServiceLocator.2.0.7\lib\net48\CommonServiceLocator.dll</HintPath>
@@ -150,15 +190,17 @@
     </Reference>
     <Reference Include="IMX.Function, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Library\IMX.Function.ViewModel\IMX.Function.dll</HintPath>
+      <HintPath>..\..\Library\IMX.Function\IMX.Function.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Function.ViewModel">
+    <Reference Include="IMX.Function.ViewModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Function.ViewModel\IMX.Function.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Logger">
       <HintPath>..\..\Library\IMX.Logger\IMX.Logger.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.WPF.Resource">
+    <Reference Include="IMX.WPF.Resource, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.WPF.Resource\IMX.WPF.Resource.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -210,10 +252,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Function\ViewModel\FunViewModelACSource.cs" />
     <Compile Include="Function\ViewModel\FunViewModelAPU.cs" />
     <Compile Include="Function\ViewModel\FunViewModelDCLoad.cs" />
     <Compile Include="Function\ViewModel\FunViewModelHVDCSource.cs" />
     <Compile Include="Function\ViewModel\FunViewModelPOPUP.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelProduct.cs" />
+    <Compile Include="Function\View\FunViewACSource.xaml.cs">
+      <DependentUpon>FunViewACSource.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Function\View\FunViewAPU.xaml.cs">
       <DependentUpon>FunViewAPU.xaml</DependentUpon>
     </Compile>
@@ -225,6 +272,9 @@
     </Compile>
     <Compile Include="Function\View\FunViewPOPUP.xaml.cs">
       <DependentUpon>FunViewPOPUP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewProduct.xaml.cs">
+      <DependentUpon>FunViewProduct.xaml</DependentUpon>
     </Compile>
     <Compile Include="Resource\Converter\ShortSatetConverter.cs" />
     <Compile Include="Resource\Converter\UseDBCConverter.cs" />
@@ -260,6 +310,10 @@
     <Compile Include="View\TestProgrammeView.xaml.cs">
       <DependentUpon>TestProgrammeView.xaml</DependentUpon>
     </Compile>
+    <Page Include="Function\View\FunViewACSource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Function\View\FunViewAPU.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -273,6 +327,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Function\View\FunViewPOPUP.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewProduct.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

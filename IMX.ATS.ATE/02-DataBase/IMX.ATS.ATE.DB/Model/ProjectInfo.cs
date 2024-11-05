@@ -158,7 +158,9 @@ namespace IMX.DB.Model
         public string SignalInitValue { get; set; }
     }
     #endregion
-
+    /// <summary>
+    /// 测试流程
+    /// </summary>
     public class Test_Process : BaseEntity<Test_Process, int>
     {
 
@@ -184,23 +186,39 @@ namespace IMX.DB.Model
         /// 上次更新人员
         /// </summary>
         public string UpdateOperator { get; set; }
+
+        /// <summary>
+        /// 描述/备注
+        /// </summary>
+        public string Description { get; set; }
     }
 
     /// <summary>
     /// 试验方案信息库表
     /// </summary>
-    public class Test_Programme : BaseEntity<Test_Programme, int> 
+    public class Test_Programme : BaseEntity<Test_Programme, int>
     {
         /// <summary>
         /// 对应项目ID
         /// </summary>
         public int ProjectID { get; set; }
 
+        ///// <summary>
+        ///// 对应项目名称
+        ///// </summary>
+        //public int ProjectName{ get; set; }
+
         /// <summary>
         /// 试验流程名称
         /// </summary>
         [JsonMap]
         public List<string> Test_FlowNames { get; set; }
+
+        /// <summary>
+        /// 下电试验流程名称
+        /// </summary>
+        [JsonMap]
+        public List<string> TestOff_FlowNames { get; set; }
 
         /// <summary>
         /// 上次更新人员

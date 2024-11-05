@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.ATEConfig" 
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800"
@@ -62,7 +63,7 @@
                              Visibility="{Binding FlowConfigVisbility}"/>
                     <RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="试验方案配置"
-                       Command="{Binding NavChangeCommand}" CommandParameter="FunctionConfig" 
+                       Command="{Binding NavChangeCommand}" CommandParameter="TestProgramme" 
                              Visibility="{Binding FlowConfigVisbility}"/>
 
                 </StackPanel>

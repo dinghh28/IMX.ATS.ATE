@@ -190,15 +190,17 @@
     </Reference>
     <Reference Include="IMX.Function, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Library\IMX.Function.ViewModel\IMX.Function.dll</HintPath>
+      <HintPath>..\..\Library\IMX.Function\IMX.Function.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Function.ViewModel">
+    <Reference Include="IMX.Function.ViewModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Function.ViewModel\IMX.Function.ViewModel.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Logger">
       <HintPath>..\..\Library\IMX.Logger\IMX.Logger.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.WPF.Resource">
+    <Reference Include="IMX.WPF.Resource, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.WPF.Resource\IMX.WPF.Resource.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -307,7 +309,8 @@
     </Compile>
     <Compile Include="View\TestProgrammeView.xaml.cs">
       <DependentUpon>TestProgrammeView.xaml</DependentUpon>
-    </Compile>    <Page Include="Function\View\FunViewACSource.xaml">
+    </Compile>
+    <Page Include="Function\View\FunViewACSource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

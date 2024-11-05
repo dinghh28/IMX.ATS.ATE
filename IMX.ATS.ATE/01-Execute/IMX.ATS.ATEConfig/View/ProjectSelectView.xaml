@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.ATEConfig" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        d:DataContext="{d:DesignInstance Type=local:ProjectSelectViewModel}"
         mc:Ignorable="d"
         Title="ProjectSelectView" Height="500" Width="450"    
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"

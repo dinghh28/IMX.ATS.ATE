@@ -40,6 +40,8 @@ using System.Collections.ObjectModel;
 using IMX.Common;
 using GalaSoft.MvvmLight.Command;
 using Super.Zoo.Framework;
+using IMX.Device.Common;
+using System.Windows.Markup;
 
 namespace IMX.ATS.ATEConfig.Function
 {
@@ -71,16 +73,34 @@ namespace IMX.ATS.ATEConfig.Function
 
         private bool enablesetstepvalue;
         /// <summary>
-        /// 允许步进设置标志位
+        /// 允许步进参数设置标志位
         /// </summary>
         public bool EnableSetStepValue
         {
-            get => enablesetstepvalue = (Func.Config as FunConfig_DCLoad).EnableStepping;
+            get => enablesetstepvalue;
+            set => Set(nameof(EnableSetStepValue), ref enablesetstepvalue, value);
+            //{
+            //    (Func.Config as FunConfig_DCLoad).EnableStepping = value;
+            //}
+            //}
+        }
+
+
+        private bool set_StepModel = false;
+        /// <summary>
+        /// 允许步进设置标志位
+        /// </summary>
+        public bool Set_StepModel
+        {
+            get => set_StepModel = (Func.Config as FunConfig_DCLoad).EnableStepping;
             set
             {
-                if (Set(nameof(EnableSetStepValue), ref enablesetstepvalue, value))
+                if (Set(nameof(Set_StepModel), ref set_StepModel, value))
                 {
                     (Func.Config as FunConfig_DCLoad).EnableStepping = value;
+
+                    EnableSetStepValue = value;
+
                 }
             }
         }
@@ -91,7 +111,22 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public DeviceOutPutState Set_ShortState
         {
-            get => set_shortstate = (Func.Config as FunConfig_DCLoad).Set_ShortState;
+            get
+            {
+                if ((Func.Config as FunConfig_DCLoad).Set_ShortState == DeviceOutPutState.ON)
+                {
+                    EnableSetLoadValue = false;
+                    EnableSetStepValue = false;
+                    Set_StepModel = false;
+                }
+                else
+                {
+                    EnableSetLoadValue = true;
+                    EnableSetStepValue = false;
+                    Set_StepModel = false;
+                }
+                return set_shortstate = (Func.Config as FunConfig_DCLoad).Set_ShortState;
+            }
             set
             {
                 if (Set(nameof(Set_ShortState), ref set_shortstate, value))
@@ -102,10 +137,13 @@ namespace IMX.ATS.ATEConfig.Function
                     {
                         EnableSetLoadValue = false;
                         EnableSetStepValue = false;
+                        Set_StepModel = false;
                     }
                     else
                     {
                         EnableSetLoadValue = true;
+                        EnableSetStepValue = false;
+                        Set_StepModel = false;
                     }
                 }
             }
@@ -125,6 +163,23 @@ namespace IMX.ATS.ATEConfig.Function
                 if (Set(nameof(Set_Model), ref set_model, value))
                 {
                     (Func.Config as FunConfig_DCLoad).Set_Model = value;
+                    switch (value)
+                    {
+                        case "CCL":
+                        case "CCH":
+                            Unit = "A";
+                            break;
+                        case "CVL":
+                        case "CVH":
+                            Unit = "V";
+                            break;
+                        case "CRL":
+                        case "CRH":
+                            Unit = "R";
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -143,6 +198,16 @@ namespace IMX.ATS.ATEConfig.Function
                     (Func.Config as FunConfig_DCLoad).Set_LoadValue = value;
                 }
             }
+        }
+        private string unit = "A";
+
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string Unit
+        {
+            get => unit;
+            set => Set(nameof(Unit), ref unit, value);
         }
 
         #region 步进参数
@@ -180,7 +245,7 @@ namespace IMX.ATS.ATEConfig.Function
 
         private double startloadvalue;
         /// <summary>
-        /// 结束拉载值
+        /// 起始拉载值
         /// </summary>
         public double StartLoadValue
         {
@@ -286,11 +351,17 @@ namespace IMX.ATS.ATEConfig.Function
                 StepValue data = new StepValue
                 {
                     ConditionValue = new StepConditionValue(),
+                    //SelectConditionName = new RelayCommand<object>(StepValuesADD),
                 };
+                //获取功率计设备高压直流侧电压电流数据
 
-                for (int i = 0; i < (Func.Config as FunConfig_DCLoad)?.ConditionalValues.Count; i++)
+                //SupportDeviceInfo.DeviceRecInfo["AN87330"]
+                //for (int i = 0; i < (Func.Config as FunConfig_DCLoad)?.ConditionalValues.Count; i++)
+                for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
                 {
-                    data.ConditionValues.Add((Func.Config as FunConfig_DCLoad).ConditionalValues[i]);
+                    data.ConditionNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
+                    data.ConditionValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
+                    //data.ConditionValues.Add((Func.Config as FunConfig_DCLoad).ConditionalValues[i]);
                 }
 
                 (Func.Config as FunConfig_DCLoad)?.Values.Add(data.ConditionValue);
@@ -304,6 +375,12 @@ namespace IMX.ATS.ATEConfig.Function
             }
 
         }
+        //private void StepValuesADD(object index)
+        //{
+        //    StepConditionValue stepCondition = (Func.Config as FunConfig_DCLoad)?.Values[SelectedValueIndex];
+        //    StepValues[SelectedValueIndex].ConditionValue.Value = StepValues[SelectedValueIndex].ConditionValues[(int)index];
+        //    stepCondition = StepValues[SelectedValueIndex].ConditionValue;
+        //}
 
         /// <summary>
         /// 删除步进跳出条件
@@ -376,6 +453,32 @@ namespace IMX.ATS.ATEConfig.Function
             set => Set(nameof(ConditionValues), ref conditionvalues, value);
         }
 
+        private ObservableCollection<string> conditionnames = new ObservableCollection<string>();
+        /// <summary>
+        /// 变量名列表
+        /// </summary>
+        public ObservableCollection<string> ConditionNames
+        {
+            get => conditionnames;
+            set => Set(nameof(ConditionNames), ref conditionnames, value);
+        }
+
+        private int conditionIndex;
+        /// <summary>
+        /// 变量名
+        /// </summary>
+        public int ConditionIndex
+        {
+            get => conditionIndex;
+            set
+            {
+                if (Set(nameof(ConditionIndex), ref conditionIndex, value))
+                {
+                    ConditionValue.Value = ConditionValues[conditionIndex];
+                }
+            }
+        }
+
 
         private StepConditionValue conditionvalue;
         /// <summary>
@@ -387,5 +490,6 @@ namespace IMX.ATS.ATEConfig.Function
             set => Set(nameof(ConditionValue), ref conditionvalue, value);
         }
 
+        //public RelayCommand<object> SelectConditionName { get; set; }
     }
 }

@@ -125,8 +125,9 @@ namespace IMX.ATS.ATEConfig
                 viewmodel.IsNewProject = false;
                 viewmodel.ProjectInfo = SelectedInfo.Info;
 
-
                 DBOperate.Default.GetDBCConfig_ByProjectID(SelectedInfo.Info.Id).AttachIfSucceed(result => viewmodel.DBCConfig = result.Data);
+
+
                 //if (SelectedInfo.Info.IsUseDDBC)
                 //{
                 //DBOperate.Default.GetFile_ByID(viewmodel.DBCConfig.DBCFileID).AttachIfSucceed(result => viewmodel.DBCFileInfo = result.Data);
@@ -135,7 +136,7 @@ namespace IMX.ATS.ATEConfig
 
             }
 
-            //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = viewmodel.ProjectInfo;
+            ((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = viewmodel.ProjectInfo;
 
             try
             {
@@ -151,6 +152,7 @@ namespace IMX.ATS.ATEConfig
                     {
                         MessageBox.Show(ex.GetMessage(), "当前窗口关闭异常，请手动关闭");
                     }
+
                 }));
             }
             catch (Exception ex)

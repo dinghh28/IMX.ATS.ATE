@@ -32,6 +32,7 @@ using IMX.Function;
 using IMX.Function.Base;
 using IMX.Function.ViewModel;
 using IMX.Function.ViewModel.Model;
+using Newtonsoft.Json;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,16 @@ namespace IMX.ATS.ATEConfig
                     SelectSolution();
                 }
             }
+        }
+
+        private ObservableCollection<string> solutionDescriptions = new ObservableCollection<string>();
+        /// <summary>
+        /// 试验方案描述
+        /// </summary>
+        public ObservableCollection<string> SolutionDescriptions
+        {
+            get => solutionDescriptions;
+            set => Set(nameof(SolutionDescriptions), ref solutionDescriptions, value);
         }
 
         private string solutionDescription;
@@ -149,7 +160,7 @@ namespace IMX.ATS.ATEConfig
                 }
             }
         }
-        
+
 
         #endregion
 
@@ -171,12 +182,27 @@ namespace IMX.ATS.ATEConfig
         /// 试验方案另存为指令
         /// </summary>
         public RelayCommand SaveAsTestFlow => new RelayCommand(SaveAsedTestFlow);
+
+        /// <summary>
+        /// 试验方案到导入指令
+        /// </summary>
+        public RelayCommand Import => new RelayCommand(ImportTestFlow);
+
+
+        /// <summary>
+        /// 试验方案导出指令
+        /// </summary>
+        public RelayCommand Export => new RelayCommand(ExportTestFlow);
+
+
+
         #endregion
 
         #endregion
 
         #region 私有变量
         private int projectid = -1;
+        private string projectname = "";
         #endregion
 
         #region 私有方法
@@ -189,13 +215,22 @@ namespace IMX.ATS.ATEConfig
             try
             {
                 SolutionNames.Clear();
-                DBOperate.Default.GetProcessName(projectid).AttachIfSucceed(result => 
+                DBOperate.Default.GetProcessName(projectid).AttachIfSucceed(result =>
                 {
                     for (int i = 0; i < result.Data.Count; i++)
                     {
                         SolutionNames.Add(result.Data[i]);
                     }
                     SolutionName = SolutionNames[0];
+                });
+
+                DBOperate.Default.GetProcessDescription(projectid).AttachIfSucceed(result =>
+                {
+                    for (int i = 0; i < result.Data.Count; i++)
+                    {
+                        SolutionDescriptions.Add(result.Data[i]);
+                    }
+                    SolutionDescription = SolutionDescriptions[0];
                 });
 
                 //OperateResult<DataTable> relt = DBOperate.Default.GetTestFunctions(GlobalModel.TestInfo.Test_ID)
@@ -209,6 +244,7 @@ namespace IMX.ATS.ATEConfig
                 //    {
                 //        MessageBox.Show($"试验方案名称加载异常:{result.Message}");
                 //    });
+
             }
             catch (Exception ex)
             {
@@ -229,7 +265,7 @@ namespace IMX.ATS.ATEConfig
 
             foreach (var item in SupportConfig.DicTestFlowItems)
             {
-                TestFlowItems.Add(new TestFlowItem {Tag = item.Key, Selcted = new RelayCommand<object>(AddFunction) });
+                TestFlowItems.Add(new TestFlowItem { Tag = item.Key, Selcted = new RelayCommand<object>(AddFunction) });
             }
         }
         #endregion
@@ -258,71 +294,71 @@ namespace IMX.ATS.ATEConfig
             switch (obj.ToString().ToUpper())
             {
                 case "UP":
-                {
-                    if (index == 0)
-                    { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+                    {
+                        if (index == 0)
+                        { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
 
-                    FunctionInfos.Insert(index - 1, FunctionInfos[index]);
-                    FunctionInfos.RemoveAt(index + 1);
-                    FunctionInfoIndex = index - 1;
-                    ReNumber();
-                }
-                break;
+                        FunctionInfos.Insert(index - 1, FunctionInfos[index]);
+                        FunctionInfos.RemoveAt(index + 1);
+                        FunctionInfoIndex = index - 1;
+                        ReNumber();
+                    }
+                    break;
                 case "DOWN":
-                {
-                    if (index == FunctionInfos.Count - 1)
-                    { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-                    FunctionInfos.Insert(index + 2, FunctionInfos[index]);
-                    FunctionInfos.RemoveAt(index);
-                    FunctionInfoIndex = index + 1;
-                    ReNumber();
-                }
-                break;
+                    {
+                        if (index == FunctionInfos.Count - 1)
+                        { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+                        FunctionInfos.Insert(index + 2, FunctionInfos[index]);
+                        FunctionInfos.RemoveAt(index);
+                        FunctionInfoIndex = index + 1;
+                        ReNumber();
+                    }
+                    break;
                 case "DELET":
-                {
-                    FunctionInfos.RemoveAt(index);
-                    FunctionInfoIndex = index;
-                    ReNumber();
-                }
-                break;
+                    {
+                        FunctionInfos.RemoveAt(index);
+                        FunctionInfoIndex = index == 0 ? index : index - 1;
+                        ReNumber();
+                    }
+                    break;
                 case "INSERT":
-                {
-                    if (SelectedTestFlowItem == null)
                     {
-                        MessageBox.Show("请选择需要插入的试验操作模板!");
-                        return;
+                        if (SelectedTestFlowItem == null)
+                        {
+                            MessageBox.Show("请选择需要插入的试验操作模板!");
+                            return;
+                        }
+
+                        if (FunctionInfoIndex == -1)
+                        {
+                            MessageBox.Show("请选择需要插入到的试验操作步骤!");
+                            return;
+                        }
+
+                        FuncitonType flowitemtag = SelectedTestFlowItem.Tag;
+
+                        var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
+
+                        if (!rlt)
+                        {
+                            MessageBox.Show($"操作无法添加:{rlt.Message}");
+                            return;
+                        }
+
+                        FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
+                        {
+                            Step = FunctionInfos.Count + 1,
+                            //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
+                            //FunctionName = obj.ToString(),
+                            CutomFuncName = SelectedTestFlowItem.Name,
+                            FunctionName = flowitemtag.ToString(),
+                            ModType = rlt.Data.SupportFuncitonType,
+                            Model = rlt.Data
+                        });
+
+                        ReNumber();
                     }
-
-                    if (FunctionInfoIndex == -1)
-                    {
-                        MessageBox.Show("请选择需要插入到的试验操作步骤!");
-                        return;
-                    }
-
-                    FuncitonType flowitemtag = SelectedTestFlowItem.Tag;
-
-                    var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
-
-                    if (!rlt)
-                    {
-                        MessageBox.Show($"操作无法添加:{rlt.Message}");
-                        return;
-                    }
-
-                    FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
-                    {
-                        Step = FunctionInfos.Count + 1,
-                        //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
-                        //FunctionName = obj.ToString(),
-                        CutomFuncName = SelectedTestFlowItem.Name,
-                        FunctionName = flowitemtag.ToString(),
-                        ModType = rlt.Data.SupportFuncitonType,
-                        Model = rlt.Data
-                    });
-
-                    ReNumber();
-                }
-                break;
+                    break;
             }
         }
 
@@ -371,8 +407,8 @@ namespace IMX.ATS.ATEConfig
 
             if (!Enum.TryParse(obj.ToString(), out FuncitonType type))
             {
-                MessageBox.Show($"无法获取当前{obj}类型操作步骤","步骤添加异常");
-                return;   
+                MessageBox.Show($"无法获取当前{obj}类型操作步骤", "步骤添加异常");
+                return;
             }
 
             var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
@@ -451,7 +487,7 @@ namespace IMX.ATS.ATEConfig
         private void CreatFunction(ModTestProcess obj)
         {
 
-            if (!Enum.TryParse(obj.FuntionName.ToUpper(), out FuncitonType type))
+            if (!Enum.TryParse(obj.FuntionName, out FuncitonType type))
             {
                 MessageBox.Show($"无法获取当前{obj}类型操作步骤", "步骤添加异常");
                 return;
@@ -513,11 +549,11 @@ namespace IMX.ATS.ATEConfig
             }
 
             DBOperate.Default.UpdateProcess(projectid, SolutionName, mod)
-                             .AttachIfSucceed(result => 
+                             .AttachIfSucceed(result =>
                              {
                                  MessageBox.Show($"配置信息保存成功");
                              })
-                             .AttachIfFailed(result => 
+                             .AttachIfFailed(result =>
                              {
                                  MessageBox.Show($"配置信息存储失败:{result.Message}", "试验流程配置异常");
                              });
@@ -533,6 +569,112 @@ namespace IMX.ATS.ATEConfig
                 Window newwindow = ContentControlManager.GetWindow<NewTestProcessView>(((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess);
                 newwindow.Show();
             }));
+        }
+
+        /// <summary>
+        /// 导出流程
+        /// </summary>
+        private void ExportTestFlow()
+        {
+            //TsetProcesse = TsetProcesse.ProcessName == "上电程序方案" ? TsetProcesses[0] : TsetProcesses[1];
+
+            if (FunctionInfos.Count < 1)
+            {
+                MessageBox.Show($"{SolutionName} 暂无流程，请先配置相关流程再导出配置", "导出配置异常");
+                return;
+            }
+            try
+            {
+                string defaultFileName = $"{projectname}_{SolutionName}_{DateTime.Now:yyyyMMddHHmm}.ATE";
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    InitialDirectory = Environment.CurrentDirectory,
+                    FileName = defaultFileName,
+                    Filter = "ATE配置文件 (*.ATE)|*.ATE"
+                };
+
+                //saveFileDialog.FilterIndex = 1;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    List<ModTestProcess> mod = new List<ModTestProcess>();
+                    foreach (var item in FunctionInfos)
+                    {
+                        OperateResult<string> result = item.Model.Func.Config.ToJson();
+
+                        mod.Add(new ModTestProcess
+                        {
+                            Step = item.Step,
+                            Description = item.Content,
+                            CustomName = item.CutomFuncName,
+                            FuntionName = item.FunctionName,
+                            Type = item.ModType.ToString(),
+                            Funtion = result ? result.Data : string.Empty,
+                        });
+                    }
+
+                    string filePath = saveFileDialog.FileName;
+                    string infos = JsonConvert.SerializeObject(mod);
+                    System.IO.File.WriteAllText(filePath, infos);
+
+                    MessageBox.Show($"{SolutionName} 已导出共{FunctionInfos?.Count}步配置", "配置导出完成");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"ATE配置文件本地写入异常:{ex.GetMessage()}", "导出配置异常");
+            }
+        }
+
+        /// <summary>
+        /// 导入流程
+        /// </summary>
+        private void ImportTestFlow()
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = Environment.CurrentDirectory,
+                    Filter = "ATE配置文件 (*.ATE)|*.ATE"
+                };
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string souname = openFileDialog.FileName.Split('_')[1];
+
+                    if (SolutionNames.Contains(souname))
+                    {
+                        MessageBox.Show($"项目中已有[{SolutionName}]流程，请修改名称后再导入", "导入失败", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
+                    string filePath = openFileDialog.FileName;
+                    string infos = System.IO.File.ReadAllText(filePath);
+                    FunctionInfos.Clear();
+                    var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
+                    for (int i = 0; i < functions?.Count; i++)
+                    {
+                        CreatFunction(functions[i]);
+                    }
+
+                    NewTestProcessViewModel newTestproce = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess;
+
+                    newTestproce.SchemeName = souname;
+
+                    newTestproce.SaveSchemeCommannd.Execute(ContentControlManager.GetWindow<NewTestProcessView>(((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess));
+
+                    SolutionName = souname;
+
+                    MessageBox.Show($"{souname} 已导入共{functions?.Count}步配置", "配置导入完成");
+
+                    //TsetProcesse.FunctionInfos = JsonConvert.DeserializeObject<ObservableCollection<FunctionInfo>>(infos);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"ATE配置文件本地导入异常:{ex.GetMessage()}", "导入配置异常");
+            }
         }
         #endregion
 
@@ -555,7 +697,7 @@ namespace IMX.ATS.ATEConfig
         public TestProcessViewModel()
         {
             projectid = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
-
+            projectname = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.ProjectName;
             GetTestSolutions();
             TestFlowItemsInit();
         }

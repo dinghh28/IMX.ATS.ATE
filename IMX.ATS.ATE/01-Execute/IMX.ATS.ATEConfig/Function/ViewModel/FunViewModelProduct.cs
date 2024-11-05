@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace IMX.ATS.ATEConfig.Function
 {
@@ -39,23 +40,14 @@ namespace IMX.ATS.ATEConfig.Function
 
                     FunConfig_Product config = (value.Config as FunConfig_Product);
 
-                    if ((Func?.Config as FunConfig_Product)?.SendMessages?.Count > 0)
+                    if ((Func?.Config as FunConfig_Product)?.SendSignals?.Count > 0)
                     {
                         sendSignals.Clear();
-                        (Func.Config as FunConfig_Product).SendMessages.ForEach(x =>
+                        (Func.Config as FunConfig_Product).SendSignals.ForEach(x =>
                         {
-                            sendSignals.Add(new DBCSendSignal
+                            sendSignals.Add(new SendSignalModel
                             {
                                 IsSelected = x.IsSend,
-                                //DBCSignal = new DBCSignalModel
-                                //{
-                                //    CustomName = x.CustomName,
-                                //    //ID = item.ID,
-                                //    MessageID = x.MessageID,
-                                //    MessageName = x.MessageName,
-                                //    SignalName = x.SignalName,
-                                //    SignalValue = x.SignalValue,
-                                //}
                                 DBCSignal = x
                             });
                         });
@@ -89,11 +81,11 @@ namespace IMX.ATS.ATEConfig.Function
         //}
 
 
-        private ObservableCollection<DBCSendSignal> sendSignals = new ObservableCollection<DBCSendSignal>();
+        private ObservableCollection<SendSignalModel> sendSignals = new ObservableCollection<SendSignalModel>();
         /// <summary>
         /// 下发信号
         /// </summary>
-        public ObservableCollection<DBCSendSignal> SendSignals
+        public ObservableCollection<SendSignalModel> SendSignals
         {
             get
             {
@@ -134,9 +126,9 @@ namespace IMX.ATS.ATEConfig.Function
         {
             //deviceNameIndex = DeviceAddress[0];
 
-            if ((Func?.Config as FunConfig_Product)?.SendMessages?.Count > 0)
+            if ((Func?.Config as FunConfig_Product)?.SendSignals?.Count > 0)
             {
-                var signals = (Func.Config as FunConfig_Product).SendMessages;
+                var signals = (Func.Config as FunConfig_Product).SendSignals;
                 SendSignals.Clear();
                 for (int i = 0; i < signals.Count; i++)
                 {
@@ -147,7 +139,7 @@ namespace IMX.ATS.ATEConfig.Function
             }
             try
             {
-                List<DBCSignalModel> dBCSignalModel = new List<DBCSignalModel>();
+                List<DBCSendSignal> dBCSignalModel = new List<DBCSendSignal>();
 
 #if DEBUG //后续从数据库中调入DBC文件内容
 
@@ -174,7 +166,7 @@ namespace IMX.ATS.ATEConfig.Function
                 {
                     m.Value.Signals.ForEach(sig =>
                     {
-                        dBCSignalModel.Add(new DBCSignalModel
+                        dBCSignalModel.Add(new DBCSendSignal
                         {
                             MessageID = m.Key,
                             MessageName = m.Value.Name,
@@ -204,17 +196,15 @@ namespace IMX.ATS.ATEConfig.Function
                     new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
                 };
 
-
-
 #endif
 
                 SendSignals.Clear();
                 foreach (var item in test_DBCConfig.Test_DBCSendSignals)
                 {
-                    SendSignals.Add(new DBCSendSignal
+                    SendSignals.Add(new SendSignalModel
                     {
                         IsSelected = false,
-                        DBCSignal = new DBCSignalModel
+                        DBCSignal = new DBCSendSignal
                         {
                             CustomName = item.Custom_Name,
                             MessageName = dBCSignalModel.Find(x => x.SignalName == item.Signal_Name).MessageName,
@@ -226,7 +216,7 @@ namespace IMX.ATS.ATEConfig.Function
                 }
                 for (Int32 i = 0; i < SendSignals.Count; i++)
                 {
-                    (Func.Config as FunConfig_Product).SendMessages.Add(SendSignals[i].DBCSignal);
+                    (Func.Config as FunConfig_Product).SendSignals.Add(SendSignals[i].DBCSignal);
                 }
 
             }
@@ -239,7 +229,7 @@ namespace IMX.ATS.ATEConfig.Function
         #endregion
     }
 
-    public class DBCSendSignal : ExtendViewModelBase
+    public class SendSignalModel : ExtendViewModelBase
     {
         private bool isSelected = false;
         public bool IsSelected
@@ -254,9 +244,9 @@ namespace IMX.ATS.ATEConfig.Function
             }
         }
 
-        private DBCSignalModel dbcsignal = new DBCSignalModel();
+        private DBCSendSignal dbcsignal = new DBCSendSignal();
 
-        public DBCSignalModel DBCSignal
+        public DBCSendSignal DBCSignal
         {
             get { return dbcsignal; }
             set { dbcsignal = value; }

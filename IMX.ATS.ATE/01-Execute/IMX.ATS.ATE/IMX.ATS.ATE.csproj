@@ -189,8 +189,9 @@
     <Reference Include="IMX.Device.Common">
       <HintPath>..\..\Library\IMX.Device.Common\IMX.Device.Common.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Function">
-      <HintPath>..\..\Library\IMX.Function.ViewModel\IMX.Function.dll</HintPath>
+    <Reference Include="IMX.Function, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Library\IMX.Function\IMX.Function.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Logger">
       <HintPath>..\..\Library\IMX.Logger\IMX.Logger.dll</HintPath>

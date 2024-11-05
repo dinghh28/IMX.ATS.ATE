@@ -37,6 +37,11 @@ namespace IMX.ATS.ATE
         /// 工装初始化状态
         /// </summary>
         public static bool CabinetSate { get; set; } = true;
+
+        /// <summary>
+        /// 试验线程运行状态
+        /// </summary>
+        public static bool IsTestThreadRun { get; set; } = true;
     }
 
     public class DeviceInfo_ALL

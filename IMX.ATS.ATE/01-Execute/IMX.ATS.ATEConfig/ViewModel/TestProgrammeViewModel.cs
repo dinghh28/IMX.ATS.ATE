@@ -124,6 +124,44 @@ namespace IMX.ATS.ATEConfig
 
         private void Save() 
         {
+            if (MessageBox.Show("是否要保存当前方案","方案保存", MessageBoxButton.OKCancel)== MessageBoxResult.Cancel)
+            {
+                return;
+            }
+
+            try
+            {
+                if (SelectedProcessNames.Count < 1)
+                {
+                    MessageBox.Show("请添加试验流程后再进行保存","方案保存失败");
+                    return;
+                }
+
+                Test_Programme programme = new Test_Programme();
+                programme.ProjectID = GlobalModel.Test_ProjectInfo.Id;
+                programme.Test_FlowNames = new List<string>();
+                for (int i = 0; i < SelectedProcessNames.Count(); i++)
+                {
+                    programme.Test_FlowNames.Add(SelectedProcessNames[i].SelectedName);
+                }
+                programme.UpdateOperator = GlobalModel.UserInfo.UserName;
+
+                DBOperate.Default.UpdateProgramme(programme)
+                    .AttachIfFailed(result => { MessageBox.Show(result.Message, "方案保存失败"); })
+                    .AttachIfSucceed(result => 
+                    {
+                        MessageBox.Show(result.Message, "方案保存");
+                    });
+            }
+            catch (Exception ex)
+            {
+                SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(TestProgrammeViewModel), nameof(Save), ex);
+                MessageBox.Show(ex.GetMessage(),"方案保存异常");
+            }
+
+            
+
+
 
         }
         #endregion

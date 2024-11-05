@@ -1,12 +1,16 @@
 ﻿using FreeSql;
 using IMX.DB.Model;
 using IMX.Logger;
+using Newtonsoft.Json;
 using Super.Zoo.Framework;
 using Super.Zoo.Framework.Logger;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -858,6 +862,76 @@ namespace IMX.DB
             }
         }
 
+        public OperateResult<Dictionary<string, List<ModTestProcess>>> GetFlowsByNameID(int id, List<string> funcnames)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, List<ModTestProcess>>>.Failed(null, LastError);
+            }
+
+            if (funcnames == null)
+            {
+                LastError = $"流程方法名称不可为空";
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, List<ModTestProcess>>>.Failed(null, LastError);
+            }
+
+            if (funcnames.Count < 1)
+            {
+                LastError = $"未获取需检索流程方法名称";
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, List<ModTestProcess>>>.Failed(null, LastError);
+            }
+
+            try
+            {
+               string sqlStr =
+               $"SELECT\n" +
+               $"    *\n" +
+               $"FROM\n" +
+               $"    TBL_TEST_FUNC\n" +
+               $"WHERE\n" +
+               $"   ProjectID = {id}\n" +
+               $"AND\n";
+
+                for (int i = 0; i < funcnames.Count; i++)
+                {
+                    if (i == funcnames.Count - 1)
+                    {
+                        sqlStr += $"    TEST_FUNNAME = '{funcnames[i]}'";
+                        break;
+                    }
+                    sqlStr += $"    TEST_FUNNAME = '{funcnames[i]}'\n" + "OR\n";
+                }
+
+                var list = Sqlite.Ado.Query<Test_Process>(sqlStr);
+
+                if (list.Count < 1)
+                {
+                    LastError = $"相关流程不存在，请确认完成相关配置";
+                    Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                    return OperateResult<Dictionary<string, List<ModTestProcess>>>.Failed(null, LastError);
+                }
+
+                Dictionary<string, List<ModTestProcess>> data = new Dictionary<string, List<ModTestProcess>>();
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    data.Add(list[i].FunctionName, list[i].Test_Flows);
+                }
+
+                return OperateResult<Dictionary<string, List<ModTestProcess>>>.Succeed(data);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, List<ModTestProcess>>>.Excepted(null, ex);
+            }
+        }
+
         /// <summary>
         /// 更新当前流程试验步骤
         /// </summary>
@@ -870,7 +944,7 @@ namespace IMX.DB
             if (!IsInitOK)
             {
                 LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
                 return OperateResult.Failed(LastError);
             }
             try
@@ -898,6 +972,548 @@ namespace IMX.DB
                 return OperateResult.Excepted(ex);
             }
         }
+        #endregion
+
+        #region 项目方案操作
+        /// <summary>
+        /// 插入试验方案
+        /// </summary>
+        /// <param name="function">试验方案</param>
+        /// <returns></returns>
+        public OperateResult InsertTestProgramme(Test_Programme function)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProgramme), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                function.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProgramme), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新当前流程试验步骤
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <param name="funcname">流程名称</param>
+        /// <param name="processes">试验步骤</param>
+        /// <returns></returns>
+        public OperateResult UpdateProgramme(Test_Programme function)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+                if (Sqlite.Select<Test_Programme>().Count() < 1)
+                {
+                    return InsertTestProgramme(function);
+                }
+
+                int row = Sqlite.Update<Test_Programme>()
+                            .Where(x => x.ProjectID == function.ProjectID)
+                            .Set(x =>x.Test_FlowNames , function.Test_FlowNames)
+                            .Set(x=>x.UpdateOperator, function.UpdateOperator)
+                            .Set(x => x.UpdateTime, DateTime.Now)
+                            .ExecuteAffrows();
+                if (row < 1)
+                {
+                    LastError = $"测试方案 未实际发生变更";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验方案
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<Test_Programme> GetProgramme(int id) 
+        {
+
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<Test_Programme>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id ).ToOne() ?? new Test_Programme();
+
+                return OperateResult<Test_Programme>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
+                return OperateResult<Test_Programme>.Excepted(null, ex);
+            }
+        }
+        #endregion
+
+        #region 结果条目操作
+        /// <summary>
+        /// 插入试验结果条目
+        /// </summary>
+        /// <param name="info">试验结果条目</param>
+        /// <returns></returns>
+        public OperateResult<string> InserTestItem(Test_ItemInfo info)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                return OperateResult<string>.Failed(string.Empty, LastError);
+            }
+
+            try
+            {
+                if (info == null)
+                {
+                    LastError = $"试验待存储条目不可为空";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult<string>.Failed(string.Empty, LastError);
+                }
+
+                //string itemtableName = nameof(Test_ItemInfo)+
+                //if (Sqlite.DbFirst.ExistsTable(tableName) == false)
+                //    Sqlite.CodeFirst.SyncStructure(typeof(Test_ItemInfo), tableName);
+
+                info.Insert();
+
+                if (info.Id < 1)
+                {
+                    LastError = $"试验条目未实际发生存储";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult<string>.Failed(string.Empty, LastError);
+                }
+                string datatableName = $"{info.ProductSN}_{info.CreateTime.Ticks}";
+                ////创建数据库表
+                //if (Sqlite.DbFirst.ExistsTable(datatableName) == false)
+                //    Sqlite.CodeFirst.SyncStructure(typeof(Test_DataInfo), datatableName);
+
+                return OperateResult<string>.Succeed(datatableName);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                return OperateResult<string>.Excepted(string.Empty, ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新试验结果条目
+        /// </summary>
+        /// <param name="info">更新试验结果条目</param>
+        /// <returns></returns>
+        public OperateResult UpdateTetsItem(Test_ItemInfo info)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                if (info == null)
+                {
+                    LastError = $"试验待存储条目不可为空";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                if (!info.Update())
+                {
+                    LastError = $"试验条目未实际发生更新";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 项目条目查新（测试版本）
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult<List<Test_ItemInfo>> GetTestItem()
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Failed(null, LastError);
+            }
+            try
+            {
+                //Sqlite.CodeFirst.GetTableByEntity(typeof(Test_ItemInfo)).AsTableImpl.SetDefaultAllTables(value => value.Take(3).ToArray());
+                List<Test_ItemInfo> items = Sqlite.Select<Test_ItemInfo>().ToList();
+
+                return OperateResult<List<Test_ItemInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验条目列表
+        /// </summary>
+        /// <param name="proid">项目ID</param>
+        /// <param name="starttime">试验开始时间</param>
+        /// <param name="endtime">试验结束时间</param>
+        /// <returns></returns>
+        public OperateResult<List<Test_ItemInfo>> GetTestItems(int proid, DateTime starttime, DateTime endtime)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //Sqlite.CodeFirst.GetTableByEntity(typeof(Test_ItemInfo)).AsTableImpl.SetDefaultAllTables(value => value.Take(3).ToArray());
+                List<Test_ItemInfo> items = Sqlite.Select<Test_ItemInfo>()
+                    .Where(x => x.ProjectID == proid && x.CreateTime > starttime && x.CreateTime < endtime)
+                    .ToList();
+
+                return OperateResult<List<Test_ItemInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验条目列表
+        /// </summary>
+        /// <param name="productsn">产品编号</param>
+        /// <param name="starttime">试验开始时间</param>
+        /// <param name="endtime">试验结束时间</param>
+        /// <returns></returns>
+        public OperateResult<List<Test_ItemInfo>> GetTestItems(string productsn, DateTime starttime, DateTime endtime)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //Sqlite.CodeFirst.GetTableByEntity(typeof(Test_ItemInfo)).AsTableImpl.SetDefaultAllTables(value => value.Take(3).ToArray());
+                List<Test_ItemInfo> items = Sqlite.Select<Test_ItemInfo>()
+                    .Where(x => x.ProductSN == productsn && x.CreateTime > starttime && x.CreateTime < endtime)
+                    .ToList();
+
+                return OperateResult<List<Test_ItemInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验条目列表
+        /// </summary>
+        /// <param name="proid">项目ID</param>
+        /// <param name="productsn">产品编号</param>
+        /// <param name="starttime">试验开始时间</param>
+        /// <param name="endtime">试验结束时间</param>
+        /// <returns></returns>
+        public OperateResult<List<Test_ItemInfo>> GetTestItems(int proid, string productsn, DateTime starttime, DateTime endtime)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //Sqlite.CodeFirst.GetTableByEntity(typeof(Test_ItemInfo)).AsTableImpl.SetDefaultAllTables(value => value.Take(3).ToArray());
+                List<Test_ItemInfo> items = Sqlite.Select<Test_ItemInfo>()
+                    .Where(x => x.ProjectID == proid && x.ProductSN == productsn && x.CreateTime > starttime && x.CreateTime < endtime)
+                    .ToList();
+
+                return OperateResult<List<Test_ItemInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestItem), LastError);
+                return OperateResult<List<Test_ItemInfo>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验条目（通过条目ID和试验开始时间）
+        /// </summary>
+        /// <param name="id">条目ID</param>
+        /// <param name="starttime">试验开始时间</param>
+        /// <returns></returns>
+        public OperateResult<Test_ItemInfo> GetTestItemByIDAndTime(int id, DateTime starttime)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestItemByIDAndTime), LastError);
+                return OperateResult<Test_ItemInfo>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //Sqlite.CodeFirst.GetTableByEntity(typeof(Test_ItemInfo)).AsTableImpl.SetDefaultAllTables(value => value.Take(3).ToArray());
+                Test_ItemInfo item = Sqlite.Select<Test_ItemInfo>()
+                    .Where(x => x.Id == id && x.CreateTime == starttime)
+                    .ToOne() ?? new Test_ItemInfo();
+
+                return OperateResult<Test_ItemInfo>.Succeed(item);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestItemByIDAndTime), LastError);
+                return OperateResult<Test_ItemInfo>.Excepted(null, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 获取测试最早开始时间
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult<DateTime> GetTestRangeStartTime()
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestRangeStartTime), LastError);
+                return OperateResult<DateTime>.Failed(DateTime.MinValue, LastError);
+            }
+            try
+            {
+                Test_ItemInfo item = Sqlite.Select<Test_ItemInfo>().Limit(1).ToOne();
+                return OperateResult<DateTime>.Succeed(item.CreateTime);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestRangeStartTime), LastError);
+                return OperateResult<DateTime>.Excepted(DateTime.MinValue, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取测试最晚结束时间
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult<DateTime> GetTestRangeEndTime()
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestRangeEndTime), LastError);
+                return OperateResult<DateTime>.Failed(DateTime.MinValue, LastError);
+            }
+            try
+            {
+                Test_ItemInfo item = Sqlite.Select<Test_ItemInfo>()
+                    .OrderBy(x => x.Id)
+                    .Limit(1)
+                    .ToOne();
+                return OperateResult<DateTime>.Succeed(item.CreateTime);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestRangeEndTime), LastError);
+                return OperateResult<DateTime>.Excepted(DateTime.MinValue, ex);
+            }
+        }
+        #endregion
+
+        #region 试验数据操作
+
+        /// <summary>
+        /// 插入试验数据
+        /// </summary>
+        /// <param name="info">试验数据</param>
+        /// <returns></returns>
+        public OperateResult InserTestData(Test_DataInfo info)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                if (info == null)
+                {
+                    LastError = $"试验待存储条目不可为空";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+                
+                info.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+
+        public OperateResult<List<Test_DataInfo>> GetTestData(int itemid, DateTime StratTime, DateTime StopTime)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestData), LastError);
+                return OperateResult<List<Test_DataInfo>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //var ufos = Sqlite.GetGuidRepository<Test_DataInfo>(null, oldname => tablename);
+                var items = Sqlite
+                    .Select<Test_DataInfo>()
+                    .Where(x => x.TestItemID == itemid && x.CreateTime >= StratTime && StopTime >= x.CreateTime).ToList();
+                //var items = Sqlite.Select<Test_DataInfo>().Where(x => x.TestItemID == itemid).ToList();
+
+                return OperateResult<List<Test_DataInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestData), LastError);
+                return OperateResult<List<Test_DataInfo>>.Excepted(null, ex);
+            }
+        }
+        /// <summary>
+        /// 获取分页测试数据
+        /// </summary>
+        /// <param name="itemid"></param>
+        /// <param name="StratTime"></param>
+        /// <param name="StopTime"></param>
+        /// <returns></returns>
+        public OperateResult<List<Test_DataInfo>> GetLimitTestData(int itemid, DateTime StratTime, DateTime StopTime, long page)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestData), LastError);
+                return OperateResult<List<Test_DataInfo>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                const int count = 1000;
+                //var ufos = Sqlite.GetGuidRepository<Test_DataInfo>(null, oldname => tablename);
+                var items = Sqlite
+                    .Select<Test_DataInfo>()
+                    .Where(x => x.TestItemID == itemid && x.CreateTime >= StratTime && StopTime >= x.CreateTime)
+                    .OrderBy(x => x.CreateTime)
+                    .Limit(count)
+                    .Offset((int)(count * (page - 1))).ToList();
+                //var items = Sqlite.Select<Test_DataInfo>().Where(x => x.TestItemID == itemid).ToList();
+
+                return OperateResult<List<Test_DataInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestData), LastError);
+                return OperateResult<List<Test_DataInfo>>.Excepted(null, ex);
+            }
+        }
+
+
+        public OperateResult<long> GetTestDataCount(int itemid, DateTime StratTime, DateTime StopTime)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetTestData), LastError);
+                return OperateResult<long>.Failed(0, LastError);
+            }
+
+            try
+            {
+                //var ufos = Sqlite.GetGuidRepository<Test_DataInfo>(null, oldname => tablename);
+                long count = Sqlite
+                    .Select<Test_DataInfo>()
+                    .Where(x => x.TestItemID == itemid && x.CreateTime >= StratTime && StopTime >= x.CreateTime).ToList().Count;
+                //var items = Sqlite.Select<Test_DataInfo>().Where(x => x.TestItemID == itemid).ToList();
+
+                return OperateResult<long>.Succeed(count);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetTestData), LastError);
+                return OperateResult<long>.Excepted(0, ex);
+            }
+        }
+
+
+
         #endregion
 
         public void SetError(string error) => LastError = error;

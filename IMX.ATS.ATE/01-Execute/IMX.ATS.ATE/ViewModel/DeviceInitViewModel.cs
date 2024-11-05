@@ -149,7 +149,6 @@ namespace IMX.ATS.ATE
 
                 SupportConfig.SysteamDeviceConfigs = config;
             });
-
         }
 
         
@@ -404,6 +403,9 @@ namespace IMX.ATS.ATE
             }
         }
 
+        /// <summary>
+        /// 工装初始化
+        /// </summary>
 
         private void CabinetInit()
         {
@@ -418,28 +420,62 @@ namespace IMX.ATS.ATE
                 {
                     if (item.Value.Config.EnableDriveInit)
                     {
-                        var result = DeviceInit(item.Value.Args)
-                       .ThenAnd(result => result.Data.Device_ReadAll()
-                       .ConvertTo(result.Data))
-                       .AttachIfSucceed(result => {
-                           item.Value.DeviceOperate = result.Data;
-                           item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
-                           Thread.Sleep(10);
-                           Application.Current.Dispatcher.Invoke(() =>
-                           {
-                               dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
-                           });
-                       })
-                       .AttachIfFailed(result =>
-                       {
-                           ErrorStr += $"{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result.Message}\r\n";
-                           GlobalModel.CabinetSate = false;
-                           Thread.Sleep(10);
-                           Application.Current.Dispatcher.Invoke(() =>
+                        var result = DeviceInit(item.Value.Args);
+                        if (!result) 
+                        {
+                            ErrorStr += $"{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result.Message}\r\n";
+                            GlobalModel.CabinetSate = false;
+                            Thread.Sleep(10);
+                            Application.Current.Dispatcher.Invoke(() =>
                            {
                                dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
                            });
-                       });
+                            continue;
+                        }
+
+                        result.Data.Device_ReadAll()
+                            .AttachIfSucceed(result1 => 
+                            {
+                                item.Value.DeviceOperate = result.Data;
+                                item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
+                                Thread.Sleep(10);
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                                });
+                            })
+                            .AttachIfFailed(result1 =>
+                            {
+                                ErrorStr += $"{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result1.Message}\r\n";
+                                GlobalModel.CabinetSate = false;
+                                Thread.Sleep(10);
+                                Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
+                                });
+                            });
+
+                        //.ThenAnd(result => result.Data.Device_ReadAll()
+                        //.ConvertTo(result.Data))
+                        //.AttachIfSucceed(result => {
+                        //    item.Value.DeviceOperate = result.Data;
+                        //    item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
+                        //    Thread.Sleep(10);
+                        //    Application.Current.Dispatcher.Invoke(() =>
+                        //    {
+                        //        dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                        //    });
+                        //})
+                        //.AttachIfFailed(result =>
+                        //{
+                        //    ErrorStr += $"{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result.Message}\r\n";
+                        //    GlobalModel.CabinetSate = false;
+                        //    Thread.Sleep(10);
+                        //    Application.Current.Dispatcher.Invoke(() =>
+                        //    {
+                        //        dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
+                        //    });
+                        //});
                     }
                 }
 
@@ -456,9 +492,47 @@ namespace IMX.ATS.ATE
 
         }
 
+        /// <summary>
+        /// 工装反初始化
+        /// </summary>
         private void CabinetUnInit()
         {
+            foreach (var item in dicInitInfo)
+            {
+                if (item.Value.DeviceSate == ResultState.FAIL)
+                {
+                    continue;
+                }
 
+
+                try
+                {
+                    var deviceinfo = GlobalModel.DicDeviceInfo[item.Key];
+
+                    deviceinfo.DeviceOperate.UnInit()
+                        .And(deviceinfo.Drive.UnregisterDevice(deviceinfo.DeviceOperate))
+                        .AttachIfSucceed(result => 
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                            });
+                            Thread.Sleep(100);
+                        })
+                        .AttachIfFailed(result =>
+                        {
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
+                            });
+                            Thread.Sleep(100);
+                        });
+                }
+                catch (Exception ex)
+                {
+                    SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, nameof(DeviceInitViewModel), nameof(CabinetUnInit), ex);
+                }
+            }
         }
         #endregion
 
@@ -492,6 +566,15 @@ namespace IMX.ATS.ATE
             }
             else
             {
+                foreach (var item in dicInitInfo) 
+                {
+                    if (item.Value.DeviceSate == ResultState.FAIL)
+                    {
+                        continue;
+                    }
+
+                    item.Value.DeviceSate = ResultState.UNACCOMPLISHED;
+                }
                 new Thread(CabinetUnInit) { IsBackground = true }.Start();
             }
 

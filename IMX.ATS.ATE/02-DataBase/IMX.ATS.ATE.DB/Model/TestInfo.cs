@@ -75,15 +75,37 @@ namespace IMX.DB.Model
         public int TestItemID { get; set; }
 
         /// <summary>
+        /// 流程名称
+        /// </summary>
+        public string FlowName { get; set; }
+
+        /// <summary>
+        /// 步骤名称
+        /// </summary>
+        public string StepName { get; set; }
+
+        /// <summary>
         /// 产品数据
         /// </summary>
         [JsonMap]
         public List<ModTestDataInfo> Pro_Data { get; set; }
 
         /// <summary>
+        /// 产品详细数据
+        /// </summary>
+        [JsonMap]
+        public List<ModDeviceReadData> Pro_DeviceRead { get; set; }
+
+        /// <summary>
         /// 设备数据
         /// </summary>
         [JsonMap]
         public List<ModTestDataInfo> Euq_Data { get; set; }
+
+        /// <summary>
+        /// 设备数据
+        /// </summary>
+        [JsonMap]
+        public List<ModDeviceReadData> Euq_DeviceRead { get; set; }
     }
 }

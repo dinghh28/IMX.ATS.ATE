@@ -25,6 +25,16 @@
             设置频率
             </summary>
         </member>
+        <member name="F:IMX.Function.FunConfig_ACSource.ClassType">
+            <summary>
+            类名
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_ACSource.FuntionName">
+            <summary>
+            方法名
+            </summary>
+        </member>
         <member name="M:IMX.Function.FunConfig_ACSource.Execute(System.Object)">
             <inheritdoc/>
         </member>
@@ -58,6 +68,16 @@
         <member name="P:IMX.Function.FunConfig_APU.Set_Cur">
             <summary>
             设置电流
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_APU.ClassType">
+            <summary>
+            类名
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_APU.FuntionName">
+            <summary>
+            方法名
             </summary>
         </member>
         <member name="M:IMX.Function.FunConfig_APU.Execute(System.Object)">
@@ -135,6 +155,16 @@
             步进变量判定参数列表
             </summary>
         </member>
+        <member name="F:IMX.Function.FunConfig_DCLoad.ClassType">
+            <summary>
+            类名
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_DCLoad.FuntionName">
+            <summary>
+            方法名
+            </summary>
+        </member>
         <member name="M:IMX.Function.FunConfig_DCLoad.Execute(System.Object)">
             <inheritdoc/>
         </member>
@@ -163,6 +193,41 @@
             <summary>
             判定值
             </summary>
+        </member>
+        <member name="T:IMX.Function.FunConfig_EquipmentResult">
+            <summary>
+            工装数据操作模板类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_EquipmentResult.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_EquipmentResult.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_EquipmentResult.DatasName">
+            <summary>
+            可参与结果判定数据名称列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_EquipmentResult.Datas">
+            <summary>
+            参与结果判定数据
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_EquipmentResult.ResultOpereate">
+            <summary>
+            试验失败操作逻辑
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_EquipmentResult.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_EquipmentResult.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_EquipmentResult.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
         </member>
         <member name="T:IMX.Function.FunConfig_HVDCSource">
             <summary>
@@ -229,69 +294,159 @@
             <param name="device"></param>
             <returns></returns>
         </member>
-        <member name="T:IMX.Function.Config.FunConfig_POPUP">
+        <member name="T:IMX.Function.DBCSendSignal">
+            <summary>
+            产品下发信号模型类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.IsSend">
+            <summary>
+            是否发送信号
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.ID">
+            <summary>
+            序号
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.MessageID">
+            <summary>
+            信号ID
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.MessageName">
+            <summary>
+            消息名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.SignalName">
+            <summary>
+            信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.CustomName">
+            <summary>
+            自定义信号名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.DBCSendSignal.SignalValue">
+            <summary>
+            发送值
+            </summary>
+        </member>
+        <member name="T:IMX.Function.FunConfig_POPUP">
             <summary>
             弹窗（手动确认试验结果）配置模板类
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.SupportFuncitonType">
+        <member name="P:IMX.Function.FunConfig_POPUP.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.DeviceAddress">
+        <member name="P:IMX.Function.FunConfig_POPUP.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.Title">
+        <member name="P:IMX.Function.FunConfig_POPUP.Title">
             <summary>
             弹窗标题
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.Description">
+        <member name="P:IMX.Function.FunConfig_POPUP.Description">
             <summary>
             弹窗内容
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_POPUP.IsResult">
+        <member name="P:IMX.Function.FunConfig_POPUP.IsResult">
             <summary>
             是否允许弹窗结果作为试验结果判定
             </summary>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_POPUP.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_POPUP.Execute(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_POPUP.#ctor">
+        <member name="M:IMX.Function.FunConfig_POPUP.#ctor">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_POPUP.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+        <member name="M:IMX.Function.FunConfig_POPUP.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
-        <member name="T:IMX.Function.Config.FunConfig_Relay">
+        <member name="T:IMX.Function.Config.FunConfig_ProductResult">
+            <summary>
+            产品结果操作模板类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ProductResult.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ProductResult.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ProductResult.DatasName">
+            <summary>
+            可参与结果判定数据名称列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ProductResult.Datas">
+            <summary>
+            参与结果判定数据
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ProductResult.ResultOpereate">
+            <summary>
+            试验失败操作逻辑
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_ProductResult.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_ProductResult.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_ProductResult.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_Relay">
             <summary>
             继电器板试验流程配置类
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_Relay.SupportFuncitonType">
+        <member name="P:IMX.Function.FunConfig_Relay.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_Relay.DeviceAddress">
+        <member name="P:IMX.Function.FunConfig_Relay.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_Relay.Set_OutPutStates">
+        <member name="P:IMX.Function.FunConfig_Relay.Set_OutPutStates">
             <summary>
             继电器输出状态
             </summary>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_Relay.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_Relay.Execute(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_Relay.#ctor">
+        <member name="M:IMX.Function.FunConfig_Relay.#ctor">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+        <member name="M:IMX.Function.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.IFunction_Result">
             <summary>
             测试结果模板接口
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFunction_Result.DatasName">
+            <summary>
+            可参与结果判定数据名称列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFunction_Result.Datas">
+            <summary>
+            参与结果判定数据
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFunction_Result.ResultOpereate">
+            <summary>
+            试验失败操作逻辑
             </summary>
         </member>
         <member name="T:IMX.Function.TestFunction">
@@ -360,7 +515,7 @@
             析构方法
             </summary>
         </member>
-        <member name="M:IMX.Function.TestFunction.Dispose">
+        <member name="M:IMX.Function.TestFunction.InternalDispose">
             <summary>
             析构方法
             </summary>
@@ -485,24 +640,24 @@
             工装上报结果
             </summary>
         </member>
-        <member name="T:IMX.Function.Base.SetOutPutState">
+        <member name="T:IMX.Function.Base.Enumerations.ResultOpereateType">
             <summary>
-            试验输出操作枚举
+            试验结果模板失败操作枚举类
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.SetOutPutState.Null">
+        <member name="F:IMX.Function.Base.Enumerations.ResultOpereateType.OUTTEST">
             <summary>
-            不操作
+            跳出试验
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.SetOutPutState.ON">
+        <member name="F:IMX.Function.Base.Enumerations.ResultOpereateType.OUTFUNCTION">
             <summary>
-            打开设备
+            跳出当前方案
             </summary>
         </member>
-        <member name="F:IMX.Function.Base.SetOutPutState.OFF">
+        <member name="F:IMX.Function.Base.Enumerations.ResultOpereateType.IGNORE">
             <summary>
-            关闭设备
+            忽略当前结果
             </summary>
         </member>
         <member name="T:IMX.Function.Base.Enumerations.StepConditions">
@@ -543,6 +698,26 @@
         <member name="F:IMX.Function.Base.Enumerations.StepValueConditions.NOTEQUALTO">
             <summary>
             不等于
+            </summary>
+        </member>
+        <member name="T:IMX.Function.Base.SetOutPutState">
+            <summary>
+            试验输出操作枚举
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.SetOutPutState.Null">
+            <summary>
+            不操作
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.SetOutPutState.ON">
+            <summary>
+            打开设备
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.SetOutPutState.OFF">
+            <summary>
+            关闭设备
             </summary>
         </member>
         <member name="T:IMX.Function.Base.Function_Config">
@@ -726,41 +901,6 @@
             <summary>
             发送值
             </summary>
-        </member>
-        <member name="T:IMX.Funciton.FunConfig_Product">
-            <summary>
-            产品下发指令配置类
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.Identify">
-            <inheritdoc/>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.SupportFuncitonType">
-            <inheritdoc/>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.DeviceAddress">
-            <inheritdoc/>
-        </member>
-        <member name="P:IMX.Funciton.FunConfig_Product.SendSignals">
-            <summary>
-            产品发送列表
-            </summary>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.#ctor">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.#ctor(Super.Zoo.Framework.Logger.ILogger)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.Finalize">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Funciton.FunConfig_Product.Execute(System.Object)">
-            <summary>
-            
-            </summary>
-            <param name="operate"></param>
-            <returns></returns>
         </member>
     </members>
 </doc>

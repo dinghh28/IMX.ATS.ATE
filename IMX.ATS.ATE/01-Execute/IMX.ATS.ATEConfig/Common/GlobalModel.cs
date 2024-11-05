@@ -19,5 +19,10 @@ namespace IMX.ATS.ATEConfig
         /// 项目信息
         /// </summary>
         public static Test_ProjectInfo Test_ProjectInfo { get; set; } = new Test_ProjectInfo();
+
+        /// <summary>
+        /// 是否为新建项目
+        /// </summary>
+        public static bool IsNewProject { get; set; } = false;
     }
 }

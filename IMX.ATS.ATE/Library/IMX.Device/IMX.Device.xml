@@ -170,6 +170,16 @@
         <member name="P:IMX.Device.APU.APU_IT6800_Operate.DeviceName">
             <inheritdoc/>
         </member>
+        <member name="F:IMX.Device.APU.APU_IT6800_Operate.ClassType">
+            <summary>
+            类名
+            </summary>
+        </member>
+        <member name="F:IMX.Device.APU.APU_IT6800_Operate.FuntionName">
+            <summary>
+            方法名
+            </summary>
+        </member>
         <member name="M:IMX.Device.APU.APU_IT6800_Operate.Device_ReadAll">
             <inheritdoc/>
         </member>
@@ -242,6 +252,7 @@
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.Device_ReadAll">
             <inheritdoc/>
+            暂不使用此方法
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
@@ -259,6 +270,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetModel(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.#ctor">
@@ -451,7 +465,7 @@
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.ReadOutPutCur">
             <summary>
-            查询输出电压
+            查询输出电流
             </summary>
             <returns></returns>
         </member>
@@ -1100,6 +1114,13 @@
             直流负载操作接口
             </summary>
         </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭设备
+            </summary>
+            <param name="value">设备输出状态</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             短路模式设置
@@ -1402,6 +1423,12 @@
             设备通讯协议层抽象类
             </summary>
         </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.ClassType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.FuntionName">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.Identify">
             <inheritdoc/>
         </member>
@@ -1561,6 +1588,16 @@
         <member name="T:IMX.Device.Base.IDeviceWarp">
             <summary>
             设备协议层接口
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.IDeviceWarp.ClassType">
+            <summary>
+            类名
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.IDeviceWarp.FuntionName">
+            <summary>
+            方法名
             </summary>
         </member>
         <member name="P:IMX.Device.Base.IDeviceWarp.Version">

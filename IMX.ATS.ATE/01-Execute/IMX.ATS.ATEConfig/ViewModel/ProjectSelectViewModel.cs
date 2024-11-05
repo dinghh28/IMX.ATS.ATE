@@ -109,6 +109,7 @@ namespace IMX.ATS.ATEConfig
 
             if (obj.ToString().ToUpper() == "N")
             {
+                GlobalModel.IsNewProject = true;
                 viewmodel.IsNewProject = true;
                 viewmodel.ProjectInfo = new Test_ProjectInfo();
                 viewmodel.DBCFileInfo = new Test_DBCFileInfo();
@@ -122,6 +123,7 @@ namespace IMX.ATS.ATEConfig
                     MessageBox.Show($"请选择项目或新建项目！");
                     return;
                 }
+                GlobalModel.IsNewProject = false;
                 viewmodel.IsNewProject = false;
                 viewmodel.ProjectInfo = SelectedInfo.Info;
 

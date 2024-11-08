@@ -879,9 +879,11 @@ namespace IMX.ATS.ATE
 
                                 SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
 
+                                Thread.Sleep(config.StepFrequency);
+
                                 canoperate?.Device_ReadAll();
                                 aqcoperate?.Device_ReadAll();
-                                
+                               
                                 //跳出步进条件
                                 if (config.Values.Count > 0)
                                 {
@@ -950,7 +952,7 @@ namespace IMX.ATS.ATE
                                     }
                                 }
 
-                                Thread.Sleep(config.StepFrequency);
+
                             }
                         }
                         else
@@ -1194,7 +1196,7 @@ namespace IMX.ATS.ATE
         {
             if (!GlobalModel.CabinetSate)
             {
-                //ContentName = "系统设备存在故障，无法运行";
+                ContentName = "系统设备存在故障，无法运行";
                 ContentColor = Brushes.Red;
             }
 #if DEBUG

@@ -326,6 +326,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Resource\Converter\ResultConverter.cs" />
     <Compile Include="ViewModels\MainWindowModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -403,6 +404,10 @@
     <ProjectReference Include="..\..\02-DataBase\IMX.ATS.ATE.DB\IMX.DB.csproj">
       <Project>{9ae13287-0976-4264-8210-0dc86e77fde9}</Project>
       <Name>IMX.DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\03-Common\IMX.ATE.Common\IMX.ATE.Common.csproj">
+      <Project>{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}</Project>
+      <Name>IMX.ATE.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

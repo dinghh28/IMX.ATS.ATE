@@ -4,11 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.DIOS" 
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:converter="clr-namespace:IMX.ATS.DIOS.Resource.Converter"
         d:DataContext="{d:DesignInstance Type=local:MainWindowModel}"
         mc:Ignorable="d"
         Title="数据查询" Height="450" Width="800" Name="Win" WindowStyle="None">
     <Window.Resources>
+        <ResourceDictionary>
         <!--设置按钮控件-->
         <Style TargetType="Button" x:Key="SettingButtonStyle">
             <Setter Property="Foreground" Value="White"/>
@@ -185,7 +187,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        <ResourceDictionary.MergedDictionaries>
+            <!--<ResourceDictionary Source="pack://application:,,,/Resource/Styles/DefaultStyle.xaml"/>-->
+            <ResourceDictionary>
+                <converter:ResultConverter x:Key="IconConverter"/>
+            </ResourceDictionary>
+        </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     
     <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" >
@@ -272,13 +280,14 @@
                 <DataGrid.Columns>
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.Header>
-                            <CheckBox  Content="全选" IsChecked="{Binding DataContext.IsSelectAll,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1 }}">
+                            <CheckBox  Content="全选">
+                                <!--IsChecked="{Binding DataContext.IsSelectAll,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource AncestorType=Window, AncestorLevel=1 }}">-->
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Checked">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.SelectAllCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding IsSelectAll, ElementName=qx}"/>
+                                        <i:InvokeCommandAction  Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}},Path= DataContext.SelectAllCommand }"/>
                                     </i:EventTrigger>
                                     <i:EventTrigger EventName="Unchecked">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.UnSelectAllCommand,  RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" CommandParameter="{Binding IsSelectAll, ElementName=qx}"/>
+                                        <i:InvokeCommandAction Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}},Path= DataContext.SelectAllCommand }"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
                             </CheckBox>
@@ -317,8 +326,8 @@ CommandParameter="{Binding .}">-->
                     </DataGridCheckBoxColumn>-->
 
                     <DataGridTextColumn Width="4*"  Header="样机编号" Binding="{Binding Pro_SN}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="3*" Header="机柜编号" Binding="{Binding CabinetID}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="3*" Header="工位" Binding="{Binding StationID}" IsReadOnly="True"/>
+                    <!--<DataGridTextColumn Width="3*" Header="机柜编号" Binding="{Binding CabinetID}" IsReadOnly="True"/>-->
+                    <!--<DataGridTextColumn Width="3*" Header="工位" Binding="{Binding StationID}" IsReadOnly="True"/>-->
                     <!--<DataGridTextColumn Width="4*"  Header="循环数" Binding="{Binding Test_CycleNum}" IsReadOnly="True"/>-->
                     <DataGridTextColumn Width="4*"  Header="实际运行时间" Binding="{Binding Test_ActTime}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="4*" Header="起始时间" Binding="{Binding Test_StartTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" IsReadOnly="True"/>

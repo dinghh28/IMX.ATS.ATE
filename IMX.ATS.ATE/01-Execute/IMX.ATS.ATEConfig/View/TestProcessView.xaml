@@ -57,9 +57,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="当前流程：" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Column="1" MinWidth="200" 
-                  ItemsSource="{Binding SolutionNames}" 
-                  SelectedValue="{Binding SolutionName}"/>
+                        <ComboBox Grid.Column="1" MinWidth="200"   ItemsSource="{Binding SolutionNames}"  SelectedValue="{Binding SolutionName}"/>
                     </Grid>
                     <Grid Grid.Column="1" Margin="20,0,20,0">
                         <Grid.ColumnDefinitions>

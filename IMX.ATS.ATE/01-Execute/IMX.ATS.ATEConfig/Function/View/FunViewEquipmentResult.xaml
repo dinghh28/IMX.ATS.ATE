@@ -1,0 +1,135 @@
+﻿<UserControl x:Class="IMX.ATS.ATEConfig.Function.FunViewEquipmentResult"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IMX.ATS.ATEConfig.Function"
+             xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework" 
+             d:DataContext="{d:DesignInstance Type=local:FunViewModelEquipmentResult}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <Binding Path="FunEquipmentResult" Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <GroupBox Header="工装读取结果配置">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="01-读取参数设置">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10,0,0">
+                                <Button Content="添加读取参数" Margin="0,0,20,0" Command="{Binding AddNewData}"/>
+                                <Button Content="删除读取参数" Command="{Binding DeleteData}"/>
+                            </WrapPanel>
+
+                            <ListBox Grid.Row="1" Margin="0,10,0,0" Background="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                     ItemsSource="{Binding InDatas}" SelectedIndex="{Binding SelectedItemIndex}"
+                                       d:ItemsSource="{d:SampleData ItemCount=5}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,10,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="2*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid Grid.Column="0" Margin="0,0,10,0">
+                                                <CheckBox Content="参与结果判定" VerticalAlignment="Center" IsChecked="{Binding is}"/>
+                                            </Grid>
+                                            <WrapPanel Grid.Column="1" Margin="0,0,10,0">
+                                                <Label Content="参数："/>
+                                                <ComboBox Width="150" ItemsSource="{Binding ResultDatas}" SelectedValue="{Binding ResultDataName}"/>
+                                                <WrapPanel Margin="0,0,10,0">
+                                                    <Label Content="判断条件:"/>
+                                                    <ComboBox Width="85"  ItemsSource="{Binding TrageConditions, Converter={StaticResource EnumValue}}" 
+                                                              SelectedValue="{Binding TrageCondition, Converter={StaticResource EnumValue}}"/>
+                                                </WrapPanel>
+                                            </WrapPanel>
+
+                                            <WrapPanel Grid.Column="2" Visibility="{Binding RangeShow}">
+                                                <WrapPanel Margin="0,0,5,0">
+                                                    <Label Content="下限值:"/>
+                                                    <TextBox Width="80" Text="{Binding ResultData.Limits_Lower}"/>
+                                                </WrapPanel>
+                                                <WrapPanel>
+                                                    <Label Content="上限值:"/>
+                                                    <TextBox Width="80" Text="{Binding ResultData.Limits_Upper}"/>
+                                                </WrapPanel>
+                                            </WrapPanel>
+
+                                            <WrapPanel Grid.Column="2" Visibility="{Binding TrageShow}">
+                                                <WrapPanel>
+                                                    <Label Content="触发值:"/>
+                                                    <TextBox Width="80" Text="{Binding ResultData.Limits_Upper}"/>
+                                                </WrapPanel>
+                                            </WrapPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
+                            
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Row="1" Header="02-结果不符合要求时处理方式">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="处理方式：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <ComboBox Grid.Column="1"  Height="35" Width="200" 
+                                          VerticalContentAlignment="Center" 
+                                          HorizontalAlignment="Left"
+                                          ItemsSource="{Binding ResultOpereates, Converter={StaticResource EnumValue}}"
+                                          SelectedValue="{Binding ResultOpereate, Converter={StaticResource EnumValue}}"/>
+                            </Grid>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+                <GroupBox Header="模板执行完成后延时设置" Grid.Row="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+            
+                        <Grid Grid.Column="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="90"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="延时时间：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBox Grid.Column="1"  Text="{Binding  DelayAfterRun}"  Height="35" Width="80" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                            <Label  Grid.Column="2" Content="毫秒" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

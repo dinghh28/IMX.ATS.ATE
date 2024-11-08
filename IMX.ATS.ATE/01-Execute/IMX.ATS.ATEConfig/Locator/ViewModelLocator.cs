@@ -82,6 +82,15 @@ namespace IMX.ATS.ATEConfig
             //产品指令配置
             SimpleIoc.Default.Register<FunViewModelProduct>();
             ContentControlManager.Regiter<FunViewProduct>();
+
+            //产品读取结果配置
+            SimpleIoc.Default.Register<FunViewModelProductResult>();
+            ContentControlManager.Regiter<FunViewProductResult>();
+
+
+            //工装读取结果配置
+            SimpleIoc.Default.Register<FunViewModelEquipmentResult>();
+            ContentControlManager.Regiter<FunViewEquipmentResult>();
             #endregion
         }
 
@@ -173,6 +182,18 @@ namespace IMX.ATS.ATEConfig
         /// 产品指令配置模板
         /// </summary>
         public FunViewModelProduct FunProduct=>ServiceLocator.Current.GetInstance<FunViewModelProduct>();
+
+
+        /// <summary>
+        /// 产品结果读取模板
+        /// </summary>
+        public FunViewModelProductResult FunProductResult => ServiceLocator.Current.GetInstance<FunViewModelProductResult>();
+
+        /// <summary>
+        /// 工装结果读取模板
+        /// </summary>
+        public FunViewModelEquipmentResult FunEquipmentResult => ServiceLocator.Current.GetInstance<FunViewModelEquipmentResult>();
+        
         #endregion
 
     }

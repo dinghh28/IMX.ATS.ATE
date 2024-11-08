@@ -217,6 +217,10 @@ namespace IMX.ATS.ATEConfig
                 SolutionNames.Clear();
                 DBOperate.Default.GetProcessName(projectid).AttachIfSucceed(result =>
                 {
+                    if (result.Data.Count < 1)
+                    {
+                        return;
+                    }
                     for (int i = 0; i < result.Data.Count; i++)
                     {
                         SolutionNames.Add(result.Data[i]);
@@ -226,6 +230,11 @@ namespace IMX.ATS.ATEConfig
 
                 DBOperate.Default.GetProcessDescription(projectid).AttachIfSucceed(result =>
                 {
+                    if (result.Data.Count < 1)
+                    {
+                        return;
+                    }
+
                     for (int i = 0; i < result.Data.Count; i++)
                     {
                         SolutionDescriptions.Add(result.Data[i]);

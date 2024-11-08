@@ -35,8 +35,8 @@ namespace IMX.ATS.ATEConfig
             {FuncitonType.Product , typeof(FunViewModelProduct)},
             {FuncitonType.ACSource , typeof(FunViewModelACSource)},
             {FuncitonType.DCLoad , typeof(FunViewModelDCLoad)},
+            {FuncitonType.EquipmentResult, typeof(FunViewModelEquipmentResult)},
+            {FuncitonType.ProductResult, typeof(FunViewModelProductResult)},
         };
-
-
     }
 }

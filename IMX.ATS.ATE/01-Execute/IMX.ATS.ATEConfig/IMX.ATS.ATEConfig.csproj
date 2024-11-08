@@ -230,6 +230,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.118.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Data.SQLite.Linq.1.0.118.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -255,9 +256,11 @@
     <Compile Include="Function\ViewModel\FunViewModelACSource.cs" />
     <Compile Include="Function\ViewModel\FunViewModelAPU.cs" />
     <Compile Include="Function\ViewModel\FunViewModelDCLoad.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelEquipmentResult.cs" />
     <Compile Include="Function\ViewModel\FunViewModelHVDCSource.cs" />
     <Compile Include="Function\ViewModel\FunViewModelPOPUP.cs" />
     <Compile Include="Function\ViewModel\FunViewModelProduct.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelProductResult.cs" />
     <Compile Include="Function\View\FunViewACSource.xaml.cs">
       <DependentUpon>FunViewACSource.xaml</DependentUpon>
     </Compile>
@@ -267,6 +270,9 @@
     <Compile Include="Function\View\FunViewDCLoad.xaml.cs">
       <DependentUpon>FunViewDCLoad.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Function\View\FunViewEquipmentResult.xaml.cs">
+      <DependentUpon>FunViewEquipmentResult.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Function\View\FunViewHVDCSource.xaml.cs">
       <DependentUpon>FunViewHVDCSource.xaml</DependentUpon>
     </Compile>
@@ -275,6 +281,9 @@
     </Compile>
     <Compile Include="Function\View\FunViewProduct.xaml.cs">
       <DependentUpon>FunViewProduct.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewProductResult.xaml.cs">
+      <DependentUpon>FunViewProductResult.xaml</DependentUpon>
     </Compile>
     <Compile Include="Resource\Converter\ShortSatetConverter.cs" />
     <Compile Include="Resource\Converter\UseDBCConverter.cs" />
@@ -322,6 +331,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Function\View\FunViewEquipmentResult.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Function\View\FunViewHVDCSource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -331,6 +344,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Function\View\FunViewProduct.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewProductResult.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -433,7 +433,7 @@ namespace IMX.ATS.ATE
                             continue;
                         }
 
-                        result.Data.Device_ReadAll()
+                        result.Data.Close()
                             .AttachIfSucceed(result1 => 
                             {
                                 item.Value.DeviceOperate = result.Data;
@@ -489,7 +489,6 @@ namespace IMX.ATS.ATE
             Thread.Sleep(1000);
 
             WindowClosedExecute(window);
-
         }
 
         /// <summary>
@@ -533,6 +532,8 @@ namespace IMX.ATS.ATE
                     SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, nameof(DeviceInitViewModel), nameof(CabinetUnInit), ex);
                 }
             }
+            Thread.Sleep(1000);
+            WindowClosedExecute(window);
         }
         #endregion
 

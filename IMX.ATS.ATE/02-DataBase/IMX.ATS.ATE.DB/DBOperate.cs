@@ -1019,6 +1019,34 @@ namespace IMX.DB
         }
 
         /// <summary>
+        /// 获取流程名称和描述
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public OperateResult<Dictionary<string, string>> GetProcessNaemAndDescription(int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult<Dictionary<string, string>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id).ToDictionary(x=>x.FunctionName, x=>x.Description);
+
+                return OperateResult<Dictionary<string, string>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult<Dictionary<string, string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
         /// 获取流程步骤
         /// </summary>
         /// <param name="funcname">流程名称</param>

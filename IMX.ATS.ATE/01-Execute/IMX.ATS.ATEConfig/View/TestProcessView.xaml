@@ -149,31 +149,43 @@
                             <Button Grid.Column="3" Content="删除" FontSize="12" Width="50" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" 
                                     Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
                         </Grid>
-                        
-                        <DataGrid Grid.Row="1" Background="Transparent" 
+                        <Grid Grid.Row="1">
+                            <Popup x:Name="popup1" 
+                                   AllowsTransparency="True" 
+                                   IsHitTestVisible="False" 
+                                   Placement="RelativePoint" 
+                                   PlacementTarget="{Binding ElementName=dataGrid1}">
+                                <TextBlock Margin="8,0,0,0" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Text="Dragging..." />
+                            </Popup>
+                            <DataGrid x:Name="dataGrid1"
+                                  Background="Transparent" 
                                   ScrollViewer.VerticalScrollBarVisibility="Visible" 
                                   SelectedIndex="{Binding FunctionInfoIndex}" 
                                   ItemsSource="{Binding FunctionInfos}" 
                                   AutoGenerateColumns="False"
-                                  CanUserAddRows="False" 
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
                                   CanUserSortColumns="False"
-                                  Datagrid:DragDropRowBehavior.Enabled="True">
-                            <DataGrid.InputBindings>
-                                <KeyBinding Key="Delete" Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
-                            </DataGrid.InputBindings>
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="上移此行" Command="{Binding ChangeFunInfos}" CommandParameter="UP"/>
-                                    <MenuItem Header="下移此行" Command="{Binding ChangeFunInfos}" CommandParameter="DOWN"/>
-                                    <MenuItem Header="删除此行" Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="序号" Binding="{Binding Step}" Width="auto" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="试验操作模板"  Binding="{Binding CutomFuncName}" Width="auto" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="备注" Width="2*" Binding="{Binding Content}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                  Datagrid:DragDropRowBehavior.Enabled="True"
+                                  Datagrid:DragDropRowBehavior.PopupControl="{Binding ElementName=popup1}">
+                                <DataGrid.InputBindings>
+                                    <KeyBinding Key="Delete" Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
+                                </DataGrid.InputBindings>
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="上移此行" Command="{Binding ChangeFunInfos}" CommandParameter="UP"/>
+                                        <MenuItem Header="下移此行" Command="{Binding ChangeFunInfos}" CommandParameter="DOWN"/>
+                                        <MenuItem Header="删除此行" Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="序号" Binding="{Binding Step}" Width="auto" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="试验操作模板"  Binding="{Binding CutomFuncName}" Width="auto" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="备注" Width="2*" Binding="{Binding Content}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+
                     </Grid>
                 </GroupBox>
             </Grid>

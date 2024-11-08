@@ -21,6 +21,9 @@
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.Device_ReadAll">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.Close">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
             <inheritdoc/>
         </member>
@@ -108,6 +111,9 @@
         <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.SetValue_Singel(System.Double,System.Double)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.Close">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.Device_ReadAll">
             <inheritdoc/>
         </member>
@@ -189,6 +195,9 @@
         <member name="M:IMX.Device.APU.APU_IT6800_Operate.SetValue(System.Double,System.Double)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.Close">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.APU.APU_IT6800_Operate.#ctor">
             <inheritdoc/>
         </member>
@@ -236,52 +245,55 @@
         <member name="M:IMX.Device.APU.APU_IT6800_Warp.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
-        <member name="T:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte">
+        <member name="T:IMX.Device.DCLoad.DCLoad_AN23600E_Operate">
             <summary>
             艾诺AN23600E系列直流负载操作类
             </summary>
         </member>
-        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.Warp">
+        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.Warp">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SupportDeviceType">
+        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SupportDeviceType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.DeviceName">
+        <member name="P:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.DeviceName">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.Device_ReadAll">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.Device_ReadAll">
             <inheritdoc/>
             暂不使用此方法
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.Close">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetCurrSLEW_POSitive(System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetCurrSLEW_NEGative(System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetCurrSLEW_POSitive(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetCurrSLEW_NEGative(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetLoadValue(System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModelAndValue(System.String,System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetModel(System.String)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetLoadValue(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModel(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.#ctor">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.#ctor">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Opearte.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Device.DCLoad.DCLoad_AN23600E_Warp">
@@ -429,7 +441,19 @@
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetValue(System.Double,System.Double)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Close">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
             <inheritdoc/>
         </member>
         <member name="F:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.HEADER">
@@ -455,6 +479,20 @@
             </summary>
             <param name="Vvalue">启动电压</param>
             <param name="Ivalue">启动电流</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.Set_Vol(System.Double)">
+            <summary>
+            设置电压参数
+            </summary>
+            <param name="value">设置电压</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.Set_Cur(System.Double)">
+            <summary>
+            设置电流参数
+            </summary>
+            <param name="value">设置电流</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.ReadOutPutVol">
@@ -662,6 +700,9 @@
             </summary>
             <param name="messages"></param>
             <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.Close">
+            <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadAll">
             <inheritdoc/>
@@ -977,6 +1018,9 @@
         <member name="M:IMX.Device.Relay.Relay_ZS_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Close">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.Relay.Relay_ZS_Operate.#ctor">
             <inheritdoc/>
         </member>
@@ -1058,6 +1102,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Close">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.#ctor">
@@ -1364,6 +1411,9 @@
         <member name="M:IMX.Device.Base.Device_Operate.Device_ReadAll">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Close">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.Base.Device_Operate.SetError(System.String)">
             <summary>
             设置错误信息
@@ -1582,6 +1632,12 @@
         <member name="M:IMX.Device.Base.IDeviceOperate.Device_ReadAll">
             <summary>
             读取设备信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IDeviceOperate.Close">
+            <summary>
+            关闭设备（设备恢复到初始状态）
             </summary>
             <returns></returns>
         </member>

@@ -1668,7 +1668,6 @@ namespace IMX.DB
             }
         }
 
-
         public OperateResult<long> GetTestDataCount(int itemid, DateTime StratTime, DateTime StopTime)
         {
             if (!IsInitOK)

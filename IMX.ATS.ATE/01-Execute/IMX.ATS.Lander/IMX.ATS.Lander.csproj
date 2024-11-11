@@ -50,7 +50,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
+    <OutputPath>..\..\bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -295,19 +295,19 @@
     <Resource Include="Resource\Image\UserManage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resource\Image\ProjectConfig.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resource\Image\DIOS.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resource\Image\BIS.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\02-DataBase\IMX.ATS.ATE.DB\IMX.DB.csproj">
       <Project>{9ae13287-0976-4264-8210-0dc86e77fde9}</Project>
       <Name>IMX.DB</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Image\ATE.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Image\ATEConfig.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />

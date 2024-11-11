@@ -46,7 +46,7 @@
         </member>
         <member name="T:IMX.Function.FunConfig_APU">
             <summary>
-            文雅支流元试验步骤配置类
+            稳压直流源试验步骤配置类
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_APU.SupportFuncitonType">
@@ -163,6 +163,16 @@
         <member name="F:IMX.Function.FunConfig_DCLoad.FuntionName">
             <summary>
             方法名
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_DCLoad.IsOutResult">
+            <summary>
+            超出判断条件
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_DCLoad.IsJudge">
+            <summary>
+            进入条件判断循环
             </summary>
         </member>
         <member name="M:IMX.Function.FunConfig_DCLoad.Execute(System.Object)">

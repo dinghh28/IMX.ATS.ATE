@@ -169,7 +169,7 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         /// <param name="obj">功能界面名称</param>
         /// <exception cref="NotImplementedException"></exception>
-        private void DoNavChanged(object obj)
+        public void DoNavChanged(object obj)
         {
             if (LastView.Equals(obj))
             {

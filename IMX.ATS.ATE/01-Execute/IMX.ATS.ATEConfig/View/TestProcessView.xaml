@@ -56,7 +56,7 @@
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="当前流程：" VerticalAlignment="Center"/>
+                        <Label Grid.Column="0" Content="当前试验项：" VerticalAlignment="Center"/>
                         <ComboBox Grid.Column="1" MinWidth="200"   ItemsSource="{Binding SolutionNames}"  SelectedValue="{Binding SolutionName}"/>
                     </Grid>
                     <Grid Grid.Column="1" Margin="20,0,20,0">
@@ -69,7 +69,7 @@
                     </Grid>
                     <Grid Grid.Column="2">
                         <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Right">
-                            <Button Content="更新流程" Command="{Binding UpdataTestFlow}"   Height="35" Width="100" FontSize="15" Margin="0,0,10,0"/>
+                            <Button Content="更新试验项" Command="{Binding UpdataTestFlow}"   Height="35" Width="100" FontSize="15" Margin="0,0,10,0"/>
                             <Button Content="另存为" Command="{Binding SaveAsTestFlow}"  Height="35" Width="100" FontSize="15" Margin="0,0,10,0"/>
                             <!--<Button Content="导入" Command="{Binding Import}"  Width="60" Height="35" FontSize="15"  Margin="10 0 0 0"/>
                             <Button Content="导出" Command="{Binding Export}" Width="60" Height="35" FontSize="15" Margin="10 0 0 0"/>-->

@@ -31,23 +31,23 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <Label Content="流程保存" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Black"/>
+            <Label Content="试验项保存" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Black"/>
             <Button Grid.Column="1" Content="&#xe71f;" Command="{Binding WindowClose}" Foreground="#333" Style="{StaticResource ControlButtonStyle}"
         CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Right" VerticalAlignment="Center"
         Background="Transparent"  Width="40" Height="40" />
         </Grid>
-        <GroupBox Grid.Row="1" Header="流程信息" FontWeight="Normal" Margin="5">
+        <GroupBox Grid.Row="1" Header="试验项信息" FontWeight="Normal" Margin="5">
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock Text="流程名称："/>
+                    <TextBlock Text="试验项名称："/>
                     <TextBox Width="200" Text="{Binding SchemeName}"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">
-                    <TextBlock Text="流程描述："/>
+                    <TextBlock Text="试验项描述："/>
                     <TextBox Width="200" Height="75" Text="{Binding SchemeDescribe}" TextWrapping="Wrap" />
                 </WrapPanel>
             </Grid>

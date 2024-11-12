@@ -475,8 +475,12 @@ namespace IMX.ATS.ATE
                          .And(operate.SetSendSignal(thread.SendSignals_CAN))
                          .ConvertTo(result.Data);
                     });
-
-                    test_Data.Pro_DeviceRead = GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos;
+                    for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++) 
+                    {
+                        test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
+                    }
+                    
+                    //test_Data.Pro_DeviceRead = GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos;
                 }
                 catch (Exception ex)
                 {
@@ -495,8 +499,11 @@ namespace IMX.ATS.ATE
                     return;
                 }
             }
-
-            test_Data.Euq_DeviceRead = GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos;
+            for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
+            {
+                test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
+            }
+            //test_Data.Euq_DeviceRead = GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos;
             bool testresult = true;
             string errorstr = string.Empty;
 
@@ -580,16 +587,57 @@ namespace IMX.ATS.ATE
 
                         if (config.SupportFuncitonType == FuncitonType.ProductResult)
                         {
-                            operate.Device_ReadAll();
+                            if (!thread.ProjectInfo.IsUseDDBC)
+                            {
+                                continue;
+                            }
+
+                            if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL caninfo))
+                            {
+                                operate = caninfo.DeviceOperate;
+                            }
+                            FunConfig_ProductResult resultconfig = config as FunConfig_ProductResult;
+
+                            var result = ProductResultExecute(stepinfo, resultconfig, operate as Product_CAN_Operate);
+
+                            test_Data.StepName = config.SupportFuncitonType.GetDescription();
+                            test_Data.FlowName = flowname;
+                            test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
+                            for (int k = 0; k < resultconfig?.Datas?.Count; k++)
+                            {
+                                test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
+                            }
+
+                            Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
+
+                            if (!result)
+                            {
+                                TestErrorString += $"{result.Message}\r\n";
+                                if (resultconfig.ResultOpereate != ResultOpereateType.IGNORE)
+                                {
+                                    testresult = false;
+                                    thread.IsStartThread = resultconfig.ResultOpereate == ResultOpereateType.OUTFUNCTION;
+                                    break;
+                                }
+                            }
                         }
                         else if (config.SupportFuncitonType == FuncitonType.EquipmentResult)
                         {
+                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL acqinfo))
+                            {
+                                operate = acqinfo.DeviceOperate;
+                            }
+
                             FunConfig_EquipmentResult resultconfig = config as FunConfig_EquipmentResult;
                             var result = EquipmentResultExecute(stepinfo, resultconfig, operate as IAcquisition);
 
                             test_Data.StepName = config.SupportFuncitonType.GetDescription();
                             test_Data.FlowName = flowname;
-
+                            test_Data.Euq_DeviceRead = new List<ModDeviceReadData>();
+                            for (int k = 0; k < resultconfig?.Datas?.Count; k++)
+                            {
+                                test_Data.Euq_DeviceRead.Add(resultconfig.Datas[k]);
+                            }
                             Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
                             if (!result)
@@ -662,6 +710,7 @@ namespace IMX.ATS.ATE
 
             SaveItem(false, testinfo);
 
+            ShutDown(thread.Programme.TestOff_FlowNames, thread.ProjectInfo.IsUseDDBC);
             if (thread.ProjectInfo.IsUseDDBC)
             {
                 CANUnint(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
@@ -1139,12 +1188,63 @@ namespace IMX.ATS.ATE
         #endregion
 
         /// <summary>
+        /// 下电操作
+        /// </summary>
+        private void ShutDown(List<string> steps, bool isusedbc) 
+        {
+            for (int i = 0; i < steps?.Count; i++) 
+            {
+                DeviceInfo_ALL info = null;
+                switch (steps[i])
+                {
+                    case "直流负载下电关机":
+                    {
+                        GlobalModel.DicDeviceInfo.TryGetValue("DCLoad", out info);
+                    }
+                        break;
+                    case "高压直流源下电关机":
+                    {
+                        GlobalModel.DicDeviceInfo.TryGetValue("HVDCSource", out info);
+                    }
+                        break;
+
+                    case "交流源下电关机":
+                    {
+                        GlobalModel.DicDeviceInfo.TryGetValue("ACSource", out info);
+                    }
+                        break;
+                    case "稳压直流源下电关机":
+                    {
+                        GlobalModel.DicDeviceInfo.TryGetValue("APU", out info);
+                    }
+                        break;
+                    case "产品通讯卸载":
+                        if (!isusedbc) 
+                        {
+                            GlobalModel.DicDeviceInfo.TryGetValue("Product", out info);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (info == null || info.DeviceOperate == null) 
+                {
+                    continue;
+                }
+
+                info.DeviceOperate.Close();
+
+            }
+        }
+
+        /// <summary>
         /// 结束试验
         /// </summary>
 
         private void TestStop()
         {
-            TestErrorString = "手动停止试验";
+            TestErrorString += "手动停止试验";
             if (monitor != null)
             {
                 monitor.IsStartThread = false;

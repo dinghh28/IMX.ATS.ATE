@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         xmlns:converter="clr-namespace:IMX.ATS.ATE.Resource.Converter" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         Title="MainView" Height="480" Width="800" 
-        FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
+        FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333" 
         WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
         ResizeMode="NoResize"  x:Name="Win">
 
@@ -19,6 +19,7 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+            <i:InvokeCommandAction Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>
@@ -274,7 +275,7 @@
                                 <DataGridTextColumn Header="下限值" Binding="{Binding Limit_Lower}" Width="1.5*"/>
                                 <DataGridTextColumn Header="上限值" Binding="{Binding Limit_Upper}" Width="1.5*"/>
                                 <DataGridTextColumn Header="判定结果" Binding="{Binding ValueConditions}" Width="1*"/>
-                                <DataGridTextColumn Header="结果" Binding="{Binding Result,Converter={StaticResource  ResultToString}}" Width="1*"/>
+                                <DataGridTextColumn Header="结果" Binding="{Binding Result,Converter={StaticResource  ResultToString}}" Width="1*" Foreground="{Binding Foreground}"/>
                                 <DataGridTextColumn Header="开始时间" Binding="{Binding StartTime}" Width="2*"/>
                             </DataGrid.Columns>
                         </DataGrid>

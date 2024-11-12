@@ -1103,7 +1103,7 @@ namespace IMX.DB
                $"SELECT\n" +
                $"    *\n" +
                $"FROM\n" +
-               $"    TBL_TEST_FUNC\n" +
+               $"    Test_Process\n" +
                $"WHERE\n" +
                $"   ProjectID = {id}\n" +
                $"AND\n";
@@ -1112,13 +1112,13 @@ namespace IMX.DB
                 {
                     if (i == funcnames.Count - 1)
                     {
-                        sqlStr += $"    TEST_FUNNAME = '{funcnames[i]}'";
+                        sqlStr += $"    FunctionName = '{funcnames[i]}'";
                         break;
                     }
-                    sqlStr += $"    TEST_FUNNAME = '{funcnames[i]}'\n" + "OR\n";
+                    sqlStr += $"    FunctionName = '{funcnames[i]}'\n" + "OR\n";
                 }
 
-                var list = Sqlite.Ado.Query<Test_Process>(sqlStr);
+                var list = Sqlite.Select<Test_Process>().WithSql(sqlStr).ToList();
 
                 if (list.Count < 1)
                 {

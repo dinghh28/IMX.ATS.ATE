@@ -508,7 +508,7 @@ namespace IMX.ATS.ATE
                 {
                     var deviceinfo = GlobalModel.DicDeviceInfo[item.Key];
 
-                    deviceinfo.DeviceOperate.UnInit()
+                    deviceinfo.DeviceOperate.Close().And(deviceinfo.DeviceOperate.UnInit())
                         .And(deviceinfo.Drive.UnregisterDevice(deviceinfo.DeviceOperate))
                         .AttachIfSucceed(result => 
                         {

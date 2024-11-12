@@ -57,7 +57,7 @@
                                 <DropShadowEffect Color="Gray" Direction="0" ShadowDepth="0.5"/>
                             </TextBlock.Effect>
                         </TextBlock>
-                        <TextBlock Text="老化测试平台" FontSize="25" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue">
+                        <TextBlock Text="功能测试平台" FontSize="25" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue">
                             <TextBlock.Effect>
                                 <DropShadowEffect Color="Gray" Direction="0" ShadowDepth="0.5"/>
                             </TextBlock.Effect>

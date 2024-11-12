@@ -425,7 +425,10 @@ namespace IMX.ATS.ATEConfig.Function
         #endregion
 
         #region 构造方法
-        public FunViewModelDCLoad() { }
+        public FunViewModelDCLoad()
+        {
+        
+        }
         #endregion
 
     }

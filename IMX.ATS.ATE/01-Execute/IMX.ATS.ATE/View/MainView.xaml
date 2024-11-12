@@ -227,7 +227,7 @@
                                                         <Label Grid.Column="2" Content="{Binding Limit_Lower}" HorizontalAlignment="Center"/>
                                                         <Label Grid.Column="3" Content="{Binding Limit_Upper}" HorizontalAlignment="Center"/>
                                                         <Label Grid.Column="4" Content="{Binding ValueConditions}" HorizontalAlignment="Center"/>
-                                                        <Label Grid.Column="5" Content="{Binding Result, Converter={StaticResource ResultToString}}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="5" Content="{Binding Result, Converter={StaticResource ResultToString}}" HorizontalAlignment="Center" Foreground="{Binding Forecolor}"/>
                                                         <Label Grid.Column="6" Content="{Binding ExecuteTime}" HorizontalAlignment="Center"/>
                                                     </Grid>
                                                 </DataTemplate>
@@ -275,7 +275,7 @@
                                 <DataGridTextColumn Header="下限值" Binding="{Binding Limit_Lower}" Width="1.5*"/>
                                 <DataGridTextColumn Header="上限值" Binding="{Binding Limit_Upper}" Width="1.5*"/>
                                 <DataGridTextColumn Header="判定结果" Binding="{Binding ValueConditions}" Width="1*"/>
-                                <DataGridTextColumn Header="结果" Binding="{Binding Result,Converter={StaticResource  ResultToString}}" Width="1*" Foreground="{Binding Foreground}"/>
+                                <DataGridTextColumn Header="结果" Binding="{Binding Result,Converter={StaticResource  ResultToString}}" Width="1*"/>
                                 <DataGridTextColumn Header="开始时间" Binding="{Binding StartTime}" Width="2*"/>
                             </DataGrid.Columns>
                         </DataGrid>

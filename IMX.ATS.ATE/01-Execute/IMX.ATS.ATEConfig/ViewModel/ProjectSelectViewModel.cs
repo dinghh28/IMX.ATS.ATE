@@ -152,6 +152,7 @@ namespace IMX.ATS.ATEConfig
                     try
                     {
                         WindowClosedExecute(Win);
+                        viewmodel.DoNavChanged("ProjectInfo");
                     }
                     catch (Exception ex)
                     {
@@ -159,6 +160,7 @@ namespace IMX.ATS.ATEConfig
                     }
 
                 }));
+
             }
             catch (Exception ex)
             {

@@ -94,7 +94,7 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition  Width="2*"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0">
+                                <Grid Grid.Column="0" >
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
                                         <ColumnDefinition/>
@@ -108,7 +108,7 @@
                                               IsChecked="{Binding Set_ShortState,Mode=TwoWay,Converter={StaticResource State}}"/>
                                 </Grid>-->
 
-                                <Grid Grid.Column="1" IsEnabled="{Binding EnableSetLoadValue}">
+                                <Grid Grid.Column="1" IsEnabled="{Binding EnableSetValue}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="100"/>
                                         <ColumnDefinition Width="90"/>
@@ -118,6 +118,7 @@
                                     <TextBox Grid.Column="1" Text="{Binding Set_LoadValue}" Height="35" Width="80"/>
                                     <Label  Grid.Column="2" Content="{Binding Unit}"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 </Grid>
+                                
                                 <Grid Grid.Column="2" IsEnabled="{Binding EnableSetLoadValue}">
                                     <CheckBox Content="步进模式"  IsChecked="{Binding Set_StepModel,Mode=TwoWay}"  VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 </Grid>

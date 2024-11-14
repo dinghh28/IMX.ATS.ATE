@@ -61,6 +61,16 @@ namespace IMX.ATS.ATEConfig.Function
 
         #region 界面绑定属性
 
+        private bool enableSetValue = true;
+        /// <summary>
+        /// 拉载设置标志位
+        /// </summary>
+        public bool EnableSetValue
+        {
+            get => enableSetValue;
+            set => Set(nameof(EnableSetValue), ref enableSetValue, value);
+        }
+
         private bool enablesetloadvalue;
         /// <summary>
         /// 允许拉载设置标志位
@@ -78,11 +88,14 @@ namespace IMX.ATS.ATEConfig.Function
         public bool EnableSetStepValue
         {
             get => enablesetstepvalue;
-            set => Set(nameof(EnableSetStepValue), ref enablesetstepvalue, value);
-            //{
-            //    (Func.Config as FunConfig_DCLoad).EnableStepping = value;
-            //}
-            //}
+            set
+            {
+                if (Set(nameof(EnableSetStepValue), ref enablesetstepvalue, value))
+                {
+                    EnableSetValue = value ? false : true;
+                }
+
+            }
         }
 
 
@@ -92,7 +105,11 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public bool Set_StepModel
         {
-            get => set_StepModel = (Func.Config as FunConfig_DCLoad).EnableStepping;
+            get
+            {
+                EnableSetStepValue = (Func.Config as FunConfig_DCLoad).EnableStepping;
+                return set_StepModel = (Func.Config as FunConfig_DCLoad).EnableStepping;
+            }
             set
             {
                 if (Set(nameof(Set_StepModel), ref set_StepModel, value))
@@ -100,6 +117,7 @@ namespace IMX.ATS.ATEConfig.Function
                     (Func.Config as FunConfig_DCLoad).EnableStepping = value;
 
                     EnableSetStepValue = value;
+                    EnableSetValue = value ? false : true;
 
                 }
             }
@@ -118,12 +136,14 @@ namespace IMX.ATS.ATEConfig.Function
                     EnableSetLoadValue = false;
                     EnableSetStepValue = false;
                     Set_StepModel = false;
+                    EnableSetValue = false;
                 }
                 else
                 {
                     EnableSetLoadValue = true;
-                    EnableSetStepValue = false;
-                    Set_StepModel = false;
+                    //EnableSetValue = true;
+                    //EnableSetStepValue = false;
+                    //Set_StepModel = false;
                 }
                 return set_shortstate = (Func.Config as FunConfig_DCLoad).Set_ShortState;
             }
@@ -138,12 +158,14 @@ namespace IMX.ATS.ATEConfig.Function
                         EnableSetLoadValue = false;
                         EnableSetStepValue = false;
                         Set_StepModel = false;
+                        EnableSetValue = false;
                     }
                     else
                     {
                         EnableSetLoadValue = true;
-                        EnableSetStepValue = false;
-                        Set_StepModel = false;
+                        //EnableSetValue = true;
+                        //EnableSetStepValue = false;
+                        //Set_StepModel = false;
                     }
                 }
             }
@@ -315,7 +337,31 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public ObservableCollection<StepValue> StepValues
         {
-            get => stepvalues;
+            get
+            {
+                stepvalues.Clear();
+                ObservableCollection<string> CondNames = new ObservableCollection<string>();
+                ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+
+                for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
+                {
+                    CondNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
+                    CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
+                    //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
+                }
+
+               (Func.Config as FunConfig_DCLoad).Values.ForEach(x =>
+               {
+                   stepvalues.Add(new StepValue
+                   {
+                       ConditionValue = x,
+                       ConditionValues = CondValues,
+                       ConditionNames = CondNames,
+                   });
+               });
+
+                return stepvalues;
+            }
             set => Set(nameof(StepValues), ref stepvalues, value);
         }
         #endregion
@@ -427,7 +473,7 @@ namespace IMX.ATS.ATEConfig.Function
         #region 构造方法
         public FunViewModelDCLoad()
         {
-        
+
         }
         #endregion
 

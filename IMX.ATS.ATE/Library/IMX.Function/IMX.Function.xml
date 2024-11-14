@@ -15,6 +15,11 @@
         <member name="P:IMX.Function.FunConfig_ACSource.DeviceAddress">
             <inheritdoc/>
         </member>
+        <member name="F:IMX.Function.FunConfig_ACSource.IsOutResult">
+            <summary>
+            超出判断条件
+            </summary>
+        </member>
         <member name="P:IMX.Function.FunConfig_ACSource.Set_Vol">
             <summary>
             设置电压
@@ -23,6 +28,46 @@
         <member name="P:IMX.Function.FunConfig_ACSource.Set_Frequency">
             <summary>
             设置频率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.EnableStepping">
+            <summary>
+            步进使能标志
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.StartLoadValue">
+            <summary>
+            开始拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.Stride">
+            <summary>
+            步进步幅
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.StepFrequency">
+            <summary>
+            步进步频
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.EndLoadValue">
+            <summary>
+            结束拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.StepCondition">
+            <summary>
+            步进各条件判定综合判定条件
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.ConditionalValues">
+            <summary>
+            步进允许判定变量列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.Values">
+            <summary>
+            步进变量判定参数列表
             </summary>
         </member>
         <member name="F:IMX.Function.FunConfig_ACSource.ClassType">

@@ -45,7 +45,7 @@
                         </Grid>
                         
                         <Grid Grid.Row="2">
-                            <CheckBox Content="是否输出试验结果" VerticalAlignment="Center"/>
+                            <CheckBox Content="是否输出试验结果" VerticalAlignment="Center" IsChecked="{Binding IsResult, Mode=TwoWay}"/>
                         </Grid>
                     </Grid>
                 </GroupBox>

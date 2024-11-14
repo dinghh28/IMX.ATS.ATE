@@ -127,7 +127,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public ResultOpereateType ResultOpereate
         {
-            get => resultopereate;
+            get => resultopereate = (Func.Config as IFunction_Result).ResultOpereate;
             set
             {
                 if (Set(nameof(ResultOpereate), ref resultopereate, value))

@@ -85,6 +85,16 @@ namespace IMX.ATS.ATEConfig
             set => Set(nameof(FlowConfigVisbility), ref flowconfigvisbility, value);
         }
 
+        //private Visibility programmconfigvisbility;
+        ///// <summary>
+        ///// 试验方案配置显示
+        ///// </summary>
+        //public Visibility ProgrammConfigVisbility
+        //{
+        //    get => programmconfigvisbility;
+        //    set => Set(nameof(ProgrammConfigVisbility), ref programmconfigvisbility, value);
+        //}
+
         /// <summary>
         /// 当前登陆用户
         /// </summary>
@@ -204,6 +214,17 @@ namespace IMX.ATS.ATEConfig
             }
 
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
+
+            if (GlobalModel.IsNewProject)
+            {
+                DBCConfigVisbility = Visibility.Collapsed;
+                FlowConfigVisbility = Visibility.Collapsed;
+                //ProgrammConfigVisbility = Visibility.Collapsed;
+            }
+            else
+            {
+                DBCConfigVisbility = GlobalModel.Test_ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
+            }
             //base.WindowLoadedExecute(obj);
         }
 
@@ -214,7 +235,7 @@ namespace IMX.ATS.ATEConfig
                 return;
             }
 
-            WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(win);
+            //WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(win);
 
             base.WindowClosedExecute(obj);
         }

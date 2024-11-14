@@ -7,7 +7,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
         mc:Ignorable="d"
         xmlns:converter="clr-namespace:IMX.ATS.ATE.Resource.Converter" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
-        Title="MainView" Height="480" Width="800" 
+        Title="MainView" Height="480" Width="800" FontSize="14"
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333" 
         WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
         ResizeMode="NoResize"  x:Name="Win">
@@ -227,7 +227,9 @@
                                                         <Label Grid.Column="2" Content="{Binding Limit_Lower}" HorizontalAlignment="Center"/>
                                                         <Label Grid.Column="3" Content="{Binding Limit_Upper}" HorizontalAlignment="Center"/>
                                                         <Label Grid.Column="4" Content="{Binding ValueConditions}" HorizontalAlignment="Center"/>
-                                                        <Label Grid.Column="5" Content="{Binding Result, Converter={StaticResource ResultToString}}" HorizontalAlignment="Center" Foreground="{Binding Forecolor}"/>
+                                                        <Label Grid.Column="5" Content="{Binding Result, Converter={StaticResource ResultToString}}"
+                                                               
+                                                               HorizontalAlignment="Center" />
                                                         <Label Grid.Column="6" Content="{Binding ExecuteTime}" HorizontalAlignment="Center"/>
                                                     </Grid>
                                                 </DataTemplate>

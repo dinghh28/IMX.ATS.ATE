@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800"
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
+        FontSize="14"
         WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
         ResizeMode="NoResize"  x:Name="Win">
     <Window.DataContext>

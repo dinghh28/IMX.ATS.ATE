@@ -85,6 +85,11 @@ namespace IMX.DB.Model
         public string StepName { get; set; }
 
         /// <summary>
+        /// 步骤序号
+        /// </summary>
+        public int StepIndex { get; set; }
+
+        /// <summary>
         /// 产品数据
         /// </summary>
         [JsonMap]

@@ -1243,6 +1243,9 @@ namespace IMX.ATS.DIOS
                 table.Columns.Add("ID");
                 table.Columns.Add("记录时间");
 
+                table.Columns.Add("试验项名称");
+                table.Columns.Add("步骤序号");
+                table.Columns.Add("步骤名称");
                 // 遍历并添加列到DataTable  
                 value[0].Pro_Data.ForEach(token =>
                 {
@@ -1280,6 +1283,12 @@ namespace IMX.ATS.DIOS
                 row["ID"] = table.Rows.Count + 1;
                 //row["记录时间"] = x.RecordTime;
                 row["记录时间"] = x.CreateTime;//.ToString("yyyy/MM/dd HH:mm:ss.fff");
+
+                row["试验项名称"] = x.FlowName;
+
+                row["步骤序号"] = x.StepIndex;
+
+                row["步骤名称"] = x.StepName;
 
                 x.Pro_Data.ForEach(y =>
                 {

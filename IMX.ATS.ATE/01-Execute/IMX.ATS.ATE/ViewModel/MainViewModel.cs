@@ -57,6 +57,9 @@ using IMX.Device.Common.Enumerations;
 using IMX.Function.Base.Enumerations;
 using IMX.Function.Config;
 using System.Windows.Documents;
+using System.Reflection.Emit;
+using Newtonsoft.Json.Linq;
+using System.Windows.Ink;
 
 namespace IMX.ATS.ATE
 {
@@ -451,7 +454,11 @@ namespace IMX.ATS.ATE
 
             thread.IsRunning = true;
             TestErrorString = string.Empty;
-            Test_DataInfo test_Data = new Test_DataInfo();
+            Test_DataInfo test_Data = new Test_DataInfo
+            {
+                Euq_Data = new List<ModTestDataInfo>(),
+                Pro_Data = new List<ModTestDataInfo>(),
+            };
 
             //CAN通讯初始化
             if (thread.ProjectInfo.IsUseDDBC)
@@ -515,6 +522,9 @@ namespace IMX.ATS.ATE
             };
 
             SaveItem(true, testinfo);
+            test_Data.TestItemID = testinfo.Id;
+
+            
 
             for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
             {
@@ -548,7 +558,8 @@ namespace IMX.ATS.ATE
                     Index = i + 1,
                     Result = ResultState.UNACCOMPLISHED,
                     StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                    StepInfos = stepinfo
+                    StepInfos = stepinfo,
+                    FunctionName = flowname
                 };
 
 
@@ -559,11 +570,16 @@ namespace IMX.ATS.ATE
 
                 for (int j = 0; j < flows?.Count; j++)
                 {
+                    bool isoutfunc = false;
                     if (!thread.IsStartThread)
                     {
                         break;
                     }
 
+                    if (isoutfunc) 
+                    {
+                        break;
+                    }
 
                     try
                     {
@@ -585,6 +601,7 @@ namespace IMX.ATS.ATE
                             StepName = config.SupportFuncitonType.GetDescription()
                         };
 
+
                         if (config.SupportFuncitonType == FuncitonType.ProductResult)
                         {
                             if (!thread.ProjectInfo.IsUseDDBC)
@@ -598,16 +615,18 @@ namespace IMX.ATS.ATE
                             }
                             FunConfig_ProductResult resultconfig = config as FunConfig_ProductResult;
 
-                            var result = ProductResultExecute(stepinfo, resultconfig, operate as Product_CAN_Operate);
+                            var result = ProductResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as Product_CAN_Operate);
 
                             test_Data.StepName = config.SupportFuncitonType.GetDescription();
                             test_Data.FlowName = flowname;
+                            test_Data.StepIndex = j + 1;
+
                             test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
                             for (int k = 0; k < resultconfig?.Datas?.Count; k++)
                             {
                                 test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
                             }
-
+                            test_Data.Id = 0;
                             Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
                             if (!result)
@@ -629,30 +648,43 @@ namespace IMX.ATS.ATE
                             }
 
                             FunConfig_EquipmentResult resultconfig = config as FunConfig_EquipmentResult;
-                            var result = EquipmentResultExecute(stepinfo, resultconfig, operate as IAcquisition);
+                            var result = EquipmentResultExecute(j+1, flowname, stepinfo, resultconfig, operate as IAcquisition);
 
                             test_Data.StepName = config.SupportFuncitonType.GetDescription();
                             test_Data.FlowName = flowname;
+                            test_Data.StepIndex = j + 1;
                             test_Data.Euq_DeviceRead = new List<ModDeviceReadData>();
                             for (int k = 0; k < resultconfig?.Datas?.Count; k++)
                             {
                                 test_Data.Euq_DeviceRead.Add(resultconfig.Datas[k]);
                             }
+                            test_Data.Id = 0;
                             Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
                             if (!result)
                             {
+                                testresult = false;
                                 TestErrorString += $"{result.Message}\r\n";
-                                if (resultconfig.ResultOpereate != ResultOpereateType.IGNORE)
+                                if (resultconfig.ResultOpereate == ResultOpereateType.OUTTEST)
                                 {
-                                    testresult = false;
-                                    thread.IsStartThread = resultconfig.ResultOpereate == ResultOpereateType.OUTFUNCTION;
+                                    thread.IsStartThread = false;
+                                    break;
+                                }
+                                else if (resultconfig.ResultOpereate == ResultOpereateType.OUTFUNCTION)
+                                {
+                                    isoutfunc = true;
+                                    //thread.IsStartThread = true;
                                     break;
                                 }
                             }
                         }
                         else if (config.SupportFuncitonType == FuncitonType.DCLoad)
                         {
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                stepinfo.Add(step);
+                            }));
+
                             Product_CAN_Operate product_CAN = null;
                             IAcquisition acquisition = null;
                             if (thread.ProjectInfo.IsUseDDBC)
@@ -667,16 +699,90 @@ namespace IMX.ATS.ATE
                                 acquisition = infoac.DeviceOperate as IAcquisition;
                             }
 
-                            DCLoadExecute(config as FunConfig_DCLoad, operate as IDCLoad, product_CAN, acquisition);
+                          var  result =  DCLoadExecute(config as FunConfig_DCLoad, 
+                                                      operate as IDCLoad, 
+                                                      product_CAN, 
+                                                      acquisition);
+                            if (!result)
+                            {
+                                thread.IsStartThread = false;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    step.Result = ResultState.FAIL;
+                                }));
+                                TestErrorString += result.Message;
+                                break;
+                            }
 
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                step.Result = ResultState.SUCCESS;
+                            }));
+                        }
+                        else if (config.SupportFuncitonType == FuncitonType.ACSource)
+                        {
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 stepinfo.Add(step);
                             }));
+
+                            Product_CAN_Operate product_CAN = null;
+                            IAcquisition acquisition = null;
+                            if (thread.ProjectInfo.IsUseDDBC)
+                            {
+                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
+                                {
+                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
+                                }
+                            }
+                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
+                            {
+                                acquisition = infoac.DeviceOperate as IAcquisition;
+                            }
+
+                            var result = ACScourceExecute(config as FunConfig_ACSource,
+                                                        operate as IACSource,
+                                                        product_CAN,
+                                                        acquisition);
+                            if (!result)
+                            {
+                                thread.IsStartThread = false;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    step.Result = ResultState.FAIL;
+                                }));
+                                TestErrorString += result.Message;
+                                break;
+                            }
+
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                step.Result = ResultState.SUCCESS;
+                            }));
                         }
                         else
                         {
-                            config.Execute(operate);
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                stepinfo.Add(step);
+                            }));
+
+                            var result =  config.Execute(operate);
+                            if (!result)
+                            {
+                                thread.IsStartThread = false;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    step.Result = ResultState.FAIL;
+                                }));
+                                TestErrorString += result.Message;
+                                break;
+                            }
+
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                step.Result = ResultState.SUCCESS;
+                            }));
                         }
                         Thread.Sleep(0);
                     }
@@ -716,6 +822,8 @@ namespace IMX.ATS.ATE
                 CANUnint(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
             }
             thread.IsRunning = false;
+            GlobalModel.IsTestThreadRun = false;
+            IsTestRuning = false;
         }
 
         #region 特殊步骤操作
@@ -723,7 +831,7 @@ namespace IMX.ATS.ATE
         /// 产品试验结果执行
         /// </summary>
         /// <returns></returns>
-        private OperateResult ProductResultExecute(ObservableCollection<ExecuteStepInfo> infos, FunConfig_ProductResult config, Product_CAN_Operate operate)
+        private OperateResult ProductResultExecute(int index, string flowname, ObservableCollection<ExecuteStepInfo> infos, FunConfig_ProductResult config, Product_CAN_Operate operate)
         {
             string errorstring = string.Empty;
 
@@ -757,11 +865,12 @@ namespace IMX.ATS.ATE
                         ValueConditions = data.Judgment.GetDescription(),
                     };
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
-
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute),
+                         $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}");
                     if (!config.Datas[i].IsInRange)
                     {
                         step.Result = ResultState.FAIL;
-                        errorstring += $"{data.DataInfo.Name}当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]），不符合要求：{data.Limits_Lower} - {data.Limits_Upper}\r\n";
+                        errorstring += $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}\r\n";
                     }
                     else
                     {
@@ -794,7 +903,7 @@ namespace IMX.ATS.ATE
         /// 工装试验结果执行
         /// </summary>
         /// <returns></returns>
-        private OperateResult EquipmentResultExecute(ObservableCollection<ExecuteStepInfo> infos, FunConfig_EquipmentResult config, IAcquisition operate)
+        private OperateResult EquipmentResultExecute(int index, string flowname, ObservableCollection<ExecuteStepInfo> infos, FunConfig_EquipmentResult config, IAcquisition operate)
         {
             string errorstring = string.Empty;
             try
@@ -829,10 +938,16 @@ namespace IMX.ATS.ATE
 
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
 
+                    //test_Data.StepName = config.SupportFuncitonType.GetDescription();
+                    //test_Data.FlowName = flowname;
+                    //test_Data.StepIndex = j + 1;
+
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(EquipmentResultExecute),
+                        $"测试项目：【{flowname}】\r\n步骤：【{index}】【{ data.DataInfo.Name}】\r\n 当前读取值【{ data.DataInfo.Value}】（判定条件[{ data.Judgment.GetDescription()}]）要求：{ data.Limits_Lower}- { data.Limits_Upper}");
                     if (!config.Datas[i].IsInRange)
                     {
                         step.Result = ResultState.FAIL;
-                        errorstring += $"{data.DataInfo.Name}当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]），不符合要求：{data.Limits_Lower} - {data.Limits_Upper}\r\n";
+                        errorstring += $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}\r\n";
                     }
                     else
                     {
@@ -883,18 +998,34 @@ namespace IMX.ATS.ATE
                     SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
                     return OperateResult.Failed(errorstring);
                 }
-
+                if (aqcoperate == null)
+                {
+                    errorstring = "采样系统不存在";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
 
                 string InfoString = string.Empty;
+
 
                 //短路模式
                 if (config.Set_ShortState == DeviceOutPutState.ON)
                 {
                     OperateResult result = device.SetShort(config.Set_ShortState);
+                    InfoString = $"设置\n[短路模式] {config.Set_ShortState}成功";
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
                 }
                 else//非短路模式
                 {
                     #region 启动拉载
+                    OperateResult result = device.SetShort(config.Set_ShortState);
+                    if (!result)
+                    {
+                        errorstring = $"设置\n[短路模式]异常：【{result.Message}】";
+                        SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+                        return OperateResult.Failed(errorstring);
+                    }
+                    Thread.Sleep(200);
 
                     double loadvalue = config.EnableStepping ? config.StartLoadValue : config.Set_LoadValue;
 
@@ -927,11 +1058,16 @@ namespace IMX.ATS.ATE
                     //步进模式
                     if (config.EnableStepping)
                     {
+                        Thread.Sleep(config.StepFrequency);
+
                         Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
 
-                        for (int i = 0; i < canoperate?.ReadInfos.Count; i++)
+                        if (canoperate != null)
                         {
-                            data.Add(canoperate.ReadInfos[i].DataInfo.Name, canoperate.ReadInfos[i]);
+                            for (int i = 0; i < canoperate?.ReadInfos.Count; i++)
+                            {
+                                data.Add(canoperate.ReadInfos[i].DataInfo.Name, canoperate.ReadInfos[i]);
+                            }
                         }
 
                         for (int i = 0; i < aqcoperate?.ReadInfos.Count; i++)
@@ -948,25 +1084,33 @@ namespace IMX.ATS.ATE
 
                                 setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
 
-                                device.SetLoadValue((uint)setpvol * 10);
+                                device.SetLoadValue(setpvol);
 
-                                InfoString = $"设备设置电压{setpvol}成功";
+                                InfoString = $"设备步进设置拉载值{setpvol}成功";
 
                                 SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
 
                                 Thread.Sleep(config.StepFrequency);
-
-                                canoperate?.Device_ReadAll();
+                                
+                                if (canoperate!=null)
+                                {
+                                    canoperate?.Device_ReadAll();
+                                }
+                                
                                 aqcoperate?.Device_ReadAll();
 
                                 //跳出步进条件
-                                if (config.Values.Count > 0)
+                                if (config.Values != null && config.Values.Count > 0)
                                 {
                                     //if (config.StepCondition == StepConditions.OR)
                                     //{
                                     List<bool> results = new List<bool>();
                                     for (int j = 0; j < config.Values.Count; j++)
                                     {
+                                        if (config.Values[j].Value == null)
+                                        {
+                                            continue;
+                                        }
                                         double readdata = data[config.Values[j].Value.DataInfo.Name].DataInfo.Value;
                                         switch (config.Values[j].StepValueCondition.ToString())
                                         {
@@ -1075,6 +1219,178 @@ namespace IMX.ATS.ATE
                 SuperDHHLoggerManager.Exception(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), ex);
                 return OperateResult.Excepted(ex);
             }
+        }
+
+        /// <summary>
+        /// 交流源试验执行
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="device"></param>
+        /// <param name="canoperate"></param>
+        /// <param name="aqcoperate"></param>
+        /// <returns></returns>
+        private OperateResult ACScourceExecute(FunConfig_ACSource config, IACSource device, Product_CAN_Operate canoperate, IAcquisition aqcoperate) 
+        {
+            string errorstring = string.Empty;
+            try
+            {
+                if (device == null)
+                {
+                    errorstring = "设备类型不存在";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+
+                if (config == null)
+                {
+                    errorstring = "交流源配置不可为空";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+                if (aqcoperate == null)
+                {
+                    errorstring = "采样系统不存在";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+
+                string InfoString = string.Empty;
+
+                double loadvalue = config.EnableStepping ? config.StartLoadValue : config.Set_Vol;
+
+                OperateResult SetRlt = device.SetValue_Singel(loadvalue, config.Set_Frequency);
+
+                if (!SetRlt)
+                {
+                    errorstring = $"设备参数设置异常：【{SetRlt.Message}】";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+
+                InfoString = $"设置\n[电压]{config.Set_Vol}\n[频率]{config.Set_Frequency}成功";
+                //Logger.Info(ClassType.Name, FuntionName, InfoString);
+                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+
+                if (config.OperateType != SetOutPutState.Null)
+                {
+                    device.SetOnOff(config.OperateType == SetOutPutState.ON ? DeviceOutPutState.ON : DeviceOutPutState.OFF);
+
+                    InfoString = config.OperateType == SetOutPutState.ON ? "打开" : "关闭";
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), $"设备已{InfoString}");
+
+                    //Logger.Info(ClassType.Name, Executename, $"设备已{InfoString}");
+                }
+
+                //步进模式
+                if (config.EnableStepping)
+                {
+                    Thread.Sleep(config.StepFrequency);
+
+                    Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
+
+                    if (canoperate != null)
+                    {
+                        for (int i = 0; i < canoperate?.ReadInfos?.Count; i++)
+                        {
+                            data.Add(canoperate.ReadInfos[i].DataInfo.Name, canoperate.ReadInfos[i]);
+                        }
+                    }
+
+                    for (int i = 0; i < aqcoperate?.ReadInfos?.Count; i++)
+                    {
+                        data.Add(aqcoperate.ReadInfos[i].DataInfo.Name, aqcoperate.ReadInfos[i]);
+                    }
+
+                    if (Math.Abs(config.EndLoadValue - config.StartLoadValue) >= config.Stride)
+                    {
+                        int count = Convert.ToInt16(Math.Abs((((config.EndLoadValue - config.StartLoadValue) % config.Stride) == 0) ? ((config.EndLoadValue - config.StartLoadValue) / config.Stride) : ((config.EndLoadValue - config.StartLoadValue) / config.Stride + 1)));
+                        for (int i = 0; i < count; i++)
+                        {
+                            double setpvol = config.StartLoadValue + config.Stride * (i + 1) * (config.EndLoadValue < config.StartLoadValue ? -1 : 1);
+
+                            setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
+
+                            device.SetValue_Singel(setpvol ,config.Set_Frequency);
+
+                            InfoString = $"设备步进设置拉载值{setpvol}成功";
+
+                            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+
+                            Thread.Sleep(config.StepFrequency);
+
+                            if (canoperate != null)
+                            {
+                                canoperate?.Device_ReadAll();
+                            }
+
+                            aqcoperate?.Device_ReadAll();
+
+                            //跳出步进条件
+                            if (config.Values  != null&& config.Values.Count > 0)
+                            {
+                                //if (config.StepCondition == StepConditions.OR)
+                                //{
+                                List<bool> results = new List<bool>();
+                                for (int j = 0; j < config.Values.Count; j++)
+                                {
+                                    if (config.Values[j].Value == null) 
+                                    {
+                                        continue;
+                                    }
+                                    double readdata = data[config.Values[j].Value.DataInfo.Name].DataInfo.Value;
+                                    switch (config.Values[j].StepValueCondition.ToString())
+                                    {
+                                        case "GREATERTHAN"://大于
+
+                                            results.Add(readdata > config.Values[j].ConditionValue ? true : false);
+                                            break;
+                                        case "LESSTHAN"://小于
+                                            results.Add(readdata < config.Values[j].ConditionValue ? true : false);
+                                            break;
+                                        case "EQUALTO"://等于
+                                            results.Add(readdata == config.Values[j].ConditionValue ? true : false);
+                                            break;
+                                        case "NOTEQUALTO"://不等于
+                                            results.Add(readdata != config.Values[j].ConditionValue ? true : false);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
+                                //}
+
+                                if (results.All(x => x == true))
+                                {
+                                    InfoString = $"达成条件，跳出步进";
+                                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+                                    return OperateResult.Succeed();
+                                }
+                                else if (results.Any(x => x == true) && config.StepCondition == StepConditions.OR)
+                                {
+                                    InfoString = $"达成条件，跳出步进";
+                                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+                                    return OperateResult.Succeed();
+                                }
+                            }
+
+
+                        }
+                    }
+                    else
+                    {
+                        InfoString = $"步进操作：步进目标值和初始值相同，无需进行步进操作";
+                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+                    }
+                }
+                Thread.Sleep(config.DelayAfterRun > 0 ? config.DelayAfterRun : 0);
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                SuperDHHLoggerManager.Exception(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), ex);
+                return OperateResult.Excepted(ex);
+            }
+
         }
         #endregion
 
@@ -1266,6 +1582,89 @@ namespace IMX.ATS.ATE
             IsTestRuning = false;
 
         }
+
+        #region 界面测试
+        private void TestThread() 
+        {   
+            for (int i = 0; i < 10; i++) 
+            {
+                ObservableCollection<ExecuteStepInfo> stepinfo = new ObservableCollection<ExecuteStepInfo>();
+
+                ExecuteInfo functioninfo = new ExecuteInfo
+                {
+                    Index = i + 1,
+                    Result = ResultState.UNACCOMPLISHED,
+                    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                    StepInfos = stepinfo,
+                    FunctionName = "test1",
+                };
+
+
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    ATEExecuteInfos.Add(functioninfo);
+                }));
+                Thread.Sleep(100);
+                for (int k = 0; k < 5; k++)
+                {
+                    ExecuteStepInfo step = new ExecuteStepInfo
+                    {
+                        Result = ResultState.UNACCOMPLISHED,
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        StepName = "KL30上电",
+                    };
+
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        stepinfo.Add(step);
+                    }));
+                    Thread.Sleep(500);
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        step.Result = ResultState.SUCCESS;
+                    }));
+                }
+                
+
+                //Application.Current.Dispatcher.Invoke(new Action(() =>
+                //{
+                //    ATEExecuteInfos.Add(new ExecuteInfo {
+                //    Index = i + 1,
+                //    FunctionName = "硬件唤醒测试",
+                //    Result = ResultState.FAIL,
+                //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+                //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+                //                new ExecuteStepInfo {
+                //                    StepName = "KL30上电",
+                //                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                //                    Limit_Lower = "11",
+                //                    Limit_Upper = "12.5",
+                //                    Result = ResultState.FAIL,
+                //                },
+                //                new ExecuteStepInfo {
+                //                    StepName = "KL15导通",
+                //                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+                //                    Limit_Lower = "1",
+                //                    Limit_Upper = "1",
+                //                    Result = ResultState.FAIL,
+                //                },
+                //                 new ExecuteStepInfo {
+                //                    StepName = "样品通讯上报",
+                //                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+                //                    Limit_Lower = string.Empty,
+                //                    Limit_Upper = string.Empty,
+                //                    Result = ResultState.FAIL,
+                //                },
+                //            }
+
+                //    });
+                //}));
+
+                //Thread.Sleep(1000);
+            }
+
+        }
+        #endregion
         #endregion
 
         #region 保护方法
@@ -1306,10 +1705,12 @@ namespace IMX.ATS.ATE
                 {
                     MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
                 });
-
-            //window = win;
-            //base.WindowLoadedExecute(obj);
-        }
+#if DEBUG
+            new Thread(TestThread) { IsBackground = true }.Start();
+#endif
+        //window = win;
+        //base.WindowLoadedExecute(obj);
+    }
 
         protected override void WindowClosedExecute(object obj)
         {
@@ -1344,194 +1745,194 @@ namespace IMX.ATS.ATE
                 ContentColor = Brushes.Red;
             }
             //#if DEBUG
-            SelectedProductName = "OBC测试800W";
-            ProductSN = "35L2024091101020S";
-            ATEExecuteInfos.Add(new ExecuteInfo
-            {
-                Index = 1,
-                FunctionName = "硬件唤醒测试",
-                Result = ResultState.FAIL,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                                new ExecuteStepInfo {
-                                    StepName = "KL30上电",
-                                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                                    Limit_Lower = "11",
-                                    Limit_Upper = "12.5",
-                                    Result = ResultState.FAIL,
-                                },
-                                new ExecuteStepInfo {
-                                    StepName = "KL15导通",
-                                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                                    Limit_Lower = "1",
-                                    Limit_Upper = "1",
-                                    Result = ResultState.FAIL,
-                                },
-                                 new ExecuteStepInfo {
-                                    StepName = "样品通讯上报",
-                                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.FAIL,
-                                },
-                            }
+            //SelectedProductName = "OBC测试800W";
+            //ProductSN = "35L2024091101020S";
+            //ATEExecuteInfos.Add(new ExecuteInfo
+            //{
+            //    Index = 1,
+            //    FunctionName = "硬件唤醒测试",
+            //    Result = ResultState.FAIL,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+            //                    new ExecuteStepInfo {
+            //                        StepName = "KL30上电",
+            //                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //                        Limit_Lower = "11",
+            //                        Limit_Upper = "12.5",
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                    new ExecuteStepInfo {
+            //                        StepName = "KL15导通",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //                        Limit_Lower = "1",
+            //                        Limit_Upper = "1",
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                     new ExecuteStepInfo {
+            //                        StepName = "样品通讯上报",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                }
 
-            });
+            //});
 
-            ATEExecuteInfos.Add(new ExecuteInfo
-            {
-                Index = 2,
-                FunctionName = "CC唤醒测试",
-                Result = ResultState.SUCCESS,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                                new ExecuteStepInfo {
-                                    StepName = "test1",
-                                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.SUCCESS,
-                                },
-                                new ExecuteStepInfo {
-                                    StepName = "test2",
-                                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                                    Limit_Lower = "1",
-                                    Limit_Upper = "3",
-                                    Result = ResultState.SUCCESS,
-                                },
-                                 new ExecuteStepInfo {
-                                    StepName = "test3",
-                                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.FAIL,
-                                },
-                            }
-            });
+            //ATEExecuteInfos.Add(new ExecuteInfo
+            //{
+            //    Index = 2,
+            //    FunctionName = "CC唤醒测试",
+            //    Result = ResultState.SUCCESS,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test1",
+            //                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test2",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //                        Limit_Lower = "1",
+            //                        Limit_Upper = "3",
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                     new ExecuteStepInfo {
+            //                        StepName = "test3",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                }
+            //});
 
-            ATEExecuteInfos.Add(new ExecuteInfo
-            {
-                Index = 2,
-                FunctionName = "CP唤醒测试",
-                Result = ResultState.UNACCOMPLISHED,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                                new ExecuteStepInfo {
-                                    StepName = "test1",
-                                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.SUCCESS,
-                                },
-                                new ExecuteStepInfo {
-                                    StepName = "test2",
-                                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                                    Limit_Lower = "1",
-                                    Limit_Upper = "3",
-                                    Result = ResultState.SUCCESS,
-                                },
-                                 new ExecuteStepInfo {
-                                    StepName = "test3",
-                                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.FAIL,
-                                },
-                            }
-            });
+            //ATEExecuteInfos.Add(new ExecuteInfo
+            //{
+            //    Index = 2,
+            //    FunctionName = "CP唤醒测试",
+            //    Result = ResultState.UNACCOMPLISHED,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test1",
+            //                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test2",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //                        Limit_Lower = "1",
+            //                        Limit_Upper = "3",
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                     new ExecuteStepInfo {
+            //                        StepName = "test3",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                }
+            //});
 
-            ATEExecuteInfos.Add(new ExecuteInfo
-            {
-                Index = 2,
-                FunctionName = "额定功率",
-                Result = ResultState.UNACCOMPLISHED,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                                new ExecuteStepInfo {
-                                    StepName = "test1",
-                                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.SUCCESS,
-                                },
-                                new ExecuteStepInfo {
-                                    StepName = "test2",
-                                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                                    Limit_Lower = "1",
-                                    Limit_Upper = "3",
-                                    Result = ResultState.SUCCESS,
-                                },
-                                 new ExecuteStepInfo {
-                                    StepName = "test3",
-                                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.FAIL,
-                                },
-                            }
-            });
+            //ATEExecuteInfos.Add(new ExecuteInfo
+            //{
+            //    Index = 2,
+            //    FunctionName = "额定功率",
+            //    Result = ResultState.UNACCOMPLISHED,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test1",
+            //                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test2",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //                        Limit_Lower = "1",
+            //                        Limit_Upper = "3",
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                     new ExecuteStepInfo {
+            //                        StepName = "test3",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                }
+            //});
 
-            ATEExecuteInfos.Add(new ExecuteInfo
-            {
-                Index = 2,
-                FunctionName = "输出电压过压保护",
-                Result = ResultState.UNACCOMPLISHED,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                                new ExecuteStepInfo {
-                                    StepName = "test1",
-                                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.SUCCESS,
-                                },
-                                new ExecuteStepInfo {
-                                    StepName = "test2",
-                                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                                    Limit_Lower = "1",
-                                    Limit_Upper = "3",
-                                    Result = ResultState.SUCCESS,
-                                },
-                                 new ExecuteStepInfo {
-                                    StepName = "test3",
-                                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.FAIL,
-                                },
-                            }
-            });
+            //ATEExecuteInfos.Add(new ExecuteInfo
+            //{
+            //    Index = 2,
+            //    FunctionName = "输出电压过压保护",
+            //    Result = ResultState.UNACCOMPLISHED,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test1",
+            //                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test2",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //                        Limit_Lower = "1",
+            //                        Limit_Upper = "3",
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                     new ExecuteStepInfo {
+            //                        StepName = "test3",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                }
+            //});
 
-            ATEExecuteInfos.Add(new ExecuteInfo
-            {
-                Index = 2,
-                FunctionName = "输出电压欠压保护",
-                Result = ResultState.UNACCOMPLISHED,
-                StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                                new ExecuteStepInfo {
-                                    StepName = "test1",
-                                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.SUCCESS,
-                                },
-                                new ExecuteStepInfo {
-                                    StepName = "test2",
-                                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                                    Limit_Lower = "1",
-                                    Limit_Upper = "3",
-                                    Result = ResultState.SUCCESS,
-                                },
-                                 new ExecuteStepInfo {
-                                    StepName = "test3",
-                                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                                    Limit_Lower = string.Empty,
-                                    Limit_Upper = string.Empty,
-                                    Result = ResultState.FAIL,
-                                },
-                            }
-            });
+            //ATEExecuteInfos.Add(new ExecuteInfo
+            //{
+            //    Index = 2,
+            //    FunctionName = "输出电压欠压保护",
+            //    Result = ResultState.UNACCOMPLISHED,
+            //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
+            //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test1",
+            //                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                    new ExecuteStepInfo {
+            //                        StepName = "test2",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
+            //                        Limit_Lower = "1",
+            //                        Limit_Upper = "3",
+            //                        Result = ResultState.SUCCESS,
+            //                    },
+            //                     new ExecuteStepInfo {
+            //                        StepName = "test3",
+            //                        ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
+            //                        Limit_Lower = string.Empty,
+            //                        Limit_Upper = string.Empty,
+            //                        Result = ResultState.FAIL,
+            //                    },
+            //                }
+            //});
             //#endif
 
         }
@@ -1637,6 +2038,20 @@ namespace IMX.ATS.ATE
             {
                 if (Set(nameof(Result), ref result, value))
                 {
+                    //switch (value)
+                    //{
+                    //    case ResultState.UNACCOMPLISHED:
+                    //        Forecolor = new SolidColorBrush(Colors.Black);
+                    //        break;
+                    //    case ResultState.SUCCESS:
+                    //        Forecolor = new SolidColorBrush(Colors.Green);
+                    //        break;
+                    //    case ResultState.FAIL:
+                    //        Forecolor = new SolidColorBrush(Colors.Red);
+                    //        break;
+                    //        default:
+                    //        break;
+                    //}
                     Forecolor = value== ResultState.SUCCESS?new SolidColorBrush(Colors.Green) :new SolidColorBrush(Colors.Red);
                 }
 
@@ -1648,7 +2063,7 @@ namespace IMX.ATS.ATE
         /// </summary>
         public string ExecuteTime { get; set; }
 
-        private Brush forecolor;
+        private Brush forecolor = new SolidColorBrush(Colors.Black);
         /// <summary>
         /// 结果字体颜色
         /// </summary>

@@ -103,7 +103,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Content="流程名称："/>
+                                    <Label Content="试验项名称："/>
                                     <ComboBox Grid.Column="2" ItemsSource="{Binding  ProcessNames}" SelectedItem="{Binding SelectedName}"/>
                                 </Grid>
                             </DataTemplate>

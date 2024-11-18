@@ -1041,6 +1041,20 @@ namespace IMX.ATS.ATE
                     InfoString = $"设置\n[模式]{config.Set_Model}\n[拉载值]{loadvalue}成功";
                     SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
 
+                    OperateResult SetParamRlt = device.SetParameters(config.Set_ParamValue1, config.Set_ParamValue2);
+
+                    if (!SetParamRlt)
+                    {
+                        errorstring = $"设备拉载参数设置异常：【{SetParamRlt.Message}】";
+                        SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+
+                        //Logger.Error(nameof(FunConfig_DCLoad), nameof(Execute), LastError);
+                        return OperateResult.Failed(errorstring);
+                    }
+
+                    InfoString = $"设置\n[模式]{config.Set_Model}\n[参数1]{config.Set_ParamValue1}\n[参数2]{config.Set_ParamValue2}成功";
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+
                     if (config.OperateType != SetOutPutState.Null)
                     {
                         Thread.Sleep(200);

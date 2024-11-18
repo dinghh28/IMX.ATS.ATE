@@ -40,8 +40,6 @@ namespace IMX.ATS.ATEConfig
 {
     public class MainViewModel : WindowViewModelBaseEx
     {
-
-
         #region 公共属性
 
         #region 界面绑定属性
@@ -190,7 +188,6 @@ namespace IMX.ATS.ATEConfig
 
             try
             {
-
                 Type win = Type.GetType($"{SupportConfig.SystemName}.{obj}View");
                 Type model = Type.GetType($"{SupportConfig.SystemName}.{obj}ViewModel");
                 MainContent = ContentControlManager.GetControl(win, ((ViewModelLocator)Application.Current.FindResource("Locator")).GetModel(model));

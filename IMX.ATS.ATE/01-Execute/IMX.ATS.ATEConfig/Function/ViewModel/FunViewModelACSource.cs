@@ -236,7 +236,7 @@ namespace IMX.ATS.ATEConfig.Function
         {
             get
             {
-                stepvalues.Clear();
+                stepvalues = new ObservableCollection<StepValue>();
                 ObservableCollection<string> CondNames = new ObservableCollection<string>();
                 ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
 
@@ -245,6 +245,10 @@ namespace IMX.ATS.ATEConfig.Function
                     CondNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
                     CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
                     //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
+                }
+                if ((Func.Config as FunConfig_ACSource).Values == null)
+                {
+                    (Func.Config as FunConfig_ACSource).Values = new List<StepConditionValue>();
                 }
 
                 (Func.Config as FunConfig_ACSource).Values.ForEach(x =>

@@ -160,6 +160,17 @@
             设置拉载值(拉载起步值)
             </summary>
         </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Set_ParamValue1">
+            <summary>
+            设置非CV模式下的上升斜率；
+            或设置CV模式下的限制电流
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Set_ParamValue2">
+            <summary>
+            设置非CV模式下的下降斜率参数
+            </summary>
+        </member>
         <member name="P:IMX.Function.FunConfig_DCLoad.EnableStepping">
             <summary>
             步进使能标志

@@ -42,6 +42,7 @@ using GalaSoft.MvvmLight.Command;
 using Super.Zoo.Framework;
 using IMX.Device.Common;
 using System.Windows.Markup;
+using Newtonsoft.Json.Linq;
 
 namespace IMX.ATS.ATEConfig.Function
 {
@@ -60,6 +61,26 @@ namespace IMX.ATS.ATEConfig.Function
         public override string SupportFuncitonString => "DCLoad";
 
         #region 界面绑定属性
+
+        //private bool enableSetParameter = true;
+        ///// <summary>
+        ///// 非CV模式参数设置标志位
+        ///// </summary>
+        //public bool EnableSetParameter
+        //{
+        //    get => enableSetParameter;
+        //    set => Set(nameof(EnableSetParameter), ref enableSetParameter, value);
+        //}
+
+        private Visibility enableSetCVParameter = Visibility.Collapsed;
+        /// <summary>
+        /// CV模式参数设置标志位
+        /// </summary>
+        public Visibility EnableSetCVParameter
+        {
+            get => enableSetCVParameter;
+            set => Set(nameof(EnableSetCVParameter), ref enableSetCVParameter, value);
+        }
 
         private bool enableSetValue = true;
         /// <summary>
@@ -97,7 +118,6 @@ namespace IMX.ATS.ATEConfig.Function
 
             }
         }
-
 
         private bool set_StepModel = false;
         /// <summary>
@@ -179,7 +199,36 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public string Set_Model
         {
-            get => set_model = (Func.Config as FunConfig_DCLoad).Set_Model;
+            get
+            {
+                switch ((Func.Config as FunConfig_DCLoad).Set_Model)
+                {
+                    case "CCL":
+                    case "CCH":
+                        Unit = "A";
+                        ParamUnit = "A/us";
+                        EnableSetCVParameter = Visibility.Visible;
+                        ParamName = "上升斜率：";
+                        break;
+                    case "CVL":
+                    case "CVH":
+                        Unit = "V";
+                        ParamUnit = "A";
+                        EnableSetCVParameter = Visibility.Collapsed;
+                        ParamName = "限制电流：";
+                        break;
+                    case "CRL":
+                    case "CRH":
+                        Unit = "R";
+                        ParamUnit = "A/us";
+                        EnableSetCVParameter = Visibility.Visible;
+                        ParamName = "上升斜率：";
+                        break;
+                    default:
+                        break;
+                }
+                return set_model = (Func.Config as FunConfig_DCLoad).Set_Model;
+            }
             set
             {
                 if (Set(nameof(Set_Model), ref set_model, value))
@@ -190,14 +239,23 @@ namespace IMX.ATS.ATEConfig.Function
                         case "CCL":
                         case "CCH":
                             Unit = "A";
+                            ParamUnit = "A/us";
+                            EnableSetCVParameter = Visibility.Visible;
+                            ParamName = "上升斜率：";
                             break;
                         case "CVL":
                         case "CVH":
                             Unit = "V";
+                            ParamUnit = "A";
+                            EnableSetCVParameter = Visibility.Collapsed;
+                            ParamName = "限制电流：";
                             break;
                         case "CRL":
                         case "CRH":
                             Unit = "R";
+                            ParamUnit = "A/us";
+                            EnableSetCVParameter = Visibility.Visible;
+                            ParamName = "上升斜率：";
                             break;
                         default:
                             break;
@@ -231,6 +289,61 @@ namespace IMX.ATS.ATEConfig.Function
             get => unit;
             set => Set(nameof(Unit), ref unit, value);
         }
+
+        private string paramunit = "A/us";
+
+        /// <summary>
+        /// 各模式下参数单位
+        /// </summary>
+        public string ParamUnit
+        {
+            get => paramunit;
+            set => Set(nameof(ParamUnit), ref paramunit, value);
+        }
+
+        private string paramName;
+
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string ParamName
+        {
+            get => paramName;
+            set => Set(nameof(ParamName), ref paramName, value);
+        }
+
+        private double set_POSitiveValue;
+        /// <summary>
+        /// 设置上升斜率
+        /// </summary>
+        public double Set_POSitiveValue
+        {
+            get => set_POSitiveValue = (Func.Config as FunConfig_DCLoad).Set_ParamValue1;
+            set
+            {
+                if (Set(nameof(Set_POSitiveValue), ref set_POSitiveValue, value))
+                {
+                    (Func.Config as FunConfig_DCLoad).Set_ParamValue1 = value;
+                }
+            }
+        }
+
+        private double set_EGativeValue;
+        /// <summary>
+        /// 设置上升斜率
+        /// </summary>
+        public double Set_EGativeValue
+        {
+            get => set_EGativeValue = (Func.Config as FunConfig_DCLoad).Set_ParamValue2;
+            set
+            {
+                if (Set(nameof(Set_EGativeValue), ref set_EGativeValue, value))
+                {
+                    (Func.Config as FunConfig_DCLoad).Set_ParamValue2 = value;
+                }
+            }
+        }
+
 
         #region 步进参数
         private double stride;
@@ -339,7 +452,7 @@ namespace IMX.ATS.ATEConfig.Function
         {
             get
             {
-                stepvalues.Clear();
+                stepvalues = new ObservableCollection<StepValue>();
                 ObservableCollection<string> CondNames = new ObservableCollection<string>();
                 ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
 
@@ -349,7 +462,10 @@ namespace IMX.ATS.ATEConfig.Function
                     CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
                     //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
                 }
-
+                if ((Func.Config as FunConfig_DCLoad).Values == null)
+                {
+                    (Func.Config as FunConfig_DCLoad).Values = new List<StepConditionValue>();
+                }
                (Func.Config as FunConfig_DCLoad).Values.ForEach(x =>
                {
                    stepvalues.Add(new StepValue

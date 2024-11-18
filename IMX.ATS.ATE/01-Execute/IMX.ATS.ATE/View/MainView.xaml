@@ -87,6 +87,7 @@
                         <Button Grid.Row="3" FontSize="16"
                                 Content="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='String'}" 
                                 Background="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Brush'}"
+                                IsEnabled="{Binding EnableTestBtn}"
                                 Command="{Binding  Test}"/>
                     </Grid>
                 </GroupBox>

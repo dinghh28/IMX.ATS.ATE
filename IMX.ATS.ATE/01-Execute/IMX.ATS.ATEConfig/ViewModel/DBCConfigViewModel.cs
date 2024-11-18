@@ -131,6 +131,11 @@ namespace IMX.ATS.ATEConfig
         /// 项目ID
         /// </summary>
         public int ProjectID { get; set; } = -1;
+
+        /// <summary>
+        /// DBC文件是否发生编辑
+        /// </summary>
+        public bool IsEdit { get; set; } = true;
         #endregion
 
         #region 私有变量
@@ -250,6 +255,39 @@ namespace IMX.ATS.ATEConfig
             }
 
 
+        }
+
+        public void LoadFile(byte[] fileData, string Extension) 
+        {
+            try
+            {
+                OperateResult<IMessageFileLoader> rltCreate = MessageFileLoader.Create(Extension, SuperDHHLoggerManager.DeviceLogger);
+                if (!rltCreate)
+                {
+                    MessageBox.Show($"DBC文件加载失败:{rltCreate.Message}", "DBC文件解析异常", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                messageFileLoader = rltCreate.Data;
+
+                var rltLoad = rltCreate.Data.Paser(fileData);
+                if (!rltLoad)
+                {
+                    MessageBox.Show($"DBC解析失败:{rltLoad.Message}", "DBC文件解析异常", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // 加载项目
+                if (rltLoad)
+                {
+                    LoadItems(messageFileLoader);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"DBC解析异常:{ex.Message}", "DBC文件解析异常", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
         }
 
         /// <summary>
@@ -637,29 +675,47 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
-            mainviewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
-            DBCConfig = mainviewmodel.DBCConfig ?? new Test_DBCConfig();
-            DBCFileInfo = mainviewmodel.DBCFileInfo;
-            DBCConfig.ProjectID = mainviewmodel.ProjectInfo.Id;
+            //mainviewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
+            DBCConfig = GlobalModel.TestDBCconfig;
+            DBCFileInfo = GlobalModel.TestDBCFileInfo;
+
             DBCFileName = DBCFileInfo?.FileName ?? string.Empty;
 
-            DBOperate.Default.GetDBCConfig_ByProjectID(mainviewmodel.ProjectInfo.Id).AttachIfSucceed(result =>
-            {
-                if (result.Data == null)
-                {
-                    isnew = true;
-                }
-            });
+
+            //DBOperate.Default.GetDBCConfig_ByProjectID(mainviewmodel.ProjectInfo.Id).AttachIfSucceed(result =>
+            //{
+            //    if (result.Data == null)
+            //    {
+            //        isnew = true;
+            //    }
+            //});
 #if DEBUG
             //DBCFileName = "BEV_E0X_OT_Car RMCU V3.72 Draft_202311220825";
             //string path = Path.Combine(@"C:\Users\Administrator\Desktop", DBCFileName + ".dbc");
             //LoadFile(path);
 #endif
-
-            if (!string.IsNullOrEmpty(DBCFileName))
+            if (IsEdit)
             {
-                string path = Path.Combine(SupportConfig.DBCFileDownPath, DBCFileName + ".dbc");
-                LoadFile(path);
+                if (!GlobalModel.IsNewProject && DBCFileInfo.Id != 0)
+                {
+                    DBCFileName = DBCFileInfo.FileName;
+
+                    if (!string.IsNullOrEmpty(DBCFileName))
+                    {
+                        if (!Directory.Exists(SupportConfig.DBCFileDownPath))
+                        {
+                            Directory.CreateDirectory(SupportConfig.DBCFileDownPath);
+                        }
+
+                        string path = Path.Combine(SupportConfig.DBCFileDownPath, DBCFileInfo.FileName + DBCFileInfo.FileExtension);
+
+                        File.WriteAllBytes(path, DBCFileInfo.FileContent);
+                        //string path = Path.Combine(SupportConfig.DBCFileDownPath, DBCFileName + ".dbc");
+                        LoadFile(path);
+                    }
+
+                    IsEdit = false;
+                }
             }
 
             //AddFixedSignal();

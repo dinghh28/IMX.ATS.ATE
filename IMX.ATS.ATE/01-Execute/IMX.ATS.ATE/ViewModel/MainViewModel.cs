@@ -149,6 +149,17 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ATEExecuteInfos), ref ateexecuteinfos, value);
         }
 
+        private bool enabletestbtn;
+        /// <summary>
+        /// 试验按钮使能
+        /// </summary>
+        public bool EnableTestBtn
+        {
+            get => enabletestbtn;
+            set => Set(nameof(EnableTestBtn), ref enabletestbtn, value);
+        }
+
+
         /// <summary>
         /// 当前登陆用户
         /// </summary>
@@ -270,7 +281,9 @@ namespace IMX.ATS.ATE
                 {
                     return;
                 }
+                Task.Run(()=>{ EnableTestBtn = false; });
                 TestStop();
+                EnableTestBtn = true;
             }
             else
             {
@@ -291,9 +304,12 @@ namespace IMX.ATS.ATE
                     return;
                 }
 
+                Task.Run(() => { EnableTestBtn = false; });
+
                 ATEExecuteInfos.Clear();
 
                 TestStart();
+                EnableTestBtn = true;
             }
             //EnableTestInfoChange =! EnableTestInfoChange;
         }
@@ -1091,9 +1107,16 @@ namespace IMX.ATS.ATE
 
                         if (Math.Abs(config.EndLoadValue - config.StartLoadValue) >= config.Stride)
                         {
+
                             int count = Convert.ToInt16(Math.Abs((((config.EndLoadValue - config.StartLoadValue) % config.Stride) == 0) ? ((config.EndLoadValue - config.StartLoadValue) / config.Stride) : ((config.EndLoadValue - config.StartLoadValue) / config.Stride + 1)));
                             for (int i = 0; i < count; i++)
                             {
+                                if (monitor != null && (!monitor.IsStartThread))
+                                {
+                                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "手动退出步进");
+                                    break;
+                                }
+
                                 double setpvol = config.StartLoadValue + config.Stride * (i + 1) * (config.EndLoadValue < config.StartLoadValue ? -1 : 1);
 
                                 setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
@@ -1320,6 +1343,11 @@ namespace IMX.ATS.ATE
                         int count = Convert.ToInt16(Math.Abs((((config.EndLoadValue - config.StartLoadValue) % config.Stride) == 0) ? ((config.EndLoadValue - config.StartLoadValue) / config.Stride) : ((config.EndLoadValue - config.StartLoadValue) / config.Stride + 1)));
                         for (int i = 0; i < count; i++)
                         {
+                            if (monitor!= null && (!monitor.IsStartThread))
+                            {
+                                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "手动退出步进");
+                                break;
+                            }
                             double setpvol = config.StartLoadValue + config.Stride * (i + 1) * (config.EndLoadValue < config.StartLoadValue ? -1 : 1);
 
                             setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
@@ -1594,7 +1622,6 @@ namespace IMX.ATS.ATE
             ContentColor = Brushes.Red;
             GlobalModel.IsTestThreadRun = false;
             IsTestRuning = false;
-
         }
 
         #region 界面测试

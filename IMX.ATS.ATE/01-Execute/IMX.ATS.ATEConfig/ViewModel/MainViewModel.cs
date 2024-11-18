@@ -26,6 +26,7 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
 using IMX.ATE.Common;
+using IMX.DB;
 using IMX.DB.Model;
 using IMX.WPF.Resource;
 using Super.Zoo.Framework;
@@ -224,6 +225,15 @@ namespace IMX.ATS.ATEConfig
             else
             {
                 DBCConfigVisbility = GlobalModel.Test_ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
+                
+                if (GlobalModel.Test_ProjectInfo.IsUseDDBC)
+                {
+                    DBOperate.Default.GetDBCConfig_ByProjectID(GlobalModel.Test_ProjectInfo.Id)
+                        .AttachIfSucceed(result => { GlobalModel.TestDBCconfig = result.Data; })
+                        .And(DBOperate.Default.GetFile_ByID(GlobalModel.TestDBCconfig.DBCFileID)
+                            .AttachIfSucceed(result => { GlobalModel.TestDBCFileInfo = result.Data; }))
+                        .AttachIfFailed(result => { MessageBox.Show($"DBC信息获取失败：{result.Message}","DBC通讯配置获取异常"); });
+                }
             }
             //base.WindowLoadedExecute(obj);
         }

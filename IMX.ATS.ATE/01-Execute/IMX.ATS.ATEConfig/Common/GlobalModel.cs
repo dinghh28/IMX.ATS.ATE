@@ -21,6 +21,16 @@ namespace IMX.ATS.ATEConfig
         public static Test_ProjectInfo Test_ProjectInfo { get; set; } = new Test_ProjectInfo();
 
         /// <summary>
+        /// DBC配置信息
+        /// </summary>
+        public static Test_DBCConfig TestDBCconfig { get; set; } = new Test_DBCConfig();
+
+        /// <summary>
+        /// DBC文件配置信息
+        /// </summary>
+        public static Test_DBCFileInfo TestDBCFileInfo { get; set; } = new Test_DBCFileInfo();
+
+        /// <summary>
         /// 是否为新建项目
         /// </summary>
         public static bool IsNewProject { get; set; } = false;

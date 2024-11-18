@@ -157,17 +157,31 @@ namespace IMX.ATS.ATEConfig
                 return;
             }
 
-            DBOperate.Default.UpdateDBCFile(ConfigID, info.Id);
+            DBOperate.Default.UpdateDBCFile(ConfigID, info.Id)
+                .AttachIfSucceed(result => 
+                {
+                    GlobalModel.TestDBCFileInfo = info;
 
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig = new Test_DBCConfig();
+                    ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.DBCFileName = DBCFileInfos[SelectedDBCIndex].FileName;
+                    ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.LoadFile(path);
 
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig.DBCFileID = info.Id;
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCFileInfo.FileName = DBCFileInfos[SelectedDBCIndex].FileName;
+                    MessageBox.Show($"DBC文件已变更为\r\n{info.FileName}","DBC文件变更成功");
 
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.DBCFileName = DBCFileInfos[SelectedDBCIndex].FileName;
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.LoadFile(path);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        WindowClosedExecute(Win);
+                    });
+                })
+                .AttachIfFailed(result=> { MessageBox.Show(result.Message, "DBC文件变更失败"); });
 
-            WindowClosedExecute(Win);
+
+
+            //((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig = new Test_DBCConfig();
+
+            //((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig.DBCFileID = info.Id;
+            //((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCFileInfo.FileName = DBCFileInfos[SelectedDBCIndex].FileName;
+
+
         }
 
         #endregion

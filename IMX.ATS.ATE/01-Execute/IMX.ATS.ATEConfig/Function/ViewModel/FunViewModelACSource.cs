@@ -26,7 +26,46 @@ namespace IMX.ATS.ATEConfig.Function
 
         #region 公共属性
 
-        public override TestFunction Func { get; set; } = TestFunction.Create(FuncitonType.ACSource);
+        private TestFunction func = TestFunction.Create(FuncitonType.ACSource);
+        public override TestFunction Func
+        {
+            get => func;
+            set
+            {
+                func = value;
+                FunConfig_ACSource config = value.Config as FunConfig_ACSource;
+
+                StepValues.Clear();
+
+                ObservableCollection<string> CondNames = new ObservableCollection<string>();
+                ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+
+                for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
+                {
+                    CondNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
+                    CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
+                    //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
+                }
+
+                if (config.Values == null)
+                {
+                    config.Values = new List<StepConditionValue>();
+                }
+
+                config.Values.ForEach(x =>
+                {
+                    StepValues.Add(new StepValue
+                    {
+                        ConditionValue = x,
+                        ConditionValues = CondValues,
+                        ConditionNames = CondNames,
+                        ConditionIndex = CondNames.ToList().FindIndex(n => n == x.Value.DataInfo.Name),
+                    });
+                });
+
+            }
+        }
+
 
         public override FuncitonType SupportFuncitonType => FuncitonType.ACSource;
 
@@ -113,7 +152,7 @@ namespace IMX.ATS.ATEConfig.Function
         {
             get
             {
-                EnableSetStepValue= (Func.Config as FunConfig_ACSource).EnableStepping;
+                EnableSetStepValue = (Func.Config as FunConfig_ACSource).EnableStepping;
                 return set_StepModel = (Func.Config as FunConfig_ACSource).EnableStepping;
             }
             set
@@ -236,30 +275,30 @@ namespace IMX.ATS.ATEConfig.Function
         {
             get
             {
-                stepvalues = new ObservableCollection<StepValue>();
-                ObservableCollection<string> CondNames = new ObservableCollection<string>();
-                ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+                //stepvalues.Clear();
+                //ObservableCollection<string> CondNames = new ObservableCollection<string>();
+                //ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
 
-                for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
-                {
-                    CondNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
-                    CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
-                    //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
-                }
-                if ((Func.Config as FunConfig_ACSource).Values == null)
-                {
-                    (Func.Config as FunConfig_ACSource).Values = new List<StepConditionValue>();
-                }
+                //for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
+                //{
+                //    CondNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
+                //    CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
+                //    //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
+                //}
+                //if ((Func.Config as FunConfig_ACSource).Values == null)
+                //{
+                //    (Func.Config as FunConfig_ACSource).Values = new List<StepConditionValue>();
+                //}
 
-                (Func.Config as FunConfig_ACSource).Values.ForEach(x =>
-                {
-                    stepvalues.Add(new StepValue
-                    {
-                        ConditionValue = x,
-                        ConditionValues = CondValues,
-                        ConditionNames = CondNames,
-                    });
-                });
+                //(Func.Config as FunConfig_ACSource).Values.ForEach(x =>
+                //{
+                //    stepvalues.Add(new StepValue
+                //    {
+                //        ConditionValue = x,
+                //        ConditionValues = CondValues,
+                //        ConditionNames = CondNames,
+                //    });
+                //});
 
                 return stepvalues;
             }
@@ -350,8 +389,8 @@ namespace IMX.ATS.ATEConfig.Function
 
             try
             {
-                StepValues.RemoveAt(SelectedValueIndex);
                 (Func.Config as FunConfig_ACSource)?.Values.RemoveAt(SelectedValueIndex);
+                StepValues.RemoveAt(SelectedValueIndex);
             }
             catch (Exception ex)
             {
@@ -364,7 +403,7 @@ namespace IMX.ATS.ATEConfig.Function
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
-            //base.WindowLoadedExecute(obj);
+           
         }
 
         protected override void WindowClosedExecute(object obj)
@@ -375,7 +414,32 @@ namespace IMX.ATS.ATEConfig.Function
 
 
         #region 构造方法
-        public FunViewModelACSource() { }
+        public FunViewModelACSource()
+        {
+            ObservableCollection<string> CondNames = new ObservableCollection<string>();
+            ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+
+            for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
+            {
+                CondNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
+                CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
+                //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
+            }
+            if ((Func.Config as FunConfig_ACSource).Values == null)
+            {
+                (Func.Config as FunConfig_ACSource).Values = new List<StepConditionValue>();
+            }
+
+                (Func.Config as FunConfig_ACSource).Values.ForEach(x =>
+                {
+                    StepValues.Add(new StepValue
+                    {
+                        ConditionValue = x,
+                        ConditionValues = CondValues,
+                        ConditionNames = CondNames,
+                    });
+                });
+        }
         #endregion
     }
 }

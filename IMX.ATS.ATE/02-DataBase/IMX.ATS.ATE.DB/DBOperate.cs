@@ -591,7 +591,7 @@ namespace IMX.DB
         /// <param name="configid">DBC配置id</param>
         /// <param name="fileid">DBC文件ID</param>
         /// <returns></returns>
-        public OperateResult UpdateDBCFile(int configid, int fileid)
+        public OperateResult UpdateDBCFile(int configid, int fileid, string username)
         {
             if (!IsInitOK)
             {
@@ -606,17 +606,28 @@ namespace IMX.DB
 
                 if (item == null)
                 {
-                    new Test_DBCConfig { DBCFileID = fileid }.Save();
+                    new Test_DBCConfig { DBCFileID = fileid }.Insert();
+                }
+                else
+                { 
+                    int row = Sqlite.Update<Test_DBCConfig>(configid)
+                        .Set(x => x.DBCFileID, fileid)
+                        .Set(x=>x.UpdateOperator, username)
+                        .Set(x=>x.UpdateTime, DateTime.Now)
+                        .ExecuteAffrows();
+
+                    if (row < 1)
+                    {
+                        LastError = $"DBC文件未实际发生变更";
+                        Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
+                        return OperateResult.Failed(LastError);
+                    }
+                    //item.DBCFileID = fileid;
+                    //item.UpdateOperator = username;
+                    //item.Update();
                 }
 
-                //int row = Sqlite.Update<Test_DBCConfig>(configid).Set(x => x.DBCFileID, fileid).ExecuteAffrows();
-
-                //if (row < 1)
-                //{
-                //    LastError = $"DBC文件未实际发生变更";
-                //    Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
-                //    return OperateResult.Failed(LastError);
-                //}
+               
 
                 return OperateResult.Succeed();
             }

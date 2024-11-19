@@ -273,17 +273,19 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
-            mainviewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
-            isnew = mainviewmodel.IsNewProject;
+            //mainviewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
+
+            isnew = GlobalModel.IsNewProject;
+            //isnew = mainviewmodel.IsNewProject;
             EnableEdite = !isnew;
             if (!isnew)
             {
-                ProjectName = mainviewmodel.ProjectInfo.ProjectName;
-                ProjectSN = mainviewmodel.ProjectInfo.ProjectSN;
-                UseDBC = mainviewmodel.ProjectInfo.IsUseDDBC;
-                RatedPow = mainviewmodel.ProjectInfo.RatedPow;
-                BaudRate = mainviewmodel.ProjectInfo.BaudRate;
-                DataBaudRate= mainviewmodel.ProjectInfo.DataBaudrate ;
+                ProjectName = GlobalModel.Test_ProjectInfo.ProjectName;
+                ProjectSN = GlobalModel.Test_ProjectInfo.ProjectSN;
+                UseDBC = GlobalModel.Test_ProjectInfo.IsUseDDBC;
+                RatedPow = GlobalModel.Test_ProjectInfo.RatedPow;
+                BaudRate = GlobalModel.Test_ProjectInfo.BaudRate;
+                DataBaudRate= GlobalModel.Test_ProjectInfo.DataBaudrate ;
             }
             //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectSelect.WindowClose.Execute("ProjectSelect");
         }

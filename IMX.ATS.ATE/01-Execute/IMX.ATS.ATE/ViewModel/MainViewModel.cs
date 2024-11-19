@@ -55,7 +55,6 @@ using IMX.Device.Product;
 using IMX.Device.DCLoad;
 using IMX.Device.Common.Enumerations;
 using IMX.Function.Base.Enumerations;
-using IMX.Function.Config;
 using System.Windows.Documents;
 using System.Reflection.Emit;
 using Newtonsoft.Json.Linq;
@@ -149,7 +148,7 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ATEExecuteInfos), ref ateexecuteinfos, value);
         }
 
-        private bool enabletestbtn;
+        private bool enabletestbtn = true;
         /// <summary>
         /// 试验按钮使能
         /// </summary>
@@ -332,6 +331,7 @@ namespace IMX.ATS.ATE
             Test_Programme programme = null;
             Dictionary<string, List<TestFunction>> process = new Dictionary<string, List<TestFunction>>();
             Dictionary<string, string> dicreadsignals = new Dictionary<string, string>();
+            List<string> sendsignals_can = new List<string>();
             string error = string.Empty;
 
             Test_ProjectInfo data = rlt.Data;
@@ -374,6 +374,11 @@ namespace IMX.ATS.ATE
                         {
                             var signal = dbcconfig.Test_DBCReceiveSignals[i];
                             dicreadsignals.Add(signal.Signal_Name, signal.Custom_Name);
+                        }
+
+                        for (int i = 0; i < dbcconfig?.Test_DBCSendSignals?.Count; i++) 
+                        {
+                            sendsignals_can.Add(dbcconfig?.Test_DBCSendSignals[i].Signal_Name);
                         }
                     }
                 }
@@ -434,6 +439,7 @@ namespace IMX.ATS.ATE
                 ProjectInfo = data,
                 DBCFile = dbcfileinfo,
                 DicReadSignals_CAN = dicreadsignals,
+                SendSignals_CAN = sendsignals_can,
                 Programme = programme,
                 TestFlowsFunction = process,
             };
@@ -489,15 +495,62 @@ namespace IMX.ATS.ATE
                 try
                 {
                     GlobalModel.DicDeviceInfo["Product"].Args.DriveConfig.BaudRate = thread.ProjectInfo.BaudRate;
-                    CANInt(GlobalModel.DicDeviceInfo["Product"].Args)
-                        .ThenAnd(result =>
+                    var canoprate = CANInt(GlobalModel.DicDeviceInfo["Product"].Args);
+                    if (!canoprate)
                     {
-                        Product_CAN_Operate operate = (result.Data as Product_CAN_Operate);
-                        return operate
-                         .SetReadSignal(thread.DicReadSignals_CAN)
-                         .And(operate.SetSendSignal(thread.SendSignals_CAN))
-                         .ConvertTo(result.Data);
-                    });
+                        GlobalModel.IsTestThreadRun = false;
+                        thread.IsRunning = false;
+                        SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
+                        
+
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            ContentName = "CAN通讯初始化失败";
+                            ContentColor = Brushes.Red;
+                            StepStrShow = Visibility.Collapsed;
+                            IsTestRuning = false;
+                        }));
+
+                        MessageBox.Show(canoprate.Message, "CAN初始化失败");
+                        return;
+                    }
+                   
+                    GlobalModel.DicDeviceInfo["Product"].DeviceOperate = canoprate.Data;
+                    Product_CAN_Operate operate = (canoprate.Data as Product_CAN_Operate);
+
+                    var cansetrlt =operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
+                        .And(operate.SetReadSignal(thread.DicReadSignals_CAN))
+                        .And(operate.SetSendSignal(thread.SendSignals_CAN));
+
+                    if (!cansetrlt) 
+                    {
+                        GlobalModel.IsTestThreadRun = false;
+                        thread.IsRunning = false;
+                        SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
+                        
+
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            ContentName = "CAN配置参数初始化失败";
+                            ContentColor = Brushes.Red;
+                            StepStrShow = Visibility.Collapsed;
+                            IsTestRuning = false;
+                        }));
+
+                        CANUnint(operate);
+
+                        MessageBox.Show(canoprate.Message, "CAN参数初始化失败");
+                        return;
+                    }
+
+                    //    .ThenAnd(result =>
+                    //{
+                    //    Product_CAN_Operate operate = (result.Data as Product_CAN_Operate);
+                    //    return operate
+                    //     .SetReadSignal(thread.DicReadSignals_CAN)
+                    //     .And(operate.SetSendSignal(thread.SendSignals_CAN))
+                    //     .ConvertTo(result.Data);
+                    //});
                     for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++) 
                     {
                         test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
@@ -1483,6 +1536,7 @@ namespace IMX.ATS.ATE
                 }
                 GlobalModel.DicDeviceDrives.Add(config.DriveConfig.ResourceString, operate);
                 drive = operate;
+                GlobalModel.DicDeviceInfo["Product"].Drive = drive;
             }
 
             return drive.RegisterDevice(config)
@@ -1490,6 +1544,7 @@ namespace IMX.ATS.ATE
                      .AttachIfSucceed(result =>
                      {
                          GlobalModel.DicDeviceOperate.Add(result.Data, drive);
+
                      });
         }
 
@@ -1747,7 +1802,7 @@ namespace IMX.ATS.ATE
                     MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
                 });
 #if DEBUG
-            new Thread(TestThread) { IsBackground = true }.Start();
+            //new Thread(TestThread) { IsBackground = true }.Start();
 #endif
         //window = win;
         //base.WindowLoadedExecute(obj);

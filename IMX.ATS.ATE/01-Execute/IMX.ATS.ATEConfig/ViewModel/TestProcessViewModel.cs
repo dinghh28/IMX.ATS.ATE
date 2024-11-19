@@ -303,71 +303,71 @@ namespace IMX.ATS.ATEConfig
             switch (obj.ToString().ToUpper())
             {
                 case "UP":
-                    {
-                        if (index == 0)
-                        { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+                {
+                    if (index == 0)
+                    { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
 
-                        FunctionInfos.Insert(index - 1, FunctionInfos[index]);
-                        FunctionInfos.RemoveAt(index + 1);
-                        FunctionInfoIndex = index - 1;
-                        ReNumber();
-                    }
-                    break;
+                    FunctionInfos.Insert(index - 1, FunctionInfos[index]);
+                    FunctionInfos.RemoveAt(index + 1);
+                    FunctionInfoIndex = index - 1;
+                    ReNumber();
+                }
+                break;
                 case "DOWN":
-                    {
-                        if (index == FunctionInfos.Count - 1)
-                        { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-                        FunctionInfos.Insert(index + 2, FunctionInfos[index]);
-                        FunctionInfos.RemoveAt(index);
-                        FunctionInfoIndex = index + 1;
-                        ReNumber();
-                    }
-                    break;
+                {
+                    if (index == FunctionInfos.Count - 1)
+                    { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+                    FunctionInfos.Insert(index + 2, FunctionInfos[index]);
+                    FunctionInfos.RemoveAt(index);
+                    FunctionInfoIndex = index + 1;
+                    ReNumber();
+                }
+                break;
                 case "DELET":
-                    {
-                        FunctionInfos.RemoveAt(index);
-                        FunctionInfoIndex = index == 0 ? index : index - 1;
-                        ReNumber();
-                    }
-                    break;
+                {
+                    FunctionInfos.RemoveAt(index);
+                    FunctionInfoIndex = index == 0 ? index : index - 1;
+                    ReNumber();
+                }
+                break;
                 case "INSERT":
+                {
+                    if (SelectedTestFlowItem == null)
                     {
-                        if (SelectedTestFlowItem == null)
-                        {
-                            MessageBox.Show("请选择需要插入的试验操作模板!");
-                            return;
-                        }
-
-                        if (FunctionInfoIndex == -1)
-                        {
-                            MessageBox.Show("请选择需要插入到的试验操作步骤!");
-                            return;
-                        }
-
-                        FuncitonType flowitemtag = SelectedTestFlowItem.Tag;
-
-                        var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
-
-                        if (!rlt)
-                        {
-                            MessageBox.Show($"操作无法添加:{rlt.Message}");
-                            return;
-                        }
-
-                        FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
-                        {
-                            Step = FunctionInfos.Count + 1,
-                            //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
-                            //FunctionName = obj.ToString(),
-                            CutomFuncName = SelectedTestFlowItem.Name,
-                            FunctionName = flowitemtag.ToString(),
-                            ModType = rlt.Data.SupportFuncitonType,
-                            Model = rlt.Data
-                        });
-
-                        ReNumber();
+                        MessageBox.Show("请选择需要插入的试验操作模板!");
+                        return;
                     }
-                    break;
+
+                    if (FunctionInfoIndex == -1)
+                    {
+                        MessageBox.Show("请选择需要插入到的试验操作步骤!");
+                        return;
+                    }
+
+                    FuncitonType flowitemtag = SelectedTestFlowItem.Tag;
+
+                    var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
+
+                    if (!rlt)
+                    {
+                        MessageBox.Show($"操作无法添加:{rlt.Message}");
+                        return;
+                    }
+
+                    FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
+                    {
+                        Step = FunctionInfos.Count + 1,
+                        //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
+                        //FunctionName = obj.ToString(),
+                        CutomFuncName = SelectedTestFlowItem.Name,
+                        FunctionName = flowitemtag.ToString(),
+                        ModType = rlt.Data.SupportFuncitonType,
+                        Model = rlt.Data
+                    });
+
+                    ReNumber();
+                }
+                break;
             }
         }
 
@@ -419,6 +419,22 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show($"无法获取当前{obj}类型操作步骤", "步骤添加异常");
                 return;
             }
+
+            //CAN相关配置
+            if (type == FuncitonType.Product || type == FuncitonType.ProductResult)
+            {
+                if (!GlobalModel.Test_ProjectInfo.IsUseDDBC)
+                {
+                    MessageBox.Show("当前项目无产品通讯，请勿使用相关模板！（如需使用，请先切至产品信息界面开启 DBC 通讯）","产品相关模板添加失败");
+                    return;
+                }
+                else if (GlobalModel.TestDBCconfig == null || GlobalModel.TestDBCconfig.Id == 0)
+                {
+                    MessageBox.Show("当前项目未配置DBC信息，请配置后使用相关模板", "产品相关模板添加失败");
+                    return;
+                }
+            }
+
 
             var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
 
@@ -705,8 +721,10 @@ namespace IMX.ATS.ATEConfig
         #region 构造方法
         public TestProcessViewModel()
         {
-            projectid = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
-            projectname = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.ProjectName;
+            projectid = GlobalModel.Test_ProjectInfo.Id;
+            projectname = GlobalModel.Test_ProjectInfo.ProjectName;
+            //projectid = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
+            //projectname = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.ProjectName;
             GetTestSolutions();
             TestFlowItemsInit();
         }

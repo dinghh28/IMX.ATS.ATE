@@ -160,6 +160,17 @@
             设置拉载值(拉载起步值)
             </summary>
         </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Set_ParamValue1">
+            <summary>
+            设置非CV模式下的上升斜率；
+            或设置CV模式下的限制电流
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.Set_ParamValue2">
+            <summary>
+            设置非CV模式下的下降斜率参数
+            </summary>
+        </member>
         <member name="P:IMX.Function.FunConfig_DCLoad.EnableStepping">
             <summary>
             步进使能标志
@@ -424,39 +435,39 @@
         <member name="M:IMX.Function.FunConfig_POPUP.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
-        <member name="T:IMX.Function.Config.FunConfig_ProductResult">
+        <member name="T:IMX.Function.FunConfig_ProductResult">
             <summary>
             产品结果操作模板类
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ProductResult.SupportFuncitonType">
+        <member name="P:IMX.Function.FunConfig_ProductResult.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ProductResult.DeviceAddress">
+        <member name="P:IMX.Function.FunConfig_ProductResult.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ProductResult.DatasName">
+        <member name="P:IMX.Function.FunConfig_ProductResult.DatasName">
             <summary>
             可参与结果判定数据名称列表
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ProductResult.Datas">
+        <member name="P:IMX.Function.FunConfig_ProductResult.Datas">
             <summary>
             参与结果判定数据
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ProductResult.ResultOpereate">
+        <member name="P:IMX.Function.FunConfig_ProductResult.ResultOpereate">
             <summary>
             试验失败操作逻辑
             </summary>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_ProductResult.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_ProductResult.Execute(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_ProductResult.#ctor">
+        <member name="M:IMX.Function.FunConfig_ProductResult.#ctor">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_ProductResult.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+        <member name="M:IMX.Function.FunConfig_ProductResult.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.FunConfig_Relay">

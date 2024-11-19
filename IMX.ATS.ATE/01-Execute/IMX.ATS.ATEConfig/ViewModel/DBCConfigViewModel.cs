@@ -136,6 +136,8 @@ namespace IMX.ATS.ATEConfig
         /// DBC文件是否发生编辑
         /// </summary>
         public bool IsEdit { get; set; } = true;
+
+        public bool IsloadFile = false;
         #endregion
 
         #region 私有变量
@@ -144,7 +146,7 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         private bool isnew = false;
 
-        private bool isloadFile = false;
+
         /// <summary>
         /// 数据库DBC配置信息
         /// </summary>
@@ -197,15 +199,15 @@ namespace IMX.ATS.ATEConfig
                     Window mainwindow = ContentControlManager.GetWindow<DBCFileChangeView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange);
                     mainwindow.Show();
 
-                    //清空上报配置
-                    SignalConfigPages[0].SignalConfigs.Clear();
-                    //清空下发配置
-                    SignalConfigPages[1].SignalConfigs.Clear();
-                    //清空信号列表
-                    DBCMessages.Clear();
+                    ////清空上报配置
+                    //SignalConfigPages[0].SignalConfigs.Clear();
+                    ////清空下发配置
+                    //SignalConfigPages[1].SignalConfigs.Clear();
+                    ////清空信号列表
+                    //DBCMessages.Clear();
 
-                    //重新导入DBC文件信号
-                    isloadFile = true;
+                    ////重新导入DBC文件信号
+                    //IsloadFile = true;
                     //重新加载DBC配置信号
                     //AddFixedSignal();
                 }
@@ -221,7 +223,7 @@ namespace IMX.ATS.ATEConfig
         /// <summary>
         /// 加载DBC文件
         /// </summary>
-        /// <param name="filepath"></param>
+        /// <param name="filepath">DBC文件地址</param>
         public void LoadFile(string filepath)
         {
             try
@@ -257,7 +259,7 @@ namespace IMX.ATS.ATEConfig
 
         }
 
-        public void LoadFile(byte[] fileData, string Extension) 
+        public void LoadFile(byte[] fileData, string Extension)
         {
             try
             {
@@ -405,8 +407,8 @@ namespace IMX.ATS.ATEConfig
         {
             try
             {
-                if (!isloadFile)//打开项目正常加载信号
-                {
+                //if (!IsloadFile)//打开项目正常加载信号
+                //{
                     SignalConfigPages[0].SignalConfigs.Clear();
                     DBCConfig.Test_DBCReceiveSignals.ForEach(signal =>
                     {
@@ -443,44 +445,44 @@ namespace IMX.ATS.ATEConfig
                             RemoveSignal = new RelayCommand(RevomeSignal)
                         });
                     });
-                }
-                else//新建项目或变更DBC文件加载格式
-                {
-                    SignalConfigPages[0].SignalConfigs.Clear();
+                //}
+                //else//新建项目或变更DBC文件加载格式
+                //{
+                //    SignalConfigPages[0].SignalConfigs.Clear();
 
-                    SignalConfigPages[0].SignalConfigs.Add(new DBCSignalConfig
-                    {
-                        Config = new SignalConfig
-                        {
-                            Info = new Test_DBCInfo { Custom_Name = "OBC电压" }
+                //    SignalConfigPages[0].SignalConfigs.Add(new DBCSignalConfig
+                //    {
+                //        Config = new SignalConfig
+                //        {
+                //            Info = new Test_DBCInfo { Custom_Name = "OBC电压" }
 
-                        },
-                        IsRegularConfig = true,
-                        AddSignal = new RelayCommand(SelectedSignal),
-                        RemoveSignal = new RelayCommand(RevomeSignal)
-                    });
-                    SignalConfigPages[0].SignalConfigs.Add(new DBCSignalConfig
-                    {
-                        Config = new SignalConfig
-                        {
-                            Info = new Test_DBCInfo { Custom_Name = "OBC电流" }
-                        },
-                        IsRegularConfig = true,
-                        AddSignal = new RelayCommand(SelectedSignal),
-                        RemoveSignal = new RelayCommand(RevomeSignal)
-                    });
-                    SignalConfigPages[0].SignalConfigs.Add(new DBCSignalConfig
-                    {
-                        Config = new SignalConfig
-                        {
-                            Info = new Test_DBCInfo { Custom_Name = "OBC工作状态" }
-                        },
-                        IsRegularConfig = true,
-                        AddSignal = new RelayCommand(SelectedSignal),
-                        RemoveSignal = new RelayCommand(RevomeSignal)
-                    });
+                //        },
+                //        IsRegularConfig = true,
+                //        AddSignal = new RelayCommand(SelectedSignal),
+                //        RemoveSignal = new RelayCommand(RevomeSignal)
+                //    });
+                //    SignalConfigPages[0].SignalConfigs.Add(new DBCSignalConfig
+                //    {
+                //        Config = new SignalConfig
+                //        {
+                //            Info = new Test_DBCInfo { Custom_Name = "OBC电流" }
+                //        },
+                //        IsRegularConfig = true,
+                //        AddSignal = new RelayCommand(SelectedSignal),
+                //        RemoveSignal = new RelayCommand(RevomeSignal)
+                //    });
+                //    SignalConfigPages[0].SignalConfigs.Add(new DBCSignalConfig
+                //    {
+                //        Config = new SignalConfig
+                //        {
+                //            Info = new Test_DBCInfo { Custom_Name = "OBC工作状态" }
+                //        },
+                //        IsRegularConfig = true,
+                //        AddSignal = new RelayCommand(SelectedSignal),
+                //        RemoveSignal = new RelayCommand(RevomeSignal)
+                //    });
 
-                }
+                //}
             }
             catch (Exception ex)
             {
@@ -534,6 +536,7 @@ namespace IMX.ATS.ATEConfig
             SelectedPage.SelectedSignalConfig.Config.MessageName = selectedsignal.TagText;
             SelectedPage.SelectedSignalConfig.Config.Signal_Name = selectedsignal.Name;
             SelectedPage.SelectedSignalConfig.Config.Message_ID = selectedsignal.Tag;
+            SelectedPage.SelectedSignalConfig.Config.SignalValue = selectedsignal.InitValue.ToString();
         }
 
         /// <summary>
@@ -573,7 +576,8 @@ namespace IMX.ATS.ATEConfig
             {
                 Config = new SignalConfig
                 {
-                    Info = new Test_DBCInfo { Custom_Name = $"新建信号{SelectedPage.SignalConfigs.Count - 2}" }
+                    Info = new Test_DBCInfo(),
+                    CustomName = $"新建信号{SelectedPage.SignalConfigs.Count}",
                 },
                 AddSignal = new RelayCommand(SelectedSignal),
                 RemoveSignal = new RelayCommand(RevomeSignal)
@@ -616,6 +620,33 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show($"请选择需要配置的信号！", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;
             }
+
+            try
+            {
+                var repeatsn = SelectedPage?.SignalConfigs.ToList()
+                .GroupBy(x => x.Config.CustomName)
+                .Where(x => x.Count() > 1)
+                .Select(x => x.Key)
+                .ToList();
+
+                if (repeatsn.Count > 0)
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.AppendLine("自定义信号名称");
+                    for (int i = 0; i < repeatsn.Count; i++)
+                    {
+                        stringBuilder.AppendLine(repeatsn[i]);
+                    }
+                    stringBuilder.AppendLine("存在重复");
+                    MessageBox.Show(stringBuilder.ToString(), "DBC配置保存异常");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, nameof(DBCConfigViewModel), nameof(SaveSignalConfig), ex);
+            }
+
             try
             {
                 if (SelectedPage?.PageName == "上报信号配置")
@@ -643,10 +674,10 @@ namespace IMX.ATS.ATEConfig
                 {
                     DBOperate.Default.InsertDBCConfig(DBCConfig).AttachIfSucceed(result =>
                     {
-                        MessageBox.Show($"DBC信号配置保存成功！");
+                        MessageBox.Show($"DBC{SelectedPage?.PageName}保存成功！");
                     }).AttachIfFailed(result =>
                     {
-                        MessageBox.Show($"保存失败：{result.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Question);
+                        MessageBox.Show($"{SelectedPage?.PageName}保存失败：{result.Message}", "信号保存失败", MessageBoxButton.OK, MessageBoxImage.Question);
                     });
                     isnew = false;
                 }
@@ -654,10 +685,10 @@ namespace IMX.ATS.ATEConfig
                 {
                     DBOperate.Default.UpdateDBCConfig(DBCConfig).AttachIfSucceed(result =>
                     {
-                        MessageBox.Show($"DBC信号配置保存成功！");
+                        MessageBox.Show($"DBC{SelectedPage?.PageName}保存成功！");
                     }).AttachIfFailed(result =>
                     {
-                        MessageBox.Show($"保存失败：{result.Message}", "失败", MessageBoxButton.OK, MessageBoxImage.Question);
+                        MessageBox.Show($"{SelectedPage?.PageName}保存失败：{result.Message}", "信号保存失败", MessageBoxButton.OK, MessageBoxImage.Question);
                     });
                 }
 
@@ -665,7 +696,7 @@ namespace IMX.ATS.ATEConfig
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"保存异常：{ex.Message}", "异常", MessageBoxButton.OK, MessageBoxImage.Question);
+                MessageBox.Show($"保存异常：{ex.Message}", "信号保存异常", MessageBoxButton.OK, MessageBoxImage.Question);
             }
 
         }
@@ -712,13 +743,15 @@ namespace IMX.ATS.ATEConfig
                         File.WriteAllBytes(path, DBCFileInfo.FileContent);
                         //string path = Path.Combine(SupportConfig.DBCFileDownPath, DBCFileName + ".dbc");
                         LoadFile(path);
+
+                        AddFixedSignal();
                     }
 
                     IsEdit = false;
                 }
             }
 
-            //AddFixedSignal();
+            
             base.WindowLoadedExecute(obj);
         }
 
@@ -923,7 +956,16 @@ namespace IMX.ATS.ATEConfig
         public string MessageName
         {
             get => messagename;
-            set => Set(nameof(MessageName), ref messagename, value);
+            set
+            {
+                if (Set(nameof(MessageName), ref messagename, value))
+                {
+                    if (Info != null)
+                    {
+                        Info.MessageName = value;
+                    }
+                }
+            }
         }
 
         private uint messageid;
@@ -963,7 +1005,24 @@ namespace IMX.ATS.ATEConfig
                 }
             }
         }
-
+        private string customname;
+        /// <summary>
+        /// 用户自定义名称
+        /// </summary>
+        public string CustomName
+        {
+            get => Info?.Custom_Name ?? customname;
+            set
+            {
+                if (Set(nameof(CustomName), ref customname, value))
+                {
+                    if (Info != null)
+                    {
+                        Info.Custom_Name = value;
+                    }
+                }
+            }
+        }
         /// <summary>
         /// 数据库配置信息
         /// </summary>
@@ -976,7 +1035,16 @@ namespace IMX.ATS.ATEConfig
         public string SignalValue
         {
             get => signalvalue;
-            set => Set(nameof(SignalValue), ref signalvalue, value);
+            set
+            {
+                if (Set(nameof(SignalValue), ref signalvalue, value))
+                {
+                    if (Info != null)
+                    {
+                        Info.SignalInitValue = value;
+                    }
+                }
+            }
         }
     }
 

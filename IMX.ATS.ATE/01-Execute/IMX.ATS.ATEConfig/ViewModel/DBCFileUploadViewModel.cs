@@ -172,6 +172,10 @@ namespace IMX.ATS.ATEConfig
                 { MessageBox.Show($"文件上传成功！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information); })
                 .AttachIfFailed(result=> { MessageBox.Show($"文件上传：{result.Message}！", "失败", MessageBoxButtons.OK, MessageBoxIcon.Error); })
                  .AttachIfFailed(result => { MessageBox.Show($"文件上传：{result.Message}！", "异常", MessageBoxButtons.OK, MessageBoxIcon.Error); });
+
+                if (MessageBox.Show("是否关闭当前窗口", "DBC文件变更窗口关闭", MessageBoxButtons.YesNo) !=  DialogResult.Yes) return;
+
+                WindowClosedExecute(Win);
             }
             catch (Exception ex)
             {
@@ -244,6 +248,8 @@ namespace IMX.ATS.ATEConfig
             DBCFileName = "";
             DBCFileDescription = "";
             #endregion
+
+            IsOpen = false;
 
             base.WindowClosedExecute(obj);
         }

@@ -28,10 +28,12 @@
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
                 <ResourceDictionary>
                     <converter:TestRunStateConverter x:Key="StateConverter"/>
-                    
                 </ResourceDictionary>
                 <ResourceDictionary>
                     <converter:ResultConverter x:Key="ResultToString"/>
+                </ResourceDictionary>
+                <ResourceDictionary>
+                    <converter:ResultStringColorConverter x:Key="ResultStringColor"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -229,7 +231,7 @@
                                                         <Label Grid.Column="3" Content="{Binding Limit_Upper}" HorizontalAlignment="Center"/>
                                                         <Label Grid.Column="4" Content="{Binding ValueConditions}" HorizontalAlignment="Center"/>
                                                         <Label Grid.Column="5" Content="{Binding Result, Converter={StaticResource ResultToString}}"
-                                                               
+                                                               Foreground="{Binding Result,Converter={StaticResource ResultStringColor} }"
                                                                HorizontalAlignment="Center" />
                                                         <Label Grid.Column="6" Content="{Binding ExecuteTime}" HorizontalAlignment="Center"/>
                                                     </Grid>
@@ -277,7 +279,7 @@
                                 <DataGridTextColumn Header="执行项目" Binding="{Binding FunctionName}" Width="2.5*"/>
                                 <DataGridTextColumn Header="下限值" Binding="{Binding Limit_Lower}" Width="1.5*"/>
                                 <DataGridTextColumn Header="上限值" Binding="{Binding Limit_Upper}" Width="1.5*"/>
-                                <DataGridTextColumn Header="判定结果" Binding="{Binding ValueConditions}" Width="1*"/>
+                                <DataGridTextColumn Header="判定条件" Binding="{Binding ValueConditions}" Width="1*"/>
                                 <DataGridTextColumn Header="结果" Binding="{Binding Result,Converter={StaticResource  ResultToString}}" Width="1*"/>
                                 <DataGridTextColumn Header="开始时间" Binding="{Binding StartTime}" Width="2*"/>
                             </DataGrid.Columns>

@@ -359,8 +359,9 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
-            MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
-            projectid = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
+            //MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
+            projectid = GlobalModel.Test_ProjectInfo.Id;
+            // = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
             ProcessNames.Clear();
             DBOperate.Default.GetProcessName(projectid)
             .AttachIfSucceed(result =>
@@ -374,7 +375,7 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show($"无法获取当前项目流程：\r\n{result.Message}", "项目流程获取异常");
             });
 
-            if (!viewmodel.IsNewProject)
+            if (!GlobalModel.IsNewProject)
             {
                 //获取试验方案阶段
                 DBOperate.Default.GetProgrammeName(projectid)

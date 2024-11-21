@@ -297,6 +297,7 @@ namespace IMX.ATS.ATEConfig
         private void LoadItems(IMessageFileLoader loader)
         {
             DBCMessages.Clear();
+
             foreach (var item in loader.MessageList.OrderBy(x => x.ID))
             {
                 var message = CreateMessageNode(item);
@@ -526,6 +527,12 @@ namespace IMX.ATS.ATEConfig
             }
 
             if (SelectedPage.SelectedSignalConfig == null)
+            {
+                MessageBox.Show($"请选择配置信号！", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
+
+            if (selectedsignal == null)
             {
                 MessageBox.Show($"请选择配置信号！", "提示", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 return;

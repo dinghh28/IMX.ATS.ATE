@@ -269,6 +269,9 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetCurr_ILIM(System.Double)">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetCurrSLEW_POSitive(System.Double)">
             <inheritdoc/>
         </member>
@@ -285,6 +288,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetParameters(System.Double,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.#ctor">
@@ -384,6 +390,18 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetShortONOFF(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             开启/关闭负载短路模式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetCurrILIM(System.Double)">
+            <summary>
+            设置定电压模式的限制电流
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetRESponse(System.String)">
+            <summary>
+            设置定电压模式的响应速度
             </summary>
             <returns></returns>
         </member>
@@ -1209,6 +1227,14 @@
             设置拉载模式
             </summary>
             <param name="eModel">模式</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetParameters(System.Double,System.Double)">
+            <summary>
+            设置各模式下的拉载参数
+            </summary>
+            <param name="value1">cv模式下为限制电流，其他模式下为上升速率</param>
+            <param name="value2">CV模式下无效，其他模式下为下降斜率</param>
             <returns></returns>
         </member>
         <member name="T:IMX.Device.Base.IACSource">

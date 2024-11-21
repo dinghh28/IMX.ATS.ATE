@@ -233,6 +233,7 @@ namespace IMX.ATS.ATEConfig
                 }
             }
             //base.WindowLoadedExecute(obj);
+            base.WindowMaxExecute(obj);
         }
 
         protected override void WindowClosedExecute(object obj)

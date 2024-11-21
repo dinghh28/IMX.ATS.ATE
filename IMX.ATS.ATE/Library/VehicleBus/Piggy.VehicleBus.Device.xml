@@ -93,7 +93,7 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.VehicleBusChannelArgs.ChannelCloseDelay">
             <summary>
-            通道关闭延时（毫秒）（默认值: 100）
+            <inheritdoc/>（默认值: 100）
             </summary>
         </member>
         <member name="T:Piggy.VehicleBus.Device.VehicleBusDevice">
@@ -298,17 +298,17 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.VehicleBusDeviceArgs.IsThreadBackground">
             <summary>
-            接收数据线程是否为后台线程（默认值: <see langword="true"/>）
+            <inheritdoc/>（默认值: <see langword="true"/>）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.VehicleBusDeviceArgs.ReceiveThreadDelay">
             <summary>
-            接收线程循环延时（毫秒）（默认值: 0）
+            <inheritdoc/>（默认值: 0）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.VehicleBusDeviceArgs.DeviceCloseDelay">
             <summary>
-            设备关闭延时（毫秒）（默认值: 2000）
+            <inheritdoc/>（默认值: 2000）
             </summary>
         </member>
         <member name="T:Piggy.VehicleBus.Device.VehicleBusMessageDataArgs">
@@ -514,6 +514,9 @@
             <inheritdoc/>
         </member>
         <member name="M:Piggy.VehicleBus.Device.PeakCANChannel.ClearBuffer">
+            <summary>
+            <inheritdoc/>（请注意，此操作为一直取接收队列数据并丢弃，直到接收队列为空）
+            </summary>
             <inheritdoc/>
         </member>
         <member name="M:Piggy.VehicleBus.Device.PeakCANChannel.GetBusState">
@@ -559,7 +562,7 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.PeakCANChannelArgs.ChannelIndex">
             <summary>
-            通道（默认值: 0x501）
+            <inheritdoc/>（默认值: 0x501）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.PeakCANChannelArgs.BaudRate">
@@ -795,7 +798,7 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.ZLGCANChannelArgs.ChannelIndex">
             <summary>
-            通道（默认值: 0）
+            <inheritdoc/>（默认值: 0）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.ZLGCANChannelArgs.BaudRate">
@@ -986,7 +989,7 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.ZLGCAN_OLD_ChannelArgs.ChannelIndex">
             <summary>
-            通道（默认值: 0）
+            <inheritdoc/>（默认值: 0）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.ZLGCAN_OLD_ChannelArgs.BaudRate">
@@ -1261,6 +1264,9 @@
             <inheritdoc/>
         </member>
         <member name="M:Piggy.VehicleBus.Device.PeakCANFDChannel.ClearBuffer">
+            <summary>
+            <inheritdoc/>（请注意，此操作为一直取接收队列数据并丢弃，直到接收队列为空）
+            </summary>
             <inheritdoc/>
         </member>
         <member name="M:Piggy.VehicleBus.Device.PeakCANFDChannel.GetBusState">
@@ -1304,7 +1310,7 @@
             <summary>
             合成数据波特率字符串
             </summary>
-            <param name="dataBaud">数据波特率</param>
+            <param name="dataBaudrate">数据波特率</param>
             <param name="clock">时钟频率</param>
             <returns></returns>
         </member>
@@ -1331,7 +1337,7 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.PeakCANFDChannelArgs.ChannelIndex">
             <summary>
-            通道（默认值: 0x501）
+            <inheritdoc/>（默认值: 0x501）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.PeakCANFDChannelArgs.ArbiBaudrate">
@@ -1371,6 +1377,11 @@
         <member name="P:Piggy.VehicleBus.Device.PeakCANFDChannelArgs.BusOffAutoReset">
             <summary>
             BUS-OFF 时自动重置（默认值: <see langword="true"/>）
+            </summary>
+        </member>
+        <member name="P:Piggy.VehicleBus.Device.PeakCANFDChannelArgs.ForceFrameBRS">
+            <summary>
+            强制设置帧 BRS 标志位（默认值: <see langword="true"/>）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.PeakCANFDChannelArgs.CANReadOnly">
@@ -4583,7 +4594,7 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.ZLGCANFDChannelArgs.ChannelIndex">
             <summary>
-            通道（默认值: 0）
+            <inheritdoc/>（默认值: 0）
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Device.ZLGCANFDChannelArgs.ArbiBaudrate">
@@ -4845,7 +4856,7 @@
         </member>
         <member name="P:Piggy.VehicleBus.Device.LoopbackTestChannelArgs.ChannelIndex">
             <summary>
-            通道（默认值: 0）
+            <inheritdoc/>（默认值: 0）
             </summary>
         </member>
         <member name="F:Piggy.VehicleBus.Device.LoopbackTestChannelArgs.BeforeSendMessage">

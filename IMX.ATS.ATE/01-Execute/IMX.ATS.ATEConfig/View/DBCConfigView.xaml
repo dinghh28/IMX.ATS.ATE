@@ -158,14 +158,14 @@
                                                 <DataGridTemplateColumn Header="名称" Width="2*">
                                                     <DataGridTemplateColumn.CellTemplate>
                                                         <DataTemplate>
-                                                            <TextBox Text="{Binding Config.Info.Custom_Name}" IsReadOnly="{Binding IsRegularConfig}"/>
+                                                            <TextBox Text="{Binding Config.CustomName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
                                                 </DataGridTemplateColumn>
-
+                                                <!--<DataGridTextColumn Header="名称" Binding="{Binding Config.CustomName}" Width="2*"/>-->
                                                 <!--<DataGridTextColumn Header="名称" Binding="{ Binding Config.Info.Custom_Name}" Width="2*" IsReadOnly="{Binding IsRegularConfig}"/>-->
                                                 <DataGridTextColumn Header="信号名" Binding="{Binding Config.Signal_Name}" IsReadOnly="True" Width="2*"/>
-                                                <DataGridTextColumn Header="消息ID" Binding="{Binding Config.Message_ID}" IsReadOnly="True" Width="1.5*"/>
+                                                <DataGridTextColumn Header="消息ID" Binding="{Binding Config.Message_ID, StringFormat={}{0:X2}}" IsReadOnly="True" Width="1.5*"/>
                                                 <DataGridTextColumn Header="消息名称" Binding="{Binding Config.MessageName}" IsReadOnly="True" Width="2*"/>
                                                 <DataGridTemplateColumn Header="操作" Width="1*">
                                                     <DataGridTemplateColumn.CellTemplate>

@@ -275,6 +275,7 @@
     <Compile Include="Locator\ViewModelLocator.cs" />
     <Compile Include="Resource\Converter\InitStateToIconConverter.cs" />
     <Compile Include="Resource\Converter\ResultConverter.cs" />
+    <Compile Include="Resource\Converter\ResultStringColorConverter.cs" />
     <Compile Include="Resource\Converter\TestRunStateConverter.cs" />
     <Compile Include="ViewModel\DeviceInitViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

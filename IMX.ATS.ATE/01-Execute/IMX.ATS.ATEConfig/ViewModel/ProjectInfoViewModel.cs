@@ -213,58 +213,75 @@ namespace IMX.ATS.ATEConfig
 
         private void SavedConfig()
         {
-            if (string.IsNullOrEmpty(ProjectName)) { MessageBox.Show($"项目名称不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-            if (string.IsNullOrEmpty(ProjectSN)) { MessageBox.Show($"项目SN不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-
-            //ProjectInfo.InputVol = SelectedVol;
-            //ProjectInfo.RunTime = RunTime;
-
-            ProjectInfo.IsUseDDBC = UseDBC;
-            ProjectInfo.RatedCur = RatedCur;
-            ProjectInfo.RatedVol = RatedVol;
-            ProjectInfo.RatedPow = RatedPow;
-            ProjectInfo.BaudRate = BaudRate;
-            ProjectInfo.DataBaudrate = DataBaudRate;
-
-            //ProjectInfo.EnableProtect = EnableProtect;
-            if (isnew)
+            try
             {
-                ProjectInfo.ProjectName = ProjectName;
-                ProjectInfo.ProjectSN = ProjectSN;
-                DBOperate.Default.InsertProjectInfo(ProjectInfo).AttachIfSucceed(result =>
+                if (string.IsNullOrEmpty(ProjectName)) { MessageBox.Show($"项目名称不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                if (string.IsNullOrEmpty(ProjectSN)) { MessageBox.Show($"项目SN不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+
+                //ProjectInfo.InputVol = SelectedVol;
+                //ProjectInfo.RunTime = RunTime;
+
+                ProjectInfo.IsUseDDBC = UseDBC;
+                ProjectInfo.RatedCur = RatedCur;
+                ProjectInfo.RatedVol = RatedVol;
+                ProjectInfo.RatedPow = RatedPow;
+                ProjectInfo.BaudRate = BaudRate;
+                ProjectInfo.DataBaudrate = DataBaudRate;
+
+                //ProjectInfo.EnableProtect = EnableProtect;
+                if (isnew)
                 {
-                    mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
-                    //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
-                    mainviewmodel.FlowConfigVisbility = Visibility.Visible;
-                    isnew = false;
-                    mainviewmodel.ProjectName = ProjectName;
-                    mainviewmodel.ProjectInfo.Id = ProjectInfo.Id;
-                    EnableEdite = true;
-                    MessageBox.Show("项目信息保存成功!", "[新建]", MessageBoxButton.OK, MessageBoxImage.Information);
-                })
-                    .AttachIfFailed(result =>
+                    ProjectInfo.ProjectName = ProjectName;
+                    ProjectInfo.ProjectSN = ProjectSN;
+                    DBOperate.Default.InsertProjectInfo(ProjectInfo).AttachIfSucceed(result =>
                     {
-                        MessageBox.Show($"项目信息保存失败：\r\n{result.Message}!", "[新建]");
-                        return;
-                    }).
-                    AttachIfExcepted(result =>
+                        mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
+                        if (ProjectInfo.IsUseDDBC && GlobalModel.TestDBCconfig.Id == 0)
+                        {
+                            DBOperate.Default.InsertDBCConfig(GlobalModel.TestDBCconfig);
+                        }
+                        //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
+                        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
+                        isnew = false;
+                        mainviewmodel.ProjectName = ProjectName;
+                        //mainviewmodel.ProjectInfo.Id = ProjectInfo.Id;
+                        EnableEdite = true;
+                        MessageBox.Show("项目信息保存成功!", "[新建]", MessageBoxButton.OK, MessageBoxImage.Information);
+                    })
+                        .AttachIfFailed(result =>
+                        {
+                            MessageBox.Show($"项目信息保存失败：\r\n{result.Message}!", "[新建]");
+                            return;
+                        }).
+                        AttachIfExcepted(result =>
+                        {
+                            MessageBox.Show($"项目信息保存异常：\r\n{result.Message}!", "[新建]");
+                            return;
+                        });
+                }
+                else
+                {
+                    DBOperate.Default.UpdataProjectInfo(ProjectInfo).AttachIfSucceed(result =>
                     {
-                        MessageBox.Show($"项目信息保存异常：\r\n{result.Message}!", "[新建]");
-                        return;
-                    });
+                        mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
+                        //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
+                        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
+                        if (ProjectInfo.IsUseDDBC && GlobalModel.TestDBCconfig.Id == 0)
+                        {
+                            DBOperate.Default.InsertDBCConfig(GlobalModel.TestDBCconfig);
+                        }
+
+                        MessageBox.Show("项目信息更新成功!", "[更新]", MessageBoxButton.OK, MessageBoxImage.None);
+                    })
+                        .AttachIfFailed(result => { MessageBox.Show($"项目信息更新失败：\r\n{result.Message}!", "[更新]"); })
+                        .AttachIfExcepted(result => { MessageBox.Show($"项目信息更新异常：\r\n{result.Message}!", "[更新]"); });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                DBOperate.Default.UpdataProjectInfo(ProjectInfo).AttachIfSucceed(result =>
-                {
-                    mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
-                    //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
-                    mainviewmodel.FlowConfigVisbility = Visibility.Visible;
-                    MessageBox.Show("项目信息更新成功!", "[更新]", MessageBoxButton.OK, MessageBoxImage.None);
-                })
-                    .AttachIfFailed(result => { MessageBox.Show($"项目信息更新失败：\r\n{result.Message}!", "[更新]"); })
-                    .AttachIfExcepted(result => { MessageBox.Show($"项目信息更新异常：\r\n{result.Message}!", "[更新]"); });
+                MessageBox.Show($"项目信息更新异常:\r\n{ex.Message}!", "[更新]", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+           
 
         }
 
@@ -274,16 +291,20 @@ namespace IMX.ATS.ATEConfig
         protected override void WindowLoadedExecute(object obj)
         {
             mainviewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
-            isnew = mainviewmodel.IsNewProject;
+            
+            
+            
+            isnew = GlobalModel.IsNewProject;
+            //isnew = mainviewmodel.IsNewProject;
             EnableEdite = !isnew;
             if (!isnew)
             {
-                ProjectName = mainviewmodel.ProjectInfo.ProjectName;
-                ProjectSN = mainviewmodel.ProjectInfo.ProjectSN;
-                UseDBC = mainviewmodel.ProjectInfo.IsUseDDBC;
-                RatedPow = mainviewmodel.ProjectInfo.RatedPow;
-                BaudRate = mainviewmodel.ProjectInfo.BaudRate;
-                DataBaudRate= mainviewmodel.ProjectInfo.DataBaudrate ;
+                ProjectName = GlobalModel.Test_ProjectInfo.ProjectName;
+                ProjectSN = GlobalModel.Test_ProjectInfo.ProjectSN;
+                UseDBC = GlobalModel.Test_ProjectInfo.IsUseDDBC;
+                RatedPow = GlobalModel.Test_ProjectInfo.RatedPow;
+                BaudRate = GlobalModel.Test_ProjectInfo.BaudRate;
+                DataBaudRate= GlobalModel.Test_ProjectInfo.DataBaudrate ;
             }
             //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectSelect.WindowClose.Execute("ProjectSelect");
         }
@@ -304,6 +325,7 @@ namespace IMX.ATS.ATEConfig
         #region 构造方法
         public ProjectInfoViewModel()
         {
+            ProjectInfo = GlobalModel.Test_ProjectInfo;
         }
         #endregion
 

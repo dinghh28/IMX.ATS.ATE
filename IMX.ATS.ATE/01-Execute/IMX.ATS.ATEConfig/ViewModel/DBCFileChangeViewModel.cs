@@ -157,25 +157,42 @@ namespace IMX.ATS.ATEConfig
                 return;
             }
 
-            DBOperate.Default.UpdateDBCFile(ConfigID, info.Id)
+            DBOperate.Default.UpdateDBCFile(GlobalModel.TestDBCconfig.Id, info.Id, GlobalModel.UserInfo.UserName)
                 .AttachIfSucceed(result => 
                 {
                     GlobalModel.TestDBCFileInfo = info;
 
-                    ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.DBCFileName = DBCFileInfos[SelectedDBCIndex].FileName;
-                    ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.LoadFile(path);
+                    var dbcconfigmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig;
+                    dbcconfigmodel.DBCConfig.DBCFileID = info.Id;
+                    dbcconfigmodel.DBCFileInfo = info;
+                    //((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.DBCFileName = DBCFileInfos[SelectedDBCIndex].FileName;
+                    //((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.LoadFile(path);
+                    //清空上报配置
+                    dbcconfigmodel.SignalConfigPages[0].SignalConfigs.Clear();
+                    //清空下发配置
+                    dbcconfigmodel.SignalConfigPages[1].SignalConfigs.Clear();
+                    //清空信号列表
+                    dbcconfigmodel.DBCMessages.Clear();
+
+                    //重新导入DBC文件信号
+                    dbcconfigmodel.IsloadFile = true;
+
+                    dbcconfigmodel.DBCFileName = DBCFileInfos[SelectedDBCIndex].FileName;
+                    dbcconfigmodel.LoadFile(path);
+
 
                     MessageBox.Show($"DBC文件已变更为\r\n{info.FileName}","DBC文件变更成功");
 
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        WindowClosedExecute(Win);
-                    });
+                    //Application.Current.Dispatcher.Invoke(() =>
+                    //{
+                    //    WindowClosedExecute(Win);
+                    //});
                 })
                 .AttachIfFailed(result=> { MessageBox.Show(result.Message, "DBC文件变更失败"); });
 
-
-
+            //if (MessageBox.Show("是否关闭当前窗口", "DBC文件变更窗口关闭", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+            
+            WindowClosedExecute(Win);
             //((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig = new Test_DBCConfig();
 
             //((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig.DBCFileID = info.Id;
@@ -193,7 +210,9 @@ namespace IMX.ATS.ATEConfig
             {
                 return;
             }
+           
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
+            Win = win;
 
             //Window win = new MouseLeftButtonDown().MouseLeft(obj);
             //if (win != null) { Win = win; }
@@ -217,6 +236,7 @@ namespace IMX.ATS.ATEConfig
 
         protected override void WindowClosedExecute(object obj)
         {
+            IsOpen = false;
             base.WindowClosedExecute(obj);
         }
         #endregion

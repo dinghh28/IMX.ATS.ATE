@@ -52,8 +52,8 @@ namespace IMX.ATS.ATEConfig.Function
             set
             {
                 func = value;
-                FunConfig_EquipmentResult config = value.Config as FunConfig_EquipmentResult;
-                config.DatasName ??= SupportDeviceInfo.DeviceRecInfo["Product_CAN"]?.ToDictionary(x => x.DataInfo.Name)?.Keys.ToList();
+                FunConfig_ProductResult config = value.Config as FunConfig_ProductResult;
+                config.DatasName ??= GlobalModel.TestDBCconfig.Test_DBCReceiveSignals?.ToDictionary(x=>x.Custom_Name)?.Keys.ToList();
 
                 DataList.Clear();
                 InDatas.Clear();
@@ -230,7 +230,10 @@ namespace IMX.ATS.ATEConfig.Function
 
 
         #region 构造方法
-        public FunViewModelProductResult() { }
+        public FunViewModelProductResult() 
+        {
+
+        }
         #endregion
 
     }

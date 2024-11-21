@@ -82,7 +82,7 @@ namespace IMX.DB
                     Logger.Error(nameof(DBOperate), nameof(Init), LastError);
                     return OperateResult.Failed(LastError);
                 }
-#if DEBUG
+//#if DEBUG
                 sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
                 .UseMonitorCommand(cmd => Trace.WriteLine($"Sql：{cmd.CommandText}"))//监听SQL语句,Trace在输出选项卡中查看
                 .UseConnectionString(DataType, ConnectionString)//DataType
@@ -90,14 +90,14 @@ namespace IMX.DB
                 .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
                 //.UseAdoConnectionPool(true)
                 .Build());
-#else
-                           sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
-                          .UseConnectionString(DataType, ConnectionString)
-                          .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
-                          .UseAdoConnectionPool(true)
-                          //.UseSlave(SlaveConnectionString)
-                          .Build());
-#endif
+//#else
+//                           sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
+//                          .UseConnectionString(DataType, ConnectionString)
+//                          .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
+//                          //.UseAdoConnectionPool(true)
+//                          //.UseSlave(SlaveConnectionString)
+//                          .Build());
+//#endif
                 try
                 {
                     Sqlite.UseJsonMap();
@@ -591,7 +591,7 @@ namespace IMX.DB
         /// <param name="configid">DBC配置id</param>
         /// <param name="fileid">DBC文件ID</param>
         /// <returns></returns>
-        public OperateResult UpdateDBCFile(int configid, int fileid)
+        public OperateResult UpdateDBCFile(int configid, int fileid, string username)
         {
             if (!IsInitOK)
             {
@@ -606,17 +606,30 @@ namespace IMX.DB
 
                 if (item == null)
                 {
-                    new Test_DBCConfig { DBCFileID = fileid }.Save();
+                    LastError = $"DBC配置不存在";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+                else
+                { 
+                    int row = Sqlite.Update<Test_DBCConfig>(configid)
+                        .Set(x => x.DBCFileID, fileid)
+                        .Set(x=>x.UpdateOperator, username)
+                        .Set(x=>x.UpdateTime, DateTime.Now)
+                        .ExecuteAffrows();
+
+                    if (row < 1)
+                    {
+                        LastError = $"DBC文件未实际发生变更";
+                        Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
+                        return OperateResult.Failed(LastError);
+                    }
+                    //item.DBCFileID = fileid;
+                    //item.UpdateOperator = username;
+                    //item.Update();
                 }
 
-                //int row = Sqlite.Update<Test_DBCConfig>(configid).Set(x => x.DBCFileID, fileid).ExecuteAffrows();
-
-                //if (row < 1)
-                //{
-                //    LastError = $"DBC文件未实际发生变更";
-                //    Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
-                //    return OperateResult.Failed(LastError);
-                //}
+               
 
                 return OperateResult.Succeed();
             }
@@ -739,7 +752,10 @@ namespace IMX.DB
             try
             {
                 var items = Sqlite.Select<Test_DBCConfig>().Where(x => x.ProjectID == id).ToOne();
-
+                if (items == null)
+                {
+                    return OperateResult<Test_DBCConfig>.Succeed(new Test_DBCConfig());
+                }
                 return OperateResult<Test_DBCConfig>.Succeed(items);
             }
             catch (Exception ex)

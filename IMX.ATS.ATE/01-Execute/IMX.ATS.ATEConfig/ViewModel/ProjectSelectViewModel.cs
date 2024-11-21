@@ -105,15 +105,18 @@ namespace IMX.ATS.ATEConfig
         public RelayCommand<object> ReturnConfig => new RelayCommand<object>((object obj) =>
         {
 
-            MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
+            //MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
 
             if (obj.ToString().ToUpper() == "N")
             {
                 GlobalModel.IsNewProject = true;
-                viewmodel.IsNewProject = true;
-                viewmodel.ProjectInfo = new Test_ProjectInfo();
-                viewmodel.DBCFileInfo = new Test_DBCFileInfo();
-                viewmodel.DBCConfig = new Test_DBCConfig();
+                GlobalModel.Test_ProjectInfo = new Test_ProjectInfo(); 
+                GlobalModel.TestDBCFileInfo = new Test_DBCFileInfo();
+                GlobalModel.TestDBCconfig = new Test_DBCConfig();
+                //viewmodel.IsNewProject = true;
+                //viewmodel.ProjectInfo = new Test_ProjectInfo();
+                //viewmodel.DBCFileInfo = new Test_DBCFileInfo();
+                //viewmodel.DBCConfig = new Test_DBCConfig();
                 //viewmodel.FunctionInfo = new Test_Function();
             }
             else
@@ -124,15 +127,21 @@ namespace IMX.ATS.ATEConfig
                     return;
                 }
                 GlobalModel.IsNewProject = false;
-                viewmodel.IsNewProject = false;
-                viewmodel.ProjectInfo = SelectedInfo.Info;
+                //viewmodel.IsNewProject = false;
+                GlobalModel.Test_ProjectInfo = SelectedInfo.Info;
+                //viewmodel.ProjectInfo = SelectedInfo.Info;
 
-                DBOperate.Default.GetDBCConfig_ByProjectID(SelectedInfo.Info.Id).AttachIfSucceed(result => viewmodel.DBCConfig = result.Data);
-
-                if (viewmodel.DBCConfig != null)
+                if (SelectedInfo.Info.IsUseDDBC)
                 {
-                    DBOperate.Default.GetFile_ByID(viewmodel.DBCConfig.DBCFileID).AttachIfSucceed(result => viewmodel.DBCFileInfo = result.Data);
+                    DBOperate.Default.GetDBCConfig_ByProjectID(SelectedInfo.Info.Id).AttachIfSucceed(result => GlobalModel.TestDBCconfig = result.Data);
+
+                    if (GlobalModel.TestDBCconfig != null)
+                    {
+                        DBOperate.Default.GetFile_ByID(GlobalModel.TestDBCconfig.DBCFileID).AttachIfSucceed(result => GlobalModel.TestDBCFileInfo = result.Data);
+                    }
                 }
+
+               //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = SelectedInfo.Info;
 
                 //if (SelectedInfo.Info.IsUseDDBC)
                 //{
@@ -142,12 +151,13 @@ namespace IMX.ATS.ATEConfig
 
             }
 
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = viewmodel.ProjectInfo;
+            
 
             try
             {
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
+                    MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
                     Window mainwindow = ContentControlManager.GetWindow<MainView>(viewmodel);
                     mainwindow.Show();
                     try

@@ -110,10 +110,6 @@ namespace IMX.ATS.ATEConfig.Function
 
         #endregion
 
-        #region （Command）
-
-
-        #endregion
 
         #region 私有方法
 
@@ -141,65 +137,65 @@ namespace IMX.ATS.ATEConfig.Function
             {
                 List<DBCSendSignal> dBCSignalModel = new List<DBCSendSignal>();
 
-#if DEBUG //后续从数据库中调入DBC文件内容
+//#if DEBUG //后续从数据库中调入DBC文件内容
 
-                string DBCFileName = "BEV_E0X_OT_Car RMCU V3.72 Draft_202311220825";
-                string path = Path.Combine(@"C:\Users\Administrator\Desktop", DBCFileName + ".dbc");
+//                string DBCFileName = "BEV_E0X_OT_Car RMCU V3.72 Draft_202311220825";
+//                string path = Path.Combine(@"C:\Users\Administrator\Desktop", DBCFileName + ".dbc");
 
-                OperateResult<IMessageFileLoader> rltCreate = MessageFileLoader.Create(Path.GetExtension(path), SuperDHHLoggerManager.DeviceLogger);
-                if (!rltCreate)
-                {
-                    MessageBox.Show($"DBC文件加载失败:{rltCreate.Message}", "DBC文件解析异常");
-                    return;
-                }
+//                OperateResult<IMessageFileLoader> rltCreate = MessageFileLoader.Create(Path.GetExtension(path), SuperDHHLoggerManager.DeviceLogger);
+//                if (!rltCreate)
+//                {
+//                    MessageBox.Show($"DBC文件加载失败:{rltCreate.Message}", "DBC文件解析异常");
+//                    return;
+//                }
 
-                IMessageFileLoader messageFileLoader = rltCreate.Data;
+//                IMessageFileLoader messageFileLoader = rltCreate.Data;
 
-                var rltLoad = rltCreate.Data.Paser(path);
-                if (!rltLoad)
-                {
-                    MessageBox.Show($"DBC解析失败:{rltLoad.Message}", "DBC文件解析异常");
-                    return;
-                }
+//                var rltLoad = rltCreate.Data.Paser(path);
+//                if (!rltLoad)
+//                {
+//                    MessageBox.Show($"DBC解析失败:{rltLoad.Message}", "DBC文件解析异常");
+//                    return;
+//                }
 
-                messageFileLoader.MessageDic.ToList().ForEach(m =>
-                {
-                    m.Value.Signals.ForEach(sig =>
-                    {
-                        dBCSignalModel.Add(new DBCSendSignal
-                        {
-                            MessageID = m.Key,
-                            MessageName = m.Value.Name,
-                            SignalName = sig.Name,
-                            SignalValue = sig.InitValue.ToString(),
-                        });
-                    });
+//                messageFileLoader.MessageDic.ToList().ForEach(m =>
+//                {
+//                    m.Value.Signals.ForEach(sig =>
+//                    {
+//                        dBCSignalModel.Add(new DBCSendSignal
+//                        {
+//                            MessageID = m.Key,
+//                            MessageName = m.Value.Name,
+//                            SignalName = sig.Name,
+//                            SignalValue = sig.InitValue.ToString(),
+//                        });
+//                    });
 
-                });
+//                });
 
+//                //从数据库中获取到已配置好的DBC发送模型
+//                Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
+//                test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
+//                {
+//                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
+//                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
+//                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
+//                };
+
+//#else
                 //从数据库中获取到已配置好的DBC发送模型
-                Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
-                test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
-                {
-                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
-                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
-                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
-                };
+                //Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
+                //test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
+                //{
+                //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
+                //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
+                //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
+                //};
 
-#else
-                //从数据库中获取到已配置好的DBC发送模型
-                Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
-                test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
-                {
-                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
-                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
-                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
-                };
-
-#endif
+//#endif
 
                 SendSignals.Clear();
-                foreach (var item in test_DBCConfig.Test_DBCSendSignals)
+                foreach (var item in GlobalModel.TestDBCconfig.Test_DBCSendSignals)
                 {
                     SendSignals.Add(new SendSignalModel
                     {
@@ -207,10 +203,10 @@ namespace IMX.ATS.ATEConfig.Function
                         DBCSignal = new DBCSendSignal
                         {
                             CustomName = item.Custom_Name,
-                            MessageName = dBCSignalModel.Find(x => x.SignalName == item.Signal_Name).MessageName,
+                            MessageName = item.MessageName,
                             MessageID = item.Message_ID,
                             SignalName = item.Signal_Name,
-                            SignalValue = dBCSignalModel.Find(x => x.SignalName == item.Signal_Name).SignalValue,
+                            SignalValue = item.SignalInitValue,
                         }
                     });
                 }
@@ -243,6 +239,21 @@ namespace IMX.ATS.ATEConfig.Function
                 }
             }
         }
+
+        private string sendvalue;
+
+        public string SendValue
+        {
+            get => sendvalue;// = DBCSignal.IsSend;
+            set
+            {
+                if (Set(nameof(SendValue), ref sendvalue, value))
+                {
+                    DBCSignal.SignalValue = value;
+                }
+            }
+        }
+
 
         private DBCSendSignal dbcsignal = new DBCSendSignal();
 

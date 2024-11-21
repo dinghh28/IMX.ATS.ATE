@@ -55,7 +55,6 @@ using IMX.Device.Product;
 using IMX.Device.DCLoad;
 using IMX.Device.Common.Enumerations;
 using IMX.Function.Base.Enumerations;
-using IMX.Function.Config;
 using System.Windows.Documents;
 using System.Reflection.Emit;
 using Newtonsoft.Json.Linq;
@@ -149,7 +148,7 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ATEExecuteInfos), ref ateexecuteinfos, value);
         }
 
-        private bool enabletestbtn;
+        private bool enabletestbtn = true;
         /// <summary>
         /// 试验按钮使能
         /// </summary>
@@ -332,6 +331,7 @@ namespace IMX.ATS.ATE
             Test_Programme programme = null;
             Dictionary<string, List<TestFunction>> process = new Dictionary<string, List<TestFunction>>();
             Dictionary<string, string> dicreadsignals = new Dictionary<string, string>();
+            List<string> sendsignals_can = new List<string>();
             string error = string.Empty;
 
             Test_ProjectInfo data = rlt.Data;
@@ -374,6 +374,11 @@ namespace IMX.ATS.ATE
                         {
                             var signal = dbcconfig.Test_DBCReceiveSignals[i];
                             dicreadsignals.Add(signal.Signal_Name, signal.Custom_Name);
+                        }
+
+                        for (int i = 0; i < dbcconfig?.Test_DBCSendSignals?.Count; i++) 
+                        {
+                            sendsignals_can.Add(dbcconfig?.Test_DBCSendSignals[i].Signal_Name);
                         }
                     }
                 }
@@ -434,6 +439,7 @@ namespace IMX.ATS.ATE
                 ProjectInfo = data,
                 DBCFile = dbcfileinfo,
                 DicReadSignals_CAN = dicreadsignals,
+                SendSignals_CAN = sendsignals_can,
                 Programme = programme,
                 TestFlowsFunction = process,
             };
@@ -489,15 +495,62 @@ namespace IMX.ATS.ATE
                 try
                 {
                     GlobalModel.DicDeviceInfo["Product"].Args.DriveConfig.BaudRate = thread.ProjectInfo.BaudRate;
-                    CANInt(GlobalModel.DicDeviceInfo["Product"].Args)
-                        .ThenAnd(result =>
+                    var canoprate = CANInt(GlobalModel.DicDeviceInfo["Product"].Args);
+                    if (!canoprate)
                     {
-                        Product_CAN_Operate operate = (result.Data as Product_CAN_Operate);
-                        return operate
-                         .SetReadSignal(thread.DicReadSignals_CAN)
-                         .And(operate.SetSendSignal(thread.SendSignals_CAN))
-                         .ConvertTo(result.Data);
-                    });
+                        GlobalModel.IsTestThreadRun = false;
+                        thread.IsRunning = false;
+                        SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
+                        
+
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            ContentName = "CAN通讯初始化失败";
+                            ContentColor = Brushes.Red;
+                            StepStrShow = Visibility.Collapsed;
+                            IsTestRuning = false;
+                        }));
+
+                        MessageBox.Show(canoprate.Message, "CAN初始化失败");
+                        return;
+                    }
+                   
+                    GlobalModel.DicDeviceInfo["Product"].DeviceOperate = canoprate.Data;
+                    Product_CAN_Operate operate = (canoprate.Data as Product_CAN_Operate);
+
+                    var cansetrlt =operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
+                        .And(operate.SetReadSignal(thread.DicReadSignals_CAN))
+                        .And(operate.SetSendSignal(thread.SendSignals_CAN));
+
+                    if (!cansetrlt) 
+                    {
+                        GlobalModel.IsTestThreadRun = false;
+                        thread.IsRunning = false;
+                        SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
+                        
+
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            ContentName = "CAN配置参数初始化失败";
+                            ContentColor = Brushes.Red;
+                            StepStrShow = Visibility.Collapsed;
+                            IsTestRuning = false;
+                        }));
+
+                        CANUnint(operate);
+
+                        MessageBox.Show(canoprate.Message, "CAN参数初始化失败");
+                        return;
+                    }
+
+                    //    .ThenAnd(result =>
+                    //{
+                    //    Product_CAN_Operate operate = (result.Data as Product_CAN_Operate);
+                    //    return operate
+                    //     .SetReadSignal(thread.DicReadSignals_CAN)
+                    //     .And(operate.SetSendSignal(thread.SendSignals_CAN))
+                    //     .ConvertTo(result.Data);
+                    //});
                     for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++) 
                     {
                         test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
@@ -522,6 +575,12 @@ namespace IMX.ATS.ATE
                     return;
                 }
             }
+
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                StepStrShow = Visibility.Collapsed;
+            }));
+
             for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
             {
                 test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
@@ -624,37 +683,52 @@ namespace IMX.ATS.ATE
                             {
                                 continue;
                             }
-
-                            if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL caninfo))
+                            try
                             {
-                                operate = caninfo.DeviceOperate;
-                            }
-                            FunConfig_ProductResult resultconfig = config as FunConfig_ProductResult;
+                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL caninfo))
+                                {
+                                    operate = caninfo.DeviceOperate;
+                                }
+                                FunConfig_ProductResult resultconfig = config as FunConfig_ProductResult;
 
-                            var result = ProductResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as Product_CAN_Operate);
+                                var result = ProductResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as Product_CAN_Operate);
 
-                            test_Data.StepName = config.SupportFuncitonType.GetDescription();
-                            test_Data.FlowName = flowname;
-                            test_Data.StepIndex = j + 1;
+                                test_Data.StepName = config.SupportFuncitonType.GetDescription();
+                                test_Data.FlowName = flowname;
+                                test_Data.StepIndex = j + 1;
 
-                            test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
-                            for (int k = 0; k < resultconfig?.Datas?.Count; k++)
-                            {
-                                test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
-                            }
-                            test_Data.Id = 0;
-                            Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
+                                test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
+                                for (int k = 0; k < resultconfig?.Datas?.Count; k++)
+                                {
+                                    test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
+                                }
+                                test_Data.Id = 0;
+                                Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
-                            if (!result)
-                            {
-                                TestErrorString += $"{result.Message}\r\n";
-                                if (resultconfig.ResultOpereate != ResultOpereateType.IGNORE)
+                                if (!result)
                                 {
                                     testresult = false;
-                                    thread.IsStartThread = resultconfig.ResultOpereate == ResultOpereateType.OUTFUNCTION;
-                                    break;
+                                    TestErrorString += $"{result.Message}\r\n";
+                                    if (resultconfig.ResultOpereate == ResultOpereateType.OUTTEST)
+                                    {
+                                        thread.IsStartThread = false;
+                                        break;
+                                    }
+                                    else if (resultconfig.ResultOpereate == ResultOpereateType.OUTFUNCTION)
+                                    {
+                                        isoutfunc = true;
+                                        //thread.IsStartThread = true;
+                                        break;
+                                    }
                                 }
                             }
+                            catch (Exception ex)
+                            {
+                                TestErrorString += $"{ex.GetMessage()}\r\n";
+                                thread.IsStartThread = false;
+                                break;
+                            }
+
                         }
                         else if (config.SupportFuncitonType == FuncitonType.EquipmentResult)
                         {
@@ -876,11 +950,15 @@ namespace IMX.ATS.ATE
                     {
                         StepName = config.Datas[i].DataInfo.Name,
                         ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        //NowVlaue=data.DataInfo.Value.ToString(),
                         Limit_Lower = data.Limits_Lower.ToString(),
                         Limit_Upper = data.Limits_Upper.ToString(),
                         ValueConditions = data.Judgment.GetDescription(),
                     };
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
+                    
+                    step.NowVlaue = data.DataInfo.Value.ToString();
+
                     SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute),
                          $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}");
                     if (!config.Datas[i].IsInRange)
@@ -947,13 +1025,15 @@ namespace IMX.ATS.ATE
                     {
                         StepName = config.Datas[i].DataInfo.Name,
                         ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        //NowVlaue = data.DataInfo.Value.ToString(),
                         Limit_Lower = data.Limits_Lower.ToString(),
                         Limit_Upper = data.Limits_Upper.ToString(),
                         ValueConditions = data.Judgment.GetDescription(),
                     };
 
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
-
+                    
+                    step.NowVlaue = data.DataInfo.Value.ToString();
                     //test_Data.StepName = config.SupportFuncitonType.GetDescription();
                     //test_Data.FlowName = flowname;
                     //test_Data.StepIndex = j + 1;
@@ -1483,6 +1563,7 @@ namespace IMX.ATS.ATE
                 }
                 GlobalModel.DicDeviceDrives.Add(config.DriveConfig.ResourceString, operate);
                 drive = operate;
+                GlobalModel.DicDeviceInfo["Product"].Drive = drive;
             }
 
             return drive.RegisterDevice(config)
@@ -1490,6 +1571,7 @@ namespace IMX.ATS.ATE
                      .AttachIfSucceed(result =>
                      {
                          GlobalModel.DicDeviceOperate.Add(result.Data, drive);
+
                      });
         }
 
@@ -1747,7 +1829,7 @@ namespace IMX.ATS.ATE
                     MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
                 });
 #if DEBUG
-            new Thread(TestThread) { IsBackground = true }.Start();
+            //new Thread(TestThread) { IsBackground = true }.Start();
 #endif
         //window = win;
         //base.WindowLoadedExecute(obj);
@@ -2052,6 +2134,11 @@ namespace IMX.ATS.ATE
         /// 执行步骤名称
         /// </summary>
         public string StepName { get; set; }
+
+        /// <summary>
+        /// 当前值
+        /// </summary>
+        public string NowVlaue {  get; set; }
 
         /// <summary>
         /// 下限值

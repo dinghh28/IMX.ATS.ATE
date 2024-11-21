@@ -240,6 +240,21 @@ namespace IMX.ATS.ATEConfig.Function
             }
         }
 
+        private string sendvalue;
+
+        public string SendValue
+        {
+            get => sendvalue;// = DBCSignal.IsSend;
+            set
+            {
+                if (Set(nameof(SendValue), ref sendvalue, value))
+                {
+                    DBCSignal.SignalValue = value;
+                }
+            }
+        }
+
+
         private DBCSendSignal dbcsignal = new DBCSendSignal();
 
         public DBCSendSignal DBCSignal

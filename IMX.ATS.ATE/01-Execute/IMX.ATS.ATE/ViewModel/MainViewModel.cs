@@ -575,6 +575,12 @@ namespace IMX.ATS.ATE
                     return;
                 }
             }
+
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                StepStrShow = Visibility.Collapsed;
+            }));
+
             for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
             {
                 test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
@@ -677,37 +683,52 @@ namespace IMX.ATS.ATE
                             {
                                 continue;
                             }
-
-                            if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL caninfo))
+                            try
                             {
-                                operate = caninfo.DeviceOperate;
-                            }
-                            FunConfig_ProductResult resultconfig = config as FunConfig_ProductResult;
+                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL caninfo))
+                                {
+                                    operate = caninfo.DeviceOperate;
+                                }
+                                FunConfig_ProductResult resultconfig = config as FunConfig_ProductResult;
 
-                            var result = ProductResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as Product_CAN_Operate);
+                                var result = ProductResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as Product_CAN_Operate);
 
-                            test_Data.StepName = config.SupportFuncitonType.GetDescription();
-                            test_Data.FlowName = flowname;
-                            test_Data.StepIndex = j + 1;
+                                test_Data.StepName = config.SupportFuncitonType.GetDescription();
+                                test_Data.FlowName = flowname;
+                                test_Data.StepIndex = j + 1;
 
-                            test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
-                            for (int k = 0; k < resultconfig?.Datas?.Count; k++)
-                            {
-                                test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
-                            }
-                            test_Data.Id = 0;
-                            Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
+                                test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
+                                for (int k = 0; k < resultconfig?.Datas?.Count; k++)
+                                {
+                                    test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
+                                }
+                                test_Data.Id = 0;
+                                Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
-                            if (!result)
-                            {
-                                TestErrorString += $"{result.Message}\r\n";
-                                if (resultconfig.ResultOpereate != ResultOpereateType.IGNORE)
+                                if (!result)
                                 {
                                     testresult = false;
-                                    thread.IsStartThread = resultconfig.ResultOpereate == ResultOpereateType.OUTFUNCTION;
-                                    break;
+                                    TestErrorString += $"{result.Message}\r\n";
+                                    if (resultconfig.ResultOpereate == ResultOpereateType.OUTTEST)
+                                    {
+                                        thread.IsStartThread = false;
+                                        break;
+                                    }
+                                    else if (resultconfig.ResultOpereate == ResultOpereateType.OUTFUNCTION)
+                                    {
+                                        isoutfunc = true;
+                                        //thread.IsStartThread = true;
+                                        break;
+                                    }
                                 }
                             }
+                            catch (Exception ex)
+                            {
+                                TestErrorString += $"{ex.GetMessage()}\r\n";
+                                thread.IsStartThread = false;
+                                break;
+                            }
+
                         }
                         else if (config.SupportFuncitonType == FuncitonType.EquipmentResult)
                         {
@@ -929,11 +950,15 @@ namespace IMX.ATS.ATE
                     {
                         StepName = config.Datas[i].DataInfo.Name,
                         ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        //NowVlaue=data.DataInfo.Value.ToString(),
                         Limit_Lower = data.Limits_Lower.ToString(),
                         Limit_Upper = data.Limits_Upper.ToString(),
                         ValueConditions = data.Judgment.GetDescription(),
                     };
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
+                    
+                    step.NowVlaue = data.DataInfo.Value.ToString();
+
                     SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute),
                          $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}");
                     if (!config.Datas[i].IsInRange)
@@ -1000,13 +1025,15 @@ namespace IMX.ATS.ATE
                     {
                         StepName = config.Datas[i].DataInfo.Name,
                         ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        //NowVlaue = data.DataInfo.Value.ToString(),
                         Limit_Lower = data.Limits_Lower.ToString(),
                         Limit_Upper = data.Limits_Upper.ToString(),
                         ValueConditions = data.Judgment.GetDescription(),
                     };
 
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
-
+                    
+                    step.NowVlaue = data.DataInfo.Value.ToString();
                     //test_Data.StepName = config.SupportFuncitonType.GetDescription();
                     //test_Data.FlowName = flowname;
                     //test_Data.StepIndex = j + 1;
@@ -2107,6 +2134,11 @@ namespace IMX.ATS.ATE
         /// 执行步骤名称
         /// </summary>
         public string StepName { get; set; }
+
+        /// <summary>
+        /// 当前值
+        /// </summary>
+        public string NowVlaue {  get; set; }
 
         /// <summary>
         /// 下限值

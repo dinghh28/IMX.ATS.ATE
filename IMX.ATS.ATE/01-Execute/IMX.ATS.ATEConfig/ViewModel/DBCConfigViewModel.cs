@@ -150,12 +150,12 @@ namespace IMX.ATS.ATEConfig
         /// <summary>
         /// 数据库DBC配置信息
         /// </summary>
-        private Test_DBCConfig DBCConfig = null;
+        public Test_DBCConfig DBCConfig = null;
 
         /// <summary>
         /// 数据库DBC文件配置信息
         /// </summary>
-        private Test_DBCFileInfo DBCFileInfo = null;
+        public Test_DBCFileInfo DBCFileInfo = null;
 
         /// <summary>
         /// 当前选中信号

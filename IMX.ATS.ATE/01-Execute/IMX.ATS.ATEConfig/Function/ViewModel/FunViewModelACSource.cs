@@ -52,16 +52,26 @@ namespace IMX.ATS.ATEConfig.Function
                     config.Values = new List<StepConditionValue>();
                 }
 
-                config.Values.ForEach(x =>
+                for (int i = 0;i < config.Values.Count;i++)
                 {
                     StepValues.Add(new StepValue
                     {
-                        ConditionValue = x,
+                        ConditionValue = config.Values[i],
                         ConditionValues = CondValues,
                         ConditionNames = CondNames,
-                        ConditionIndex = CondNames.ToList().FindIndex(n => n == x.Value.DataInfo.Name),
+                        ConditionIndex = CondNames.ToList().FindIndex(n => n == config.Values[i].Value.DataInfo.Name),
                     });
-                });
+                }
+                //config.Values.ForEach(x =>
+                //{
+                //    StepValues.Add(new StepValue
+                //    {
+                //        ConditionValue = x,
+                //        ConditionValues = CondValues,
+                //        ConditionNames = CondNames,
+                //        ConditionIndex = CondNames.ToList().FindIndex(n => n == x.Value.DataInfo.Name),
+                //    });
+                //});
 
             }
         }

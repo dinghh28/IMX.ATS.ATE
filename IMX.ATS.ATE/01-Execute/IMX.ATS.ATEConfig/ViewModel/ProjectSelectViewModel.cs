@@ -140,7 +140,8 @@ namespace IMX.ATS.ATEConfig
                         DBOperate.Default.GetFile_ByID(GlobalModel.TestDBCconfig.DBCFileID).AttachIfSucceed(result => GlobalModel.TestDBCFileInfo = result.Data);
                     }
                 }
-               
+
+               //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = SelectedInfo.Info;
 
                 //if (SelectedInfo.Info.IsUseDDBC)
                 //{
@@ -150,7 +151,7 @@ namespace IMX.ATS.ATEConfig
 
             }
 
-            ((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = SelectedInfo.Info;
+            
 
             try
             {

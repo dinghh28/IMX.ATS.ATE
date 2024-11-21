@@ -173,7 +173,7 @@ namespace IMX.ATS.ATEConfig
                 .AttachIfFailed(result=> { MessageBox.Show($"文件上传：{result.Message}！", "失败", MessageBoxButtons.OK, MessageBoxIcon.Error); })
                  .AttachIfFailed(result => { MessageBox.Show($"文件上传：{result.Message}！", "异常", MessageBoxButtons.OK, MessageBoxIcon.Error); });
 
-                if (MessageBox.Show("是否关闭当前窗口", "DBC文件变更窗口关闭", MessageBoxButtons.YesNo) !=  DialogResult.Yes) return;
+                //if (MessageBox.Show("是否关闭当前窗口", "DBC文件变更窗口关闭", MessageBoxButtons.YesNo) !=  DialogResult.Yes) return;
 
                 WindowClosedExecute(Win);
             }

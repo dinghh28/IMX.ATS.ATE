@@ -82,7 +82,7 @@ namespace IMX.DB
                     Logger.Error(nameof(DBOperate), nameof(Init), LastError);
                     return OperateResult.Failed(LastError);
                 }
-#if DEBUG
+//#if DEBUG
                 sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
                 .UseMonitorCommand(cmd => Trace.WriteLine($"Sql：{cmd.CommandText}"))//监听SQL语句,Trace在输出选项卡中查看
                 .UseConnectionString(DataType, ConnectionString)//DataType
@@ -90,14 +90,14 @@ namespace IMX.DB
                 .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
                 //.UseAdoConnectionPool(true)
                 .Build());
-#else
-                           sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
-                          .UseConnectionString(DataType, ConnectionString)
-                          .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
-                          .UseAdoConnectionPool(true)
-                          //.UseSlave(SlaveConnectionString)
-                          .Build());
-#endif
+//#else
+//                           sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
+//                          .UseConnectionString(DataType, ConnectionString)
+//                          .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
+//                          //.UseAdoConnectionPool(true)
+//                          //.UseSlave(SlaveConnectionString)
+//                          .Build());
+//#endif
                 try
                 {
                     Sqlite.UseJsonMap();
@@ -606,7 +606,9 @@ namespace IMX.DB
 
                 if (item == null)
                 {
-                    new Test_DBCConfig { DBCFileID = fileid }.Insert();
+                    LastError = $"DBC配置不存在";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateDBCFile), LastError);
+                    return OperateResult.Failed(LastError);
                 }
                 else
                 { 
@@ -750,7 +752,10 @@ namespace IMX.DB
             try
             {
                 var items = Sqlite.Select<Test_DBCConfig>().Where(x => x.ProjectID == id).ToOne();
-
+                if (items == null)
+                {
+                    return OperateResult<Test_DBCConfig>.Succeed(new Test_DBCConfig());
+                }
                 return OperateResult<Test_DBCConfig>.Succeed(items);
             }
             catch (Exception ex)

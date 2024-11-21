@@ -61,30 +61,16 @@
             归还对象
             </summary>
         </member>
-        <member name="T:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension">
-            <summary>
-            汽车总线对象池管理器扩展方法
-            </summary>
-        </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.FrameObject)">
-            <summary>
-            归还帧对象
-            </summary>
-            <param name="obj">帧对象</param>
-        </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.VehicleBusState)">
-            <summary>
-            归还汽车总线状态对象
-            </summary>
-            <param name="obj">汽车总线状态对象</param>
-        </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.SendCustomMessage)">
-            <summary>
-            归还待发送自定义报文对象
-            </summary>
-            <param name="obj">待发送自定义报文对象</param>
-        </member>
         <member name="T:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager">
+            <summary>
+            汽车总线对象池管理器
+            </summary>
+            <summary>
+            汽车总线对象池管理器
+            </summary>
+            <summary>
+            汽车总线对象池管理器
+            </summary>
             <summary>
             汽车总线对象池管理器
             </summary>
@@ -103,6 +89,13 @@
             <param name="id">帧ID</param>
             <param name="frameFormat">帧格式</param>
             <returns>帧对象</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetSendCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
+            <summary>
+            创建并返回一个待发送自定义报文对象
+            </summary>
+            <param name="customMessage">自定义报文</param>
+            <returns>汽车总线状态对象</returns>
         </member>
         <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetVehicleBusState(System.Boolean,System.Int32,System.String)">
             <summary>
@@ -123,12 +116,34 @@
             <param name="readTime">读取时间</param>
             <returns>汽车总线状态对象</returns>
         </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetSendCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
+        <member name="T:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension">
             <summary>
-            创建并返回一个待发送自定义报文对象
+            汽车总线对象池管理器扩展方法
             </summary>
-            <param name="customMessage">自定义报文</param>
-            <returns>汽车总线状态对象</returns>
+            <summary>
+            汽车总线对象池管理器扩展方法
+            </summary>
+            <summary>
+            汽车总线对象池管理器扩展方法
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.FrameObject)">
+            <summary>
+            归还帧对象
+            </summary>
+            <param name="obj">帧对象</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.SendCustomMessage)">
+            <summary>
+            归还待发送自定义报文对象
+            </summary>
+            <param name="obj">待发送自定义报文对象</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.VehicleBusState)">
+            <summary>
+            归还汽车总线状态对象
+            </summary>
+            <param name="obj">汽车总线状态对象</param>
         </member>
         <member name="T:Piggy.VehicleBus.Common.ReceiveMessageDelegate">
             <summary>

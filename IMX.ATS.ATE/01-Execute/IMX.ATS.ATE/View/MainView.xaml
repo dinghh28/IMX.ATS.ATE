@@ -222,18 +222,20 @@
                                                             <ColumnDefinition Width="2.5*"/>
                                                             <ColumnDefinition Width="1.5*"/>
                                                             <ColumnDefinition Width="1.5*"/>
+                                                            <ColumnDefinition Width="1.5*"/>
                                                             <ColumnDefinition Width="1*"/>
                                                             <ColumnDefinition Width="1*"/>
                                                             <ColumnDefinition Width="2*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Label Grid.Column="1" Content="{Binding StepName}" HorizontalAlignment="Center"/>
-                                                        <Label Grid.Column="2" Content="{Binding Limit_Lower}" HorizontalAlignment="Center"/>
-                                                        <Label Grid.Column="3" Content="{Binding Limit_Upper}" HorizontalAlignment="Center"/>
-                                                        <Label Grid.Column="4" Content="{Binding ValueConditions}" HorizontalAlignment="Center"/>
-                                                        <Label Grid.Column="5" Content="{Binding Result, Converter={StaticResource ResultToString}}"
+                                                        <Label Grid.Column="2" Content="{Binding NowVlaue}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="3" Content="{Binding Limit_Lower}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="4" Content="{Binding Limit_Upper}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="5" Content="{Binding ValueConditions}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="6" Content="{Binding Result, Converter={StaticResource ResultToString}}"
                                                                Foreground="{Binding Result,Converter={StaticResource ResultStringColor} }"
                                                                HorizontalAlignment="Center" />
-                                                        <Label Grid.Column="6" Content="{Binding ExecuteTime}" HorizontalAlignment="Center"/>
+                                                        <Label Grid.Column="7" Content="{Binding ExecuteTime}" HorizontalAlignment="Center"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>
@@ -277,6 +279,7 @@
                                 </DataGridTemplateColumn>-->
                                 <DataGridTextColumn Header="序号" Binding="{Binding Index}" Width="45"/>
                                 <DataGridTextColumn Header="执行项目" Binding="{Binding FunctionName}" Width="2.5*"/>
+                                <DataGridTextColumn Header="当前值" Binding="{Binding NowVlaue}" Width="1.5*"/>
                                 <DataGridTextColumn Header="下限值" Binding="{Binding Limit_Lower}" Width="1.5*"/>
                                 <DataGridTextColumn Header="上限值" Binding="{Binding Limit_Upper}" Width="1.5*"/>
                                 <DataGridTextColumn Header="判定条件" Binding="{Binding ValueConditions}" Width="1*"/>

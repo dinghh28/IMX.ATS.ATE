@@ -163,7 +163,8 @@ namespace IMX.ATS.ATEConfig
                     GlobalModel.TestDBCFileInfo = info;
 
                     var dbcconfigmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig;
-
+                    dbcconfigmodel.DBCConfig.DBCFileID = info.Id;
+                    dbcconfigmodel.DBCFileInfo = info;
                     //((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.DBCFileName = DBCFileInfos[SelectedDBCIndex].FileName;
                     //((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig.LoadFile(path);
                     //清空上报配置
@@ -189,7 +190,7 @@ namespace IMX.ATS.ATEConfig
                 })
                 .AttachIfFailed(result=> { MessageBox.Show(result.Message, "DBC文件变更失败"); });
 
-            if (MessageBox.Show("是否关闭当前窗口", "DBC文件变更窗口关闭", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+            //if (MessageBox.Show("是否关闭当前窗口", "DBC文件变更窗口关闭", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
             
             WindowClosedExecute(Win);
             //((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig = new Test_DBCConfig();

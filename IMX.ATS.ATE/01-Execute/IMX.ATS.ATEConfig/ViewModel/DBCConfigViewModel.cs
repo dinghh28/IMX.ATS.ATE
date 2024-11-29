@@ -172,6 +172,7 @@ namespace IMX.ATS.ATEConfig
         #endregion
 
         #region 私有方法
+
         private void ChangedDBCFile(object obj)
         {
             try

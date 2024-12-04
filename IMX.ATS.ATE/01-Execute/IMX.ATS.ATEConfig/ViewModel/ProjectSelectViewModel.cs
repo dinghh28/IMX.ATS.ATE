@@ -110,7 +110,7 @@ namespace IMX.ATS.ATEConfig
             if (obj.ToString().ToUpper() == "N")
             {
                 GlobalModel.IsNewProject = true;
-                GlobalModel.Test_ProjectInfo = new Test_ProjectInfo(); 
+                GlobalModel.Test_ProjectInfo = new Test_ProjectInfo();
                 GlobalModel.TestDBCFileInfo = new Test_DBCFileInfo();
                 GlobalModel.TestDBCconfig = new Test_DBCConfig();
                 //viewmodel.IsNewProject = true;
@@ -137,11 +137,14 @@ namespace IMX.ATS.ATEConfig
 
                     if (GlobalModel.TestDBCconfig != null)
                     {
-                        DBOperate.Default.GetFile_ByID(GlobalModel.TestDBCconfig.DBCFileID).AttachIfSucceed(result => GlobalModel.TestDBCFileInfo = result.Data);
+                        DBOperate.Default.GetFile_ByID(GlobalModel.TestDBCconfig.DBCFileID).AttachIfSucceed(result =>
+                        {
+                            GlobalModel.TestDBCFileInfo = result.Data == null ? new Test_DBCFileInfo() : result.Data;
+                        });
                     }
                 }
 
-               //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = SelectedInfo.Info;
+                //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectInfo.ProjectInfo = SelectedInfo.Info;
 
                 //if (SelectedInfo.Info.IsUseDDBC)
                 //{
@@ -151,7 +154,7 @@ namespace IMX.ATS.ATEConfig
 
             }
 
-            
+
 
             try
             {

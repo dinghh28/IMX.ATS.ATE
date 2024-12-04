@@ -144,7 +144,7 @@ ResizeMode="NoResize"  x:Name="Win"
             </Grid>-->
 
             <Grid Grid.Row="2">
-                <Button Content="上传文件" Command="{Binding UploadFile}"/>
+                <Button Content="上传文件" Command="{Binding UploadFile}" Width="200"/>
             </Grid>
         </Grid>
     </Border>

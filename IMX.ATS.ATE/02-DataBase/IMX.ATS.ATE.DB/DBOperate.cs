@@ -84,7 +84,7 @@ namespace IMX.DB
                     Logger.Error(nameof(DBOperate), nameof(Init), LastError);
                     return OperateResult.Failed(LastError);
                 }
-//#if DEBUG
+                //#if DEBUG
                 sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
                 .UseMonitorCommand(cmd => Trace.WriteLine($"Sql：{cmd.CommandText}"))//监听SQL语句,Trace在输出选项卡中查看
                 .UseConnectionString(DataType, ConnectionString)//DataType
@@ -92,14 +92,14 @@ namespace IMX.DB
                 .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
                 //.UseAdoConnectionPool(true)
                 .Build());
-//#else
-//                           sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
-//                          .UseConnectionString(DataType, ConnectionString)
-//                          .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
-//                          //.UseAdoConnectionPool(true)
-//                          //.UseSlave(SlaveConnectionString)
-//                          .Build());
-//#endif
+                //#else
+                //                           sqliteLazy = new Lazy<IFreeSql>(() => new FreeSqlBuilder()
+                //                          .UseConnectionString(DataType, ConnectionString)
+                //                          .UseAutoSyncStructure(true) //自动同步实体结构到数据库，FreeSql不会扫描程序集，只有CRUD时才会生成表。
+                //                          //.UseAdoConnectionPool(true)
+                //                          //.UseSlave(SlaveConnectionString)
+                //                          .Build());
+                //#endif
                 try
                 {
                     Sqlite.UseJsonMap();
@@ -238,7 +238,7 @@ namespace IMX.DB
             {
                 int row = Sqlite.Update<UserInfo>(id)
                     .Set(x => x.Privilege, privilege)
-                    .Set(x=>x.UpdateTime, DateTime.Now)
+                    .Set(x => x.UpdateTime, DateTime.Now)
                     .ExecuteAffrows();
 
                 if (row < 1)
@@ -546,7 +546,7 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_DBCFileInfo>().ToList();
+                var items = Sqlite.Select<Test_DBCFileInfo>().Where(x => x.IsDeleted != true).ToList();
 
                 return OperateResult<List<Test_DBCFileInfo>>.Succeed(items);
             }
@@ -585,6 +585,51 @@ namespace IMX.DB
             }
         }
 
+        public OperateResult DeleteDBCFile(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(DeleteDBCFile), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                //var item = Test_DBCFileInfo.Find(id);
+
+                //if (item == null)
+                //{
+                //    LastError = $"DBC文件不存在";
+                //    Logger.Error(nameof(DBOperate), nameof(DeleteDBCFile), LastError);
+                //    return OperateResult.Failed(LastError);
+                //}
+                //else
+                //{
+                int row = Sqlite.Update<Test_DBCFileInfo>(id)
+                    .Set(x => x.IsDeleted, true)
+                    .ExecuteAffrows();
+
+                if (row < 1)
+                {
+                    LastError = $"DBC文件未实际发生删除";
+                    Logger.Error(nameof(DBOperate), nameof(DeleteDBCFile), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+                //item.DBCFileID = fileid;
+                //item.UpdateOperator = username;
+                //item.Update();
+                //}
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(DeleteDBCFile), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
         #endregion
 
         #region DBC配置信息操作
@@ -614,11 +659,11 @@ namespace IMX.DB
                     return OperateResult.Failed(LastError);
                 }
                 else
-                { 
+                {
                     int row = Sqlite.Update<Test_DBCConfig>(configid)
                         .Set(x => x.DBCFileID, fileid)
-                        .Set(x=>x.UpdateOperator, username)
-                        .Set(x=>x.UpdateTime, DateTime.Now)
+                        .Set(x => x.UpdateOperator, username)
+                        .Set(x => x.UpdateTime, DateTime.Now)
                         .ExecuteAffrows();
 
                     if (row < 1)
@@ -632,7 +677,7 @@ namespace IMX.DB
                     //item.Update();
                 }
 
-               
+
 
                 return OperateResult.Succeed();
             }
@@ -643,6 +688,8 @@ namespace IMX.DB
                 return OperateResult.Excepted(ex);
             }
         }
+
+
 
         /// <summary>
         /// 保存DBC配置
@@ -862,7 +909,7 @@ namespace IMX.DB
         /// <param name="funcname">流程名称</param>
         /// <param name="processes">试验步骤</param>
         /// <returns></returns>
-        public OperateResult UpdateProgram(int id,  List<string> testprocess,List<string> testpoweroff)
+        public OperateResult UpdateProgram(int id, List<string> testprocess, List<string> testpoweroff)
         {
             if (!IsInitOK)
             {
@@ -874,7 +921,7 @@ namespace IMX.DB
             try
             {
                 int row = Sqlite.Update<Test_Programme>()
-                            .Where(x => x.ProjectID == id )
+                            .Where(x => x.ProjectID == id)
                             .Set(X => X.Test_FlowNames, testprocess)
                             .Set(X => X.TestOff_FlowNames, testpoweroff)
                             .Set(x => x.UpdateTime, DateTime.Now)
@@ -910,7 +957,7 @@ namespace IMX.DB
             {
                 LastError = $"数据库未初始化";
                 Logger.Error(nameof(DBOperate), nameof(ExistProgram), LastError);
-                return OperateResult<Test_Programme>.Failed(null,LastError);
+                return OperateResult<Test_Programme>.Failed(null, LastError);
             }
 
             try
@@ -961,7 +1008,7 @@ namespace IMX.DB
         /// </summary>
         /// <param name="function">试验流程</param>
         /// <returns></returns>
-        public OperateResult InsertTestProccess(Test_Process function) 
+        public OperateResult InsertTestProccess(Test_Process function)
         {
             if (!IsInitOK)
             {
@@ -999,15 +1046,15 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id).ToList(x=> x.FunctionName);
+                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id && x.IsDeleted == false).ToList(x => x.FunctionName);
 
-                return OperateResult<List< string>>.Succeed(items);
+                return OperateResult<List<string>>.Succeed(items);
             }
             catch (Exception ex)
             {
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
-                return OperateResult<List< string>>.Excepted(null, ex);
+                return OperateResult<List<string>>.Excepted(null, ex);
             }
         }
 
@@ -1026,7 +1073,7 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id).ToList(x => x.Description);
+                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id && x.IsDeleted == false).ToList(x => x.Description);
 
                 return OperateResult<List<string>>.Succeed(items);
             }
@@ -1043,7 +1090,7 @@ namespace IMX.DB
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public OperateResult<Dictionary<string, string>> GetProcessNaemAndDescription(int id) 
+        public OperateResult<Dictionary<string, string>> GetProcessNaemAndDescription(int id)
         {
             if (!IsInitOK)
             {
@@ -1054,7 +1101,7 @@ namespace IMX.DB
 
             try
             {
-                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id).ToDictionary(x=>x.FunctionName, x=>x.Description);
+                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id).ToDictionary(x => x.FunctionName, x => x.Description);
 
                 return OperateResult<Dictionary<string, string>>.Succeed(items);
             }
@@ -1072,7 +1119,7 @@ namespace IMX.DB
         /// <param name="funcname">流程名称</param>
         /// <param name="id">项目ID</param>
         /// <returns></returns>
-        public OperateResult<List<ModTestProcess>> GetFlowsByNameID(string funcname, int id) 
+        public OperateResult<List<ModTestProcess>> GetFlowsByNameID(string funcname, int id)
         {
             if (!IsInitOK)
             {
@@ -1119,14 +1166,14 @@ namespace IMX.DB
 
             try
             {
-               string sqlStr =
-               $"SELECT\n" +
-               $"    *\n" +
-               $"FROM\n" +
-               $"    Test_Process\n" +
-               $"WHERE\n" +
-               $"   ProjectID = {id}\n" +
-               $"AND\n";
+                string sqlStr =
+                $"SELECT\n" +
+                $"    *\n" +
+                $"FROM\n" +
+                $"    Test_Process\n" +
+                $"WHERE\n" +
+                $"   ProjectID = {id}\n" +
+                $"AND\n";
 
                 for (int i = 0; i < funcnames.Count; i++)
                 {
@@ -1171,7 +1218,7 @@ namespace IMX.DB
         /// <param name="funcname">流程名称</param>
         /// <param name="processes">试验步骤</param>
         /// <returns></returns>
-        public OperateResult UpdateProcess(int id, string funcname, List<ModTestProcess> processes) 
+        public OperateResult UpdateProcess(int id, string funcname, List<ModTestProcess> processes)
         {
             if (!IsInitOK)
             {
@@ -1201,6 +1248,43 @@ namespace IMX.DB
             {
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 删除当前流程试验步骤
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public OperateResult DeleteProcess(int id, string funcname)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(DeleteProcess), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+                int row = Sqlite.Update<Test_Process>()
+                            .Where(x => x.ProjectID == id && x.FunctionName == funcname)
+                            .Set(x => x.IsDeleted, true)
+                            .ExecuteAffrows();
+
+                if (row < 1)
+                {
+                    LastError = $"测试流程【{funcname}】未实际删除";
+                    Logger.Error(nameof(DBOperate), nameof(DeleteProcess), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(DeleteProcess), LastError);
                 return OperateResult.Excepted(ex);
             }
         }
@@ -1259,8 +1343,8 @@ namespace IMX.DB
 
                 int row = Sqlite.Update<Test_Programme>()
                             .Where(x => x.ProjectID == function.ProjectID)
-                            .Set(x =>x.Test_FlowNames , function.Test_FlowNames)
-                            .Set(x=>x.UpdateOperator, function.UpdateOperator)
+                            .Set(x => x.Test_FlowNames, function.Test_FlowNames)
+                            .Set(x => x.UpdateOperator, function.UpdateOperator)
                             .Set(x => x.UpdateTime, DateTime.Now)
                             .ExecuteAffrows();
                 if (row < 1)
@@ -1285,7 +1369,7 @@ namespace IMX.DB
         /// </summary>
         /// <param name="id">项目ID</param>
         /// <returns></returns>
-        public OperateResult<Test_Programme> GetProgramme(int id) 
+        public OperateResult<Test_Programme> GetProgramme(int id)
         {
 
             if (!IsInitOK)
@@ -1296,7 +1380,7 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id ).ToOne() ?? new Test_Programme();
+                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne() ?? new Test_Programme();
 
                 return OperateResult<Test_Programme>.Succeed(items);
             }
@@ -1638,7 +1722,7 @@ namespace IMX.DB
                     Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
                     return OperateResult.Failed(LastError);
                 }
-                
+
                 info.Insert();
 
                 return OperateResult.Succeed();

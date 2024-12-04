@@ -98,10 +98,10 @@
                  SelectedIndex="{Binding SelectedIndex}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid Width="800">
+                                <Grid Width="800"  Background="{Binding NameColor}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="试验项名称："/>
                                     <ComboBox Grid.Column="2" ItemsSource="{Binding  ProcessNames}" SelectedItem="{Binding SelectedName}"/>

@@ -10,15 +10,20 @@
              mc:Ignorable="d" 
              x:Name="Win"
              d:DesignHeight="450" d:DesignWidth="800">
-    <!--<i:Interaction.Triggers>
+    <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
         </i:EventTrigger>
-    </i:Interaction.Triggers>-->
+    </i:Interaction.Triggers>
     
     <UserControl.Resources>
         <ResourceDictionary>
-            <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+                </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -157,8 +162,8 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <WrapPanel Grid.Row="0" Orientation="Horizontal">
-                            <Button Content="新增条件" Margin="10,0,0,0" Command="{Binding AddCondition}"/>
-                            <Button Content="删除条件" Margin="10,0,0,0" Command="{Binding DeletCondition}"/>
+                            <Button Content="新增条件" Margin="10,0,0,0" Command="{Binding AddCondition}" Width="80"/>
+                            <Button Content="删除条件" Margin="10,0,0,0" Command="{Binding DeletCondition}" Width="80"/>
                             <WrapPanel Margin="10,0,0,0">
                                 <Label Content="条件间判定逻辑:"/>
                                 <ComboBox Width="80" 

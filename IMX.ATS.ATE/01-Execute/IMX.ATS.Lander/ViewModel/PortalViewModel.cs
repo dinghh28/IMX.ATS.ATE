@@ -99,8 +99,8 @@ namespace IMX.ATS.Lander
         private Dictionary<string, string> dicViewname = new Dictionary<string, string>()
         {
             { "ATEConfig", "项目信息配置" },
-            { "UserManage", "用户管理" },
             { "ATE", "测试管理" },
+            { "UserManage", "用户管理" },
             { "DIOS", "数据管理" },
         };
 

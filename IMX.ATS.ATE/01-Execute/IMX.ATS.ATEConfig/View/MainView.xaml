@@ -11,16 +11,15 @@
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
         FontSize="14"
         WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
-        ResizeMode="NoResize"  Name="Win">
+        ResizeMode="NoResize"  Name="Win" >
     <Window.DataContext>
         <Binding Path="Main" Source="{StaticResource Locator}"/>
     </Window.DataContext>
-
-    <!--<i:Interaction.Triggers>
+    <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
         </i:EventTrigger>
-    </i:Interaction.Triggers>-->
+    </i:Interaction.Triggers>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

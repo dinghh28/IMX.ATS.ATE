@@ -225,6 +225,8 @@ namespace IMX.ATS.ATEConfig
 
         private int projectid = -1;
 
+        private bool projectError = false;
+
         #endregion
 
         #region 私有方法
@@ -290,13 +292,16 @@ namespace IMX.ATS.ATEConfig
             {
                 listProcessNames.Add(item.SelectedName);
             }
+            if (listProcessNames.Contains(" "))
+            {
+                MessageBox.Show($"试验方案保存异常：\r\n试验方案中存在不存在项目，请重新配置试验项", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
             if (SelectedProcessNames.Count == 0)
             {
-                if (MessageBox.Show($"试验方案保存异常：\r\n试验方案流程为空，是否继续保存方案", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
-                {
-                    return;
-                }
+                MessageBox.Show($"试验方案保存异常：\r\n试验方案流程为空，请重新配置试验项", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                return;
             }
             Test_Programme program = new Test_Programme()
             {
@@ -312,12 +317,12 @@ namespace IMX.ATS.ATEConfig
                     if (result.Data == null)
                     {
                         DBOperate.Default.InsertTestProgramme(program)
-                        .AttachIfFailed(result =>{MessageBox.Show($"试验方案保存失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information);});
+                        .AttachIfFailed(result => { MessageBox.Show($"试验方案保存失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information); });
                     }
                     else
                     {
                         DBOperate.Default.UpdateProgram(projectid, listProcessNames, EPowerOffProcessNames.ToList())
-                        .AttachIfSucceed(result => { MessageBox.Show($"试验方案保存成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);  })
+                        .AttachIfSucceed(result => { MessageBox.Show($"试验方案保存成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information); })
                         .AttachIfFailed(result => { MessageBox.Show($"试验方案保存失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information); });
                     }
 
@@ -396,11 +401,28 @@ namespace IMX.ATS.ATEConfig
                                SelectedProcessNames.Clear();
                                for (int i = 0; i < test_Programme.Test_FlowNames.Count; i++)
                                {
-                                   SelectedProcessNames.Add(new TestProcessNameModel
+                                   if (ProcessNames.Contains(result.Data.Test_FlowNames[i]))
                                    {
-                                       SelectedName = result.Data.Test_FlowNames[i],
-                                       ProcessNames = ProcessNames
-                                   });
+                                       SelectedProcessNames.Add(new TestProcessNameModel
+                                       {
+                                           ProcessNames = ProcessNames,
+                                           SelectedName = result.Data.Test_FlowNames[i],
+                                           
+                                           //NameColor = new SolidColorBrush(Colors.Transparent)
+                                       });
+                                   }
+                                   else
+                                   {
+                                       SelectedProcessNames.Add(new TestProcessNameModel
+                                       {
+                                           ProcessNames = ProcessNames,
+                                           SelectedName = " ",
+                                           
+                                           //NameColor = new SolidColorBrush(Colors.Red)
+                                       });
+                                       //projectError = true;
+                                   }
+
                                }
                            }
                            if (test_Programme.TestOff_FlowNames.Count > 0)
@@ -456,17 +478,6 @@ namespace IMX.ATS.ATEConfig
 
     public class TestProcessNameModel : ViewModelBase
     {
-        private string selectedname;
-
-        /// <summary>
-        /// 当前选择的流程名称
-        /// </summary>
-        public string SelectedName
-        {
-            get => selectedname;
-            set => Set(nameof(SelectedName), ref selectedname, value);
-        }
-
         private ObservableCollection<string> processnames;
         /// <summary>
         /// 流程列表
@@ -476,6 +487,39 @@ namespace IMX.ATS.ATEConfig
             get => processnames;
             set => Set(nameof(ProcessNames), ref processnames, value);
         }
+
+        private string selectedname;
+
+        /// <summary>
+        /// 当前选择的流程名称
+        /// </summary>
+        public string SelectedName
+        {
+            get => selectedname;
+            set
+            {
+                if (Set(nameof(SelectedName), ref selectedname, value))
+                {
+                    if (ProcessNames.Contains(value))
+                    { NameColor = new SolidColorBrush(Colors.Transparent); }
+                    else
+                    { NameColor = new SolidColorBrush(Colors.Red); }
+                }
+            }
+        }
+
+
+
+        private Brush nameColor = new SolidColorBrush(Colors.Transparent);
+        /// <summary>
+        /// 流程加载异常颜色
+        /// </summary>
+        public Brush NameColor
+        {
+            get => nameColor;
+            set => Set(nameof(NameColor), ref nameColor, value);
+        }
+
 
     }
 

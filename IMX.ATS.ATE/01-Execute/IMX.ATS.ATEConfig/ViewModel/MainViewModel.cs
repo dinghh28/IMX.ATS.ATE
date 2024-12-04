@@ -97,7 +97,7 @@ namespace IMX.ATS.ATEConfig
         /// <summary>
         /// 当前登陆用户
         /// </summary>
-        public string UserName=>GlobalModel.UserInfo?.UserName;
+        public string UserName => GlobalModel.UserInfo?.UserName;
 
         /// <summary>
         /// 软件版本信息
@@ -222,14 +222,14 @@ namespace IMX.ATS.ATEConfig
             else
             {
                 DBCConfigVisbility = GlobalModel.Test_ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
-                
+
                 if (GlobalModel.Test_ProjectInfo.IsUseDDBC)
                 {
                     DBOperate.Default.GetDBCConfig_ByProjectID(GlobalModel.Test_ProjectInfo.Id)
                         .AttachIfSucceed(result => { GlobalModel.TestDBCconfig = result.Data; })
                         .And(DBOperate.Default.GetFile_ByID(GlobalModel.TestDBCconfig.DBCFileID)
-                            .AttachIfSucceed(result => { GlobalModel.TestDBCFileInfo = result.Data; }))
-                        .AttachIfFailed(result => { MessageBox.Show($"DBC信息获取失败：{result.Message}","DBC通讯配置获取异常"); });
+                            .AttachIfSucceed(result => { GlobalModel.TestDBCFileInfo = result.Data == null ? new Test_DBCFileInfo() : result.Data; }))
+                        .AttachIfFailed(result => { MessageBox.Show($"DBC信息获取失败：{result.Message}", "DBC通讯配置获取异常"); });
                 }
             }
             //base.WindowLoadedExecute(obj);

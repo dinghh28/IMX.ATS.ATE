@@ -5,12 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework" 
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig.Function" 
-             d:DataContext="{d:DesignInstance Type=local:FunViewModelProductResult}"
+             d:DataContext="{d:DesignInstance Type=local:FunViewModelProductResult}"             
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             Name="Win"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <Binding Path="FunProductResult" Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -40,8 +47,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <WrapPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10,0,0">
-                                <Button Content="添加读取参数" Margin="0,0,20,0" Command="{Binding AddNewData}"/>
-                                <Button Content="删除读取参数" Command="{Binding DeleteData}"/>
+                                <Button Content="添加读取参数" Margin="0,0,20,0" Command="{Binding AddNewData}" Width="100" Height="25"/>
+                                <Button Content="删除读取参数" Command="{Binding DeleteData}" Width="100" Height="25"/>
                             </WrapPanel>
 
                             <ListBox Grid.Row="1" Margin="0,10,0,0" Background="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" 

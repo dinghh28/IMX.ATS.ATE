@@ -82,7 +82,11 @@
                         <DataGridTextColumn Header="上传人员" Binding="{Binding Operator}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button Grid.Row="2" Content="导入当前选择文件" Command="{Binding Submit}"/>
+                <WrapPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" >
+                    <Button  Content="导入当前选择文件" Command="{Binding Submit}" Width="120" Height="30"/>
+                    <Button  Content="删除当前选择文件" Command="{Binding Delete}" Width="120" Margin="10 0 0 0"/>
+                </WrapPanel>
+               
             </Grid>
         </Grid>
     </Border>

@@ -18,18 +18,17 @@
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-        
     </UserControl.Resources>
 
     <UserControl.DataContext>
         <Binding Path="TestProcess"  Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
     
-    <!--<i1:Interaction.Triggers>
+    <i1:Interaction.Triggers>
         <i1:EventTrigger EventName="Loaded">
             <i1:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Window}"/>
         </i1:EventTrigger>
-    </i1:Interaction.Triggers>-->
+    </i1:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
@@ -45,6 +44,7 @@
                     <WrapPanel VerticalAlignment="Center" HorizontalAlignment="Left">
                         <Button Content="导入" Command="{Binding Import}"  Width="60" Height="25" FontSize="15"  Margin="10 0 0 0"/>
                         <Button Content="导出" Command="{Binding Export}" Width="60" Height="25" FontSize="15" Margin="10 0 0 0"/>
+                        <Button Content="删除" Command="{Binding Delete}" Width="60" Height="25" FontSize="15" Margin="10 0 0 0"/>
                     </WrapPanel>
                 </Grid>
                 <Grid Grid.Row="1">

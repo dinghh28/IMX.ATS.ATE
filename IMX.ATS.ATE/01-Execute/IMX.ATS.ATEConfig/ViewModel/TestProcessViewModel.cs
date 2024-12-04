@@ -44,6 +44,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
+using FastDeepCloner;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -196,6 +197,12 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public RelayCommand Export => new RelayCommand(ExportTestFlow);
 
+        /// <summary>
+        /// 试验方案删除指令
+        /// </summary>
+        public RelayCommand Delete => new RelayCommand(DeleteTestFlow);
+
+
 
 
         #endregion
@@ -306,91 +313,91 @@ namespace IMX.ATS.ATEConfig
             switch (obj.ToString().ToUpper())
             {
                 case "UP":
-                {
-                    if (index < 0)
                     {
-                        return;
-                    }
-                    if (index == 0)
-                    { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+                        if (index < 0)
+                        {
+                            return;
+                        }
+                        if (index == 0)
+                        { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
 
-                    FunctionInfos.Insert(index - 1, FunctionInfos[index]);
-                    FunctionInfos.RemoveAt(index + 1);
-                    FunctionInfoIndex = index - 1;
-                    ReNumber();
-                    Thread.Sleep(10);
-                }
-                break;
+                        FunctionInfos.Insert(index - 1, FunctionInfos[index]);
+                        FunctionInfos.RemoveAt(index + 1);
+                        FunctionInfoIndex = index - 1;
+                        ReNumber();
+                        Thread.Sleep(10);
+                    }
+                    break;
                 case "DOWN":
-                {
-                    if (index < 0)
                     {
-                        return;
+                        if (index < 0)
+                        {
+                            return;
+                        }
+                        if (index == FunctionInfos.Count - 1)
+                        { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+                        FunctionInfos.Insert(index + 2, FunctionInfos[index]);
+                        FunctionInfos.RemoveAt(index);
+                        FunctionInfoIndex = index + 1;
+                        ReNumber();
+                        Thread.Sleep(10);
                     }
-                    if (index == FunctionInfos.Count - 1)
-                    { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-                    FunctionInfos.Insert(index + 2, FunctionInfos[index]);
-                    FunctionInfos.RemoveAt(index);
-                    FunctionInfoIndex = index + 1;
-                    ReNumber();
-                    Thread.Sleep(10);
-                }
-                break;
+                    break;
                 case "DELET":
-                {
-                    if (FunctionInfos.Count < 1)
                     {
-                        return;
+                        if (FunctionInfos.Count < 1)
+                        {
+                            return;
+                        }
+                        FunctionInfos.RemoveAt(index);
+                        if (FunctionInfos.Count < 1)
+                        {
+                            return;
+                        }
+                        FunctionInfoIndex = index == 0 ? index : index - 1;
+                        ReNumber();
+                        Thread.Sleep(10);
                     }
-                    FunctionInfos.RemoveAt(index);
-                    if (FunctionInfos.Count < 1)
-                    {
-                        return;
-                    }
-                    FunctionInfoIndex = index == 0 ? index : index - 1;
-                    ReNumber();
-                    Thread.Sleep(10);
-                }
-                break;
+                    break;
                 case "INSERT":
-                {
-                    if (SelectedTestFlowItem == null)
                     {
-                        MessageBox.Show("请选择需要插入的试验操作模板!");
-                        return;
+                        if (SelectedTestFlowItem == null)
+                        {
+                            MessageBox.Show("请选择需要插入的试验操作模板!");
+                            return;
+                        }
+
+                        if (FunctionInfoIndex == -1)
+                        {
+                            MessageBox.Show("请选择需要插入到的试验操作步骤!");
+                            return;
+                        }
+
+                        FuncitonType flowitemtag = SelectedTestFlowItem.Tag;
+
+                        var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
+
+                        if (!rlt)
+                        {
+                            MessageBox.Show($"操作无法添加:{rlt.Message}");
+                            return;
+                        }
+
+                        FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
+                        {
+                            Step = FunctionInfos.Count + 1,
+                            //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
+                            //FunctionName = obj.ToString(),
+                            CutomFuncName = SelectedTestFlowItem.Name,
+                            FunctionName = flowitemtag.ToString(),
+                            ModType = rlt.Data.SupportFuncitonType,
+                            Model = rlt.Data
+                        });
+
+                        ReNumber();
+                        Thread.Sleep(10);
                     }
-
-                    if (FunctionInfoIndex == -1)
-                    {
-                        MessageBox.Show("请选择需要插入到的试验操作步骤!");
-                        return;
-                    }
-
-                    FuncitonType flowitemtag = SelectedTestFlowItem.Tag;
-
-                    var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
-
-                    if (!rlt)
-                    {
-                        MessageBox.Show($"操作无法添加:{rlt.Message}");
-                        return;
-                    }
-
-                    FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
-                    {
-                        Step = FunctionInfos.Count + 1,
-                        //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
-                        //FunctionName = obj.ToString(),
-                        CutomFuncName = SelectedTestFlowItem.Name,
-                        FunctionName = flowitemtag.ToString(),
-                        ModType = rlt.Data.SupportFuncitonType,
-                        Model = rlt.Data
-                    });
-
-                    ReNumber();
-                    Thread.Sleep(10);
-                }
-                break;
+                    break;
             }
         }
 
@@ -448,7 +455,7 @@ namespace IMX.ATS.ATEConfig
             {
                 if (!GlobalModel.Test_ProjectInfo.IsUseDDBC)
                 {
-                    MessageBox.Show("当前项目无产品通讯，请勿使用相关模板！（如需使用，请先切至产品信息界面开启 DBC 通讯）","产品相关模板添加失败");
+                    MessageBox.Show("当前项目无产品通讯，请勿使用相关模板！（如需使用，请先切至产品信息界面开启 DBC 通讯）", "产品相关模板添加失败");
                     return;
                 }
                 else if (GlobalModel.TestDBCconfig == null || GlobalModel.TestDBCconfig.Id == 0)
@@ -470,7 +477,8 @@ namespace IMX.ATS.ATEConfig
 
             if (FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
             {
-                funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
+                DeepCloner.CloneTo( FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model, funmodel);
+                //funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
             }
 
             FunctionInfos.Add(new FunctionInfo
@@ -483,8 +491,6 @@ namespace IMX.ATS.ATEConfig
                 ModType = type,
                 Model = funmodel
             });
-
-
 
             FunctionInfoIndex = FunctionInfos.Count - 1;
             if (FunctionInfos.Count < 2)
@@ -722,6 +728,26 @@ namespace IMX.ATS.ATEConfig
             catch (Exception ex)
             {
                 MessageBox.Show($"ATE配置文件本地导入异常:{ex.GetMessage()}", "导入配置异常");
+            }
+        }
+
+        /// <summary>
+        /// 删除流程
+        /// </summary>
+        private void DeleteTestFlow()
+        {
+            if (MessageBox.Show($"确认是否删除【{SolutionName}】试验项", "删除试验项", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                DBOperate.Default.DeleteProcess(projectid, SolutionName)
+                 .AttachIfSucceed(result =>
+                 {
+                     MessageBox.Show($"【{SolutionName}】试验项删除成功");
+                     GetTestSolutions();
+                 })
+                 .AttachIfFailed(result =>
+                 {
+                     MessageBox.Show($"试验项删除成功:{result.Message}", "异常");
+                 });
             }
         }
         #endregion

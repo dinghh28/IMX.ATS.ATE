@@ -37,6 +37,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -81,6 +83,8 @@ namespace IMX.ATS.ATEConfig
         #region 界面绑定指令
 
         public RelayCommand Submit => new RelayCommand(SubmitChange);
+
+        public RelayCommand Delete => new RelayCommand(DeleteFile);
 
         /// <summary>
         /// 项目信息检索指令
@@ -128,6 +132,7 @@ namespace IMX.ATS.ATEConfig
         #endregion
 
         #region 私有方法
+
         private void SubmitChange()
         {
             if (SelectedDBCIndex == -1)
@@ -158,7 +163,7 @@ namespace IMX.ATS.ATEConfig
             }
 
             DBOperate.Default.UpdateDBCFile(GlobalModel.TestDBCconfig.Id, info.Id, GlobalModel.UserInfo.UserName)
-                .AttachIfSucceed(result => 
+                .AttachIfSucceed(result =>
                 {
                     GlobalModel.TestDBCFileInfo = info;
 
@@ -181,17 +186,17 @@ namespace IMX.ATS.ATEConfig
                     dbcconfigmodel.LoadFile(path);
 
 
-                    MessageBox.Show($"DBC文件已变更为\r\n{info.FileName}","DBC文件变更成功");
+                    MessageBox.Show($"DBC文件已变更为\r\n{info.FileName}", "DBC文件变更成功");
 
                     //Application.Current.Dispatcher.Invoke(() =>
                     //{
                     //    WindowClosedExecute(Win);
                     //});
                 })
-                .AttachIfFailed(result=> { MessageBox.Show(result.Message, "DBC文件变更失败"); });
+                .AttachIfFailed(result => { MessageBox.Show(result.Message, "DBC文件变更失败"); });
 
             //if (MessageBox.Show("是否关闭当前窗口", "DBC文件变更窗口关闭", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
-            
+
             WindowClosedExecute(Win);
             //((ViewModelLocator)Application.Current.FindResource("Locator")).Main.DBCConfig = new Test_DBCConfig();
 
@@ -201,6 +206,66 @@ namespace IMX.ATS.ATEConfig
 
         }
 
+        private void DeleteFile()
+        {
+            if (SelectedDBCIndex == -1)
+            {
+                MessageBox.Show("请先选择DBC文件", "删除文件异常");
+                return;
+            }
+
+            Test_DBCFileInfo info = DBCFileInfos[SelectedDBCIndex];
+
+            var dbcconfigmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCConfig;
+
+            if (dbcconfigmodel.DBCConfig.DBCFileID == info.Id)
+            {
+                if (MessageBox.Show($"DBC文件【{info.FileName}】在当前项目使用中，\r\n请确认是否【删除文件】并【清空DBC配置信息】", "删除文件", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                {
+                    DBOperate.Default.DeleteDBCFile(info.Id)
+                       .AttachIfSucceed(result =>
+                       {
+                           GlobalModel.TestDBCFileInfo = new Test_DBCFileInfo();
+
+                           dbcconfigmodel.DBCConfig.DBCFileID = 0;
+
+                           dbcconfigmodel.DBCFileInfo = new Test_DBCFileInfo();
+
+                           //清空上报配置
+                           dbcconfigmodel.SignalConfigPages[0].SignalConfigs.Clear();
+                           //清空下发配置
+                           dbcconfigmodel.SignalConfigPages[1].SignalConfigs.Clear();
+                           //清空信号列表
+                           dbcconfigmodel.DBCMessages.Clear();
+
+                           MessageBox.Show($"DBC文件【{info.FileName}】已删除\r\n", "DBC文件删除成功");
+
+                       })
+                       .AttachIfFailed(result => { MessageBox.Show(result.Message, "DBC文件删除失败"); });
+                }
+                fileinfos.Clear();
+                DBCFileInfos.Clear();
+                DBOperate.Default.GetFiles().AttachIfSucceed(result =>
+                {
+                    fileinfos = result.Data;
+                    for (int i = 0; i < result.Data.Count; i++)
+                    {
+                        DBCFileInfos.Add(result.Data[i]);
+                    }
+                });
+                return;
+            }
+
+            if (MessageBox.Show("确认是否删除选择DBC文件", "删除文件", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+            {
+                DBOperate.Default.DeleteDBCFile(info.Id)
+                   .AttachIfSucceed(result =>
+                   {
+                       MessageBox.Show($"DBC文件【{info.FileName}】已删除\r\n", "DBC文件删除成功");
+                   })
+                   .AttachIfFailed(result => { MessageBox.Show(result.Message, "DBC文件删除失败"); });
+            }
+        }
         #endregion
 
         #region 保护方法
@@ -210,7 +275,7 @@ namespace IMX.ATS.ATEConfig
             {
                 return;
             }
-           
+
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
             Win = win;
 
@@ -236,6 +301,11 @@ namespace IMX.ATS.ATEConfig
 
         protected override void WindowClosedExecute(object obj)
         {
+            if (GlobalModel.TestDBCFileInfo.Id == 0 && GlobalModel.Test_ProjectInfo.IsUseDDBC)
+            {
+                MessageBox.Show("此项目未配置DBC文件，请选择变更的DBC文件");
+                return;
+            }
             IsOpen = false;
             base.WindowClosedExecute(obj);
         }

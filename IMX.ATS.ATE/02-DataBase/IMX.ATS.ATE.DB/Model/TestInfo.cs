@@ -75,6 +75,11 @@ namespace IMX.DB.Model
         public int TestItemID { get; set; }
 
         /// <summary>
+        /// 样品编号
+        /// </summary>
+        public string ProductSN { get; set; }
+
+        /// <summary>
         /// 流程名称
         /// </summary>
         public string FlowName { get; set; }
@@ -112,5 +117,15 @@ namespace IMX.DB.Model
         /// </summary>
         [JsonMap]
         public List<ModDeviceReadData> Euq_DeviceRead { get; set; }
+
+        /// <summary>
+        /// 试验结果
+        /// </summary>
+        public ResultState Result { get; set; }
+
+        /// <summary>
+        /// 故障信息
+        /// </summary>
+        public string ErrorInfo { get; set; }
     }
 }

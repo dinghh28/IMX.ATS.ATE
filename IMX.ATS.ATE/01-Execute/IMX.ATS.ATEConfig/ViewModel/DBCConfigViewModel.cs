@@ -25,6 +25,7 @@
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using H.WPF.Framework;
 using IMX.DB;
 using IMX.DB.Model;
@@ -112,6 +113,16 @@ namespace IMX.ATS.ATEConfig
             set => Set(nameof(DBCFileName), ref dbcfilename, value);
         }
 
+
+        private string fileerror;
+        /// <summary>
+        /// DBC文件异常信息
+        /// </summary>
+        public string FileError
+        {
+            get => fileerror;
+            set => Set(nameof(FileError), ref fileerror, value);
+        }
         #endregion
 
         #region 界面绑定指令
@@ -244,6 +255,8 @@ namespace IMX.ATS.ATEConfig
                     MessageBox.Show($"DBC解析失败:{rltLoad.Message}", "DBC文件解析异常", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+
+                FileError = rltLoad.Message;
 
                 // 加载项目
                 if (rltLoad)
@@ -412,17 +425,19 @@ namespace IMX.ATS.ATEConfig
                 //if (!IsloadFile)//打开项目正常加载信号
                 //{
                     SignalConfigPages[0].SignalConfigs.Clear();
+                    var dbcmessagelist = DBCMessages.ToList();
                     DBCConfig.Test_DBCReceiveSignals.ForEach(signal =>
                     {
+                        string messagename = dbcmessagelist.First(x => x.Tag == signal.Message_ID).Signals.ToList().First(y => y.Name == signal.Signal_Name).TagText;
+
                         SignalConfigPages[0].SignalConfigs.Add(new DBCSignalConfig
                         {
                             Config = new SignalConfig
                             {
+                                Info = new Test_DBCInfo { Custom_Name = signal.Custom_Name, Signal_Name = signal.Signal_Name, Message_ID = signal.Message_ID },
                                 Signal_Name = signal.Signal_Name,
                                 Message_ID = signal.Message_ID,
-                                MessageName = DBCMessages.ToList().First(x => x.Tag == signal.Message_ID).Signals.ToList().First(y => y.Name == signal.Signal_Name).TagText,
-                                Info = new Test_DBCInfo { Custom_Name = signal.Custom_Name, Signal_Name = signal.Signal_Name, Message_ID = signal.Message_ID }
-
+                                MessageName = messagename,
                             },
                             IsRegularConfig = true,
                             AddSignal = new RelayCommand(SelectedSignal),
@@ -432,15 +447,16 @@ namespace IMX.ATS.ATEConfig
                     SignalConfigPages[1].SignalConfigs.Clear();
                     DBCConfig.Test_DBCSendSignals.ForEach(signal =>
                     {
+                        string messagename = dbcmessagelist.First(x => x.Tag == signal.Message_ID).Signals.ToList().First(y => y.Name == signal.Signal_Name).TagText;
+
                         SignalConfigPages[1].SignalConfigs.Add(new DBCSignalConfig
                         {
                             Config = new SignalConfig
                             {
+                                Info = new Test_DBCInfo { Custom_Name = signal.Custom_Name, Signal_Name = signal.Signal_Name, Message_ID = signal.Message_ID },
                                 Signal_Name = signal.Signal_Name,
                                 Message_ID = signal.Message_ID,
-                                MessageName = DBCMessages.ToList().First(x => x.Tag == signal.Message_ID).Signals.ToList().First(y => y.Name == signal.Signal_Name).TagText,
-                                Info = new Test_DBCInfo { Custom_Name = signal.Custom_Name, Signal_Name = signal.Signal_Name, Message_ID = signal.Message_ID }
-
+                                MessageName = messagename,
                             },
                             IsRegularConfig = true,
                             AddSignal = new RelayCommand(SelectedSignal),
@@ -682,6 +698,7 @@ namespace IMX.ATS.ATEConfig
                 {
                     DBOperate.Default.InsertDBCConfig(DBCConfig).AttachIfSucceed(result =>
                     {
+                        GlobalModel.TestDBCconfig = DBCConfig;
                         MessageBox.Show($"DBC{SelectedPage?.PageName}保存成功！");
                     }).AttachIfFailed(result =>
                     {
@@ -693,6 +710,7 @@ namespace IMX.ATS.ATEConfig
                 {
                     DBOperate.Default.UpdateDBCConfig(DBCConfig).AttachIfSucceed(result =>
                     {
+                        GlobalModel.TestDBCconfig = DBCConfig;
                         MessageBox.Show($"DBC{SelectedPage?.PageName}保存成功！");
                     }).AttachIfFailed(result =>
                     {

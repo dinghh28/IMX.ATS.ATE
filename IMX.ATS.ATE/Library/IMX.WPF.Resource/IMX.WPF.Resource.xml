@@ -4,6 +4,82 @@
         <name>IMX.WPF.Resource</name>
     </assembly>
     <members>
+        <member name="T:IMX.WPF.Resource.TextBoxKeyDownBehavior">
+            <summary>
+            Textbox按键事件
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.TextBoxKeyDownBehavior.Command">
+            <summary>
+            事件命令
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.TextBoxKeyDownBehavior.CommandParameter">
+            <summary>
+            事件自定义传参
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.TextBoxKeyDownBehavior.OnAttached">
+            <summary>
+            按键触发事件
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.TextBoxKeyDownBehavior.OnDetaching">
+            <summary>
+            按键松开事件
+            </summary>
+        </member>
+        <member name="T:IMX.WPF.Resource.KeyDownArgs">
+            <summary>
+            按钮事件信息
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.KeyDownArgs.Sender">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.KeyDownArgs.Args">
+            <summary>
+            按键事件
+            </summary>
+        </member>
+        <member name="P:IMX.WPF.Resource.KeyDownArgs.Parameters">
+            <summary>
+            传参
+            </summary>
+        </member>
+        <member name="T:IMX.WPF.Resource.FocusExtension">
+            <summary>
+            控件焦点扩展方法
+            </summary>
+        </member>
+        <member name="F:IMX.WPF.Resource.FocusExtension.IsFocusedProperty">
+            <summary>
+            焦点状态
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.FocusExtension.GetIsFocused(System.Windows.DependencyObject)">
+            <summary>
+            获取焦点状态
+            </summary>
+            <param name="element"></param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:IMX.WPF.Resource.FocusExtension.SetIsFocused(System.Windows.DependencyObject,System.Nullable{System.Boolean})">
+            <summary>
+            设置焦点状态
+            </summary>
+            <param name="element"></param>
+            <param name="value"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="T:IMX.WPF.Resource.WindowLeftDown_MoveEvent">
+            <summary>
+            窗口左击移动事件
+            </summary>
+        </member>
         <member name="M:IMX.WPF.Resource.WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(System.Windows.Window)">
             <summary>
             窗口移动事件注册
@@ -87,6 +163,11 @@
         <member name="M:IMX.WPF.Resource.DragDropRowBehavior.ResetDragDrop">
             <summary>
             Initiates a drag action if the grid is not in edit mode.
+            </summary>
+        </member>
+        <member name="T:IMX.WPF.Resource.UIHelpers">
+            <summary>
+            
             </summary>
         </member>
         <member name="M:IMX.WPF.Resource.UIHelpers.TryFindParent``1(System.Windows.DependencyObject)">

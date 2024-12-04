@@ -82,7 +82,7 @@
                         <DataGridTextColumn Header="上传人员" Binding="{Binding Operator}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button Grid.Row="2" Content="选择文件" Command="{Binding Submit}"/>
+                <Button Grid.Row="2" Content="导入当前选择文件" Command="{Binding Submit}"/>
             </Grid>
         </Grid>
     </Border>

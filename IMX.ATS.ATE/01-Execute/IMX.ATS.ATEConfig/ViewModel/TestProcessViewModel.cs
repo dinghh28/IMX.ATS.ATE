@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -156,6 +157,7 @@ namespace IMX.ATS.ATEConfig
             {
                 if (Set(nameof(FunctionInfoIndex), ref functionInfoIndex, value))
                 {
+                    Thread.Sleep(100);
                     ShowFunction(value);
                 }
             }
@@ -275,6 +277,7 @@ namespace IMX.ATS.ATEConfig
             foreach (var item in SupportConfig.DicTestFlowItems)
             {
                 TestFlowItems.Add(new TestFlowItem { Tag = item.Key, Selcted = new RelayCommand<object>(AddFunction) });
+                Thread.Sleep(10);
             }
         }
         #endregion
@@ -304,6 +307,10 @@ namespace IMX.ATS.ATEConfig
             {
                 case "UP":
                 {
+                    if (index < 0)
+                    {
+                        return;
+                    }
                     if (index == 0)
                     { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
 
@@ -311,23 +318,38 @@ namespace IMX.ATS.ATEConfig
                     FunctionInfos.RemoveAt(index + 1);
                     FunctionInfoIndex = index - 1;
                     ReNumber();
+                    Thread.Sleep(10);
                 }
                 break;
                 case "DOWN":
                 {
+                    if (index < 0)
+                    {
+                        return;
+                    }
                     if (index == FunctionInfos.Count - 1)
                     { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
                     FunctionInfos.Insert(index + 2, FunctionInfos[index]);
                     FunctionInfos.RemoveAt(index);
                     FunctionInfoIndex = index + 1;
                     ReNumber();
+                    Thread.Sleep(10);
                 }
                 break;
                 case "DELET":
                 {
+                    if (FunctionInfos.Count < 1)
+                    {
+                        return;
+                    }
                     FunctionInfos.RemoveAt(index);
+                    if (FunctionInfos.Count < 1)
+                    {
+                        return;
+                    }
                     FunctionInfoIndex = index == 0 ? index : index - 1;
                     ReNumber();
+                    Thread.Sleep(10);
                 }
                 break;
                 case "INSERT":
@@ -366,6 +388,7 @@ namespace IMX.ATS.ATEConfig
                     });
 
                     ReNumber();
+                    Thread.Sleep(10);
                 }
                 break;
             }

@@ -114,10 +114,32 @@
             结果三态
             </summary>
         </member>
+        <member name="F:IMX.Common.ResultState.UNACCOMPLISHED">
+            <summary>
+            进行中
+            </summary>
+        </member>
+        <member name="F:IMX.Common.ResultState.SUCCESS">
+            <summary>
+            成功
+            </summary>
+        </member>
+        <member name="F:IMX.Common.ResultState.FAIL">
+            <summary>
+            失败
+            </summary>
+        </member>
         <member name="T:IMX.Common.XmlserializeEx">
             <summary>
             xml类型文件序列化类
             </summary>
+        </member>
+        <member name="M:IMX.Common.XmlserializeEx.ObjToXml(System.Object)">
+            <summary>
+            序列化
+            </summary>
+            <param name="obj">待序列化类</param>
+            <returns></returns>
         </member>
         <member name="M:IMX.Common.XmlserializeEx.Serialize``1(``0)">
             <summary>
@@ -127,12 +149,30 @@
             <param name="obj"></param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Common.XmlserializeEx.Serialize``1(``0,System.Text.Encoding)">
+            <summary>
+            序列化
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="obj"></param>
+            <param name="encoding"></param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Common.XmlserializeEx.DeSerialize``1(System.String)">
             <summary>
             反序列化
             </summary>
             <typeparam name="T"></typeparam>
             <param name="xml"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Common.XmlserializeEx.DeSerialize``1(System.String,System.Text.Encoding)">
+            <summary>
+            反序列化
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="xml"></param>
+            <param name="encoding"></param>
             <returns></returns>
         </member>
     </members>

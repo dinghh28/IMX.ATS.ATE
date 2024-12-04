@@ -83,4 +83,17 @@
 		<EnableFlow>true</EnableFlow>
 		<EnableManual>false</EnableManual>
 		<EnableMonitor>true</EnableMonitor>
-	</SysteamSupportDeviceConfigInfo></ArrayOfSysteamSupportDeviceConfigInfo>
+	</SysteamSupportDeviceConfigInfo>
+	<SysteamSupportDeviceConfigInfo>
+		<DeviceType>Relay</DeviceType>
+		<DeviceNum>1</DeviceNum>
+		<TypeName>ZS4Bit</TypeName>
+		<Description>Relay</Description>
+		<DeviceModel>ZS4Bit</DeviceModel>
+		<FuncitonType>Relay</FuncitonType>
+		<EnableDriveInit>true</EnableDriveInit>
+		<EnableFlow>true</EnableFlow>
+		<EnableManual>false</EnableManual>
+		<EnableMonitor>true</EnableMonitor>
+	</SysteamSupportDeviceConfigInfo>
+</ArrayOfSysteamSupportDeviceConfigInfo>

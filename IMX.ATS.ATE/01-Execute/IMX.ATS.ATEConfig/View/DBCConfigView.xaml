@@ -104,90 +104,101 @@
                     </WrapPanel>
                 </Grid>
                 <!--#endregion-->
-
                 <Grid Grid.Column="1">
-                    <TabControl ItemsSource="{Binding SignalConfigPages}" SelectedItem="{Binding SelectedPage}">
-                        <!--#region 标签样式-->
-                        <TabControl.ItemTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding PageName}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                            </DataTemplate>
-                        </TabControl.ItemTemplate>
-                        <!--#endregion-->
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-                        <!--#region 内容样式-->
-                        <TabControl.ContentTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="40"/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <WrapPanel>
-                                            <Button Content="增加自定义信号" Command="{Binding AddNewConfig}" Height="35" Width="150"/>
-                                            <Button Content="删除选中自定义信号" Command="{Binding DeleteConfig}" Height="35" Width="150" Margin="5 0 0 0"/>
-                                            <Button Content="保存当前信号配置" Command="{Binding SaveConfig}" Height="35" Width="150" Margin="5 0 0 0"/>
-                                        </WrapPanel>
+                    <Grid Grid.Row="0">
+                        <TabControl ItemsSource="{Binding SignalConfigPages}" SelectedItem="{Binding SelectedPage}">
+                            <!--#region 标签样式-->
+                            <TabControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding PageName}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                                </DataTemplate>
+                            </TabControl.ItemTemplate>
+                            <!--#endregion-->
+
+                            <!--#region 内容样式-->
+                            <TabControl.ContentTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="40"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <WrapPanel>
+                                                <Button Content="增加空信号" Command="{Binding AddNewConfig}" Height="35" Width="150"/>
+                                                <Button Content="删除选中信号" Command="{Binding DeleteConfig}" Height="35" Width="150" Margin="5 0 0 0"/>
+                                                <Button Content="保存信号配置" Command="{Binding SaveConfig}" Height="35" Width="150" Margin="5 0 0 0"/>
+                                            </WrapPanel>
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <DataGrid AutoGenerateColumns="False"  
+                                  CanUserAddRows="False" CanUserDeleteRows="False" 
+                                  CanUserReorderColumns="False" CanUserSortColumns="False"
+                                  CanUserResizeRows="False" CanUserResizeColumns="False"
+                                  FontSize="14"
+                            ItemsSource="{Binding SignalConfigs}" SelectedItem="{Binding SelectedSignalConfig}">
+                                                <DataGrid.ColumnHeaderStyle>
+                                                    <Style TargetType="DataGridColumnHeader">
+                                                        <Setter Property="FontSize" Value="16"/>
+                                                        <Setter Property="FontWeight" Value="Black"/>
+                                                        <!--<Setter Property="SeparatorBrush" Value="Transparent"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>-->
+                                                    </Style>
+                                                </DataGrid.ColumnHeaderStyle>
+                                                <!--<DataGrid.Style>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="FontSize" Value="20"/>
+                                    
+                                </Style>
+                            </DataGrid.Style>-->
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Header="名称" Width="2*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <TextBox Text="{Binding Config.CustomName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <!--<DataGridTextColumn Header="名称" Binding="{Binding Config.CustomName}" Width="2*"/>-->
+                                                    <!--<DataGridTextColumn Header="名称" Binding="{ Binding Config.Info.Custom_Name}" Width="2*" IsReadOnly="{Binding IsRegularConfig}"/>-->
+                                                    <DataGridTextColumn Header="信号名" Binding="{Binding Config.Signal_Name}" IsReadOnly="True" Width="2*"/>
+                                                    <DataGridTextColumn Header="消息ID" Binding="{Binding Config.Message_ID, StringFormat={}{0:X2}}" IsReadOnly="True" Width="1.5*"/>
+                                                    <DataGridTextColumn Header="消息名称" Binding="{Binding Config.MessageName}" IsReadOnly="True" Width="2*"/>
+                                                    <DataGridTemplateColumn Header="操作" Width="1*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <Grid>
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition/>
+                                                                        <ColumnDefinition/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Button Grid.Column="0" Content="添加" Command="{Binding AddSignal}" Margin="5,0"/>
+                                                                    <Button Grid.Column="1" Content="清空" Command="{Binding RemoveSignal}" Margin="5,0"/>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
                                     </Grid>
-                                    <Grid Grid.Row="1">
-                                        <DataGrid AutoGenerateColumns="False"  
-                                                  CanUserAddRows="False" CanUserDeleteRows="False" 
-                                                  CanUserReorderColumns="False" CanUserSortColumns="False"
-                                                  CanUserResizeRows="False" CanUserResizeColumns="False"
-                                                  FontSize="14"
-                                            ItemsSource="{Binding SignalConfigs}" SelectedItem="{Binding SelectedSignalConfig}">
-                                            <DataGrid.ColumnHeaderStyle>
-                                                <Style TargetType="DataGridColumnHeader">
-                                                    <Setter Property="FontSize" Value="16"/>
-                                                    <Setter Property="FontWeight" Value="Black"/>
-                                                    <!--<Setter Property="SeparatorBrush" Value="Transparent"/>
-                                                    <Setter Property="Background" Value="Transparent"/>
-                                                    <Setter Property="BorderBrush" Value="Transparent"/>-->
-                                                </Style>
-                                            </DataGrid.ColumnHeaderStyle>
-                                            <!--<DataGrid.Style>
-                                                <Style TargetType="DataGridColumnHeader">
-                                                    <Setter Property="FontSize" Value="20"/>
-                                                    
-                                                </Style>
-                                            </DataGrid.Style>-->
-                                            <DataGrid.Columns>
-                                                <DataGridTemplateColumn Header="名称" Width="2*">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <TextBox Text="{Binding Config.CustomName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-                                                <!--<DataGridTextColumn Header="名称" Binding="{Binding Config.CustomName}" Width="2*"/>-->
-                                                <!--<DataGridTextColumn Header="名称" Binding="{ Binding Config.Info.Custom_Name}" Width="2*" IsReadOnly="{Binding IsRegularConfig}"/>-->
-                                                <DataGridTextColumn Header="信号名" Binding="{Binding Config.Signal_Name}" IsReadOnly="True" Width="2*"/>
-                                                <DataGridTextColumn Header="消息ID" Binding="{Binding Config.Message_ID, StringFormat={}{0:X2}}" IsReadOnly="True" Width="1.5*"/>
-                                                <DataGridTextColumn Header="消息名称" Binding="{Binding Config.MessageName}" IsReadOnly="True" Width="2*"/>
-                                                <DataGridTemplateColumn Header="操作" Width="1*">
-                                                    <DataGridTemplateColumn.CellTemplate>
-                                                        <DataTemplate>
-                                                            <Grid>
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition/>
-                                                                    <ColumnDefinition/>
-                                                                </Grid.ColumnDefinitions>
-                                                                <Button Grid.Column="0" Content="添加" Command="{Binding AddSignal}" Margin="5,0"/>
-                                                                <Button Grid.Column="1" Content="清空" Command="{Binding RemoveSignal}" Margin="5,0"/>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </DataGridTemplateColumn.CellTemplate>
-                                                </DataGridTemplateColumn>
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </Grid>
-                                </Grid>
-                            </DataTemplate>
-                        </TabControl.ContentTemplate>
-                        <!--#endregion-->
-                    </TabControl>
+                                </DataTemplate>
+                            </TabControl.ContentTemplate>
+                            <!--#endregion-->
+                        </TabControl>
+                    </Grid>
+
+                    <Grid Grid.Row="1">
+                        <TextBlock TextWrapping="Wrap" Text="{Binding FileError}" FontSize="15"/>
+                    </Grid>
                 </Grid>
+                
 
             </Grid>
         </Grid>

@@ -5,10 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework" 
              xmlns:stateconverter ="clr-namespace:IMX.ATS.ATEConfig.Resource.Converter"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig.Function" 
              d:DataContext="{d:DesignInstance Type=local:FunViewModelDCLoad}"
              mc:Ignorable="d" 
+             Name="Win"
              d:DesignHeight="450" d:DesignWidth="800">
     <!--<i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

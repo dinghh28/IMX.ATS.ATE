@@ -190,7 +190,7 @@ namespace IMX.ATS.ATE
             set => Set(nameof(EnableTestBtn), ref enabletestbtn, value);
         }
 
-        private bool prodectnamechangelock = false;
+        private bool prodectnamechangelock = true;
         /// <summary>
         /// 项目锁（锁定后无法变更试验项目）
         /// </summary>
@@ -356,7 +356,11 @@ namespace IMX.ATS.ATE
                 return;
             }
 
-            if (args.Args.Key != Key.Enter)
+            if (args.Args.Key == Key.Back) 
+            {
+                productsnlenth = ProductSN.Length;
+            }
+            else if (args.Args.Key != Key.Enter)
             {
                 return;
             }
@@ -366,9 +370,9 @@ namespace IMX.ATS.ATE
             //{
 
             //}
-            //ProductSN = ProductSN.Remove(0, productsnlenth);
+            ProductSN = ProductSN.Remove(0, productsnlenth);
 
-            //productsnlenth = ProductSN.Length;
+            productsnlenth = ProductSN.Length;
 
             TestStartReady();
 
@@ -378,8 +382,8 @@ namespace IMX.ATS.ATE
             //}
         }
 
-            #region 试验操作
-            private void DoTest()
+        #region 试验操作
+        private void DoTest()
         {
             if (!GlobalModel.CabinetSate)
             {
@@ -591,6 +595,9 @@ namespace IMX.ATS.ATE
             };
 
             Thread.Sleep(1000);
+
+            TestResult = "进行中";
+            TestResultColor = Brushes.Blue;
 #if DEBUG
 #else
             try
@@ -664,7 +671,8 @@ namespace IMX.ATS.ATE
                         GlobalModel.IsTestThreadRun = false;
                         thread.IsRunning = false;
                         SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
-                        
+
+                        Thread.Sleep(200);
 
                         Application.Current.Dispatcher.Invoke(new Action(() =>
                         {
@@ -672,6 +680,9 @@ namespace IMX.ATS.ATE
                             ContentColor = Brushes.Red;
                             StepStrShow = Visibility.Collapsed;
                             IsTestRuning = false;
+                            TestResult = "NG";
+                            TestResultColor = Brushes.Red;
+                            IsFocuse = true;
                         }));
 
                         try
@@ -700,14 +711,17 @@ namespace IMX.ATS.ATE
                         GlobalModel.IsTestThreadRun = false;
                         thread.IsRunning = false;
                         SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
-                        
 
+                        Thread.Sleep(200);
                         Application.Current.Dispatcher.Invoke(new Action(() =>
                         {
                             ContentName = "CAN配置参数初始化失败";
                             ContentColor = Brushes.Red;
                             StepStrShow = Visibility.Collapsed;
                             IsTestRuning = false;
+                            TestResult = "NG";
+                            TestResultColor = Brushes.Red;
+                            IsFocuse = true;
                         }));
 
                         CANUnint(operate);
@@ -743,6 +757,9 @@ namespace IMX.ATS.ATE
                         ContentName = "CAN通讯初始化失败";
                         ContentColor = Brushes.Red;
                         StepStrShow = Visibility.Collapsed;
+                        TestResult = "NG";
+                        TestResultColor = Brushes.Red;
+                        IsFocuse = true;
                     }));
 
                     return;
@@ -772,10 +789,11 @@ namespace IMX.ATS.ATE
                 Operator = UserName,
             };
 
+            
             SaveItem(true, testinfo);
             test_Data.TestItemID = testinfo.Id;
+            test_Data.ProductSN = ProductSN;
 
-            
 
             for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
             {
@@ -795,6 +813,9 @@ namespace IMX.ATS.ATE
                         ContentName = "试验方案获取异常";
                         ContentColor = Brushes.Red;
                         StepStrShow = Visibility.Collapsed;
+                        TestResult = "NG";
+                        TestResultColor = Brushes.Red;
+                        IsFocuse = true;
                     }));
 
                     TestErrorString = ContentName;
@@ -879,6 +900,8 @@ namespace IMX.ATS.ATE
                                     test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
                                 }
                                 test_Data.Id = 0;
+                                test_Data.ErrorInfo = result? string.Empty : result.Message;
+                                test_Data.Result = result? ResultState.SUCCESS : ResultState.FAIL;
                                 Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
                                 if (!result)
@@ -898,8 +921,6 @@ namespace IMX.ATS.ATE
                                         //thread.IsStartThread = true;
                                         break;
                                     }
-
-                                    
                                 }
                             }
                             catch (Exception ex)
@@ -934,6 +955,8 @@ namespace IMX.ATS.ATE
                                 test_Data.Euq_DeviceRead.Add(resultconfig.Datas[k]);
                             }
                             test_Data.Id = 0;
+                            test_Data.ErrorInfo = result ? string.Empty : result.Message;
+                            test_Data.Result = result ? ResultState.SUCCESS : ResultState.FAIL;
                             Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
                             if (!result)
@@ -1101,8 +1124,13 @@ namespace IMX.ATS.ATE
             {
                 testinfo.ErrorInfo = TestErrorString;
                 testinfo.Result = ResultState.FAIL;
-
-                MessageBox.Show(TestErrorString, "试验失败");
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    TestResult = "NG";
+                    TestResultColor = Brushes.Red;
+                    IsFocuse = true;
+                }));
+                //MessageBox.Show(TestErrorString, "试验失败");
             }
             else
             {
@@ -1110,11 +1138,14 @@ namespace IMX.ATS.ATE
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     ContentName = string.Empty;
-                    ContentColor = Brushes.Red;
+                    //ContentColor = Brushes.Red;
                     StepStrShow = Visibility.Collapsed;
+                    TestResult = "OK";
+                    TestResultColor = Brushes.Green;
+                    IsFocuse = true;
                 }));
                 relayoperate_4?.SateLedContrcl(LightType.DEFALT);
-                MessageBox.Show("试验运行完成", "试验成功");
+                //MessageBox.Show("试验运行完成", "试验成功");
             }
 
             SaveItem(false, testinfo);
@@ -1135,7 +1166,6 @@ namespace IMX.ATS.ATE
             //{
             //    SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestRun), ex);
             //}
-            
         }
 
         #region 特殊步骤操作
@@ -1924,6 +1954,8 @@ namespace IMX.ATS.ATE
 
             ContentName = "手动停止试验";
             ContentColor = Brushes.Red;
+            TestResult = "NG";
+            TestResultColor = Brushes.Red;
             GlobalModel.IsTestThreadRun = false;
             IsTestRuning = false;
         }

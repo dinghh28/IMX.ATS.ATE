@@ -468,10 +468,10 @@ namespace IMX.ATS.ATEConfig
             }
             IFunViewModel funmodel = rlt.Data;
 
-            if (FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
-            {
-                funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
-            }
+            //if (FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
+            //{
+            //    funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
+            //}
 
             FunctionInfos.Add(new FunctionInfo
             {
@@ -489,6 +489,7 @@ namespace IMX.ATS.ATEConfig
             FunctionInfoIndex = FunctionInfos.Count - 1;
             if (FunctionInfos.Count < 2)
             {
+                Thread.Sleep(50);
                 ShowFunction(FunctionInfos.Count - 1);
             }
         }

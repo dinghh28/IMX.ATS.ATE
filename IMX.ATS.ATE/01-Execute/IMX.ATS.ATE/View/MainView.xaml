@@ -46,7 +46,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="65"/>
                 <RowDefinition/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="35"/>
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black"/>
@@ -143,7 +143,7 @@
                                 <Style TargetType="DataGridColumnHeader">
                                     <!--<Setter Property="SeparatorBrush" Value="Transparent"/>-->
                                     <!--<Setter Property="Background" Value="Transparent"/>-->
-                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="FontSize" Value="16"/>
                                     <Setter Property="FontWeight" Value="Bold"/>
                                     <Setter Property="HorizontalContentAlignment" Value="Center"/>
                                     <!--<Setter Property="VerticalAlignment" Value="Center"/>
@@ -184,7 +184,7 @@
                                     
                                     <!--<Setter Property="HorizontalContentAlignment" Value="Center"/>
                                     <Setter Property="HorizontalAlignment" Value="Center"/>-->
-                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="FontSize" Value="16"/>
                                     <Setter Property="FontWeight" Value="Medium"/>
                                     <!--<Setter Property="Template">
                                         <Setter.Value>

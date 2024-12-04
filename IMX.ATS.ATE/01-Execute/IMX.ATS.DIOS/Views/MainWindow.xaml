@@ -8,7 +8,7 @@
         xmlns:converter="clr-namespace:IMX.ATS.DIOS.Resource.Converter"
         d:DataContext="{d:DesignInstance Type=local:MainWindowModel}"
         mc:Ignorable="d"
-        Title="数据查询" Height="450" Width="800" Name="Win" WindowStyle="None">
+        Title="数据查询" Height="700" Width="1250" Name="Win" WindowStyle="None">
     <Window.Resources>
         <ResourceDictionary>
         <!--设置按钮控件-->
@@ -200,7 +200,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="60"/>
-            <RowDefinition Height="280"/>
+            <RowDefinition Height="400"/>
             <RowDefinition/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -269,7 +269,7 @@
                 <!--<ColumnDefinition Width="31*"/>-->
             </Grid.ColumnDefinitions>
             <DataGrid  Name="ItemdataGrid"  ItemsSource="{Binding  TestItemDataTable}"
-                       Height="270"
+                       Height="390"
                        CanUserAddRows="False" 
                        ColumnWidth="*" 
                        IsReadOnly="True" 

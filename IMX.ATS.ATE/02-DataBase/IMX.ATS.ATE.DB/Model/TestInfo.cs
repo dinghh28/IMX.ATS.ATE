@@ -121,7 +121,7 @@ namespace IMX.DB.Model
         /// <summary>
         /// 试验结果
         /// </summary>
-        public ResultState Result { get; set; }
+        public ResultState Result { get; set; } = ResultState.SUCCESS;
 
         /// <summary>
         /// 故障信息

@@ -202,7 +202,6 @@ namespace IMX.ATS.ATEConfig
         public bool IsNewProject { get; set; } = false;
         #endregion
 
-
         #region 私有变量
         private bool isnew;
 
@@ -291,8 +290,6 @@ namespace IMX.ATS.ATEConfig
         protected override void WindowLoadedExecute(object obj)
         {
             mainviewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
-            
-            
             
             isnew = GlobalModel.IsNewProject;
             //isnew = mainviewmodel.IsNewProject;

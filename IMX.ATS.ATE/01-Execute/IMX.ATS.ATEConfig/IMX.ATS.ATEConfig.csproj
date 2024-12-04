@@ -178,7 +178,8 @@
     <Reference Include="H.Maths.Encryption">
       <HintPath>..\..\Library\H.Maths.Encryption.dll</HintPath>
     </Reference>
-    <Reference Include="H.WPF.Framework">
+    <Reference Include="H.WPF.Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\Framework\H.WPF.Framework.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Common">

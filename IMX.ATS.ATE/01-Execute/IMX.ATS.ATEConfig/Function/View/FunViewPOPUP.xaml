@@ -10,6 +10,17 @@
     <UserControl.DataContext>
         <Binding Path="FunPOPUP" Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!--<ResourceDictionary>
+                    <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+                </ResourceDictionary>-->
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     
     <Grid>
         <GroupBox Header="手动测试配置">

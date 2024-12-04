@@ -25,6 +25,8 @@
                 <ResourceDictionary>
                     <stateconverter:ShortSatetConverter x:Key="State"/>
                 </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
 

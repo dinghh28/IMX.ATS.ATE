@@ -17,7 +17,12 @@
     
     <UserControl.Resources>
         <ResourceDictionary>
-            <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+                </ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 

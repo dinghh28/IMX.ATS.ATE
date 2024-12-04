@@ -17,7 +17,7 @@ using static FreeSql.Internal.GlobalFilter;
 
 namespace IMX.DB
 {
-    public class DBOperate : SingletonObject<DBOperate>, ILogRecord
+    public class DBOperate : SingletonObject<DBOperate>, ILogRecord, IDisposableObject, IDisposable
     {
         #region 公共属性
         public Guid Identify { get; } = Guid.NewGuid();
@@ -34,6 +34,8 @@ namespace IMX.DB
         public bool OutterLogger { get; }
 
         public string LastError { get; set; }
+
+        public bool Disposed { get; private set; } = false;
         #endregion
 
         #region 私有变量
@@ -101,9 +103,7 @@ namespace IMX.DB
                 try
                 {
                     Sqlite.UseJsonMap();
-
                     BaseEntity.Initialization(Sqlite, null);
-
                     //var tableName = Sqlite.CodeFirst.GetTableByEntity(typeof(Test_ItemInfo))
                     //.AsTableImpl
                     //.GetTableNameByColumnValue(DateTime.Now.Date, autoExpand: true);
@@ -151,7 +151,7 @@ namespace IMX.DB
             }
             try
             {
-                UserInfo item = Sqlite.Select<UserInfo>().Where(x => x.UserName == username && x.Password == psw).ToOne();
+                UserInfo item = Sqlite.Select<UserInfo>().Where(x => x.UserName == username && x.Password == psw && x.IsDeleted == false).ToOne();
 
                 if (item == null)
                 {
@@ -192,7 +192,7 @@ namespace IMX.DB
                     return OperateResult.Failed(LastError);
                 }
 
-                long exrow = Sqlite.Select<UserInfo>().Where(x => x.UserName == userInfo.UserName).Count();
+                long exrow = Sqlite.Select<UserInfo>().Where(x => x.UserName == userInfo.UserName && x.IsDeleted == false).Count();
                 if (exrow > 0)
                 {
                     LastError = $"该用户名已存在，请重新填写用户名！";
@@ -236,7 +236,10 @@ namespace IMX.DB
             }
             try
             {
-                int row = Sqlite.Update<UserInfo>(id).Set(x => x.Privilege, privilege).ExecuteAffrows();
+                int row = Sqlite.Update<UserInfo>(id)
+                    .Set(x => x.Privilege, privilege)
+                    .Set(x=>x.UpdateTime, DateTime.Now)
+                    .ExecuteAffrows();
 
                 if (row < 1)
                 {
@@ -1767,6 +1770,24 @@ namespace IMX.DB
             Logger = logger ?? SuperDHHLoggerManager.DBLogger;
         }
 
+        #endregion
+
+        #region 析构方法
+
+        ~DBOperate()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!Disposed)
+            {
+                Disposed = true;
+                Sqlite?.Dispose();
+                GC.SuppressFinalize(this);
+            }
+        }
         #endregion
     }
 }

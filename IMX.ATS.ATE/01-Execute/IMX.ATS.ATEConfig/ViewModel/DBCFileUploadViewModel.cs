@@ -26,7 +26,10 @@
 using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
 using IMX.DB;
+using IMX.Logger;
 using IMX.WPF.Resource;
+using Piggy.VehicleBus.Common;
+using Piggy.VehicleBus.MessageProcess;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;
@@ -159,6 +162,38 @@ namespace IMX.ATS.ATEConfig
                 //GlobalModel.TestInfo.Test_DBCFile.Test_FileContent = fileContent;
                 //GlobalModel.TestInfo.Test_DBCFile.Test_FileSize = fileContent.Length;
                 //GlobalModel.TestInfo.Test_DBCFile.Test_FileName = DBCFileName;
+
+                OperateResult<IMessageFileLoader> rltCreate = MessageFileLoader.Create(dbcfileextension, SuperDHHLoggerManager.DeviceLogger);
+                if (!rltCreate)
+                {
+                    if (MessageBox.Show($"DBC文件加载失败:{rltCreate.Message},是否仍上传文件？", "DBC文件解析异常", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+                    {
+                        return;
+                    } 
+                }
+                else
+                {
+                    var rltLoad = rltCreate.Data.Paser(fileContent);
+                    if (!rltLoad)
+                    {
+                        if (MessageBox.Show($"DBC解析失败:{rltLoad.Message},是否仍上传文件", "DBC文件解析异常", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No) 
+                        {
+                            return;
+                        }
+                    }
+
+                    if (rltLoad.Message != string.Empty)
+                    {
+                        if (MessageBox.Show($"DBC文件校验异常:\r\n{rltLoad.Message}\r\n,是否仍上传文件", "DBC文件解析异常", MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.No)
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                //messageFileLoader = rltCreate.Data;
+
+
 
                 DBOperate.Default.InsertDBCFile(new DB.Model.Test_DBCFileInfo
                 {

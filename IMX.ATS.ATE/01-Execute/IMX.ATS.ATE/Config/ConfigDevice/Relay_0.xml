@@ -1,5 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DeviceArgs Type="Relay" Name="ZhongShen"><Address>1</Address>
-	<DriveArgs><TimeoutMS>500</TimeoutMS><BeforeReadDelayMS>200</BeforeReadDelayMS><TerminationCharacterEnabled>false</TerminationCharacterEnabled><BaudRate>38400</BaudRate><CommunicationType>ASRL</CommunicationType><BusType>Unknow</BusType><ResourceString>ASRL3::INSTR</ResourceString><ConfigString>Parity=None;DataBits=8;StopBits=One;FlowControl=None;Address=1;UseSerial=false</ConfigString>
-</DriveArgs>
+<DeviceArgs Type="Relay" Name="ZS4Bit">
+	<Address>1</Address>
+	<BelongTo>0</BelongTo>
+	<EnableMonitor>false</EnableMonitor>
+	<RefreshTime>1000</RefreshTime>
+	<DataCollectionInterval>-1</DataCollectionInterval>
+	<ProtectTriggerMaxCount>5</ProtectTriggerMaxCount>
+	<DriveConfig>
+		<TimeoutMS>500</TimeoutMS>
+		<BeforeReadDelayMS>200</BeforeReadDelayMS>
+		<TerminationCharacterEnabled>true</TerminationCharacterEnabled>
+		<BaudRate>38400</BaudRate>
+		<CommunicationType>ASRL</CommunicationType>
+		<BusType>Unknow</BusType>
+		<ResourceString>ASRL4::INSTR</ResourceString>
+		<ConfigString>Parity=None;DataBits=8;StopBits=One;FlowControl=None;Address=1;UseSerial=false</ConfigString>
+	</DriveConfig>
 </DeviceArgs>

@@ -81,7 +81,8 @@ namespace IMX.ATS.ATEConfig
         {
             try
             {
-                int id = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
+                int id = GlobalModel.Test_ProjectInfo.Id;
+                //int id = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
                 var testprocess = ((ViewModelLocator)Application.Current.FindResource("Locator")).TestProcess;
                 var funtion = testprocess.FunctionInfos;
                 List<string> SchemeNames = testprocess.SolutionNames.ToList();

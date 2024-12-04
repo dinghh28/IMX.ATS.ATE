@@ -4,10 +4,26 @@
         <name>IMX.Logger</name>
     </assembly>
     <members>
+        <member name="T:IMX.Logger.SuperDHHConsoleLogger">
+            <summary>
+            日志控制类
+            </summary>
+        </member>
+        <member name="P:IMX.Logger.SuperDHHConsoleLogger.LoggerFolder">
+            <summary>
+            日志文件地址
+            </summary>
+        </member>
         <member name="P:IMX.Logger.SuperDHHConsoleLogger.LastMessage">
             <summary>
             上次故障记录信息
             </summary>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHConsoleLogger.#ctor(System.String)">
+            <summary>
+            构造方法
+            </summary>
+            <param name="loggerFolder">日志文件地址</param>
         </member>
         <member name="T:IMX.Logger.SuperDHHLoggerManager">
             <summary>

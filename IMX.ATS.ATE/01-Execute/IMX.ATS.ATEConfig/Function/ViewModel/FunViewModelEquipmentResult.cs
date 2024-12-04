@@ -55,7 +55,14 @@ namespace IMX.ATS.ATEConfig.Function
             {
                 func = value;
                 FunConfig_EquipmentResult config = value.Config as FunConfig_EquipmentResult;
-                config.DatasName ??= SupportDeviceInfo.DeviceRecInfo["AN87330"]?.ToDictionary(x => x.DataInfo.Name)?.Keys.ToList();
+                var datanames = SupportDeviceInfo.DeviceRecInfo["AN87330"]?.ToDictionary(x => x.DataInfo.Name)?.Keys.ToList();
+                //if (config.DatasName.Count> datanames.Count)
+                //{
+                //    config.DatasName = null;
+                //}
+                
+                config.DatasName ??= datanames;
+                config.DatasName = config.DatasName.Distinct().ToList();
 
                 DataList.Clear();
                 InDatas.Clear();

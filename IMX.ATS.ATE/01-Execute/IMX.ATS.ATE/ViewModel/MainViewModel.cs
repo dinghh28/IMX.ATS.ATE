@@ -59,6 +59,8 @@ using System.Windows.Documents;
 using System.Reflection.Emit;
 using Newtonsoft.Json.Linq;
 using System.Windows.Ink;
+using IMX.Device.Relay;
+using System.Windows.Input;
 
 namespace IMX.ATS.ATE
 {
@@ -138,6 +140,16 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ProductSN), ref productsn, value);
         }
 
+        private bool isfocuse = false;
+        /// <summary>
+        /// 当前SN码输入框是否获取焦点
+        /// </summary>
+        public bool IsFocuse
+        {
+            get => isfocuse;
+            set => Set(nameof(IsFocuse), ref isfocuse, value);
+        }
+
         private ObservableCollection<ExecuteInfo> ateexecuteinfos = new ObservableCollection<ExecuteInfo>();
         /// <summary>
         /// 试验执行信息展示
@@ -148,6 +160,26 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ATEExecuteInfos), ref ateexecuteinfos, value);
         }
 
+        private string testresult;
+        /// <summary>
+        /// 试验结果
+        /// </summary>
+        public string TestResult
+        {
+            get => testresult;
+            set => Set(nameof(TestResult), ref testresult, value);
+        }
+
+        private SolidColorBrush testresultcolor = Brushes.Yellow;
+        /// <summary>
+        /// 试验结果颜色
+        /// </summary>
+        public SolidColorBrush TestResultColor
+        {
+            get => testresultcolor;
+            set => Set(nameof(TestResultColor), ref testresultcolor, value);
+        }
+
         private bool enabletestbtn = true;
         /// <summary>
         /// 试验按钮使能
@@ -156,6 +188,16 @@ namespace IMX.ATS.ATE
         {
             get => enabletestbtn;
             set => Set(nameof(EnableTestBtn), ref enabletestbtn, value);
+        }
+
+        private bool prodectnamechangelock = false;
+        /// <summary>
+        /// 项目锁（锁定后无法变更试验项目）
+        /// </summary>
+        public bool ProdectNameChangeLock
+        {
+            get => prodectnamechangelock;
+            set => Set(nameof(ProdectNameChangeLock), ref prodectnamechangelock, value);
         }
 
 
@@ -199,7 +241,21 @@ namespace IMX.ATS.ATE
         #endregion
 
         #region 界面绑定指令
+        /// <summary>
+        /// 试验指令
+        /// </summary>
         public RelayCommand Test => new RelayCommand(DoTest);
+
+        /// <summary>
+        /// 清除故障指示灯
+        /// </summary>
+        public RelayCommand ClearError => new RelayCommand(ClearErrorLED);
+
+
+        /// <summary>
+        /// 扫码枪回车事件
+        /// </summary>
+        public RelayCommand<object> EnterKeyboard => new RelayCommand<object>(FocuseChanged);
 
         #region 系统窗口指令
         ///// <summary>
@@ -261,12 +317,69 @@ namespace IMX.ATS.ATE
         /// 试验监控线程
         /// </summary>
         private MonitorThread monitor = null;
+
+        /// <summary>
+        /// 继电器操作句柄
+        /// </summary>
+        private Relay_ZS4Bit_Operate relayoperate_4 = null;
         // private Window window;
         #endregion
 
         #region 私有方法
 
-        private void DoTest()
+        /// <summary>
+        /// 指示灯清除
+        /// </summary>
+        private void ClearErrorLED()
+        {
+            relayoperate_4?.SateLedContrcl(LightType.ERROR_CLR);
+            Thread.Sleep(100);
+            //foreach (var item in dicMonitorThread.Values)
+            //{
+            //    item.IsRunning = false;
+            //}
+
+            //TestStoped();
+
+            MessageBox.Show($"故障指示灯已清除");
+        }
+
+        private int productsnlenth = 0;
+        /// <summary>
+        /// 产品SN回车焦点事件
+        /// </summary>
+        /// <param name="obj"></param>
+        private void FocuseChanged(object obj)
+        {
+            if (!(obj is KeyDownArgs args))
+            {
+                return;
+            }
+
+            if (args.Args.Key != Key.Enter)
+            {
+                return;
+            }
+
+            Thread.Sleep(20);
+            //if (!string.IsNullOrEmpty(ProductSN)) 
+            //{
+
+            //}
+            //ProductSN = ProductSN.Remove(0, productsnlenth);
+
+            //productsnlenth = ProductSN.Length;
+
+            TestStartReady();
+
+            //if (args.Parameters.Length < 1)
+            //{
+            //    return;
+            //}
+        }
+
+            #region 试验操作
+            private void DoTest()
         {
             if (!GlobalModel.CabinetSate)
             {
@@ -286,33 +399,66 @@ namespace IMX.ATS.ATE
             }
             else
             {
-                if (string.IsNullOrEmpty(SelectedProductName))
-                {
-                    MessageBox.Show("试验项目不可为空，请选择需运行项目", "试验开启失败");
-                    return;
-                }
+                TestStartReady();
+                //if (string.IsNullOrEmpty(SelectedProductName))
+                //{
+                //    MessageBox.Show("试验项目不可为空，请选择需运行项目", "试验开启失败");
+                //    return;
+                //}
 
-                if (string.IsNullOrEmpty(ProductSN))
-                {
-                    MessageBox.Show("项目编码不可为空，请填写产品对应编码", "试验开启失败");
-                    return;
-                }
+                //if (string.IsNullOrEmpty(ProductSN))
+                //{
+                //    MessageBox.Show("项目编码不可为空，请填写产品对应编码", "试验开启失败");
+                //    return;
+                //}
 
-                if (MessageBox.Show("是否开始试验?", "试验开始确认", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
+                //if (MessageBox.Show("是否开始试验?", "试验开始确认", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel)
+                //{
+                //    return;
+                //}
 
-                Task.Run(() => { EnableTestBtn = false; });
+                //Task.Run(() => { EnableTestBtn = false; });
 
-                ATEExecuteInfos.Clear();
+                //ATEExecuteInfos.Clear();
 
-                TestStart();
-                EnableTestBtn = true;
+                //TestStart();
+                //EnableTestBtn = true;
             }
             //EnableTestInfoChange =! EnableTestInfoChange;
         }
 
+        /// <summary>
+        /// 开始试验准备动作
+        /// </summary>
+        private void TestStartReady() 
+        {
+            if (string.IsNullOrEmpty(SelectedProductName))
+            {
+                MessageBox.Show("试验项目不可为空，请选择需运行项目", "试验开启失败");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(ProductSN))
+            {
+                MessageBox.Show("项目编码不可为空，请填写产品对应编码", "试验开启失败");
+                return;
+            }
+
+            //if (MessageBox.Show("是否开始试验?", "试验开始确认", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel)
+            //{
+            //    return;
+            //}
+
+            Task.Run(() => { EnableTestBtn = false; });
+
+            ATEExecuteInfos.Clear();
+
+            TestStart();
+
+            Task.Run(() => {
+                EnableTestBtn = true;
+            });
+        }
         /// <summary>
         /// 开始试验
         /// </summary>
@@ -444,10 +590,27 @@ namespace IMX.ATS.ATE
                 TestFlowsFunction = process,
             };
 
+            Thread.Sleep(1000);
+#if DEBUG
+#else
+            try
+            {
+                relayoperate_4?.SateLedContrcl(LightType.RUNING);
+                //(GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate).SateLedContrcl(LightType.RUNING);
+            }
+            catch (Exception ex)
+            {
+                SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestStart), ex);
+            }
+            Thread.Sleep(1000);
+#endif
+
+
             monitor.OprateThread.Start(monitor);
 
+            
             ContentName = "运行试验中...";
-            ContentColor = Brushes.LightGreen;
+            ContentColor = Brushes.Green;
             IsTestRuning = true;
         }
 
@@ -491,7 +654,7 @@ namespace IMX.ATS.ATE
                     StepStrShow = Visibility.Visible;
                 }));
 
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
                 try
                 {
                     GlobalModel.DicDeviceInfo["Product"].Args.DriveConfig.BaudRate = thread.ProjectInfo.BaudRate;
@@ -510,6 +673,16 @@ namespace IMX.ATS.ATE
                             StepStrShow = Visibility.Collapsed;
                             IsTestRuning = false;
                         }));
+
+                        try
+                        {
+                            relayoperate_4?.SateLedContrcl(LightType.ERROR);
+                            //(GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate).SateLedContrcl(LightType.ERROR);
+                        }
+                        catch (Exception ex)
+                        {
+                            SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestStart), ex);
+                        }
 
                         MessageBox.Show(canoprate.Message, "CAN初始化失败");
                         return;
@@ -580,11 +753,14 @@ namespace IMX.ATS.ATE
             {
                 StepStrShow = Visibility.Collapsed;
             }));
-
+#if DEBUG
+#else
             for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
             {
                 test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
             }
+#endif
+
             //test_Data.Euq_DeviceRead = GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos;
             bool testresult = true;
             string errorstr = string.Empty;
@@ -707,6 +883,8 @@ namespace IMX.ATS.ATE
 
                                 if (!result)
                                 {
+                                    relayoperate_4.SateLedContrcl(LightType.ERROR);
+
                                     testresult = false;
                                     TestErrorString += $"{result.Message}\r\n";
                                     if (resultconfig.ResultOpereate == ResultOpereateType.OUTTEST)
@@ -720,10 +898,13 @@ namespace IMX.ATS.ATE
                                         //thread.IsStartThread = true;
                                         break;
                                     }
+
+                                    
                                 }
                             }
                             catch (Exception ex)
                             {
+                                relayoperate_4.SateLedContrcl(LightType.ERROR);
                                 TestErrorString += $"{ex.GetMessage()}\r\n";
                                 thread.IsStartThread = false;
                                 break;
@@ -732,6 +913,10 @@ namespace IMX.ATS.ATE
                         }
                         else if (config.SupportFuncitonType == FuncitonType.EquipmentResult)
                         {
+#if DEBUG
+                            continue;
+#endif
+
                             if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL acqinfo))
                             {
                                 operate = acqinfo.DeviceOperate;
@@ -753,6 +938,7 @@ namespace IMX.ATS.ATE
 
                             if (!result)
                             {
+                                relayoperate_4.SateLedContrcl(LightType.ERROR);
                                 testresult = false;
                                 TestErrorString += $"{result.Message}\r\n";
                                 if (resultconfig.ResultOpereate == ResultOpereateType.OUTTEST)
@@ -770,6 +956,9 @@ namespace IMX.ATS.ATE
                         }
                         else if (config.SupportFuncitonType == FuncitonType.DCLoad)
                         {
+#if DEBUG
+                            continue;
+#endif
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 stepinfo.Add(step);
@@ -795,6 +984,7 @@ namespace IMX.ATS.ATE
                                                       acquisition);
                             if (!result)
                             {
+                                relayoperate_4.SateLedContrcl(LightType.ERROR);
                                 thread.IsStartThread = false;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -811,6 +1001,9 @@ namespace IMX.ATS.ATE
                         }
                         else if (config.SupportFuncitonType == FuncitonType.ACSource)
                         {
+#if DEBUG
+                            continue;
+#endif
                             Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
                                 stepinfo.Add(step);
@@ -836,12 +1029,15 @@ namespace IMX.ATS.ATE
                                                         acquisition);
                             if (!result)
                             {
+                                relayoperate_4.SateLedContrcl(LightType.ERROR);
                                 thread.IsStartThread = false;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     step.Result = ResultState.FAIL;
                                 }));
                                 TestErrorString += result.Message;
+
+
                                 break;
                             }
 
@@ -857,9 +1053,24 @@ namespace IMX.ATS.ATE
                                 stepinfo.Add(step);
                             }));
 
+                            //防止调试过程中频繁勾选DBC使用情况，试验项步骤未变更
+                            if (config.SupportFuncitonType == FuncitonType.Product && !thread.ProjectInfo.IsUseDDBC)
+                            {
+                                step.Result = ResultState.SUCCESS;
+                                continue;
+                            }
+
+#if DEBUG
+                            if (config.SupportFuncitonType != FuncitonType.Product) 
+                            {
+                                continue;
+                            }
+#endif
+
                             var result =  config.Execute(operate);
                             if (!result)
                             {
+                                relayoperate_4.SateLedContrcl(LightType.ERROR);
                                 thread.IsStartThread = false;
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
@@ -878,6 +1089,7 @@ namespace IMX.ATS.ATE
                     }
                     catch (Exception ex)
                     {
+                        relayoperate_4.SateLedContrcl(LightType.ERROR);
                         thread.IsStartThread = false;
                         SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestRun), ex);
                         break;
@@ -901,6 +1113,7 @@ namespace IMX.ATS.ATE
                     ContentColor = Brushes.Red;
                     StepStrShow = Visibility.Collapsed;
                 }));
+                relayoperate_4?.SateLedContrcl(LightType.DEFALT);
                 MessageBox.Show("试验运行完成", "试验成功");
             }
 
@@ -914,6 +1127,15 @@ namespace IMX.ATS.ATE
             thread.IsRunning = false;
             GlobalModel.IsTestThreadRun = false;
             IsTestRuning = false;
+            //try
+            //{
+            //    //(GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate).SateLedContrcl(LightType.DEFALT);
+            //}
+            //catch (Exception ex)
+            //{
+            //    SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestRun), ex);
+            //}
+            
         }
 
         #region 特殊步骤操作
@@ -1706,6 +1928,8 @@ namespace IMX.ATS.ATE
             IsTestRuning = false;
         }
 
+        #endregion
+
         #region 界面测试
         private void TestThread() 
         {   
@@ -1788,7 +2012,8 @@ namespace IMX.ATS.ATE
 
         }
         #endregion
-        #endregion
+
+#endregion
 
         #region 保护方法
         protected override void WindowMaxExecute(object obj)
@@ -1828,6 +2053,11 @@ namespace IMX.ATS.ATE
                 {
                     MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
                 });
+
+            if (GlobalModel.CabinetSate)
+            {
+                relayoperate_4 = GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate;
+            }
 #if DEBUG
             //new Thread(TestThread) { IsBackground = true }.Start();
 #endif

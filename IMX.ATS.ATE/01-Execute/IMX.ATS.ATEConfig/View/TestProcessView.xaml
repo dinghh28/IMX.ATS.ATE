@@ -4,12 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig"
-             xmlns:Datagrid="clr-namespace:IMX.WPF.Resource;assembly=IMX.WPF.Resource" 
              xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance Type=local:TestProcessViewModel}"
              mc:Ignorable="d" 
              Name="Window"
              d:DesignHeight="450" d:DesignWidth="800" FontSize="14">
+
+    <!--xmlns:Datagrid="clr-namespace:IMX.WPF.Resource;assembly=IMX.WPF.Resource"-->
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -57,7 +58,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="当前试验项：" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Column="1" MinWidth="200"   ItemsSource="{Binding SolutionNames}"  SelectedValue="{Binding SolutionName}"/>
+                        <ComboBox Grid.Column="1" MinWidth="200"   ItemsSource="{Binding SolutionNames}"  SelectedValue="{Binding SolutionName, Delay=100}"/>
                     </Grid>
                     <Grid Grid.Column="1" Margin="20,0,20,0">
                         <Grid.ColumnDefinitions>
@@ -163,9 +164,9 @@
                                   AutoGenerateColumns="False"
                                   CanUserAddRows="False"
                                   CanUserDeleteRows="False"
-                                  CanUserSortColumns="False"
-                                  Datagrid:DragDropRowBehavior.Enabled="True"
-                                  Datagrid:DragDropRowBehavior.PopupControl="{Binding ElementName=popup1}">
+                                  CanUserSortColumns="False">
+                                  <!--Datagrid:DragDropRowBehavior.Enabled="True"
+                                  Datagrid:DragDropRowBehavior.PopupControl="{Binding ElementName=popup1}"-->
                                 <DataGrid.InputBindings>
                                     <KeyBinding Key="Delete" Command="{Binding ChangeFunInfos}" CommandParameter="DELET"/>
                                 </DataGrid.InputBindings>

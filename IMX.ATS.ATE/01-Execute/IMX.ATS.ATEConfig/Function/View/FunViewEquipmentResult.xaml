@@ -51,7 +51,11 @@
                                                 <ColumnDefinition Width="2*"/>
                                             </Grid.ColumnDefinitions>
                                             <Grid Grid.Column="0" Margin="0,0,10,0">
-                                                <CheckBox Content="参与结果判定" VerticalAlignment="Center" IsChecked="{Binding  IsUse, Mode=TwoWay}"/>
+                                                <WrapPanel>
+                                                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding  IsUse, Mode=TwoWay}"/>
+                                                    <Label  Content="参与结果判定"/>
+                                                </WrapPanel>
+                                                
                                             </Grid>
                                             <WrapPanel Grid.Column="1" Margin="0,0,10,0">
                                                 <Label Content="参数："/>

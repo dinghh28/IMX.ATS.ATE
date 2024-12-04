@@ -87,6 +87,11 @@
             </summary>
             <param name="function"></param>
         </member>
+        <member name="T:IMX.Function.ViewModel.IFunViewModel">
+            <summary>
+            试验配置界面接口
+            </summary>
+        </member>
         <member name="P:IMX.Function.ViewModel.IFunViewModel.IsInit">
             <summary>
             是否为初始化模板

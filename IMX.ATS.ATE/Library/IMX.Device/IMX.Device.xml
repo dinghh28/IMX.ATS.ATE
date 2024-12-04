@@ -946,7 +946,7 @@
             <summary>
             停止消息发送
             </summary>
-            <param name="message">消息帧ID</param>
+            <param name="messageId">消息帧ID</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.StopMessageSend(System.Collections.Generic.List{System.UInt32})">
@@ -1161,6 +1161,16 @@
             全通道设置
             </summary>
             <param name="value">bit字符串</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Warp.Set_Led(IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            
+            </summary>
+            <param name="value1">黄灯</param>
+            <param name="value2">绿灯</param>
+            <param name="value3">红灯</param>
+            <param name="value4">蜂鸣器</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Warp.ReadAllInfo">
@@ -1707,7 +1717,7 @@
             设备初始化
             </summary>
             <param name="config">设备配置信息</param>
-            <param name="com">串口</param>
+            <param name="drive">串口</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Base.IDeviceWarp.Device_Uinit">
@@ -1715,6 +1725,16 @@
             设备卸载
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.DriveOperate.DriveOperate">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.DriveOperate.Identify">
+            <summary>
+            内部标识
+            </summary>
         </member>
         <member name="P:IMX.Device.Base.DriveOperate.DriveOperate.Drive">
             <summary>
@@ -1746,6 +1766,11 @@
             是否可以移除改句柄
             </summary>
         </member>
+        <member name="P:IMX.Device.Base.DriveOperate.DriveOperate.Devices">
+            <summary>
+            驱动下注册设备列表
+            </summary>
+        </member>
         <member name="F:IMX.Device.Base.DriveOperate.DriveOperate.deviceOperation">
             <summary>
             设备操作锁对象
@@ -1756,12 +1781,37 @@
             设备操作器字典
             </summary>
         </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.Creat">
+            <summary>
+            创建驱动类
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.Creat(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            创建驱动类
+            </summary>
+            <param name="logger">日志注册器</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.Open(IMX.Device.Common.DriveArgs)">
+            <summary>
+            打开驱动
+            </summary>
+            <param name="dirveconfig">驱动配置信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.Close">
+            <summary>
+            关闭驱动
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.RegisterDevice(IMX.Device.Common.DeviceArgs)">
             <summary>
             注册设备
             </summary>
-            <param name="guid">设备操作接口guid</param>
-            <param name="resourcestring">设备串口资源信息</param>
+            <param name="deviceConfig">设备配置信息</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.UnregisterDevice(System.Guid)">
@@ -1783,6 +1833,45 @@
             移除所有设备
             </summary>
             <returns>操作结果</returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.GetDeviceList">
+            <summary>
+            获取设备列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.SetError(System.String)">
+            <summary>
+            设置错误信息
+            </summary>
+            <param name="error">故障内容</param>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.#ctor">
+            <summary>
+            无参构造
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            单参构造
+            </summary>
+            <param name="logger">日志注册器</param>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.Finalize">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.Dispose">
+            <summary>
+            析构方法
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.DriveOperate.Dispose(System.Boolean)">
+            <summary>
+            析构方法
+            </summary>
+            <param name="isDispose">是否释放资源</param>
         </member>
         <member name="T:IMX.Device.Base.DriveOperate.ISuperDrive">
             <summary>
@@ -2014,10 +2103,21 @@
             驱动操作类
             </summary>
         </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.Identify">
+            <summary>
+            内部标识
+            </summary>
+        </member>
         <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.IsClearBuffer">
             <summary>
             是否清空缓存区
             </summary>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.IsDriveOpen">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.DriveConfig">
+            <inheritdoc/>
         </member>
         <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.Logger">
             <summary>
@@ -2034,10 +2134,28 @@
             最后一次故障信息
             </summary>
         </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.ReOpen_MaxWriteFailCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.ReOpen_CurWriteFailCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.ReOpen_MinIntervalMS">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.IsWriteCmdWithNewLine">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.WriteCmdWithNewLine">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.DelayMS_Read_ByteArray">
             <summary>
             每次读取之间延时毫秒(默认100ms)
             </summary>
+        </member>
+        <member name="P:IMX.Device.Base.DriveOperate.SuperDriveOprate.SupportFuncitonType">
+            <inheritdoc/>
         </member>
         <member name="F:IMX.Device.Base.DriveOperate.SuperDriveOprate.dicDriveSuffix">
             <summary>
@@ -2068,6 +2186,32 @@
             <summary>
             初始化Visa驱动字典
             </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.SuperDriveOprate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.SuperDriveOprate.Open(IMX.Device.Common.DriveArgs)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.SuperDriveOprate.SetError(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.SuperDriveOprate.#ctor">
+            <summary>
+            无参构造
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.SuperDriveOprate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <summary>
+            单参构造
+            </summary>
+            <param name="logger">日志注册器</param>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.SuperDriveOprate.Finalize">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.DriveOperate.SuperDriveOprate.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:IMX.Device.Base.DriveOperate.VehicleBusDriveOprate">
             <summary>

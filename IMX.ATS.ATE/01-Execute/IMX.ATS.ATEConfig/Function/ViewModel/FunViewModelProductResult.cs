@@ -53,8 +53,10 @@ namespace IMX.ATS.ATEConfig.Function
             {
                 func = value;
                 FunConfig_ProductResult config = value.Config as FunConfig_ProductResult;
-                config.DatasName ??= GlobalModel.TestDBCconfig.Test_DBCReceiveSignals?.ToDictionary(x=>x.Custom_Name)?.Keys.ToList();
 
+                config.DatasName ??= GlobalModel.TestDBCconfig.Test_DBCReceiveSignals?.ToDictionary(x=>x.Custom_Name)?.Keys.ToList();
+                config.DatasName = config.DatasName.Distinct().ToList();
+                
                 DataList.Clear();
                 InDatas.Clear();
 

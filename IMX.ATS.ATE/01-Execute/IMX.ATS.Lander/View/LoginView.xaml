@@ -57,7 +57,7 @@
                                 <DropShadowEffect Color="Gray" Direction="0" ShadowDepth="0.5"/>
                             </TextBlock.Effect>
                         </TextBlock>
-                        <TextBlock Text="功能测试平台" FontSize="25" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue">
+                        <TextBlock Text="ATE性能测试平台" FontSize="25" FontWeight="Bold" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="DarkBlue">
                             <TextBlock.Effect>
                                 <DropShadowEffect Color="Gray" Direction="0" ShadowDepth="0.5"/>
                             </TextBlock.Effect>
@@ -71,7 +71,7 @@
                               base:PassWordBoxHelper.Password ="{Binding Password, Mode=OneWayToSource ,UpdateSourceTrigger=PropertyChanged}"
                               base:PassWordBoxHelper.Attach="True" />
 
-                    <Button Content="立 即 登 录" Foreground="Black" Grid.Row="6" Height="35" BorderThickness="0" Width="200"
+                    <Button Content="立 即 登 录"  Grid.Row="6" Height="35" BorderThickness="0" Width="200"
                         Command="{Binding LoginCommand }"
                         CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" />
                     <Label Content="{Binding ErrorMessage}" Foreground="Red" Grid.Row="5"   Width="200"  FontWeight="Bold" />

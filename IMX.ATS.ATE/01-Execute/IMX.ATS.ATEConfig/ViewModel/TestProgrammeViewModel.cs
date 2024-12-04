@@ -258,20 +258,24 @@ namespace IMX.ATS.ATEConfig
 
         private void Up()
         {
-            if (PowerOffIndex == 0)
+            int index = PowerOffIndex;
+            if (index == 0)
             { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
 
-            EPowerOffProcessNames.Insert(PowerOffIndex - 1, EPowerOffProcessNames[PowerOffIndex]);
-            EPowerOffProcessNames.RemoveAt(PowerOffIndex);
+            EPowerOffProcessNames.Insert(index - 1, EPowerOffProcessNames[index]);
+            EPowerOffProcessNames.RemoveAt(index+1);
+            PowerOffIndex = index - 1;
             //PowerOffIndex = PowerOffIndex - 1;
         }
 
         private void Down()
         {
-            if (PowerOffIndex == EPowerOffProcessNames.Count - 1)
+            int index = PowerOffIndex;
+            if (index == EPowerOffProcessNames.Count - 1)
             { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-            EPowerOffProcessNames.Insert(PowerOffIndex + 2, EPowerOffProcessNames[PowerOffIndex]);
-            EPowerOffProcessNames.RemoveAt(PowerOffIndex);
+            EPowerOffProcessNames.Insert(index + 2, EPowerOffProcessNames[index]);
+            EPowerOffProcessNames.RemoveAt(index);
+            PowerOffIndex = index + 1;
             //PowerOffIndex = PowerOffIndex + 1;
         }
 

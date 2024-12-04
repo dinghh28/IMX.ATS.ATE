@@ -183,6 +183,7 @@ namespace IMX.ATS.ATEConfig
         #endregion
 
         #region 私有方法
+
         private void ChangedDBCFile(object obj)
         {
             try
@@ -312,6 +313,7 @@ namespace IMX.ATS.ATEConfig
         private void LoadItems(IMessageFileLoader loader)
         {
             DBCMessages.Clear();
+
             foreach (var item in loader.MessageList.OrderBy(x => x.ID))
             {
                 var message = CreateMessageNode(item);

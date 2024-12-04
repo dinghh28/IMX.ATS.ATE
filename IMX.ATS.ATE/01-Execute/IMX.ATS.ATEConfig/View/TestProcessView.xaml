@@ -24,11 +24,11 @@
         <Binding Path="TestProcess"  Source="{StaticResource Locator}"/>
     </UserControl.DataContext>
     
-    <i1:Interaction.Triggers>
+    <!--<i1:Interaction.Triggers>
         <i1:EventTrigger EventName="Loaded">
             <i1:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Window}"/>
         </i1:EventTrigger>
-    </i1:Interaction.Triggers>
+    </i1:Interaction.Triggers>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>

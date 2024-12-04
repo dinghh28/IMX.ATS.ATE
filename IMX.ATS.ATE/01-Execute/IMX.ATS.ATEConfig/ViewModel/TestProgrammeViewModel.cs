@@ -258,25 +258,29 @@ namespace IMX.ATS.ATEConfig
 
         private void Up()
         {
+
             int index = PowerOffIndex;
+
             if (index == 0)
             { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
 
+
             EPowerOffProcessNames.Insert(index - 1, EPowerOffProcessNames[index]);
-            EPowerOffProcessNames.RemoveAt(index+1);
+            EPowerOffProcessNames.RemoveAt(index + 1);
             PowerOffIndex = index - 1;
-            //PowerOffIndex = PowerOffIndex - 1;
         }
 
         private void Down()
         {
+
             int index = PowerOffIndex;
             if (index == EPowerOffProcessNames.Count - 1)
             { MessageBox.Show("已到达最低点，无法下移!", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
+
+
             EPowerOffProcessNames.Insert(index + 2, EPowerOffProcessNames[index]);
             EPowerOffProcessNames.RemoveAt(index);
             PowerOffIndex = index + 1;
-            //PowerOffIndex = PowerOffIndex + 1;
         }
 
         private void Save()
@@ -308,7 +312,6 @@ namespace IMX.ATS.ATEConfig
                     if (result.Data == null)
                     {
                         DBOperate.Default.InsertTestProgramme(program)
-                        .AttachIfSucceed(result =>{ MessageBox.Show($"试验方案保存成功", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);})
                         .AttachIfFailed(result =>{MessageBox.Show($"试验方案保存失败：\r\n{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Information);});
                     }
                     else

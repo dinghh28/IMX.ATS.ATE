@@ -10,11 +10,11 @@
              mc:Ignorable="d" 
              x:Name="Win"
              d:DesignHeight="450" d:DesignWidth="800">
-    <i:Interaction.Triggers>
+    <!--<i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
         </i:EventTrigger>
-    </i:Interaction.Triggers>
+    </i:Interaction.Triggers>-->
     
     <UserControl.Resources>
         <ResourceDictionary>

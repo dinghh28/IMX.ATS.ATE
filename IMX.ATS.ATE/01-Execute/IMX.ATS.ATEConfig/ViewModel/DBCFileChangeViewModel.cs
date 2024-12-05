@@ -237,6 +237,7 @@ namespace IMX.ATS.ATEConfig
                            dbcconfigmodel.SignalConfigPages[1].SignalConfigs.Clear();
                            //清空信号列表
                            dbcconfigmodel.DBCMessages.Clear();
+                           dbcconfigmodel.DBCFileName = "";
 
                            MessageBox.Show($"DBC文件【{info.FileName}】已删除\r\n", "DBC文件删除成功");
 
@@ -264,6 +265,16 @@ namespace IMX.ATS.ATEConfig
                        MessageBox.Show($"DBC文件【{info.FileName}】已删除\r\n", "DBC文件删除成功");
                    })
                    .AttachIfFailed(result => { MessageBox.Show(result.Message, "DBC文件删除失败"); });
+                fileinfos.Clear();
+                DBCFileInfos.Clear();
+                DBOperate.Default.GetFiles().AttachIfSucceed(result =>
+                {
+                    fileinfos = result.Data;
+                    for (int i = 0; i < result.Data.Count; i++)
+                    {
+                        DBCFileInfos.Add(result.Data[i]);
+                    }
+                });
             }
         }
         #endregion

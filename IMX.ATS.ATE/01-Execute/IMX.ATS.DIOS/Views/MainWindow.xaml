@@ -198,11 +198,12 @@
     
     <Grid MouseLeftButtonDown="Grid_MouseLeftButtonDown" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="280"/>
-            <RowDefinition/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="40*"/>
+            <RowDefinition Height="60*"/>
+            <RowDefinition Height="200*"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="400*"/>
+            <RowDefinition Height="25*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
             <Grid.ColumnDefinitions>
@@ -269,7 +270,7 @@
                 <!--<ColumnDefinition Width="31*"/>-->
             </Grid.ColumnDefinitions>
             <DataGrid  Name="ItemdataGrid"  ItemsSource="{Binding  TestItemDataTable}"
-                       Height="270"
+                       Height="auto"
                        CanUserAddRows="False" 
                        ColumnWidth="*" 
                        IsReadOnly="True" 
@@ -350,9 +351,9 @@ CommandParameter="{Binding .}">-->
             </DataGrid>
 
         </Grid>
-
+        <GridSplitter Grid.Row="3"  Height="3" Foreground="Gray" HorizontalAlignment="Stretch" VerticalAlignment="Center" ShowsPreview="True"/>
         <!--<Grid Grid.Row="3">-->
-        <DataGrid Grid.Row="3" Name="TestdataGrid" ItemsSource="{Binding  TestDataTable}"  CanUserAddRows="False"  IsReadOnly="True"  FrozenColumnCount="1"
+        <DataGrid Grid.Row="4" Name="TestdataGrid" ItemsSource="{Binding  TestDataTable}"  CanUserAddRows="False"  IsReadOnly="True"  FrozenColumnCount="1"
                              ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
 
         </DataGrid>
@@ -391,7 +392,7 @@ CommandParameter="{Binding .}">-->
                 </lvc:CartesianChart>
             </Grid>-->
         <!--</Grid>-->
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition  Width="2*" />

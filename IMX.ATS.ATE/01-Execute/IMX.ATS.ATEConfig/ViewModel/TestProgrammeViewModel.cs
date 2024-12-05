@@ -260,12 +260,10 @@ namespace IMX.ATS.ATEConfig
 
         private void Up()
         {
-
             int index = PowerOffIndex;
 
             if (index == 0)
             { MessageBox.Show("已到达最高点，无法上移！", "提示！", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
-
 
             EPowerOffProcessNames.Insert(index - 1, EPowerOffProcessNames[index]);
             EPowerOffProcessNames.RemoveAt(index + 1);
@@ -327,8 +325,6 @@ namespace IMX.ATS.ATEConfig
                     }
 
                 });
-
-
         }
 
         //private void SaveAs()

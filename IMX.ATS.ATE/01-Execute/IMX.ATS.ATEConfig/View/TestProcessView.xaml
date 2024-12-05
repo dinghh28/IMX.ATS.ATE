@@ -110,7 +110,7 @@
                                     <Label Content="{Binding Name}" Width="500">
                                         <i1:Interaction.Triggers>
                                             <i1:EventTrigger EventName="MouseDoubleClick">
-                                                <i1:InvokeCommandAction Command="{Binding Selcted}" CommandParameter="{Binding Tag}"/>
+                                                <i1:InvokeCommandAction Command="{Binding Selcted,Delay=150}" CommandParameter="{Binding Tag}"/>
                                             </i1:EventTrigger>
                                         </i1:Interaction.Triggers>
                                     </Label>

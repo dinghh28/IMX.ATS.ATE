@@ -455,7 +455,7 @@ namespace IMX.ATS.ATEConfig
             {
                 if (!GlobalModel.Test_ProjectInfo.IsUseDDBC)
                 {
-                    MessageBox.Show("当前项目无产品通讯，请勿使用相关模板！（如需使用，请先切至产品信息界面开启 DBC 通讯）", "产品相关模板添加失败");
+                    MessageBox.Show("当前项目无产品通讯，请勿使用相关模板！（如需使用，请先切至产品信息界面开启 DBC 通讯）","产品相关模板添加失败");
                     return;
                 }
                 else if (GlobalModel.TestDBCconfig == null || GlobalModel.TestDBCconfig.Id == 0)

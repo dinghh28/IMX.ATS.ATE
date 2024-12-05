@@ -1243,6 +1243,7 @@ namespace IMX.ATS.DIOS
                 table.Columns.Add("ID");
                 table.Columns.Add("记录时间");
 
+                table.Columns.Add("产品编号");
                 table.Columns.Add("试验项名称");
                 table.Columns.Add("步骤序号");
                 table.Columns.Add("步骤名称");
@@ -1258,6 +1259,8 @@ namespace IMX.ATS.DIOS
                 {
                     table.Columns.Add(token.Name);
                 });
+                table.Columns.Add("试验结果");
+                table.Columns.Add("异常信息");
 
                 return OperateResult<DataTable>.Succeed(table);
             }
@@ -1281,6 +1284,7 @@ namespace IMX.ATS.DIOS
             {
                 DataRow row = table.NewRow();
                 row["ID"] = table.Rows.Count + 1;
+                row["产品编号"] = x.ProductSN;
                 //row["记录时间"] = x.RecordTime;
                 row["记录时间"] = x.CreateTime;//.ToString("yyyy/MM/dd HH:mm:ss.fff");
 
@@ -1292,12 +1296,15 @@ namespace IMX.ATS.DIOS
 
                 x.Pro_Data.ForEach(y =>
                 {
-                    row[y.Name] = y.Value;
+                    row[y.Name] = Math.Round(y.Value,3);
                 });
                 x.Euq_Data.ForEach(y =>
                 {
-                    row[y.Name] = y.Value;
+                    row[y.Name] = Math.Round(y.Value, 3);
                 });
+
+                row["试验结果"] = x.Result == ResultState.SUCCESS ? "OK" : "NG";
+                row["异常信息"] = x.ErrorInfo;
                 table.Rows.Add(row);
             });
 

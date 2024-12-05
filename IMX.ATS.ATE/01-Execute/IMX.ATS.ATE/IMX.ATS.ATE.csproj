@@ -317,7 +317,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\02-DataBase\IMX.ATS.ATE.DB\IMX.DB.csproj">
-      <Project>{9AE13287-0976-4264-8210-0DC86E77FDE9}</Project>
+      <Project>{9ae13287-0976-4264-8210-0dc86e77fde9}</Project>
       <Name>IMX.DB</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\03-Common\IMX.ATE.Common\IMX.ATE.Common.csproj">

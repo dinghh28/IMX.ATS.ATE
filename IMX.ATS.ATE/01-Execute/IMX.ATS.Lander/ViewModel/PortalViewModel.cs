@@ -193,7 +193,7 @@ namespace IMX.ATS.Lander
                 if (obj.ToString() == "UserManage")
                 {
                     string pathStr = AppDomain.CurrentDomain.BaseDirectory + string.Format("IMX.ATS.UserManage.exe");
-                    string info = """{"UserName":"丁慧慧","Password":null,"Privilege":15,"Id":1}""";
+                    string info = """{"UserName":"admin","Password":null,"Privilege":15,"Id":1}""";
                     //string info = "1111";
                     string arg = AES.Encrypt(info, "VXNlck1hbmFnZQ==");
 
@@ -208,7 +208,7 @@ namespace IMX.ATS.Lander
                 if (obj.ToString() == "ProjectConfig")
                 {
                     string pathStr = AppDomain.CurrentDomain.BaseDirectory + string.Format("IMX.ATS.ProjectConfig.exe");
-                    string info = """{"UserName":"丁慧慧","Password":null,"Privilege":15,"Id":1}""";
+                    string info = """{"UserName":"admin","Password":null,"Privilege":15,"Id":1}""";
                     //string info = "1111";
                     string arg = AES.Encrypt(info, "UHJvamVjdENvbmZpZw ==");
 

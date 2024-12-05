@@ -21,7 +21,7 @@ namespace IMX.ATS.UserManage
 
         #region 界面绑定属性
 
-        private string userName;
+        private string userName = GlobalModel.UserInfo.UserName;
 
         public string UserName
         {
@@ -35,7 +35,7 @@ namespace IMX.ATS.UserManage
             get => userMannage;
             set => Set(nameof(UserMannage), ref userMannage, value);
         }
-        private string passWord;
+        private string passWord=GlobalModel.UserInfo.Password;
         /// <summary>
         /// 用户原密码
         /// </summary>
@@ -86,7 +86,7 @@ namespace IMX.ATS.UserManage
         /// <summary>
         /// 当前窗口
         /// </summary>
-        private Window Win=null;
+        private Window Win = null;
 
         #endregion
 
@@ -113,7 +113,7 @@ namespace IMX.ATS.UserManage
             {
                 MessageBox.Show($"{ex.Message}");
             }
-            
+
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace IMX.ATS.UserManage
         {
             Window win = MouseLeft(obj);
             if (win != null) { Win = win; }
-            
+
             if (!DBOperate.Default.IsInitOK)
             {
                 DBOperate.Default.Init();
@@ -211,9 +211,11 @@ namespace IMX.ATS.UserManage
             //}
         }
 
-        //public UserMainViewModel(string[] args) 
+        //public UserMainViewModel(string[] args)
         //{
-
+        //    GlobalModel.UserInfo.UserName = args[0];
+        //    GlobalModel.UserInfo.Password = args[1];
+        //    GlobalModel.UserInfo.Privilege =Convert.ToInt16(args[2]);
         //}
 
         #endregion
@@ -330,9 +332,9 @@ namespace IMX.ATS.UserManage
                     MessageBox.Show($"[{UserName}]用户权限修改成功！");
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message );
+                MessageBox.Show(ex.Message);
             }
         }
     }

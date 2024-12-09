@@ -179,19 +179,32 @@
                  >
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <WrapPanel>
-                                        <Label Content="判定变量:"/>
-                                        <ComboBox Margin="0,0,0,10" ItemsSource="{Binding ConditionNames}" SelectedIndex="{Binding ConditionIndex}" >
+                                    <WrapPanel Margin="0,5,0,5" HorizontalAlignment="Center">
+                                        <Label Content="判定变量:" 
+                                               HorizontalAlignment="Center"/>
+                                        <ComboBox Margin="0,0,40,0" 
+                                                  ItemsSource="{Binding ConditionNames}" 
+                                                  SelectedIndex="{Binding ConditionIndex}"
+                                                  HorizontalAlignment="Center"
+                                                  Width="200">
                                             <!--<i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding SelectConditionName}" CommandParameter="{Binding ElementName=cmb_name,Path=SelectedIndex}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>-->
                                         </ComboBox>
-                                        <Label Content="判定条件"/>
-                                        <ComboBox ItemsSource="{Binding ValueConditions, Converter={StaticResource EnumValue}}" SelectedValue="{Binding ConditionValue.StepValueCondition, Converter={StaticResource EnumValue}}" Width="100"/>
+                                        <Label Content="判定条件"
+                                               HorizontalAlignment="Center"/>
+                                        <ComboBox 
+                                            ItemsSource="{Binding ValueConditions, Converter={StaticResource EnumValue}}" 
+                                            SelectedValue="{Binding ConditionValue.StepValueCondition, Converter={StaticResource EnumValue}}"
+                                            HorizontalAlignment="Center"
+                                            Width="100"
+                                            Margin="0,0,40,0"/>
                                         <Label Content="判定值:"/>
-                                        <TextBox Text="{Binding ConditionValue.ConditionValue}" Width="100"/>
+                                        <TextBox Text="{Binding ConditionValue.ConditionValue}" Width="100"
+                                                 Margin="0,0,40,0"
+                                                 HorizontalAlignment="Center"/>
                                     </WrapPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>

@@ -150,6 +150,16 @@ namespace IMX.ATS.ATE
             set => Set(nameof(IsFocuse), ref isfocuse, value);
         }
 
+        private bool winfocuse = true;
+        /// <summary>
+        /// 当前窗口焦点
+        /// </summary>
+        public bool WinFocuse
+        {
+            get => winfocuse;
+            set => Set(nameof(WinFocuse), ref winfocuse, value);
+        }
+
         private ObservableCollection<ExecuteInfo> ateexecuteinfos = new ObservableCollection<ExecuteInfo>();
         /// <summary>
         /// 试验执行信息展示
@@ -160,6 +170,7 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ATEExecuteInfos), ref ateexecuteinfos, value);
         }
 
+        #region 试验结果
         private string testresult;
         /// <summary>
         /// 试验结果
@@ -179,6 +190,7 @@ namespace IMX.ATS.ATE
             get => testresultcolor;
             set => Set(nameof(TestResultColor), ref testresultcolor, value);
         }
+        #endregion
 
         private bool enabletestbtn = true;
         /// <summary>
@@ -332,16 +344,19 @@ namespace IMX.ATS.ATE
         /// </summary>
         private void ClearErrorLED()
         {
-            relayoperate_4?.SateLedContrcl(LightType.ERROR_CLR);
+            if (IsTestRuning)
+            {
+                relayoperate_4?.SateLedContrcl(LightType.RUNING);
+            }
+            else
+            {
+                relayoperate_4?.SateLedContrcl(LightType.DEFALT);
+            }
+
+            
             Thread.Sleep(100);
-            //foreach (var item in dicMonitorThread.Values)
-            //{
-            //    item.IsRunning = false;
-            //}
-
-            //TestStoped();
-
-            MessageBox.Show($"故障指示灯已清除");
+            IsFocuse = true;
+            //MessageBox.Show($"故障指示灯已清除");
         }
 
         private int productsnlenth = 0;
@@ -351,6 +366,9 @@ namespace IMX.ATS.ATE
         /// <param name="obj"></param>
         private void FocuseChanged(object obj)
         {
+            //焦点获取判定，非textbox不处理事件
+            if (!IsFocuse) { return; }
+
             if (!(obj is KeyDownArgs args))
             {
                 return;
@@ -359,8 +377,14 @@ namespace IMX.ATS.ATE
             if (args.Args.Key == Key.Back) 
             {
                 productsnlenth = ProductSN.Length;
+                return;
             }
             else if (args.Args.Key != Key.Enter)
+            {
+                return;
+            }
+
+           if (IsTestRuning)
             {
                 return;
             }
@@ -370,9 +394,10 @@ namespace IMX.ATS.ATE
             //{
 
             //}
+
             ProductSN = ProductSN.Remove(0, productsnlenth);
 
-            productsnlenth = ProductSN.Length;
+            
 
             TestStartReady();
 
@@ -448,6 +473,7 @@ namespace IMX.ATS.ATE
                 return;
             }
 
+            productsnlenth = ProductSN.Length;
             //if (MessageBox.Show("是否开始试验?", "试验开始确认", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel)
             //{
             //    return;
@@ -486,7 +512,7 @@ namespace IMX.ATS.ATE
 
             Test_ProjectInfo data = rlt.Data;
 
-
+            #region DBC配置获取
             if (data.IsUseDDBC)
             {
                 DBOperate.Default.GetDBCConfig_ByProjectID(data.Id)
@@ -516,6 +542,12 @@ namespace IMX.ATS.ATE
                     //MessageBox.Show($"DBC配置获取异常,请联系上位机工程师:\r\n{result.Message}", "试验配置保存异常"); 
                 });
 
+                if (dbcfileinfo == null || dbcconfig == null)
+                {
+                    issucced = false;
+                    error = "无DBC文件或未配置DBC，请确认配置信息";
+                }
+
                 try
                 {
                     if (issucced)
@@ -538,6 +570,7 @@ namespace IMX.ATS.ATE
                     issucced = false;
                 }
             }
+            #endregion
 
             List<string> funtionnames = new List<string>();
 
@@ -680,9 +713,9 @@ namespace IMX.ATS.ATE
                             ContentColor = Brushes.Red;
                             StepStrShow = Visibility.Collapsed;
                             IsTestRuning = false;
-                            TestResult = "NG";
+                            TestResult = "FAIL";
                             TestResultColor = Brushes.Red;
-                            IsFocuse = true;
+                            //IsFocuse = true;
                         }));
 
                         try
@@ -719,9 +752,10 @@ namespace IMX.ATS.ATE
                             ContentColor = Brushes.Red;
                             StepStrShow = Visibility.Collapsed;
                             IsTestRuning = false;
-                            TestResult = "NG";
+                            TestResult = "FAIL";
                             TestResultColor = Brushes.Red;
-                            IsFocuse = true;
+                            //ProductSN = string.Empty;
+                            //productsnlenth = 0;
                         }));
 
                         CANUnint(operate);
@@ -757,9 +791,11 @@ namespace IMX.ATS.ATE
                         ContentName = "CAN通讯初始化失败";
                         ContentColor = Brushes.Red;
                         StepStrShow = Visibility.Collapsed;
-                        TestResult = "NG";
+                        TestResult = "FAIL";
                         TestResultColor = Brushes.Red;
-                        IsFocuse = true;
+                        //ProductSN = string.Empty;
+                        //productsnlenth = 0;
+                        //IsFocuse = true;
                     }));
 
                     return;
@@ -785,6 +821,7 @@ namespace IMX.ATS.ATE
             Test_ItemInfo testinfo = new Test_ItemInfo
             {
                 ProductSN = ProductSN,
+                ProjectName = SelectedProductName,
                 ProjectID = thread.ProjectInfo.Id,
                 Operator = UserName,
             };
@@ -793,8 +830,9 @@ namespace IMX.ATS.ATE
             SaveItem(true, testinfo);
             test_Data.TestItemID = testinfo.Id;
             test_Data.ProductSN = ProductSN;
+            test_Data.ProjectName = SelectedProductName;
 
-
+            #region 试验方案执行
             for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
             {
 
@@ -813,9 +851,9 @@ namespace IMX.ATS.ATE
                         ContentName = "试验方案获取异常";
                         ContentColor = Brushes.Red;
                         StepStrShow = Visibility.Collapsed;
-                        TestResult = "NG";
+                        TestResult = "FAIL";
                         TestResultColor = Brushes.Red;
-                        IsFocuse = true;
+                        //IsFocuse = true;
                     }));
 
                     TestErrorString = ContentName;
@@ -839,7 +877,8 @@ namespace IMX.ATS.ATE
                 {
                     ATEExecuteInfos.Add(functioninfo);
                 }));
-
+                #region 试验项执行
+                //TODO 试验项执行
                 for (int j = 0; j < flows?.Count; j++)
                 {
                     bool isoutfunc = false;
@@ -873,7 +912,8 @@ namespace IMX.ATS.ATE
                             StepName = config.SupportFuncitonType.GetDescription()
                         };
 
-
+                        #region 试验步骤执行
+                        //TODO 试验步骤执行
                         if (config.SupportFuncitonType == FuncitonType.ProductResult)
                         {
                             if (!thread.ProjectInfo.IsUseDDBC)
@@ -928,6 +968,9 @@ namespace IMX.ATS.ATE
                                 relayoperate_4.SateLedContrcl(LightType.ERROR);
                                 TestErrorString += $"{ex.GetMessage()}\r\n";
                                 thread.IsStartThread = false;
+                                ProductSN = string.Empty;
+                                productsnlenth = 0;
+                                //IsFocuse = true;
                                 break;
                             }
 
@@ -1109,16 +1152,22 @@ namespace IMX.ATS.ATE
                             }));
                         }
                         Thread.Sleep(0);
+                        #endregion
                     }
                     catch (Exception ex)
                     {
                         relayoperate_4.SateLedContrcl(LightType.ERROR);
                         thread.IsStartThread = false;
+                        //ProductSN = string.Empty;
+                        //productsnlenth = 0;
+                        //IsFocuse = true;
                         SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestRun), ex);
                         break;
                     }
                 }
+                #endregion
             }
+            #endregion
 
             if (!string.IsNullOrEmpty(TestErrorString))
             {
@@ -1126,9 +1175,12 @@ namespace IMX.ATS.ATE
                 testinfo.Result = ResultState.FAIL;
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    TestResult = "NG";
+                    
+                    TestResult = "FAIL";
                     TestResultColor = Brushes.Red;
-                    IsFocuse = true;
+                    //ProductSN = string.Empty;
+                    //productsnlenth = 0;
+                    //IsFocuse = true;
                 }));
                 //MessageBox.Show(TestErrorString, "试验失败");
             }
@@ -1137,17 +1189,16 @@ namespace IMX.ATS.ATE
                 testinfo.Result = ResultState.SUCCESS;
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    ContentName = string.Empty;
                     //ContentColor = Brushes.Red;
-                    StepStrShow = Visibility.Collapsed;
-                    TestResult = "OK";
+                    TestResult = "PASS";
                     TestResultColor = Brushes.Green;
-                    IsFocuse = true;
+
                 }));
                 relayoperate_4?.SateLedContrcl(LightType.DEFALT);
                 //MessageBox.Show("试验运行完成", "试验成功");
             }
 
+            testinfo.ActualRunTime = DateTime.Now.Ticks - testinfo.CreateTime.Ticks;
             SaveItem(false, testinfo);
 
             ShutDown(thread.Programme.TestOff_FlowNames, thread.ProjectInfo.IsUseDDBC);
@@ -1155,9 +1206,19 @@ namespace IMX.ATS.ATE
             {
                 CANUnint(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
             }
+
             thread.IsRunning = false;
             GlobalModel.IsTestThreadRun = false;
             IsTestRuning = false;
+
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                ContentName = string.Empty;
+                StepStrShow = Visibility.Collapsed;
+                //ProductSN = string.Empty;
+                //productsnlenth = 0;
+                //IsFocuse = true;
+            }));
             //try
             //{
             //    //(GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate).SateLedContrcl(LightType.DEFALT);
@@ -1377,7 +1438,15 @@ namespace IMX.ATS.ATE
 
                     double loadvalue = config.EnableStepping ? config.StartLoadValue : config.Set_LoadValue;
 
-                    OperateResult SetRlt = device.SetModelAndValue(config.Set_Model, loadvalue);
+                    OperateResult SetRlt = null;
+                    if (string.IsNullOrEmpty(config.Set_Model))
+                    {
+                        SetRlt = device.SetLoadValue(loadvalue);
+                    }
+                    else
+                    {
+                        SetRlt = device.SetModelAndValue(config.Set_Model, loadvalue);
+                    }
 
                     if (!SetRlt)
                     {
@@ -1954,10 +2023,11 @@ namespace IMX.ATS.ATE
 
             ContentName = "手动停止试验";
             ContentColor = Brushes.Red;
-            TestResult = "NG";
+            TestResult = "FAIL";
             TestResultColor = Brushes.Red;
             GlobalModel.IsTestThreadRun = false;
             IsTestRuning = false;
+            IsFocuse = true;
         }
 
         #endregion

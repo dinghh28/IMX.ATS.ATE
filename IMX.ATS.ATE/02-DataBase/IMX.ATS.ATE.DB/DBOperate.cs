@@ -1172,17 +1172,19 @@ namespace IMX.DB
                 $"FROM\n" +
                 $"    Test_Process\n" +
                 $"WHERE\n" +
-                $"   ProjectID = {id}\n" +
-                $"AND\n";
+                $"    ProjectID = {id}\n" +
+                $"    AND\n"+
+                $"    (\n";
 
                 for (int i = 0; i < funcnames.Count; i++)
                 {
                     if (i == funcnames.Count - 1)
                     {
-                        sqlStr += $"    FunctionName = '{funcnames[i]}'";
+                        sqlStr += $"        FunctionName = '{funcnames[i]}'\n"
+                            +$"   )";
                         break;
                     }
-                    sqlStr += $"    FunctionName = '{funcnames[i]}'\n" + "OR\n";
+                    sqlStr += $"        FunctionName = '{funcnames[i]}'\n" + "      OR\n";
                 }
 
                 var list = Sqlite.Select<Test_Process>().WithSql(sqlStr).ToList();
@@ -1784,7 +1786,7 @@ namespace IMX.DB
                 //var ufos = Sqlite.GetGuidRepository<Test_DataInfo>(null, oldname => tablename);
                 var items = Sqlite
                     .Select<Test_DataInfo>()
-                    .Where(x => x.TestItemID == itemid && x.CreateTime >= StratTime && StopTime >= x.CreateTime)
+                    .Where(x => x.TestItemID == itemid && x.CreateTime >= StratTime && StopTime.AddMinutes(1) >= x.CreateTime)
                     .OrderBy(x => x.CreateTime)
                     .Limit(count)
                     .Offset((int)(count * (page - 1))).ToList();

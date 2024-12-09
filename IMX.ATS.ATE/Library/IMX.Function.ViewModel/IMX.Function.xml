@@ -522,7 +522,7 @@
         </member>
         <member name="P:IMX.Function.TestFunction.Step">
             <summary>
-            运行步骤 
+            运行步骤
             </summary>
         </member>
         <member name="P:IMX.Function.TestFunction.Config">

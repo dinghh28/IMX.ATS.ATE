@@ -135,6 +135,12 @@ namespace IMX.ATS.ATEConfig
 
         private void SubmitChange()
         {
+            if (DBCFileInfos.Count == 0)
+            {
+                MessageBox.Show("库中不存在DBC文件，无法进行变更操作", "变更提交异常");
+                return;
+            }
+
             if (SelectedDBCIndex == -1)
             {
                 MessageBox.Show("请先选择DBC文件", "变更提交异常");
@@ -208,6 +214,11 @@ namespace IMX.ATS.ATEConfig
 
         private void DeleteFile()
         {
+            if (DBCFileInfos.Count == 0)
+            {
+                MessageBox.Show("库中不存在DBC文件，无法进行删除操作", "删除文件异常");
+                return;
+            }
             if (SelectedDBCIndex == -1)
             {
                 MessageBox.Show("请先选择DBC文件", "删除文件异常");
@@ -312,11 +323,11 @@ namespace IMX.ATS.ATEConfig
 
         protected override void WindowClosedExecute(object obj)
         {
-            if (GlobalModel.TestDBCFileInfo.Id == 0 && GlobalModel.Test_ProjectInfo.IsUseDDBC)
-            {
-                MessageBox.Show("此项目未配置DBC文件，请选择变更的DBC文件");
-                return;
-            }
+            //if (GlobalModel.TestDBCFileInfo.Id == 0 && GlobalModel.Test_ProjectInfo.IsUseDDBC)
+            //{
+            //    MessageBox.Show("此项目未配置DBC文件，请选择变更的DBC文件");
+            //    return;
+            //}
             IsOpen = false;
             base.WindowClosedExecute(obj);
         }

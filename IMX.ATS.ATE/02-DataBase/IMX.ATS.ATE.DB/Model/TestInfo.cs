@@ -75,6 +75,11 @@ namespace IMX.DB.Model
         public int TestItemID { get; set; }
 
         /// <summary>
+        /// 项目名称
+        /// </summary>
+        public string ProjectName { get; set; }
+
+        /// <summary>
         /// 样品编号
         /// </summary>
         public string ProductSN { get; set; }

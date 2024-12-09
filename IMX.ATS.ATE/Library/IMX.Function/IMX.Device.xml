@@ -43,6 +43,11 @@
             帧尾
             </summary>
         </member>
+        <member name="F:IMX.Device.Acquisition.Acquisition_AN87330_Warp.CT">
+            <summary>
+            CT变比
+            </summary>
+        </member>
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Warp.Device_ReadAll">
             <summary>
             单次扫描读取所有数据

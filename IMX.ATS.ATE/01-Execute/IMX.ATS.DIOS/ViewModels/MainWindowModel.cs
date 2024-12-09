@@ -405,6 +405,7 @@ namespace IMX.ATS.DIOS
                         Test_ID = item.ProjectID,
                         TestItem_ID = item.Id,
                         Pro_SN = item.ProductSN,
+                        ProjectName = item.ProjectName,
                         Result = item.Result,
                         ErrorInfo = item.ErrorInfo,
                         Test_ActTime = TimeSpan.FromTicks(item.ActualRunTime).ToString(@"hh\:mm\:ss"),
@@ -1238,6 +1239,10 @@ namespace IMX.ATS.DIOS
         {
             try
             {
+                if (value.Count < 1)
+                {
+                    return OperateResult<DataTable>.Failed(null, "未检索到相关数据");
+                }
                 DataTable table = new DataTable();
 
                 table.Columns.Add("ID");
@@ -1467,6 +1472,11 @@ namespace IMX.ATS.DIOS
         public int Test_ID { get; set; }
 
         public int TestItem_ID { get; set; }
+
+        /// <summary>
+        /// 项目名称
+        /// </summary>
+        public string ProjectName { get; set; }
 
         //样品编号
         public string Pro_SN { get; set; }

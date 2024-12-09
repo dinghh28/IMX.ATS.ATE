@@ -158,7 +158,7 @@ namespace IMX.ATS.ATEConfig
             {
                 if (Set(nameof(FunctionInfoIndex), ref functionInfoIndex, value))
                 {
-                    Thread.Sleep(100);
+                    Thread.Sleep(20);
                     ShowFunction(value);
                 }
             }
@@ -547,7 +547,7 @@ namespace IMX.ATS.ATEConfig
                 return;
             }
 
-            var jsonrlt = Function_Config.DeJson(type, obj.Funtion.ToString());
+            var jsonrlt = Function_Config.DeJson(type, obj.Funtion?.ToString());
             if (!jsonrlt)
             {
                 MessageBox.Show($"JSON错误:{jsonrlt.Message}");

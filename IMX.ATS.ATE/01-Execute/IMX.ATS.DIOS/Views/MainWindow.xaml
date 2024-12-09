@@ -331,7 +331,8 @@ CommandParameter="{Binding .}">-->
                     <!--<DataGridTextColumn Width="3*" Header="机柜编号" Binding="{Binding CabinetID}" IsReadOnly="True"/>-->
                     <!--<DataGridTextColumn Width="3*" Header="工位" Binding="{Binding StationID}" IsReadOnly="True"/>-->
                     <!--<DataGridTextColumn Width="4*"  Header="循环数" Binding="{Binding Test_CycleNum}" IsReadOnly="True"/>-->
-                    <DataGridTextColumn Width="4*"  Header="实际运行时间" Binding="{Binding Test_ActTime}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="4*" Header="项目名称" Binding="{Binding ProjectName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="3*"  Header="实际运行时间" Binding="{Binding Test_ActTime}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="4*" Header="起始时间" Binding="{Binding Test_StartTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="4*" Header="结束时间" Binding="{Binding Test_EndTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="3*" Header="试验结果" Binding="{Binding Result, Converter={StaticResource IconConverter}}" IsReadOnly="True"/>

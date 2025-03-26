@@ -355,13 +355,16 @@ namespace IMX.ATS.ATEConfig.Function
                 {
                     data.ConditionNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
                     data.ConditionValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
+                    
                     //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
                 }
+                data.ConditionValue.Value = data.ConditionValues[0];
+
+
                 if ((Func.Config as FunConfig_ACSource).Values == null)
                 {
                     (Func.Config as FunConfig_ACSource).Values = new List<StepConditionValue>();
                 }
-
                 (Func.Config as FunConfig_ACSource)?.Values.Add(data.ConditionValue);
 
                 StepValues.Add(data);

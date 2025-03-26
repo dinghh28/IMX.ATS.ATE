@@ -228,7 +228,6 @@ namespace IMX.ATS.ATEConfig
             {
                 MessageBox.Show($"变更DBC文件异常：{ex.Message}", "异常", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
         }
 
         #region DBC文件操作

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Piggy.VehicleBus.Common;
+using IMX.ATE.Common;
 
 namespace IMX.DB.Model
 {
@@ -46,6 +48,16 @@ namespace IMX.DB.Model
         public bool IsUseDDBC { get; set; } = false;
 
         /// <summary>
+        /// 对应DBC配置ID
+        /// </summary>
+        public int DBCConfigID { get; set; } = -1;
+
+        /// <summary>
+        /// 供电电能
+        /// </summary>
+        public Electricity Electricity { get; set; } = Electricity.Single;
+
+        /// <summary>
         /// 仲裁波特率
         /// </summary>
         public string BaudRate { get; set; } = "500Kbps";
@@ -56,108 +68,6 @@ namespace IMX.DB.Model
         public string DataBaudrate { get; set; } = "500Kbps";
     }
 
-    #region DBC
-    /// <summary>
-    /// DBC文件数据库列表
-    /// </summary>
-    public class Test_DBCFileInfo : BaseEntity<Test_DBCFileInfo, int>
-    {
-        /// <summary>
-        /// 文件名称
-        /// </summary>
-        public string FileName { get; set; }
-
-        /// <summary>
-        /// 文件说明
-        /// </summary>
-        public string FileDescription { get; set; }
-
-        /// <summary>
-        /// 文件大小
-        /// </summary>
-        public int FileSize { get; set; }
-
-        /// <summary>
-        /// 文件后缀
-        /// </summary>
-        public string FileExtension { get; set; }
-
-        /// <summary>
-        /// 文本内容
-        /// </summary>
-        [Column(StringLength = -1)]
-        public byte[] FileContent { get; set; }
-
-        /// <summary>
-        /// 文件上传人员
-        /// </summary>
-        public string Operator { get; set; }
-    }
-
-    /// <summary>
-    /// DBC配置数据库列表
-    /// </summary>
-    public class Test_DBCConfig : BaseEntity<Test_DBCConfig, int>
-    {
-        /// <summary>
-        /// 对应DBC文件ID
-        /// </summary>
-        public int DBCFileID { get; set; }
-
-        /// <summary>
-        /// 对应项目ID
-        /// </summary>
-        public int ProjectID { get; set; }
-
-        /// <summary>
-        /// DBC下发信号配置
-        /// </summary>
-        [JsonMap]
-        public List<Test_DBCInfo> Test_DBCSendSignals { get; set; } = new List<Test_DBCInfo>();
-
-        /// <summary>
-        /// DBC上报信号配置
-        /// </summary>
-        [JsonMap]
-        public List<Test_DBCInfo> Test_DBCReceiveSignals { get; set; } = new List<Test_DBCInfo>();
-
-        /// <summary>
-        /// 上次更新人员
-        /// </summary>
-        public string UpdateOperator { get; set; }
-    }
-
-    /// <summary>
-    /// DBC存储信息
-    /// </summary>
-    public class Test_DBCInfo
-    {
-        /// <summary>
-        /// 帧ID
-        /// </summary>
-        public uint Message_ID { get; set; }
-
-        /// <summary>
-        /// 帧名
-        /// </summary>
-        public string MessageName { get; set; }
-
-        /// <summary>
-        /// 信号名
-        /// </summary>
-        public string Signal_Name { get; set; }
-
-        /// <summary>
-        /// 用户自定义名称
-        /// </summary>
-        public string Custom_Name { get; set; }
-
-        /// <summary>
-        /// 信号初始值
-        /// </summary>
-        public string SignalInitValue { get; set; }
-    }
-    #endregion
     /// <summary>
     /// 测试流程
     /// </summary>

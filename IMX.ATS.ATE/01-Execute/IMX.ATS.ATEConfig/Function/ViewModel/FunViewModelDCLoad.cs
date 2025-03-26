@@ -75,10 +75,7 @@ namespace IMX.ATS.ATEConfig.Function
                     //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
                 }
 
-                if (config.Values == null)
-                {
-                    config.Values = new List<StepConditionValue>();
-                }
+                config.Values ??= [];
 
                 for (int i = 0; i < config.Values.Count; i++)
                 {
@@ -89,7 +86,6 @@ namespace IMX.ATS.ATEConfig.Function
                         ConditionNames = CondNames,
                         ConditionIndex = CondNames.ToList().FindIndex(n => n == config.Values[i].Value.DataInfo.Name),
                     });
-
                 }
                // config.Values.ForEach(x =>
                //{
@@ -577,6 +573,12 @@ namespace IMX.ATS.ATEConfig.Function
                     //data.ConditionValues.Add((Func.Config as FunConfig_DCLoad).ConditionalValues[i]);
                 }
 
+                data.ConditionValue.Value = data.ConditionValues[0];
+
+                if ((Func.Config as FunConfig_DCLoad).Values == null)
+                {
+                    (Func.Config as FunConfig_DCLoad).Values = new List<StepConditionValue>();
+                }
                 (Func.Config as FunConfig_DCLoad)?.Values.Add(data.ConditionValue);
 
                 StepValues.Add(data);

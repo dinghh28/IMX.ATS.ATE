@@ -63,58 +63,6 @@
                                 <i:InvokeCommandAction Command="{Binding Search}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <!--<TextBox.Style>
-                            <Style TargetType="TextBox" >
-                                <Setter Property="IsReadOnly" Value="False"/>
-                                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="TextBox">
-                                            <Border x:Name="border" BorderBrush="Black" BorderThickness="0.5" CornerRadius="2">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="35"/>
-                                                        <ColumnDefinition/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Label Content="&#xe6b4;" />
-                                                    --><!--<TextBlock Grid.Column="1" Text="{TemplateBinding Text}" VerticalAlignment="Center" HorizontalAlignment="Left"/>--><!--
-                                                    <ScrollViewer x:Name="PART_ContentHost" Focusable="False"
-                                                   HorizontalScrollBarVisibility="Hidden"
-                                                   VerticalScrollBarVisibility="Hidden"
-                                                   Grid.Column="1"
-                                                   VerticalAlignment="Center" MinHeight="20"/>
-                                                    <TextBlock  x:Name="MarkText" Grid.Column="1" Text="请输入检索内容" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="{x:Type TextBlock}">
-                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                                <Setter Property="Opacity" Value="0.35"/>
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="" >
-                                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
-                                                </Grid>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
-                                                </Trigger>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="BorderBrush" TargetName="border" Value="#FF7EB4EA"/>
-                                                </Trigger>
-                                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                                    <Setter Property="BorderBrush" TargetName="border" Value="#FF569DE5"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-
-                            </Style>
-                        </TextBox.Style>-->
                     </TextBox>
                 </WrapPanel>
 
@@ -125,7 +73,7 @@
                     SelectedIndex="{Binding SelectedInfoIndex}"  AlternationCount="2" AlternatingRowBackground="LightCyan"
                     ItemsSource="{Binding SearchProjectInfos}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="项目信息列表" Width="420" IsReadOnly="True"  Binding="{Binding Tag}"/>
+                            <DataGridTextColumn Header="项目信息列表" Width="*" IsReadOnly="True"  Binding="{Binding Tag}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

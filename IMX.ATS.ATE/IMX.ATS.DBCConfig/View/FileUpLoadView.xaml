@@ -1,0 +1,264 @@
+﻿<Window x:Class="IMX.ATS.DBCConfig.FileUpLoadView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IMX.ATS.DBCConfig" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:converter="clr-namespace:IMX.ATS.DBCConfig.Resuoce"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:FileUpLoadViewModel}"
+        Title="FileUpLoadView" Height="768" Width="1024" 
+        FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
+        WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
+        ResizeMode="NoResize"  x:Name="Win" AllowDrop="True">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+                <ResourceDictionary>
+                    <converter:ViewLoggerForeground x:Key="LoggerForeground"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <Binding Path="FileUpLoad" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Border BorderThickness="0.5" BorderBrush="Gray"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black"/>
+            <Grid Grid.Row="0" Margin="10,5">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label Content="DBC文件上传" VerticalAlignment="Center" FontWeight="Bold" FontSize="15"/>
+                </StackPanel>
+            </Grid>
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                <Button Content="&#xe721;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMin}" CommandParameter="{Binding ElementName=Win}"/>
+                <!--<Button Content="&#xe720;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>-->
+                <Button Content="&#xe71f;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Win}"/>
+            </StackPanel>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <!--#region 文件上传及其信息填写 -->
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="60"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="5">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="1.5*"/>
+                                <RowDefinition Height="1.3*"/>
+                            </Grid.RowDefinitions>
+
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="85"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="DBC文件地址"
+                 VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <Grid Grid.Row="0" Grid.Column="1"
+                 VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                 Margin="10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="70"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBox Grid.Column="0" Text="{Binding DBCFilePath}" Height="60"
+                                         VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                         VerticalContentAlignment="Center"
+                                         IsReadOnly="True" TextWrapping="Wrap" MinLines="4">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox">
+
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                                <Button Grid.Column="1" Content="选择文件" Height="40" Margin="5" Command="{Binding SelectFile}"/>
+                            </Grid>
+
+                            <Label Grid.Row="1" Grid.Column="0" Content="DBC文件名称"
+VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DBCFileName}"
+  VerticalAlignment="Center" HorizontalAlignment="Stretch"
+  VerticalContentAlignment="Center"
+  Margin="10,0" Height="100"
+  IsReadOnly="True" TextWrapping="Wrap" MinLines="3">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+
+                            <Label Grid.Row="2" Grid.Column="0" Content="DBC文件说明" 
+                                   VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding DBCFileDescription}"
+                                     VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                                     VerticalContentAlignment="Top"
+                                     Margin="10,0" Height="80"
+                                     TextWrapping="Wrap" MinLines="5">
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox">
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="1" Content="加载文件" Height="40" Command="{Binding LoadFile}"/>
+                            <Button Grid.Column="3" Content="上传文件" Height="40" Command="{Binding UploadFile}"/>
+                        </Grid>
+                    </Grid>
+
+                    <GroupBox Header="信号列表" Grid.Column="1">
+                        <TreeView ItemsSource="{Binding DBCMessages}" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                  VirtualizingPanel.IsVirtualizing="True">
+                            <!--<i:Interaction.Triggers>
+        <i:EventTrigger EventName="SelectedItemChanged">
+            <i:InvokeCommandAction Command="{Binding SelectChanged}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>-->
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="TreeViewItem">
+                                    <Setter Property="IsExpanded" Value="False"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="#33000000"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#22000000"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate DataType="{x:Type local:DBCMessageTreeNode}" ItemsSource="{Binding Signals}">
+                                    <StackPanel>
+                                        <Label Content="{Binding Name}" FontSize="14" Background="{Binding BackColor}" ToolTip="{Binding ToolTipText}" ToolTipService.IsEnabled="True"/>
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </GroupBox>
+                    <!--#endregion-->
+                </Grid>
+                <!--<Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>-->
+                
+
+                <!--<Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <GroupBox Grid.Row="0">
+                        
+                    </GroupBox>-->
+
+                    <GroupBox Grid.Row="1" Header="日志" FontSize="14" FontWeight="Bold">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+
+                        <DataGrid Grid.Column="0"
+                                  HeadersVisibility="None" 
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False"
+                                  CanUserResizeRows="False"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="False"
+                                  IsReadOnly="True"
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                  FontSize="14"
+                                  FontWeight="Medium"
+                                  ItemsSource="{Binding Logger}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="150">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                Text="{Binding RecordTime,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                Foreground="{Binding Level,Converter={StaticResource LoggerForeground}}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <!--<DataGridTextColumn Header="时间" Width="150" Binding="{Binding RecordTime,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>-->
+                                <DataGridTemplateColumn Width="80">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               Text="{Binding Level}"
+                               Foreground="{Binding Level,Converter={StaticResource LoggerForeground}}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left"
+                               TextWrapping="WrapWithOverflow"
+                               Text="{Binding Content}"  
+                               Foreground="{Binding Level,Converter={StaticResource LoggerForeground}}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <!--<DataGridTextColumn Header="" Width="80" Binding="{Binding Level}"/>-->
+                                <!--<DataGridTextColumn Header="" Width="*" Binding="{Binding Content}"/>-->
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Content="清&#x0a;空&#x0a;日&#x0a;志&#x0a;" Grid.Column="1" Command="{Binding ClearLogger}">
+                            <!--<Button.LayoutTransform>
+                                <RotateTransform Angle="270"/>
+                            </Button.LayoutTransform>-->
+                        </Button>
+                    </Grid>
+                        
+                    </GroupBox>
+                <!--</Grid>-->
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

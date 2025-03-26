@@ -210,6 +210,16 @@
             <param name="IsUseSerial">串口通讯_是否使用原生串口</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,System.String@,System.String@,System.UInt32@,System.String@)">
+            <summary>
+            根据传入的配置字符串, 解析出对应配置参数;
+            </summary>
+            <param name="configString">配置字符串, 采用"配置名=某值"的方式 且 英文分号隔开</param>
+            <param name="DataBaudrate">数据波特率</param>
+            <param name="CanfdSpeed">CANFD加速器</param>
+            <param name="ChannelIndex">通道地址</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,System.String@,System.String@,System.UInt32@)">
             <summary>
             根据传入的配置字符串, 解析出对应配置参数;

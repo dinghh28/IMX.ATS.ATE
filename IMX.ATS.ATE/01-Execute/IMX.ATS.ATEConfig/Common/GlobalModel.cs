@@ -30,6 +30,7 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public static Test_DBCFileInfo TestDBCFileInfo { get; set; } = new Test_DBCFileInfo();
 
+
         /// <summary>
         /// 是否为新建项目
         /// </summary>

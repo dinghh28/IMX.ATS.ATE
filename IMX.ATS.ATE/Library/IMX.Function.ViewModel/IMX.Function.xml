@@ -319,6 +319,12 @@
         <member name="M:IMX.Function.FunConfig_HVDCSource.Execute(System.Object)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Function.FunConfig_HVDCSource.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_HVDCSource.SetStep(System.Object)">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Function.FunConfig_HVDCSource.#ctor">
             <inheritdoc/>
         </member>
@@ -495,6 +501,53 @@
         <member name="M:IMX.Function.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
+        <member name="T:IMX.Function.Function_Step">
+            <summary>
+            允许步进设备配置模板抽象类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Function_Step.EnableStepping">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.StartLoadValue">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.Stride">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.StepFrequency">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.EndLoadValue">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.NeedStepCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.StepCondition">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.ConditionalValues">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Function_Step.Values">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Function_Step.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Function_Step.SetStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Function_Step.StepOutCheck(System.Collections.Generic.Dictionary{System.String,IMX.Common.ModDeviceReadData})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Function_Step.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Function_Step.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
         <member name="T:IMX.Function.IFunction_Result">
             <summary>
             测试结果模板接口
@@ -514,6 +567,77 @@
             <summary>
             试验失败操作逻辑
             </summary>
+        </member>
+        <member name="T:IMX.Function.IFuntion_Step">
+            <summary>
+            允许步进配置接口
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.EnableStepping">
+            <summary>
+            步进使能标志
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.StartLoadValue">
+            <summary>
+            开始拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.Stride">
+            <summary>
+            步进步幅
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.StepFrequency">
+            <summary>
+            步进步频
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.EndLoadValue">
+            <summary>
+            结束拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.NeedStepCount">
+            <summary>
+            需要步进步数
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.StepCondition">
+            <summary>
+            步进各条件判定综合判定条件
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.ConditionalValues">
+            <summary>
+            步进允许判定变量列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.IFuntion_Step.Values">
+            <summary>
+            步进变量判定参数列表
+            </summary>
+        </member>
+        <member name="M:IMX.Function.IFuntion_Step.SetStep(System.Object)">
+            <summary>
+            步进参数设置方法
+            </summary>
+            <param name="device">设备操作句柄</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:IMX.Function.IFuntion_Step.Execut_ExceptStep(System.Object)">
+            <summary>
+            除步进外操作
+            </summary>
+            <param name="device">设备操作句柄</param>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:IMX.Function.IFuntion_Step.StepOutCheck(System.Collections.Generic.Dictionary{System.String,IMX.Common.ModDeviceReadData})">
+            <summary>
+            步进跳出判断
+            </summary>
+            <param name="data">比对数据</param>
+            <returns>是否跳出步进</returns>
         </member>
         <member name="T:IMX.Function.TestFunction">
             <summary>

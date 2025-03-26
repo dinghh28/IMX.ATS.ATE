@@ -1,7 +1,9 @@
 ﻿using FreeSql;
+using IMX.ATE.Common;
 using IMX.DB.Model;
 using IMX.Logger;
 using Newtonsoft.Json;
+using Piggy.VehicleBus.Common;
 using Super.Zoo.Framework;
 using Super.Zoo.Framework.Logger;
 using System;
@@ -13,7 +15,9 @@ using System.Linq.Expressions;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static FreeSql.Internal.GlobalFilter;
+using DataType = FreeSql.DataType;
 
 namespace IMX.DB
 {
@@ -36,6 +40,11 @@ namespace IMX.DB
         public string LastError { get; set; }
 
         public bool Disposed { get; private set; } = false;
+
+        /// <summary>
+        /// 用户信息
+        /// </summary>
+        public string UpdateOperator { get; set; } = string.Empty;
         #endregion
 
         #region 私有变量
@@ -689,8 +698,6 @@ namespace IMX.DB
             }
         }
 
-
-
         /// <summary>
         /// 保存DBC配置
         /// </summary>
@@ -729,7 +736,7 @@ namespace IMX.DB
             if (!IsInitOK)
             {
                 LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(SaveDBCConfig), LastError);
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
                 return OperateResult.Failed(LastError);
             }
 
@@ -753,10 +760,226 @@ namespace IMX.DB
             catch (Exception ex)
             {
                 LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(SaveDBCConfig), LastError);
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
                 return OperateResult.Excepted(ex);
             }
         }
+
+        /// <summary>
+        /// 更新DBC配置信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name">配置名称</param>
+        /// <param name="describe">配置描述</param>
+        /// <param name="filename">DBC文件名</param>
+        /// <param name="fileid">DBC文件ID</param>
+        /// <param name="enableusesend">下发信号可用使能</param>
+        /// <param name="enableusereceive">上报信号可用使能</param>
+        /// <returns></returns>
+        public OperateResult UpdateDBCConfig(int id, string name, string describe, string filename, int fileid, Electricity electricity, bool enableusesend, bool enableusereceive)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+                var affrows = Sqlite.Update<Test_DBCConfig>(id)
+                    .Set(x=>x.EnableUse, true)
+                    .Set(x => x.EnableUseReceive, enableusereceive)
+                    .Set(x => x.EnableUseSend, enableusesend)
+                    .Set(x => x.ConfigName, name)
+                    .Set(x => x.Describe, describe)
+                    .Set(x => x.DBCFileName, filename)
+                    .Set(x => x.DBCFileID, fileid)
+                    .Set(x => x.Electricity, electricity)
+                    .Set(x => x.UpdateOperator, UpdateOperator)
+                    .Set(x => x.UpdateTime, DateTime.Now)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"DBC配置信息未发生实际变化";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
+                    return OperateResult.Failed();
+                }
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
+                return OperateResult.Excepted(ex);
+            }
+
+        }
+
+        /// <summary>
+        /// 更新DBC配置信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name">配置名称</param>
+        /// <param name="describe">配置描述</param>
+        /// <param name="enableusereceive">上报信号可用使能</param>
+        /// <returns></returns>
+        public OperateResult UpdateDBCConfig(int id, string name, string describe, Electricity electricity, bool enableusereceive)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
+                return OperateResult.Failed(LastError);
+            }
+            try
+            {
+                var affrows = Sqlite.Update<Test_DBCConfig>(id)
+                    .Set(x => x.EnableUseReceive, enableusereceive)
+                    .Set(x => x.ConfigName, name)
+                    .Set(x => x.Describe, describe)
+                    .Set(x => x.Electricity, electricity)
+                    .Set(x => x.UpdateOperator, UpdateOperator)
+                    .Set(x => x.UpdateTime, DateTime.Now)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"DBC配置信息未发生实际变化";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
+                    return OperateResult.Failed();
+                }
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCConfig), LastError);
+                return OperateResult.Excepted(ex);
+            }
+
+        }
+
+        /// <summary>
+        /// 更新上报信号
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="signals">上报信号配置列表</param>
+        /// <returns></returns>
+        public OperateResult UpdateReceiveSignals(int id, List<Test_DBCInfo> signals)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateReceiveSignals), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                var affrows = Sqlite.Update<Test_DBCConfig>(id)
+                    .Set(x => x.EnableUseReceive, true)
+                    .Set(x => x.Test_DBCReceiveSignals, signals)
+                    .Set(x => x.UpdateOperator, UpdateOperator)
+                    .Set(x => x.UpdateTime, DateTime.Now)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"DBC上报信号未发生实际变化";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateReceiveSignals), LastError);
+                    return OperateResult.Failed();
+                }
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateReceiveSignals), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新下发信号
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="signals">下发信号列表</param>
+        /// <param name="messages">下发消息列表</param>
+        /// <returns></returns>
+        public OperateResult UpdateSendSignals(int id, List<Test_DBCInfo> signals, List<Test_DBCMessageInfo> messages)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateSendSignals), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                var affrows = Sqlite.Update<Test_DBCConfig>(id)
+                    .Set(x => x.EnableUseSend, true)
+                    .Set(x => x.Test_DBCSendSignals, signals)
+                    .Set(x => x.Test_DBCSendMessages, messages)
+                    .Set(x => x.UpdateOperator, UpdateOperator)
+                    .Set(x => x.UpdateTime, DateTime.Now)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"DBC下发信号未发生实际变化";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateSendSignals), LastError);
+                    return OperateResult.Failed();
+                }
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateSendSignals), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新DBC使用状态（全置false）
+        /// </summary>
+        /// <param name="id">对应DBC文件ID</param>
+        /// <returns></returns>
+        public OperateResult UpdateDBCEnableState_False(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCEnableState_False), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                var affrows = Sqlite.Update<Test_DBCConfig>().Where(x => x.DBCFileID == id)
+                    .Set(x => x.EnableUse, false)
+                    .Set(x => x.UpdateOperator, UpdateOperator)
+                    .Set(x => x.UpdateTime, DateTime.Now)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"DBC使用状态未发生实际变化";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateDBCEnableState_False), LastError);
+                    return OperateResult.Failed();
+                }
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateDBCEnableState_False), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
         /// <summary>
         /// 插入DBC配置
         /// </summary>
@@ -817,6 +1040,31 @@ namespace IMX.DB
         }
 
         /// <summary>
+        /// 获取所有DBC配置信息
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult<List<Test_DBCConfig>> SelectedDBCConfig_All() 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SelectedDBCConfig_All), LastError);
+                return OperateResult<List<Test_DBCConfig>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_DBCConfig>().ToList();
+                return OperateResult<List<Test_DBCConfig>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SelectedDBCConfig_All), LastError);
+                return OperateResult<List<Test_DBCConfig>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
         /// 获取DBC上报信息(通过项目ID)
         /// </summary>
         /// <param name="id">项目ID</param>
@@ -842,6 +1090,197 @@ namespace IMX.DB
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(GetDBCReceiveSignals), LastError);
                 return OperateResult<List<Test_DBCInfo>>.Excepted(null, ex);
+            }
+        }
+        #endregion
+
+        #region 自定义帧配置操作
+        /// <summary>
+        /// 获取配置名称
+        /// </summary>
+        /// <param name="id">对应DBC配置ID</param>
+        /// <returns></returns>
+        public OperateResult<List<string>> GetCustomConfigName (int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetCustomConfigName), LastError);
+                return OperateResult<List<string>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //var item =  Test_CustomMessageInfo.Find(id);
+
+                var items = Sqlite.Select<Test_CustomMessageInfo>().Where(x => x.DBCConfigID == id).ToList(x=>x.ConfigName);
+
+                return OperateResult<List<string>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetCustomConfigName), LastError);
+                return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取自定义配置
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public OperateResult<List<Test_CustomMessageInfo>> GetCustomConfig(int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetCustomConfigName), LastError);
+                return OperateResult<List<Test_CustomMessageInfo>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //var item =  Test_CustomMessageInfo.Find(id);
+
+                var items = Sqlite.Select<Test_CustomMessageInfo>().Where(x => x.DBCConfigID == id).ToList();
+
+                return OperateResult<List<Test_CustomMessageInfo>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetCustomConfigName), LastError);
+                return OperateResult<List<Test_CustomMessageInfo>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取对应消息配置信息
+        /// </summary>
+        /// <param name="id">配置自id</param>
+        /// <returns></returns>
+        public OperateResult<List<Test_CustomMessage>> GetCustomMessages(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetCustomMessages), LastError);
+                return OperateResult<List<Test_CustomMessage>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //var item =  Test_CustomMessageInfo.Find(id);
+
+                var items = Sqlite.Select<Test_CustomMessageInfo>().Where(x => x.Id == id).ToOne(x => x.CustomMessages);
+
+                return OperateResult<List<Test_CustomMessage>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetCustomMessages), LastError);
+                return OperateResult<List<Test_CustomMessage>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取对应消息配置信息
+        /// </summary>
+        /// <param name="id">对应DBC配置ID</param>
+        /// <param name="name">消息配置名称</param>
+        /// <returns></returns>
+        public OperateResult<List<Test_CustomMessage>> GetCustomMessages(int id, string name) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetCustomMessages), LastError);
+                return OperateResult<List<Test_CustomMessage>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //var item =  Test_CustomMessageInfo.Find(id);
+
+                var items = Sqlite.Select<Test_CustomMessageInfo>()
+                    .Where(x => x.DBCConfigID == id && x.ConfigName == name)
+                    .ToOne(x => x.CustomMessages);
+
+                return OperateResult<List<Test_CustomMessage>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetCustomMessages), LastError);
+                return OperateResult<List<Test_CustomMessage>>.Excepted(null, ex);
+            }
+        }
+
+
+        /// <summary>
+        /// 插入DBC配置
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        public OperateResult InsertCustomConfig(Test_CustomMessageInfo config)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertCustomConfig), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                config.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertCustomConfig), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新自定义配置
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult UpdateCustomMessage(int id, List<Test_CustomMessage> messages) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateCustomMessage), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                var affrows = Sqlite.Update<Test_CustomMessageInfo>(id)
+                    .Set(x => x.CustomMessages, messages)
+                    .Set(x => x.UpdateOperator, UpdateOperator)
+                    .Set(x => x.UpdateTime, DateTime.Now)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"自定义帧配置未发生实际变化";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateCustomMessage), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateCustomMessage), LastError);
+                return OperateResult.Excepted(ex);
             }
         }
         #endregion

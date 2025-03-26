@@ -61,6 +61,8 @@ using Newtonsoft.Json.Linq;
 using System.Windows.Ink;
 using IMX.Device.Relay;
 using System.Windows.Input;
+using System.Reflection;
+using System.Runtime.Hosting;
 
 namespace IMX.ATS.ATE
 {
@@ -157,7 +159,7 @@ namespace IMX.ATS.ATE
         public bool WinFocuse
         {
             get => winfocuse;
-            set => Set(nameof(WinFocuse), ref winfocuse, value);
+            set => Application.Current.Dispatcher.Invoke(()=> Application.Current.MainWindow.Focus());
         }
 
         private ObservableCollection<ExecuteInfo> ateexecuteinfos = new ObservableCollection<ExecuteInfo>();
@@ -353,7 +355,7 @@ namespace IMX.ATS.ATE
                 relayoperate_4?.SateLedContrcl(LightType.DEFALT);
             }
 
-            
+
             Thread.Sleep(100);
             IsFocuse = true;
             //MessageBox.Show($"故障指示灯已清除");
@@ -374,7 +376,7 @@ namespace IMX.ATS.ATE
                 return;
             }
 
-            if (args.Args.Key == Key.Back) 
+            if (args.Args.Key == Key.Back)
             {
                 productsnlenth = ProductSN.Length;
                 return;
@@ -384,7 +386,7 @@ namespace IMX.ATS.ATE
                 return;
             }
 
-           if (IsTestRuning)
+            if (IsTestRuning)
             {
                 return;
             }
@@ -397,7 +399,9 @@ namespace IMX.ATS.ATE
 
             ProductSN = ProductSN.Remove(0, productsnlenth);
 
-            
+            productsnlenth = ProductSN.Length;
+
+            Thread.Sleep(20);
 
             TestStartReady();
 
@@ -422,7 +426,7 @@ namespace IMX.ATS.ATE
                 {
                     return;
                 }
-                Task.Run(()=>{ EnableTestBtn = false; });
+                Task.Run(() => { EnableTestBtn = false; });
                 TestStop();
                 EnableTestBtn = true;
             }
@@ -456,10 +460,11 @@ namespace IMX.ATS.ATE
             //EnableTestInfoChange =! EnableTestInfoChange;
         }
 
+        #region 试验开始
         /// <summary>
         /// 开始试验准备动作
         /// </summary>
-        private void TestStartReady() 
+        private void TestStartReady()
         {
             if (string.IsNullOrEmpty(SelectedProductName))
             {
@@ -558,7 +563,7 @@ namespace IMX.ATS.ATE
                             dicreadsignals.Add(signal.Signal_Name, signal.Custom_Name);
                         }
 
-                        for (int i = 0; i < dbcconfig?.Test_DBCSendSignals?.Count; i++) 
+                        for (int i = 0; i < dbcconfig?.Test_DBCSendSignals?.Count; i++)
                         {
                             sendsignals_can.Add(dbcconfig?.Test_DBCSendSignals[i].Signal_Name);
                         }
@@ -648,12 +653,14 @@ namespace IMX.ATS.ATE
 
             monitor.OprateThread.Start(monitor);
 
-            
+
             ContentName = "运行试验中...";
             ContentColor = Brushes.Green;
             IsTestRuning = true;
+            GlobalModel.IsTestThreadRun = true;
         }
 
+        #endregion
 
         private string TestErrorString = string.Empty;
 
@@ -712,9 +719,16 @@ namespace IMX.ATS.ATE
                             ContentName = "CAN通讯初始化失败";
                             ContentColor = Brushes.Red;
                             StepStrShow = Visibility.Collapsed;
-                            IsTestRuning = false;
+                            //IsTestRuning = false;
                             TestResult = "FAIL";
                             TestResultColor = Brushes.Red;
+
+                            //使能解封
+                            IsTestRuning = false;
+                            //窗口需获取焦点
+                            Application.Current.MainWindow.Focus();
+                            Thread.Sleep(100);
+                            IsFocuse = true;
                             //IsFocuse = true;
                         }));
 
@@ -731,15 +745,15 @@ namespace IMX.ATS.ATE
                         MessageBox.Show(canoprate.Message, "CAN初始化失败");
                         return;
                     }
-                   
+
                     GlobalModel.DicDeviceInfo["Product"].DeviceOperate = canoprate.Data;
                     Product_CAN_Operate operate = (canoprate.Data as Product_CAN_Operate);
 
-                    var cansetrlt =operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
+                    var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
                         .And(operate.SetReadSignal(thread.DicReadSignals_CAN))
                         .And(operate.SetSendSignal(thread.SendSignals_CAN));
 
-                    if (!cansetrlt) 
+                    if (!cansetrlt)
                     {
                         GlobalModel.IsTestThreadRun = false;
                         thread.IsRunning = false;
@@ -751,11 +765,19 @@ namespace IMX.ATS.ATE
                             ContentName = "CAN配置参数初始化失败";
                             ContentColor = Brushes.Red;
                             StepStrShow = Visibility.Collapsed;
-                            IsTestRuning = false;
+                            //IsTestRuning = false;
                             TestResult = "FAIL";
                             TestResultColor = Brushes.Red;
                             //ProductSN = string.Empty;
                             //productsnlenth = 0;
+
+
+                            //使能解封
+                            IsTestRuning = false;
+                            //窗口需获取焦点
+                            Application.Current.MainWindow.Focus();
+                            Thread.Sleep(100);
+                            IsFocuse = true;
                         }));
 
                         CANUnint(operate);
@@ -772,11 +794,11 @@ namespace IMX.ATS.ATE
                     //     .And(operate.SetSendSignal(thread.SendSignals_CAN))
                     //     .ConvertTo(result.Data);
                     //});
-                    for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++) 
+                    for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++)
                     {
                         test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
                     }
-                    
+
                     //test_Data.Pro_DeviceRead = GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos;
                 }
                 catch (Exception ex)
@@ -788,6 +810,8 @@ namespace IMX.ATS.ATE
 
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
+
+
                         ContentName = "CAN通讯初始化失败";
                         ContentColor = Brushes.Red;
                         StepStrShow = Visibility.Collapsed;
@@ -796,6 +820,13 @@ namespace IMX.ATS.ATE
                         //ProductSN = string.Empty;
                         //productsnlenth = 0;
                         //IsFocuse = true;
+
+                        //使能解封
+                        IsTestRuning = false;
+                        //窗口需获取焦点
+                        Application.Current.MainWindow.Focus();
+                        Thread.Sleep(100);
+                        IsFocuse = true;
                     }));
 
                     return;
@@ -826,7 +857,11 @@ namespace IMX.ATS.ATE
                 Operator = UserName,
             };
 
-            
+#if DEBUG
+            //Debug模式下状态监测延时
+            Thread.Sleep(10000);
+#endif
+
             SaveItem(true, testinfo);
             test_Data.TestItemID = testinfo.Id;
             test_Data.ProductSN = ProductSN;
@@ -836,7 +871,7 @@ namespace IMX.ATS.ATE
             for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
             {
 
-                if (!thread.IsStartThread)
+                if (!thread.IsStartThread || !GlobalModel.IsTestThreadRun)
                 {
                     break;
                 }
@@ -882,12 +917,12 @@ namespace IMX.ATS.ATE
                 for (int j = 0; j < flows?.Count; j++)
                 {
                     bool isoutfunc = false;
-                    if (!thread.IsStartThread)
+                    if (!thread.IsStartThread || !GlobalModel.IsTestThreadRun)
                     {
                         break;
                     }
 
-                    if (isoutfunc) 
+                    if (isoutfunc)
                     {
                         break;
                     }
@@ -940,8 +975,8 @@ namespace IMX.ATS.ATE
                                     test_Data.Pro_DeviceRead.Add(resultconfig.Datas[k]);
                                 }
                                 test_Data.Id = 0;
-                                test_Data.ErrorInfo = result? string.Empty : result.Message;
-                                test_Data.Result = result? ResultState.SUCCESS : ResultState.FAIL;
+                                test_Data.ErrorInfo = result ? string.Empty : result.Message;
+                                test_Data.Result = result ? ResultState.SUCCESS : ResultState.FAIL;
                                 Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
 
                                 if (!result)
@@ -987,7 +1022,7 @@ namespace IMX.ATS.ATE
                             }
 
                             FunConfig_EquipmentResult resultconfig = config as FunConfig_EquipmentResult;
-                            var result = EquipmentResultExecute(j+1, flowname, stepinfo, resultconfig, operate as IAcquisition);
+                            var result = EquipmentResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as IAcquisition);
 
                             test_Data.StepName = config.SupportFuncitonType.GetDescription();
                             test_Data.FlowName = flowname;
@@ -1044,10 +1079,10 @@ namespace IMX.ATS.ATE
                                 acquisition = infoac.DeviceOperate as IAcquisition;
                             }
 
-                          var  result =  DCLoadExecute(config as FunConfig_DCLoad, 
-                                                      operate as IDCLoad, 
-                                                      product_CAN, 
-                                                      acquisition);
+                            var result = DCLoadExecute(config as FunConfig_DCLoad,
+                                                        operate as IDCLoad,
+                                                        product_CAN,
+                                                        acquisition);
                             if (!result)
                             {
                                 relayoperate_4.SateLedContrcl(LightType.ERROR);
@@ -1112,6 +1147,53 @@ namespace IMX.ATS.ATE
                                 step.Result = ResultState.SUCCESS;
                             }));
                         }
+                        else if (config.SupportFuncitonType == FuncitonType.HVDCSource)
+                        {
+#if DEBUG
+                            continue;
+#endif
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                stepinfo.Add(step);
+                            }));
+
+                            Product_CAN_Operate product_CAN = null;
+                            IAcquisition acquisition = null;
+                            if (thread.ProjectInfo.IsUseDDBC)
+                            {
+                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
+                                {
+                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
+                                }
+                            }
+                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
+                            {
+                                acquisition = infoac.DeviceOperate as IAcquisition;
+                            }
+
+                            var result = HVDCSScourceExecute(config as FunConfig_HVDCSource,
+                                                        operate as IHVDCSource,
+                                                        product_CAN,
+                                                        acquisition);
+                            if (!result)
+                            {
+                                relayoperate_4.SateLedContrcl(LightType.ERROR);
+                                thread.IsStartThread = false;
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    step.Result = ResultState.FAIL;
+                                }));
+                                TestErrorString += result.Message;
+
+
+                                break;
+                            }
+
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                step.Result = ResultState.SUCCESS;
+                            }));
+                        }
                         else
                         {
                             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -1127,13 +1209,13 @@ namespace IMX.ATS.ATE
                             }
 
 #if DEBUG
-                            if (config.SupportFuncitonType != FuncitonType.Product) 
+                            if (config.SupportFuncitonType != FuncitonType.Product)
                             {
                                 continue;
                             }
 #endif
 
-                            var result =  config.Execute(operate);
+                            var result = config.Execute(operate);
                             if (!result)
                             {
                                 relayoperate_4.SateLedContrcl(LightType.ERROR);
@@ -1175,7 +1257,7 @@ namespace IMX.ATS.ATE
                 testinfo.Result = ResultState.FAIL;
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    
+
                     TestResult = "FAIL";
                     TestResultColor = Brushes.Red;
                     //ProductSN = string.Empty;
@@ -1209,15 +1291,20 @@ namespace IMX.ATS.ATE
 
             thread.IsRunning = false;
             GlobalModel.IsTestThreadRun = false;
-            IsTestRuning = false;
 
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
+                //textbox所在窗口先恢复enbale状态再设置焦点
+                IsTestRuning = false;
                 ContentName = string.Empty;
                 StepStrShow = Visibility.Collapsed;
                 //ProductSN = string.Empty;
                 //productsnlenth = 0;
-                //IsFocuse = true;
+
+                //窗口需获取焦点
+                Application.Current.MainWindow.Focus();
+                Thread.Sleep(100);
+                IsFocuse = true;
             }));
             //try
             //{
@@ -1230,6 +1317,76 @@ namespace IMX.ATS.ATE
         }
 
         #region 特殊步骤操作
+
+        #region 结果模板
+
+        /// <summary>
+        /// 试验结果模板执行
+        /// </summary>
+        /// <param name="index">当前步骤序号</param>
+        /// <param name="flowname">测试项目名称</param>
+        /// <param name="infos">界面记录信息</param>
+        /// <param name="config">结果配置类</param>
+        /// <param name="operate">操作句柄</param>
+        /// <returns></returns>
+        private OperateResult ResultExecute(int index, string flowname, ObservableCollection<ExecuteStepInfo> infos, IFunction_Result config, IDeviceOperate operate)
+        {
+            string errorstring = string.Empty;
+            try
+            {
+                for (int i = 0; i < config.Datas?.Count; i++)
+                {
+                    ModDeviceReadData data = config.Datas[i];
+                    ExecuteStepInfo step = new ExecuteStepInfo
+                    {
+                        StepName = config.Datas[i].DataInfo.Name,
+                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
+                        //NowVlaue = data.DataInfo.Value.ToString(),
+                        Limit_Lower = data.Limits_Lower.ToString(),
+                        Limit_Upper = data.Limits_Upper.ToString(),
+                        ValueConditions = data.Judgment.GetDescription(),
+                    };
+
+                    config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
+
+                    step.NowVlaue = data.DataInfo.Value.ToString();
+                    //test_Data.StepName = config.SupportFuncitonType.GetDescription();
+                    //test_Data.FlowName = flowname;
+                    //test_Data.StepIndex = j + 1;
+
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ResultExecute),
+                        $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}");
+                    if (!config.Datas[i].IsInRange)
+                    {
+                        step.Result = ResultState.FAIL;
+                        errorstring += $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}\r\n";
+                    }
+                    else
+                    {
+                        step.Result = ResultState.SUCCESS;
+                    }
+
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        infos.Add(step);
+                    }));
+                }
+
+                if (!string.IsNullOrEmpty(errorstring))
+                {
+                    return OperateResult.Failed(errorstring);
+                }
+
+                Thread.Sleep(config.DelayAfterRun > 0 ? config.DelayAfterRun : 0);
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(ATE), nameof(ResultExecute), ex);
+                return OperateResult.Failed(ex.GetMessage());
+            }
+        }
+
         /// <summary>
         /// 产品试验结果执行
         /// </summary>
@@ -1269,7 +1426,7 @@ namespace IMX.ATS.ATE
                         ValueConditions = data.Judgment.GetDescription(),
                     };
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
-                    
+
                     step.NowVlaue = data.DataInfo.Value.ToString();
 
                     SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute),
@@ -1299,10 +1456,10 @@ namespace IMX.ATS.ATE
 
                 return OperateResult.Succeed();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(ATE), nameof(ProductResultExecute), ex);
+                return OperateResult.Excepted(ex);
             }
         }
 
@@ -1345,14 +1502,14 @@ namespace IMX.ATS.ATE
                     };
 
                     config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
-                    
+
                     step.NowVlaue = data.DataInfo.Value.ToString();
                     //test_Data.StepName = config.SupportFuncitonType.GetDescription();
                     //test_Data.FlowName = flowname;
                     //test_Data.StepIndex = j + 1;
 
                     SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(EquipmentResultExecute),
-                        $"测试项目：【{flowname}】\r\n步骤：【{index}】【{ data.DataInfo.Name}】\r\n 当前读取值【{ data.DataInfo.Value}】（判定条件[{ data.Judgment.GetDescription()}]）要求：{ data.Limits_Lower}- { data.Limits_Upper}");
+                        $"测试项目：【{flowname}】\r\n步骤：【{index}】【{data.DataInfo.Name}】\r\n 当前读取值【{data.DataInfo.Value}】（判定条件[{data.Judgment.GetDescription()}]）要求：{data.Limits_Lower}- {data.Limits_Upper}");
                     if (!config.Datas[i].IsInRange)
                     {
                         step.Result = ResultState.FAIL;
@@ -1378,12 +1535,13 @@ namespace IMX.ATS.ATE
 
                 return OperateResult.Succeed();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(ATE), nameof(EquipmentResultExecute), ex);
+                return OperateResult.Excepted(ex);
             }
         }
+        #endregion
 
         /// <summary>
         /// 负载试验执行
@@ -1529,12 +1687,12 @@ namespace IMX.ATS.ATE
                                 SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
 
                                 Thread.Sleep(config.StepFrequency);
-                                
-                                if (canoperate!=null)
+
+                                if (canoperate != null)
                                 {
                                     canoperate?.Device_ReadAll();
                                 }
-                                
+
                                 aqcoperate?.Device_ReadAll();
 
                                 //跳出步进条件
@@ -1667,7 +1825,7 @@ namespace IMX.ATS.ATE
         /// <param name="canoperate"></param>
         /// <param name="aqcoperate"></param>
         /// <returns></returns>
-        private OperateResult ACScourceExecute(FunConfig_ACSource config, IACSource device, Product_CAN_Operate canoperate, IAcquisition aqcoperate) 
+        private OperateResult ACScourceExecute(FunConfig_ACSource config, IACSource device, Product_CAN_Operate canoperate, IAcquisition aqcoperate)
         {
             string errorstring = string.Empty;
             try
@@ -1722,7 +1880,7 @@ namespace IMX.ATS.ATE
                 //步进模式
                 if (config.EnableStepping)
                 {
-                    Thread.Sleep(config.StepFrequency);
+                    //Thread.Sleep(config.StepFrequency);
 
                     Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
 
@@ -1744,77 +1902,88 @@ namespace IMX.ATS.ATE
                         int count = Convert.ToInt16(Math.Abs((((config.EndLoadValue - config.StartLoadValue) % config.Stride) == 0) ? ((config.EndLoadValue - config.StartLoadValue) / config.Stride) : ((config.EndLoadValue - config.StartLoadValue) / config.Stride + 1)));
                         for (int i = 0; i < count; i++)
                         {
-                            if (monitor!= null && (!monitor.IsStartThread))
+                            if (monitor != null && (!monitor.IsStartThread))
                             {
                                 SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "手动退出步进");
                                 break;
                             }
+
+                            Thread.Sleep(config.StepFrequency);
+
+                            //先判断再进行步进操作
+                            //步进判断
+                            var checkrlt = StepOutCheck(config.StepCondition, config.Values, data, canoperate, aqcoperate);
+                            if (checkrlt)
+                            {
+                                return OperateResult.Succeed();
+                            }
+
                             double setpvol = config.StartLoadValue + config.Stride * (i + 1) * (config.EndLoadValue < config.StartLoadValue ? -1 : 1);
 
                             setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
 
-                            device.SetValue_Singel(setpvol ,config.Set_Frequency);
+                            device.SetValue_Singel(setpvol, config.Set_Frequency);
 
                             InfoString = $"设备步进设置拉载值{setpvol}成功";
 
                             SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
 
-                            Thread.Sleep(config.StepFrequency);
+                            //Thread.Sleep(config.StepFrequency);
 
-                            if (canoperate != null)
-                            {
-                                canoperate?.Device_ReadAll();
-                            }
+                            //if (canoperate != null)
+                            //{
+                            //    canoperate?.Device_ReadAll();
+                            //}
 
-                            aqcoperate?.Device_ReadAll();
+                            //aqcoperate?.Device_ReadAll();
 
-                            //跳出步进条件
-                            if (config.Values  != null&& config.Values.Count > 0)
-                            {
-                                //if (config.StepCondition == StepConditions.OR)
-                                //{
-                                List<bool> results = new List<bool>();
-                                for (int j = 0; j < config.Values.Count; j++)
-                                {
-                                    if (config.Values[j].Value == null) 
-                                    {
-                                        continue;
-                                    }
-                                    double readdata = data[config.Values[j].Value.DataInfo.Name].DataInfo.Value;
-                                    switch (config.Values[j].StepValueCondition.ToString())
-                                    {
-                                        case "GREATERTHAN"://大于
+                            ////跳出步进条件
+                            //if (config.Values  != null&& config.Values.Count > 0)
+                            //{
+                            //    //if (config.StepCondition == StepConditions.OR)
+                            //    //{
+                            //    List<bool> results = new List<bool>();
+                            //    for (int j = 0; j < config.Values.Count; j++)
+                            //    {
+                            //        if (config.Values[j].Value == null) 
+                            //        {
+                            //            continue;
+                            //        }
+                            //        double readdata = data[config.Values[j].Value.DataInfo.Name].DataInfo.Value;
+                            //        switch (config.Values[j].StepValueCondition.ToString())
+                            //        {
+                            //            case "GREATERTHAN"://大于
 
-                                            results.Add(readdata > config.Values[j].ConditionValue ? true : false);
-                                            break;
-                                        case "LESSTHAN"://小于
-                                            results.Add(readdata < config.Values[j].ConditionValue ? true : false);
-                                            break;
-                                        case "EQUALTO"://等于
-                                            results.Add(readdata == config.Values[j].ConditionValue ? true : false);
-                                            break;
-                                        case "NOTEQUALTO"://不等于
-                                            results.Add(readdata != config.Values[j].ConditionValue ? true : false);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                }
-                                //}
+                            //                results.Add(readdata > config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            case "LESSTHAN"://小于
+                            //                results.Add(readdata < config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            case "EQUALTO"://等于
+                            //                results.Add(readdata == config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            case "NOTEQUALTO"://不等于
+                            //                results.Add(readdata != config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            default:
+                            //                break;
+                            //        }
+                            //    }
+                            //    //}
 
-                                if (results.All(x => x == true))
-                                {
-                                    InfoString = $"达成条件，跳出步进";
-                                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
-                                    return OperateResult.Succeed();
-                                }
-                                else if (results.Any(x => x == true) && config.StepCondition == StepConditions.OR)
-                                {
-                                    InfoString = $"达成条件，跳出步进";
-                                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
-                                    return OperateResult.Succeed();
-                                }
-                            }
+                            //    if (results.All(x => x == true))
+                            //    {
+                            //        InfoString = $"达成条件，跳出步进";
+                            //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+                            //        return OperateResult.Succeed();
+                            //    }
+                            //    else if (results.Any(x => x == true) && config.StepCondition == StepConditions.OR)
+                            //    {
+                            //        InfoString = $"达成条件，跳出步进";
+                            //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+                            //        return OperateResult.Succeed();
+                            //    }
+                            //}
 
 
                         }
@@ -1833,7 +2002,266 @@ namespace IMX.ATS.ATE
                 SuperDHHLoggerManager.Exception(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), ex);
                 return OperateResult.Excepted(ex);
             }
+        }
 
+        /// <summary>
+        /// 高压源试验执行
+        /// </summary>
+        /// <param name="config"></param>
+        /// <param name="device"></param>
+        /// <param name="canoperate"></param>
+        /// <param name="aqcoperate"></param>
+        /// <returns></returns>
+        private OperateResult HVDCSScourceExecute(FunConfig_HVDCSource config, IHVDCSource device, Product_CAN_Operate canoperate, IAcquisition aqcoperate) 
+        {
+            string errorstring = string.Empty;
+            try
+            {
+                if (device == null)
+                {
+                    errorstring = "设备类型不存在";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+
+                if (config == null)
+                {
+                    errorstring = "交流源配置不可为空";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+                if (aqcoperate == null)
+                {
+                    errorstring = "采样系统不存在";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+
+                string InfoString = string.Empty;
+
+                double loadvalue = config.EnableStepping ? config.StartLoadValue : config.Set_Vol;
+
+                OperateResult SetRlt = device.SetValue(loadvalue, config.Set_Cur);
+
+                if (!SetRlt)
+                {
+                    errorstring = $"设备参数设置异常：【{SetRlt.Message}】";
+                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), errorstring);
+                    return OperateResult.Failed(errorstring);
+                }
+
+                InfoString = $"设置\n[电压]{loadvalue}\n[电流]{config.Set_Cur}成功";
+                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), InfoString);
+
+                if (config.OperateType != SetOutPutState.Null)
+                {
+                    Thread.Sleep(200);
+                    device.SetOnOff(config.OperateType == SetOutPutState.ON ? DeviceOutPutState.ON : DeviceOutPutState.OFF);
+
+                    InfoString = config.OperateType == SetOutPutState.ON ? "打开" : "关闭";
+
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), $"高压源设备已{InfoString}");
+                }
+
+
+                //步进模式
+                if (config.EnableStepping)
+                {
+                    //Thread.Sleep(config.StepFrequency);
+
+                    Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
+
+                    if (canoperate != null)
+                    {
+                        for (int i = 0; i < canoperate?.ReadInfos?.Count; i++)
+                        {
+                            data.Add(canoperate.ReadInfos[i].DataInfo.Name, canoperate.ReadInfos[i]);
+                        }
+                    }
+
+                    for (int i = 0; i < aqcoperate?.ReadInfos?.Count; i++)
+                    {
+                        data.Add(aqcoperate.ReadInfos[i].DataInfo.Name, aqcoperate.ReadInfos[i]);
+                    }
+
+                    if (config.NeedStepCount > 0)
+                    {
+                        int count = config.NeedStepCount;
+                        //int count = Convert.ToInt16(Math.Abs((((config.EndLoadValue - config.StartLoadValue) % config.Stride) == 0) ? ((config.EndLoadValue - config.StartLoadValue) / config.Stride) : ((config.EndLoadValue - config.StartLoadValue) / config.Stride + 1)));
+                        for (int i = 0; i < count; i++)
+                        {
+                            if (monitor != null && (!monitor.IsStartThread))
+                            {
+                                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), "手动退出步进");
+                                break;
+                            }
+
+                            Thread.Sleep(config.StepFrequency);
+                            //先判断再进行步进操作
+                            //步进判断
+                            var checkrlt = StepOutCheck(config.StepCondition, config.Values, data, canoperate, aqcoperate);
+                            if (checkrlt)
+                            {
+                                return OperateResult.Succeed();
+                            }
+
+                            double setpvol = config.StartLoadValue + config.Stride * (i + 1) * (config.EndLoadValue < config.StartLoadValue ? -1 : 1);
+
+                            setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
+
+                            device.SetVol(setpvol);
+
+                            InfoString = $"高压源步进电压设置拉载值[{setpvol}]成功";
+
+                            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), InfoString);
+
+                            //Thread.Sleep(config.StepFrequency);
+
+                            //if (canoperate != null)
+                            //{
+                            //    canoperate?.Device_ReadAll();
+                            //}
+
+                            //aqcoperate?.Device_ReadAll();
+
+                            ////跳出步进条件
+                            //if (config.Values  != null&& config.Values.Count > 0)
+                            //{
+                            //    //if (config.StepCondition == StepConditions.OR)
+                            //    //{
+                            //    List<bool> results = new List<bool>();
+                            //    for (int j = 0; j < config.Values.Count; j++)
+                            //    {
+                            //        if (config.Values[j].Value == null) 
+                            //        {
+                            //            continue;
+                            //        }
+                            //        double readdata = data[config.Values[j].Value.DataInfo.Name].DataInfo.Value;
+                            //        switch (config.Values[j].StepValueCondition.ToString())
+                            //        {
+                            //            case "GREATERTHAN"://大于
+
+                            //                results.Add(readdata > config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            case "LESSTHAN"://小于
+                            //                results.Add(readdata < config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            case "EQUALTO"://等于
+                            //                results.Add(readdata == config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            case "NOTEQUALTO"://不等于
+                            //                results.Add(readdata != config.Values[j].ConditionValue ? true : false);
+                            //                break;
+                            //            default:
+                            //                break;
+                            //        }
+                            //    }
+                            //    //}
+
+                            //    if (results.All(x => x == true))
+                            //    {
+                            //        InfoString = $"达成条件，跳出步进";
+                            //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+                            //        return OperateResult.Succeed();
+                            //    }
+                            //    else if (results.Any(x => x == true) && config.StepCondition == StepConditions.OR)
+                            //    {
+                            //        InfoString = $"达成条件，跳出步进";
+                            //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), InfoString);
+                            //        return OperateResult.Succeed();
+                            //    }
+                            //}
+
+
+                        }
+                    }
+                    else
+                    {
+                        InfoString = $"步进操作：步进目标值和初始值相同，无需进行步进操作";
+                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), InfoString);
+                    }
+                }
+                Thread.Sleep(config.DelayAfterRun > 0 ? config.DelayAfterRun : 0);
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                SuperDHHLoggerManager.Exception(LoggerType.TESTLOG, nameof(MainViewModel), nameof(HVDCSScourceExecute), ex);
+                return OperateResult.Excepted(ex);
+            }
+        }
+        
+        /// <summary>
+        /// 步进跳出判断
+        /// </summary>
+        /// <returns></returns>
+        private OperateResult StepOutCheck(StepConditions stepcondition, List<StepConditionValue> Values, Dictionary<string, ModDeviceReadData> data, Product_CAN_Operate canoperate, IAcquisition aqcoperate) 
+        {
+            //跳出步进条件
+            if (Values != null && Values.Count > 0)
+            {
+                if (canoperate == null && aqcoperate == null)
+                {
+                    return OperateResult.Failed();
+                }
+
+                canoperate?.Device_ReadAll();
+
+                aqcoperate?.Device_ReadAll();
+
+                //if (config.StepCondition == StepConditions.OR)
+                //{
+                List<bool> results = new();
+                for (int j = 0; j < Values.Count; j++)
+                {
+                    if (Values[j].Value == null)
+                    {
+                        continue;
+                    }
+                    double readdata = data[Values[j].Value.DataInfo.Name].DataInfo.Value;
+                    switch (Values[j].StepValueCondition.ToString())
+                    {
+                        case "GREATERTHAN"://大于
+                            results.Add(readdata > Values[j].ConditionValue);
+                            break;
+                        case "LESSTHAN"://小于
+                            results.Add(readdata < Values[j].ConditionValue);
+                            break;
+                        case "EQUALTO"://等于
+                            results.Add(readdata == Values[j].ConditionValue);
+                            break;
+                        case "NOTEQUALTO"://不等于
+                            results.Add(readdata != Values[j].ConditionValue);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                if ((stepcondition == StepConditions.OR && results.Any(x => x == true)) 
+                    || results.All(x => x == true))
+                {
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "达成条件，跳出步进");
+                    return OperateResult.Succeed();
+                }
+                //else if (results.All(x => x == true))
+                //{
+                //    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "达成条件，跳出步进");
+                //    return OperateResult.Succeed();
+                //}
+                //if (results.All(x => x == true))
+                //{
+                //    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "达成条件，跳出步进");
+                //    return OperateResult.Succeed();
+                //}
+                //else if (results.Any(x => x == true) && stepcondition == StepConditions.OR)
+                //{
+                //    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "达成条件，跳出步进");
+                //    return OperateResult.Succeed();
+                //}
+            }
+
+            return OperateResult.Failed();
         }
         #endregion
 

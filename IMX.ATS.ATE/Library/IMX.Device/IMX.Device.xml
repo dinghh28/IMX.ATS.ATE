@@ -464,6 +464,9 @@
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetValue(System.Double,System.Double)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetVol(System.Double)">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Close">
             <inheritdoc/>
         </member>
@@ -1310,6 +1313,13 @@
             </summary>
             <param name="Vvalue">电压</param>
             <param name="Ivalue">电流</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IHVDCSource.SetVol(System.Double)">
+            <summary>
+            电压参数设置
+            </summary>
+            <param name="Vvalue">电压</param>
             <returns></returns>
         </member>
         <member name="T:IMX.Device.Base.IRelay">

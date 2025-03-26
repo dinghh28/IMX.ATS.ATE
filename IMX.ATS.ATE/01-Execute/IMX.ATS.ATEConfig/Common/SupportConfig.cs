@@ -2,10 +2,13 @@
 using IMX.Function.Base;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Collections.ObjectModel;
+using IMX.Device.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using DriveType = IMX.Device.Common.DriveType;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -38,5 +41,7 @@ namespace IMX.ATS.ATEConfig
             {FuncitonType.EquipmentResult, typeof(FunViewModelEquipmentResult)},
             {FuncitonType.ProductResult, typeof(FunViewModelProductResult)},
         };
+
+
     }
 }

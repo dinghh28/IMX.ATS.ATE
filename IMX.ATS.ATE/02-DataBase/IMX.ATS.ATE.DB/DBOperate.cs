@@ -1065,6 +1065,35 @@ namespace IMX.DB
         }
 
         /// <summary>
+        /// 获取DBC配置信息
+        /// </summary>
+        /// <param name="electricity">配置供电类型</param>
+        /// <returns></returns>
+        public OperateResult<List<Test_DBCConfig>> SelectedDBCConfig(Electricity electricity)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SelectedDBCConfig), LastError);
+                return OperateResult<List<Test_DBCConfig>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_DBCConfig>()
+                    .Where(x=>x.Electricity == electricity)
+                    .Where(x=>x.EnableUse)
+                    .ToList();
+                return OperateResult<List<Test_DBCConfig>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SelectedDBCConfig), LastError);
+                return OperateResult<List<Test_DBCConfig>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
         /// 获取DBC上报信息(通过项目ID)
         /// </summary>
         /// <param name="id">项目ID</param>
@@ -1458,6 +1487,7 @@ namespace IMX.DB
 
             try
             {
+                function.UpdateOperator = UpdateOperator;
                 function.Insert();
 
                 return OperateResult.Succeed();
@@ -1729,6 +1759,42 @@ namespace IMX.DB
                 return OperateResult.Excepted(ex);
             }
         }
+
+#if DEBUG
+        /// <summary>
+        /// 试验项插入功能调试
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult Test_InsertTestProccess()
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                Test_Process function = new Test_Process
+                {
+                    Test_Flows = new List<ModTestProcess>(),
+                    //SaveDatas = new Test_ProcessSaveData(),
+                };
+
+                function.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+#endif
+
         #endregion
 
         #region 项目方案操作
@@ -2274,7 +2340,7 @@ namespace IMX.DB
 
         public void SetError(string error) => LastError = error;
 
-        #endregion
+#endregion
 
         #region 构造函数
         /// <summary>

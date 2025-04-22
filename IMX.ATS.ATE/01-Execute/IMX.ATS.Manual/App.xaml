@@ -4,6 +4,19 @@
              xmlns:local="clr-namespace:IMX.ATS.Manual"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <local:ViewModelLocator x:Key="Locator"/>
+                </ResourceDictionary>
+
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+
+        </ResourceDictionary>
+
     </Application.Resources>
 </Application>

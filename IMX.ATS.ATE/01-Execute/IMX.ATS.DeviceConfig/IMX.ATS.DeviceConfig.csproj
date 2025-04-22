@@ -61,8 +61,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\CommonServiceLocator.2.0.7\lib\net48\CommonServiceLocator.dll</HintPath>
+      <HintPath>..\..\packages\CommonServiceLocator.2.0.2\lib\net47\CommonServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="FreeSql.Extensions.BaseEntity">
       <HintPath>..\..\packages\FreeSql.Extensions.BaseEntity.3.2.833\lib\net45\FreeSql.Extensions.BaseEntity.dll</HintPath>

@@ -21,11 +21,11 @@ namespace IMX.ATS.DBCConfig
     {
         public App()
         {
-            System.AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-            System.Threading.Tasks.TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             ResigerGetMessageEvent();
         }

@@ -26,6 +26,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
+using IMX.ATE.Framework;
 using IMX.DB;
 using IMX.DB.Model;
 using IMX.Logger;
@@ -260,6 +261,8 @@ namespace IMX.ATS.DBCConfig
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(Win);
 
             SearchStr = string.Empty;
+            LsDBCConfigInfos.Clear();
+            SearchDBCConfigInfos.Clear();
 
             if (!DBOperate.Default.IsInitOK)
             {
@@ -267,11 +270,13 @@ namespace IMX.ATS.DBCConfig
                 DBOperate.Default.UpdateOperator = GlobalModel.UserInfo.UserName;
             }
 
+
+
             DBOperate.Default.SelectedDBCConfig_All()
                 .AttachIfSucceed(result =>
             {
-                LsDBCConfigInfos.Clear();
-                SearchDBCConfigInfos.Clear();
+                //LsDBCConfigInfos.Clear();
+                //SearchDBCConfigInfos.Clear();
                 result.Data.ForEach(item => { LsDBCConfigInfos.Add(new DBCConfigInfo { Config = item }); });
 
                 for (int i = 0; i < result.Data?.Count; i++)
@@ -299,19 +304,5 @@ namespace IMX.ATS.DBCConfig
         #endregion
     }
 
-    /// <summary>
-    /// DBC配置信息
-    /// </summary>
-    public class DBCConfigInfo:ViewModelBase
-    {
-        /// <summary>
-        /// DBC配置
-        /// </summary>
-        public Test_DBCConfig Config { get; set; }
 
-        /// <summary>
-        /// DBC文件配置
-        /// </summary>
-        public Test_DBCFileInfo FileInfo { get; set; }
-    }
 }

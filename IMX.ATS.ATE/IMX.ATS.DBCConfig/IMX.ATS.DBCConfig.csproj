@@ -294,6 +294,10 @@
       <Project>{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}</Project>
       <Name>IMX.ATE.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\03-Common\IMX.ATE.Framework\IMX.ATE.Framework.csproj">
+      <Project>{05d26bee-0051-4e45-b4c6-e2bb01b24212}</Project>
+      <Name>IMX.ATE.Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">

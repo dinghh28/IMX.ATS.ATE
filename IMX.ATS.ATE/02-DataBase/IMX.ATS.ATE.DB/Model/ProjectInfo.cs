@@ -1,12 +1,8 @@
 ﻿using FreeSql.DataAnnotations;
 using FreeSql;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Piggy.VehicleBus.Common;
 using IMX.ATE.Common;
+using IMX.Common;
 
 namespace IMX.DB.Model
 {
@@ -27,20 +23,20 @@ namespace IMX.DB.Model
         [Column(IsNullable = true)]
         public string ProjectName { get; set; }
 
-        /// <summary>
-        /// 标定电压
-        /// </summary>
-        public uint RatedVol { get; set; }
+        ///// <summary>
+        ///// 标定电压
+        ///// </summary>
+        //public uint RatedVol { get; set; }
 
-        /// <summary>
-        /// 标定电流
-        /// </summary>
-        public uint RatedCur { get; set; }
+        ///// <summary>
+        ///// 标定电流
+        ///// </summary>
+        //public uint RatedCur { get; set; }
 
-        /// <summary>
-        /// 标定功率
-        /// </summary>
-        public uint RatedPow { get; set; }
+        ///// <summary>
+        ///// 标定功率
+        ///// </summary>
+        //public uint RatedPow { get; set; }
 
         /// <summary>
         /// 是否使用DBC
@@ -51,6 +47,11 @@ namespace IMX.DB.Model
         /// 对应DBC配置ID
         /// </summary>
         public int DBCConfigID { get; set; } = -1;
+
+        /// <summary>
+        /// 对应DBC配置名称
+        /// </summary>
+        public string DBCConfigName { get; set; }
 
         /// <summary>
         /// 供电电能
@@ -66,6 +67,18 @@ namespace IMX.DB.Model
         /// 数据域波特率
         /// </summary>
         public string DataBaudrate { get; set; } = "500Kbps";
+
+        /// <summary>
+        /// 试验流程
+        /// </summary>
+        [JsonMap]
+        public List<ModTestProcess> Test_OpenFlows { get; set; }
+
+        /// <summary>
+        /// 试验流程
+        /// </summary>
+        [JsonMap]
+        public List<ModTestProcess> Test_ShutFlows { get; set; }
     }
 
     /// <summary>
@@ -91,6 +104,30 @@ namespace IMX.DB.Model
         /// </summary>
         [JsonMap]
         public List<ModTestProcess> Test_Flows { get; set; }
+
+
+        /// <summary>
+        /// 试验存储读取数据列表
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Test_ReadData { get; set; }
+
+        /// <summary>
+        /// 试验存储设置数据列表
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Test_SetData { get; set; }
+
+        /// <summary>
+        /// 是否允许使用自定义数据
+        /// </summary>
+        public bool UseCustomData { get; set; } = false;
+
+        /// <summary>
+        /// 试验存储用户自定义数据列表
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Test_CustomData { get; set; }
 
         /// <summary>
         /// 上次更新人员

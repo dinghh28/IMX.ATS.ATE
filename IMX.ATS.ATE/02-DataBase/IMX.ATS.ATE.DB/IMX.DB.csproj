@@ -112,13 +112,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\03-Common\IMX.ATE.Common\IMX.ATE.Common.csproj">
       <Project>{62ba9fb9-3475-4241-aa00-0aaadf4bbb61}</Project>
       <Name>IMX.ATE.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -44,7 +44,7 @@
                 </Grid.RowDefinitions>
                 <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Text="试验项名称："/>
-                    <TextBox Width="200" Text="{Binding SchemeName}"/>
+                    <ComboBox Width="200" SelectedItem="{Binding SchemeName}" ItemsSource="{Binding SchemeNames}" IsReadOnly="True"/>
                 </WrapPanel>
                 <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">
                     <TextBlock Text="试验项描述："/>

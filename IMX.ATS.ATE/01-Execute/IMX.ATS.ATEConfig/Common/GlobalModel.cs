@@ -1,4 +1,5 @@
 ﻿
+using IMX.ATE.Common;
 using IMX.DB.Model;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,19 @@ namespace IMX.ATS.ATEConfig
         public static Test_DBCConfig TestDBCconfig { get; set; } = new Test_DBCConfig();
 
         /// <summary>
+        /// DBC配置变更后信息
+        /// </summary>
+        public static Test_DBCConfig TestDBCconfig_Change { get; set; } = null;
+
+        /// <summary>
+        /// 当前选择供电电能
+        /// </summary>
+        public static Electricity NowElectricity { get; set; }
+
+        /// <summary>
         /// DBC文件配置信息
         /// </summary>
         public static Test_DBCFileInfo TestDBCFileInfo { get; set; } = new Test_DBCFileInfo();
-
 
         /// <summary>
         /// 是否为新建项目

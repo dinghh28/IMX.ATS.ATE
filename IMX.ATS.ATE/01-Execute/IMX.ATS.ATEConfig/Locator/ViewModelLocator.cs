@@ -19,13 +19,17 @@ namespace IMX.ATS.ATEConfig
             SimpleIoc.Default.Register<ProjectSelectViewModel>();
             ContentControlManager.Regiter<ProjectSelectView>();
 
-            //项目选择
+            //项目信息配置
             SimpleIoc.Default.Register<ProjectInfoViewModel>();
             ContentControlManager.Regiter<ProjectInfoView>();
 
             //项目配置主界面
             SimpleIoc.Default.Register<MainViewModel>();
             ContentControlManager.Regiter<MainView>();
+
+            //DBC配置选择界面
+            SimpleIoc.Default.Register<SelectDBCViewModel>();
+            ContentControlManager.Regiter<SelectDBCView>();
 
             //DBC信号配置
             SimpleIoc.Default.Register<DBCConfigViewModel>();
@@ -43,6 +47,9 @@ namespace IMX.ATS.ATEConfig
             //SimpleIoc.Default.Register<PCProtectConfigViewModel>();
             //ContentControlManager.Regiter<PCProtectConfigView>();
 
+            //固定试验步骤配置
+            SimpleIoc.Default.Register<FixedProcessViewModel>();
+            ContentControlManager.Regiter<FixedProcessView>();
 
             //试验步骤配置
             SimpleIoc.Default.Register<TestProcessViewModel>();
@@ -55,8 +62,6 @@ namespace IMX.ATS.ATEConfig
             //试验方案配置
             SimpleIoc.Default.Register<TestProgrammeViewModel>();
             ContentControlManager.Regiter<TestProgrammeView>();
-
-            
 
             #region 流程步骤配置
             //直流稳压源配置
@@ -111,6 +116,11 @@ namespace IMX.ATS.ATEConfig
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 
         /// <summary>
+        /// 选择DBC配置
+        /// </summary>
+        public SelectDBCViewModel SelectDBC=> ServiceLocator.Current.GetInstance<SelectDBCViewModel>();
+
+        /// <summary>
         /// DBC信号配置
         /// </summary>
         public DBCConfigViewModel DBCConfig => ServiceLocator.Current.GetInstance<DBCConfigViewModel>();
@@ -129,6 +139,11 @@ namespace IMX.ATS.ATEConfig
         ///// 试验保护配置
         ///// </summary>
         //public PCProtectConfigViewModel ProtectConfig => ServiceLocator.Current.GetInstance<PCProtectConfigViewModel>();
+
+        /// <summary>
+        /// 固定试验步骤配置
+        /// </summary>
+        public FixedProcessViewModel FixedProcess => ServiceLocator.Current.GetInstance<FixedProcessViewModel>();
 
         /// <summary>
         /// 试验步骤配置

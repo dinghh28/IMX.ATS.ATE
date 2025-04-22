@@ -620,8 +620,24 @@ namespace IMX.ATS.ATEConfig
         {
             System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                Window newwindow = ContentControlManager.GetWindow<NewTestProcessView>(((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess);
+                NewTestProcessViewModel model = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess;
+                Window newwindow = ContentControlManager.GetWindow<NewTestProcessView>(model);
+
+                if (model.IsOpen) 
+                {
+                    MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButtons.OK, MessageBoxIcon.Information); return;
+                }
+
+                model.SchemeNames.Clear();
+
+                List<string> canaddschemenames = SupportConfig.DicProcessConfig.Keys.ToList().Except(SolutionNames.ToList()).ToList();
+
+                for (int i = 0; i < canaddschemenames.Count; i++)
+                {
+                    model.SchemeNames.Add(canaddschemenames[i]);
+                }
                 newwindow.Show();
+
             }));
         }
 
@@ -699,8 +715,23 @@ namespace IMX.ATS.ATEConfig
 
                     if (SolutionNames.Contains(souname))
                     {
-                        MessageBox.Show($"项目中已有[{SolutionName}]流程，请修改名称后再导入", "导入失败", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        return;
+                        //List<string> repeatname = SolutionNames.ToList().FindAll(x => x.Contains(souname));
+
+                        //for (int i = 1; i <= repeatname?.Count; i++)
+                        //{
+                        //    if (!repeatname.Contains($"{souname}_{i}"))
+                        //    {
+                        //        souname = $"{souname}_{i}";
+                        //        break;
+                        //    }
+                        //}
+
+                        MessageBox.Show("测试项已存在，请勿重复导入","导入试验项配置失败");
+                    }
+
+                    if (!SupportConfig.TestTestProcess.Contains(souname)) 
+                    {
+                        MessageBox.Show("该测试项目不符合需求，请确认后重新导入", "导入试验项配置失败");
                     }
 
                     string filePath = openFileDialog.FileName;
@@ -712,22 +743,64 @@ namespace IMX.ATS.ATEConfig
                         CreatFunction(functions[i]);
                     }
 
-                    NewTestProcessViewModel newTestproce = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess;
-
-                    newTestproce.SchemeName = souname;
-
-                    newTestproce.SaveSchemeCommannd.Execute(ContentControlManager.GetWindow<NewTestProcessView>(((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess));
-
-                    SolutionName = souname;
-
-                    MessageBox.Show($"{souname} 已导入共{functions?.Count}步配置", "配置导入完成");
-
-                    //TsetProcesse.FunctionInfos = JsonConvert.DeserializeObject<ObservableCollection<FunctionInfo>>(infos);
+                    SaveScheme(souname).AttachIfSucceed(result =>
+                    {
+                        SolutionNames.Add(souname);
+                        SolutionName = souname;
+                        MessageBox.Show($"{souname} 已导入共{functions?.Count}步配置", "配置导入完成");
+                    }).AttachIfFailed(result => { MessageBox.Show(result.Message, "配置导入失败"); })
+                        ;
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"ATE配置文件本地导入异常:{ex.GetMessage()}", "导入配置异常");
+            }
+        }
+
+        /// <summary>
+        /// 保存测试项
+        /// </summary>
+        /// <param name="SchemeName">测试项名称</param>
+        /// <returns></returns>
+        private OperateResult SaveScheme(string SchemeName)
+        {
+            try
+            {
+                int id = GlobalModel.Test_ProjectInfo.Id;
+                //List<string> SchemeNames = SolutionNames.ToList();
+
+                List<ModTestProcess> mod = new List<ModTestProcess>();
+
+                for (int i = 0; i < FunctionInfos?.Count; i++)
+                {
+                    FunctionInfo item = FunctionInfos[i];
+                    OperateResult<string> result = item.Model.Func.Config.ToJson();
+
+                    mod.Add(new ModTestProcess
+                    {
+
+                        Step = item.Step,
+                        CustomName = item.CutomFuncName,
+                        Description = item.Content,
+                        FuntionName = item.FunctionName,
+                        Type = item.ModType.ToString(),
+                        Funtion = result ? result.Data : string.Empty,
+                    });
+                }
+
+                return DBOperate.Default.InsertTestProccess(new Test_Process
+                {
+                    ProjectID = id,
+                    FunctionName = SchemeName,
+                    Test_Flows = mod,
+
+                    //UpdateOperator = GlobalModel.UserInfo?.UserName,
+                });
+            }
+            catch (Exception ex)
+            {
+                return OperateResult.Excepted(ex);
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\..\packages\SQLite.3.13.0\build\net45\SQLite.props" Condition="Exists('..\..\packages\SQLite.3.13.0\build\net45\SQLite.props')" />
+  <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -298,9 +298,11 @@
     <Compile Include="ViewModel\DBCConfigViewModel.cs" />
     <Compile Include="ViewModel\DBCFileChangeViewModel.cs" />
     <Compile Include="ViewModel\DBCFileUploadViewModel.cs" />
+    <Compile Include="ViewModel\FixedProcessViewModel.cs" />
     <Compile Include="ViewModel\NewTestProcessViewModel.cs" />
     <Compile Include="ViewModel\ProjectInfoViewModel.cs" />
     <Compile Include="ViewModel\ProjectSelectViewModel.cs" />
+    <Compile Include="ViewModel\SelectDBCViewModel.cs" />
     <Compile Include="ViewModel\TestProcessViewModel.cs" />
     <Compile Include="ViewModel\TestProgrammeViewModel.cs" />
     <Compile Include="View\DBCConfigView.xaml.cs">
@@ -312,6 +314,9 @@
     <Compile Include="View\DBCFileUploadView.xaml.cs">
       <DependentUpon>DBCFileUploadView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\FixedProcessView.xaml.cs">
+      <DependentUpon>FixedProcessView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\NewTestProcessView.xaml.cs">
       <DependentUpon>NewTestProcessView.xaml</DependentUpon>
     </Compile>
@@ -320,6 +325,9 @@
     </Compile>
     <Compile Include="View\ProjectSelectView.xaml.cs">
       <DependentUpon>ProjectSelectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SelectDBCView.xaml.cs">
+      <DependentUpon>SelectDBCView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TestProcessView.xaml.cs">
       <DependentUpon>TestProcessView.xaml</DependentUpon>
@@ -371,6 +379,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\FixedProcessView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -396,6 +408,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ProjectSelectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SelectDBCView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -445,6 +461,10 @@
       <Project>{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}</Project>
       <Name>IMX.ATE.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\03-Common\IMX.ATE.Framework\IMX.ATE.Framework.csproj">
+      <Project>{05D26BEE-0051-4E45-B4C6-E2BB01B24212}</Project>
+      <Name>IMX.ATE.Framework</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -452,9 +472,9 @@
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
     <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\SQLite.3.13.0\build\net45\SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SQLite.3.13.0\build\net45\SQLite.props'))" />
     <Error Condition="!Exists('..\..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.118.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
   </Target>
   <Import Project="..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />

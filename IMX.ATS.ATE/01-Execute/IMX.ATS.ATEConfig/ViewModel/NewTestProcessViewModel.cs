@@ -36,12 +36,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using IMX.Function.ViewModel.Model;
+using System.Collections.ObjectModel;
 
 namespace IMX.ATS.ATEConfig
 {
     public class NewTestProcessViewModel : ExtendViewModelBase
     {
-
+              
 
         #region 公共属性
 
@@ -55,6 +56,17 @@ namespace IMX.ATS.ATEConfig
             get => schemeName;
             set => Set(nameof(SchemeName), ref schemeName, value);
         }
+
+        private ObservableCollection<string> schemenames = new ObservableCollection<string>();
+        /// <summary>
+        /// 当前可新增试验项列表
+        /// </summary>
+        public ObservableCollection<string> SchemeNames
+        {
+            get => schemenames;
+            set => Set(nameof(SchemeNames), ref schemenames, value);
+        }
+
 
         private string schemeDescribe = "";
         /// <summary>
@@ -70,6 +82,8 @@ namespace IMX.ATS.ATEConfig
         #region 界面绑定指令
         public RelayCommand<object> SaveSchemeCommannd => new RelayCommand<object>(SaveScheme);
         #endregion
+
+        public bool IsOpen { get; set; } = false;
 
         #endregion
 
@@ -167,11 +181,13 @@ namespace IMX.ATS.ATEConfig
         {
             SchemeName = "";
             SchemeDescribe = "";
+            IsOpen = true;
             //base.WindowLoadedExecute(obj);
         }
 
         protected override void WindowClosedExecute(object obj)
         {
+            IsOpen = false;
             base.WindowClosedExecute(obj);
         }
         #endregion

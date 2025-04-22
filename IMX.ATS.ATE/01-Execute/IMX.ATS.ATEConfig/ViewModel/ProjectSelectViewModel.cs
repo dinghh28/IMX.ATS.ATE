@@ -250,6 +250,7 @@ namespace IMX.ATS.ATEConfig
             if (!DBOperate.Default.IsInitOK)
             {
                 DBOperate.Default.Init();
+                DBOperate.Default.UpdateOperator = GlobalModel.UserInfo.UserName;
             }
 
             DBOperate.Default.SelectedProjectInfo_All().AttachIfSucceed(result =>

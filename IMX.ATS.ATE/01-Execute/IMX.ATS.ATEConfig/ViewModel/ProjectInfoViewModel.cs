@@ -23,8 +23,10 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using FastDeepCloner;
 using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
+using IMX.ATE.Common;
 using IMX.DB;
 using IMX.DB.Model;
 using Super.Zoo.Framework;
@@ -32,6 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -108,36 +111,63 @@ namespace IMX.ATS.ATEConfig
             set => Set(nameof(ProjectSN), ref projectsn, value);
         }
 
-        private uint ratedvol = 220;
+        private Electricity electricity = Electricity.Single;
         /// <summary>
-        /// 标定电压
+        /// 电能类型
         /// </summary>
-        public uint RatedVol
+        public Electricity Electricity
         {
-            get => ratedvol;
-            set => Set(nameof(RatedVol), ref ratedvol, value);
+            get => electricity;
+            set
+            {
+                if (Set(nameof(Electricity), ref electricity, value))
+                {
+                    GlobalModel.NowElectricity = value;
+                }
+            }
+        }
+
+        private string dbcconfigname;
+        /// <summary>
+        /// dbc配置名称
+        /// </summary>
+        public string DBCConfigName
+        {
+            get => dbcconfigname;
+            set => Set(nameof(DBCConfigName), ref dbcconfigname, value);
         }
 
 
-        private uint ratedcur = 20;
-        /// <summary>
-        /// 标定电流
-        /// </summary>
-        public uint RatedCur
-        {
-            get => ratedcur;
-            set => Set(nameof(RatedCur), ref ratedcur, value);
-        }
+        //private uint ratedvol = 220;
+        ///// <summary>
+        ///// 标定电压
+        ///// </summary>
+        //public uint RatedVol
+        //{
+        //    get => ratedvol;
+        //    set => Set(nameof(RatedVol), ref ratedvol, value);
+        //}
 
-        private uint ratedpow = 4400;
-        /// <summary>
-        /// 标定电压
-        /// </summary>
-        public uint RatedPow
-        {
-            get => ratedpow;
-            set => Set(nameof(RatedPow), ref ratedpow, value);
-        }
+
+        //private uint ratedcur = 20;
+        ///// <summary>
+        ///// 标定电流
+        ///// </summary>
+        //public uint RatedCur
+        //{
+        //    get => ratedcur;
+        //    set => Set(nameof(RatedCur), ref ratedcur, value);
+        //}
+
+        //private uint ratedpow = 4400;
+        ///// <summary>
+        ///// 标定电压
+        ///// </summary>
+        //public uint RatedPow
+        //{
+        //    get => ratedpow;
+        //    set => Set(nameof(RatedPow), ref ratedpow, value);
+        //}
 
         //private uint runtime = 1;
         ///// <summary>
@@ -187,6 +217,41 @@ namespace IMX.ATS.ATEConfig
 
         #region 界面绑定指令
         public RelayCommand SaveConfig => new RelayCommand(SavedConfig);
+
+        public RelayCommand ChangeDBC => new RelayCommand(() =>
+        {
+            var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).SelectDBC;
+            Window view = ContentControlManager.GetWindow<SelectDBCView>(model);
+            if (model.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
+            
+            if (GlobalModel.TestDBCconfig != null || GlobalModel.TestDBCconfig.Id != 0)
+            {
+                if (MessageBox.Show("是否切换当前配置DBC?\r\n若切换请核对试验项操作步骤，避免产品相关指令不符合预期", "DBC配置变更", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                {
+                    return;
+                }
+            }
+
+            view.Topmost = true;
+            view.Show();
+
+            Task.Run(() => 
+            {
+                Thread.Sleep(500);
+                while (true)
+                {
+                    if (!model.IsOpen)
+                    {
+                        dbcconfig = GlobalModel.TestDBCconfig_Change;
+                        if (dbcconfig != null)
+                        {
+                            DBCConfigName = dbcconfig.ConfigName;
+                        }
+                    }
+                }
+            });
+        });
+
         #endregion
 
         /// <summary>
@@ -206,6 +271,8 @@ namespace IMX.ATS.ATEConfig
         private bool isnew;
 
         private MainViewModel mainviewmodel;
+
+        private Test_DBCConfig dbcconfig = null;
         #endregion
 
         #region 私有方法
@@ -216,69 +283,98 @@ namespace IMX.ATS.ATEConfig
             {
                 if (string.IsNullOrEmpty(ProjectName)) { MessageBox.Show($"项目名称不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
                 if (string.IsNullOrEmpty(ProjectSN)) { MessageBox.Show($"项目SN不允许为空！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                if (string.IsNullOrEmpty(DBCConfigName)) {MessageBox.Show($"请选择DBC配置后再进行保存！", "项目保存", MessageBoxButton.OK, MessageBoxImage.Error); return;}
 
                 //ProjectInfo.InputVol = SelectedVol;
                 //ProjectInfo.RunTime = RunTime;
 
-                ProjectInfo.IsUseDDBC = UseDBC;
-                ProjectInfo.RatedCur = RatedCur;
-                ProjectInfo.RatedVol = RatedVol;
-                ProjectInfo.RatedPow = RatedPow;
+                //ProjectInfo.IsUseDDBC = UseDBC;
+                //ProjectInfo.RatedCur = RatedCur;
+                //ProjectInfo.RatedVol = RatedVol;
+                //ProjectInfo.RatedPow = RatedPow;
                 ProjectInfo.BaudRate = BaudRate;
                 ProjectInfo.DataBaudrate = DataBaudRate;
+                ProjectInfo.Electricity = Electricity;
+                ProjectInfo.DBCConfigName = DBCConfigName;
 
-                //ProjectInfo.EnableProtect = EnableProtect;
-                if (isnew)
+                if (dbcconfig != null)
+                {
+                    ProjectInfo.DBCConfigID = GlobalModel.TestDBCconfig_Change.Id;
+                }
+
+                if (isnew && GlobalModel.Test_ProjectInfo.Id == 0) 
                 {
                     ProjectInfo.ProjectName = ProjectName;
                     ProjectInfo.ProjectSN = ProjectSN;
-                    DBOperate.Default.InsertProjectInfo(ProjectInfo).AttachIfSucceed(result =>
+
+                    DBOperate.Default.InsertProjectInfo(ProjectInfo).AttachIfSucceed(result => 
                     {
-                        mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
-                        if (ProjectInfo.IsUseDDBC && GlobalModel.TestDBCconfig.Id == 0)
-                        {
-                            DBOperate.Default.InsertDBCConfig(GlobalModel.TestDBCconfig);
-                        }
-                        //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
-                        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
-                        isnew = false;
                         mainviewmodel.ProjectName = ProjectName;
-                        //mainviewmodel.ProjectInfo.Id = ProjectInfo.Id;
-                        EnableEdite = true;
-                        MessageBox.Show("项目信息保存成功!", "[新建]", MessageBoxButton.OK, MessageBoxImage.Information);
-                    })
-                        .AttachIfFailed(result =>
-                        {
-                            MessageBox.Show($"项目信息保存失败：\r\n{result.Message}!", "[新建]");
-                            return;
-                        }).
-                        AttachIfExcepted(result =>
-                        {
-                            MessageBox.Show($"项目信息保存异常：\r\n{result.Message}!", "[新建]");
-                            return;
-                        });
+                        dbcconfig = null;
+                        MessageBox.Show("项目信息保存成功!", "新建项目", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }).AttachIfFailed(result=> MessageBox.Show($"项目信息保存失败：\r\n{result.Message}!", "新建项目"));
                 }
                 else
                 {
-                    DBOperate.Default.UpdataProjectInfo(ProjectInfo).AttachIfSucceed(result =>
+                    DBOperate.Default.UpdataProjectInfo(ProjectInfo).AttachIfSucceed(result => 
                     {
-                        mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
-                        //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
-                        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
-                        if (ProjectInfo.IsUseDDBC && GlobalModel.TestDBCconfig.Id == 0)
-                        {
-                            DBOperate.Default.InsertDBCConfig(GlobalModel.TestDBCconfig);
-                        }
-
-                        MessageBox.Show("项目信息更新成功!", "[更新]", MessageBoxButton.OK, MessageBoxImage.None);
-                    })
-                        .AttachIfFailed(result => { MessageBox.Show($"项目信息更新失败：\r\n{result.Message}!", "[更新]"); })
-                        .AttachIfExcepted(result => { MessageBox.Show($"项目信息更新异常：\r\n{result.Message}!", "[更新]"); });
+                        dbcconfig = null;
+                        MessageBox.Show("项目信息保存成功!", "项目更新", MessageBoxButton.OK, MessageBoxImage.Information);
+                    });
                 }
+
+                //ProjectInfo.EnableProtect = EnableProtect;
+                //if (isnew)
+                //{
+                //    ProjectInfo.ProjectName = ProjectName;
+                //    ProjectInfo.ProjectSN = ProjectSN;
+                //    DBOperate.Default.InsertProjectInfo(ProjectInfo).AttachIfSucceed(result =>
+                //    {
+                //        mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
+                //        //if (ProjectInfo.IsUseDDBC && GlobalModel.TestDBCconfig.Id == 0)
+                //        //{
+                //        //    DBOperate.Default.InsertDBCConfig(GlobalModel.TestDBCconfig);
+                //        //}
+                //        //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
+                //        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
+                //        isnew = false;
+                //        mainviewmodel.ProjectName = ProjectName;
+                //        //mainviewmodel.ProjectInfo.Id = ProjectInfo.Id;
+                //        EnableEdite = true;
+                //        MessageBox.Show("项目信息保存成功!", "[新建]", MessageBoxButton.OK, MessageBoxImage.Information);
+                //    })
+                //        .AttachIfFailed(result =>
+                //        {
+                //            MessageBox.Show($"项目信息保存失败：\r\n{result.Message}!", "[新建]");
+                //            return;
+                //        }).
+                //        AttachIfExcepted(result =>
+                //        {
+                //            MessageBox.Show($"项目信息保存异常：\r\n{result.Message}!", "[新建]");
+                //            return;
+                //        });
+                //}
+                //else
+                //{
+                //    DBOperate.Default.UpdataProjectInfo(ProjectInfo).AttachIfSucceed(result =>
+                //    {
+                //        mainviewmodel.DBCConfigVisbility = ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
+                //        //mainviewmodel.ProtectConfigVisbility = ProjectInfo.EnableProtect ? Visibility.Visible : Visibility.Collapsed;
+                //        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
+                //        if (ProjectInfo.IsUseDDBC && GlobalModel.TestDBCconfig.Id == 0)
+                //        {
+                //            DBOperate.Default.InsertDBCConfig(GlobalModel.TestDBCconfig);
+                //        }
+
+                //        MessageBox.Show("项目信息更新成功!", "[更新]", MessageBoxButton.OK, MessageBoxImage.None);
+                //    })
+                //        .AttachIfFailed(result => { MessageBox.Show($"项目信息更新失败：\r\n{result.Message}!", "[更新]"); })
+                //        .AttachIfExcepted(result => { MessageBox.Show($"项目信息更新异常：\r\n{result.Message}!", "[更新]"); });
+                //}
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"项目信息更新异常:\r\n{ex.Message}!", "[更新]", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"项目信息更新异常:\r\n{ex.Message}!", "项目保存异常", MessageBoxButton.OK, MessageBoxImage.Error);
             }
            
 
@@ -298,8 +394,8 @@ namespace IMX.ATS.ATEConfig
             {
                 ProjectName = GlobalModel.Test_ProjectInfo.ProjectName;
                 ProjectSN = GlobalModel.Test_ProjectInfo.ProjectSN;
-                UseDBC = GlobalModel.Test_ProjectInfo.IsUseDDBC;
-                RatedPow = GlobalModel.Test_ProjectInfo.RatedPow;
+                //UseDBC = GlobalModel.Test_ProjectInfo.IsUseDDBC;
+                //RatedPow = GlobalModel.Test_ProjectInfo.RatedPow;
                 BaudRate = GlobalModel.Test_ProjectInfo.BaudRate;
                 DataBaudRate= GlobalModel.Test_ProjectInfo.DataBaudrate ;
             }
@@ -311,7 +407,7 @@ namespace IMX.ATS.ATEConfig
             ProjectName = "";
             ProjectSN = "";
             //RunTime = 1;
-            UseDBC = false;
+            //UseDBC = false;
             //SelectedVol = 0;
             //EnableProtect = false;
             base.WindowClosedExecute(obj);

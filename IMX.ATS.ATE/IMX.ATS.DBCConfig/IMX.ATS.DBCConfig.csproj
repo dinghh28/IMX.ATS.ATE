@@ -79,8 +79,7 @@
     <StartupObject>IMX.ATS.DBCConfig.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="CommonServiceLocator, Version=2.0.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.7\lib\net48\CommonServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -125,6 +124,14 @@
     </Reference>
     <Reference Include="H.WPF.Framework">
       <HintPath>..\Library\Framework\H.WPF.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="IMX.ATE.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\bin\x64\Debug\IMX.ATE.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="IMX.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\IMX.Common\IMX.Common.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Logger, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
@@ -289,10 +296,6 @@
     <ProjectReference Include="..\02-DataBase\IMX.ATS.ATE.DB\IMX.DB.csproj">
       <Project>{9AE13287-0976-4264-8210-0DC86E77FDE9}</Project>
       <Name>IMX.DB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\03-Common\IMX.ATE.Common\IMX.ATE.Common.csproj">
-      <Project>{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}</Project>
-      <Name>IMX.ATE.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\03-Common\IMX.ATE.Framework\IMX.ATE.Framework.csproj">
       <Project>{05d26bee-0051-4e45-b4c6-e2bb01b24212}</Project>

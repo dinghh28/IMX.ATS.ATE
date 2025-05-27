@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace IMX.ATS.Manual
 {
     /// <summary>
-    /// MainView.xaml 的交互逻辑
+    /// ManualViewLVDCLoad.xaml 的交互逻辑
     /// </summary>
-    public partial class MainView : Window
+    public partial class ManualViewLVDCLoad : UserControl
     {
-        public MainView()
+        public ManualViewLVDCLoad()
         {
             InitializeComponent();
         }

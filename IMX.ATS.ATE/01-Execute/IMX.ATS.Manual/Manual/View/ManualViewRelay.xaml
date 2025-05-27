@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="IMX.ATS.Manual.ManualViewRelay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converter="clr-namespace:IMX.WPF.Resource.Converters;assembly=IMX.WPF.Resource"
+             xmlns:local="clr-namespace:IMX.ATS.Manual" 
+             d:DataContext="{d:DesignInstance Type=local:ManualViewModelRelay}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <Binding Path="Relay" Source="{StaticResource Locator}"/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+                <ResourceDictionary>
+                    <converter:EnumValueToEnumNameConverter x:Key="EnumValue"/>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid>
+            <GroupBox Header="继电器">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!--<RowDefinition Height="95"/>-->
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <!--<Grid Grid.Row="0" Margin="0,15,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        --><!--<GroupBox Header="01-运行状态"  >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="设置运行状态："  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <ComboBox Grid.Column="1"  Margin="5,0" Height="35"  Width="200"  ItemsSource="{Binding OperateList, Converter={StaticResource EnumValue}}" SelectedValue="{Binding OperateType, Converter={StaticResource EnumValue}}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                </ComboBox>
+                            </Grid>
+                        </GroupBox>--><!--
+                        <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Content="参  数  下  发" Margin="0,0,20,0" Height="40" Command="{Binding SetValues}"/>
+                    </Grid>-->
+                    <!--<Grid Grid.Row="1">
+                        <GroupBox Header="02-输出模式" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="设置输出模式："  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <ComboBox Grid.Column="1" Margin="5,0"  Height="35" Width="200"  ItemsSource="{Binding RunModeList, Converter={StaticResource EnumValue}}" SelectedValue="{Binding RunModeType, Converter={StaticResource EnumValue}}" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                </ComboBox>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>-->
+
+                    <GroupBox Header="01-输出设置" Grid.Row="0" Margin="5">
+                        <ItemsControl ItemsSource="{Binding Path=Relayboards}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="4"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsOn}" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="Hand" FontSize="15" Style="{StaticResource ResourceKey=Switch_CK}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </GroupBox>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

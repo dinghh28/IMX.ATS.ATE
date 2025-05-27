@@ -189,6 +189,10 @@ namespace IMX.ATS.Lander
         //[DllImport("kernel32.dll")]
         //public static extern int WinExec(string programPath, int operType);
 
+        /// <summary>
+        /// 选择功能模块
+        /// </summary>
+        /// <param name="obj"></param>
         private void DoViewChange(object obj)
         {
             //GC.Collect();

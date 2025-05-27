@@ -49,7 +49,7 @@ namespace IMX.ATS.Manual
         #region 私有变量
         #endregion
 
-        #region 私有方法
+        #region 私有方法 
         #endregion
 
         #region 保护方法

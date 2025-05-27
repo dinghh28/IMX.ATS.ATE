@@ -64,7 +64,7 @@ namespace IMX.ATS.ATE
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             //ResigerGetMessageEvent();
-            //MessageBox.Show(e.Exception.GetMessage(), "软件异常 - 异步线程", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(e.Exception.GetMessage(), "软件异常 - 异步线程", MessageBoxButtons.OK, MessageBoxIcon.Error);
             //ExceptionExtends.ResetGetMessageEvent();
             return;
         }

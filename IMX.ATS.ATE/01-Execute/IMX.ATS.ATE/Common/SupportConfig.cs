@@ -2,6 +2,7 @@
 using IMX.Function.Base;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,11 @@ namespace IMX.ATS.ATE
         /// 系统支持设备配置字典[设备类型, 设备配置信息]
         /// </summary>
         public static Dictionary<string, SysteamSupportDeviceConfigInfo> DicSysteamDeviceConfigs { get; set; } = new Dictionary<string, SysteamSupportDeviceConfigInfo>();
+
+        /// <summary>
+        /// 数据本地存储文件地址
+        /// </summary>
+        public static string DataSavePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LocalDataFile");
     }
 
     /// <summary>

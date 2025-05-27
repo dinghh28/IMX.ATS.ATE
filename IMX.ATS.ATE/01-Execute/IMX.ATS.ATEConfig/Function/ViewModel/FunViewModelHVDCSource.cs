@@ -31,6 +31,7 @@ using IMX.Function;
 using IMX.Function.Base;
 using IMX.Function.Base.Enumerations;
 using IMX.Function.ViewModel;
+using IMX.Function.ViewModel.Model;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;

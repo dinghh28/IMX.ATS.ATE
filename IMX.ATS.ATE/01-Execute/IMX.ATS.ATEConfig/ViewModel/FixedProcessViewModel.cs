@@ -26,7 +26,9 @@
 using FastDeepCloner;
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
+using IMX.DB;
 using IMX.DB.Model;
+using IMX.Function;
 using IMX.Function.Base;
 using IMX.Function.ViewModel;
 using IMX.Function.ViewModel.Model;
@@ -121,14 +123,14 @@ namespace IMX.ATS.ATEConfig
         #endregion
 
         #region 私有变量
+
+        /// <summary>
+        /// 项目ID
+        /// </summary>
+        private int proid = -1;
         #endregion
 
         #region 私有方法
-
-        private void InsertFunction() 
-        {
-
-        }
 
         //#region 试验步骤顺序变更
         ///// <summary>
@@ -330,7 +332,7 @@ namespace IMX.ATS.ATEConfig
             }
 
             TsetProcesses = [
-                new TestProcessModel()
+                                new TestProcessModel()
             {
                 ProcessName = "开机流程",
                 TestFlowItems = TestFlowItems,
@@ -346,7 +348,7 @@ namespace IMX.ATS.ATEConfig
                 //Import = new RelayCommand(ImportFunctions),
                 FunctionInfoIndex = -1,
             },
-            new()
+                                new()
             {
                 ProcessName = "关机流程",
                 TestFlowItems = TestFlowItems,
@@ -362,7 +364,7 @@ namespace IMX.ATS.ATEConfig
                 //Import = new RelayCommand(ImportFunctions),
                 FunctionInfoIndex = -1,
             }
-           ];
+                            ];
         }
         #endregion
 
@@ -372,6 +374,22 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            if (proid == GlobalModel.Test_ProjectInfo.Id)
+            {
+                return;
+            }
+
+            proid = GlobalModel.Test_ProjectInfo.Id;
+            //开机流程导入
+            for (int i = 0; i < GlobalModel.Test_ProjectInfo.Test_OpenFlows?.Count; i++)
+            {
+                TsetProcesses[0].CreatFunction(GlobalModel.Test_ProjectInfo.Test_OpenFlows[i]);
+            }
+            //关机流程导入
+            for (int i = 0; i < GlobalModel.Test_ProjectInfo.Test_ShutFlows?.Count; i++)
+            {
+                TsetProcesses[1].CreatFunction(GlobalModel.Test_ProjectInfo.Test_ShutFlows[i]);
+            }
             //base.WindowLoadedExecute(obj);
         }
 
@@ -385,7 +403,6 @@ namespace IMX.ATS.ATEConfig
         #region 构造方法
         public FixedProcessViewModel() { TestFlowItemsInit(); }
         #endregion
-
     }
 
     public class TestProcessModel : ExtendViewModelBase
@@ -477,35 +494,6 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public RelayCommand Export => new RelayCommand(ExportFunctions);
 
-        private void ShowFunction(int index)
-        {
-            if (index == -1)
-            {
-                ConfigContent = null;
-                return;
-            }
-
-            try
-            {
-                if (index > FunctionInfos.Count)
-                {
-                    MessageBox.Show($"选择步骤超方案已有步骤范围");
-                    return;
-                }
-                string winname = FunctionInfos[index].FunctionName;
-
-                Type win = Type.GetType($"{SupportConfig.SystemName}.Function.FunView{winname}");
-
-                ConfigContent = ContentControlManager.GetControl(win, FunctionInfos[index].Model);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.GetMessage());
-                return;
-            }
-
-        }
-
         /// <summary>
         /// 更新方案
         /// </summary>
@@ -528,8 +516,11 @@ namespace IMX.ATS.ATEConfig
                 });
             }
 
-            if (System.Windows.MessageBox.Show($"是否更新当前测试流程！", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel) return;
+            if (System.Windows.MessageBox.Show($"是否更新当前{ProcessName}！", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel) return;
 
+            DBOperate.Default.UpdataedTestFlow(GlobalModel.Test_ProjectInfo.Id, mod, ProcessName == "开机流程")
+                .AttachIfSucceed(result => MessageBox.Show($"{ProcessName}配置信息保存成功！"))
+                .AttachIfFailed(result => MessageBox.Show($"{ProcessName}配置信息保存成功失败:{result.Message}", "开关机流程配置异常"));
         }
 
         /// <summary>
@@ -538,7 +529,34 @@ namespace IMX.ATS.ATEConfig
         /// <exception cref="NotImplementedException"></exception>
         private void ImportFunctions()
         {
-            throw new NotImplementedException();
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = Environment.CurrentDirectory,
+                    Filter = "ATE配置文件 (*.FIXP)|*.FIXP"
+                };
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string souname = openFileDialog.FileName.Split('_')[1];
+
+                    string filePath = openFileDialog.FileName;
+                    string infos = System.IO.File.ReadAllText(filePath);
+                    FunctionInfos.Clear();
+                    var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
+                    for (int i = 0; i < functions?.Count; i++)
+                    {
+                        CreatFunction(functions[i]);
+                    }
+
+                    MessageBox.Show($"ATE配置【{ProcessName}】文件导入成功");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"ATE配置文件本地导入异常:{ex.GetMessage()}", "导入配置异常");
+            }
         }
 
         /// <summary>
@@ -558,7 +576,7 @@ namespace IMX.ATS.ATEConfig
                 {
                     InitialDirectory = Environment.CurrentDirectory,
                     FileName = defaultFileName,
-                    Filter = "ATS配置文件 (*.OPEN)|*.OPEN"
+                    Filter = "ATS配置文件 (*.FIXP)|*.FIXP"
                 };
 
                 //saveFileDialog.FilterIndex = 1;
@@ -593,6 +611,80 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show($"老化配置文件本地写入异常:{ex.GetMessage()}", "导出配置异常");
             }
         }
+
+        #region 流程操作
+        /// <summary>
+        /// 选择流程导入配置步骤ADMINISTRATOR
+        /// </summary>
+        /// <param name="obj"></param>
+        public void CreatFunction(ModTestProcess obj)
+        {
+
+            if (!Enum.TryParse(obj.FuntionName, out FuncitonType type))
+            {
+                MessageBox.Show($"无法获取当前{obj}类型操作步骤", "步骤添加异常");
+                return;
+            }
+
+            var jsonrlt = Function_Config.DeJson(type, obj.Funtion?.ToString());
+            if (!jsonrlt)
+            {
+                MessageBox.Show($"JSON错误:{jsonrlt.Message}");
+                return;
+            }
+
+            var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
+
+            if (!rlt)
+            {
+                MessageBox.Show($"操作无法添加:{rlt.Message}");
+                return;
+            }
+            var model = rlt.Data;
+            model.Func = TestFunction.Create(jsonrlt.Data);
+
+            FunctionInfos.Add(new FunctionInfo
+            {
+                Step = obj.Step,
+                CutomFuncName = type.GetDescription(),
+                FunctionName = type.ToString(),
+                Content = obj.Description,
+                ModType = type,
+                Model = model
+            });
+
+            FunctionInfoIndex = FunctionInfos.Count - 1;
+        }
+
+        private void ShowFunction(int index)
+        {
+            if (index == -1)
+            {
+                ConfigContent = null;
+                return;
+            }
+
+            try
+            {
+                if (index > FunctionInfos.Count)
+                {
+                    MessageBox.Show($"选择步骤超方案已有步骤范围");
+                    return;
+                }
+                string winname = FunctionInfos[index].FunctionName;
+
+                Type win = Type.GetType($"{SupportConfig.SystemName}.Function.FunView{winname}");
+
+                ConfigContent = ContentControlManager.GetControl(win, FunctionInfos[index].Model);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetMessage());
+                return;
+            }
+
+        }
+        #endregion
 
         #region 试验步骤顺序变更
         /// <summary>

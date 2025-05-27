@@ -15,11 +15,6 @@
         <member name="P:IMX.Function.FunConfig_ACSource.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="F:IMX.Function.FunConfig_ACSource.IsOutResult">
-            <summary>
-            超出判断条件
-            </summary>
-        </member>
         <member name="P:IMX.Function.FunConfig_ACSource.Set_Vol">
             <summary>
             设置电压
@@ -30,63 +25,232 @@
             设置频率
             </summary>
         </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.EnableStepping">
-            <summary>
-            步进使能标志
-            </summary>
+        <member name="M:IMX.Function.FunConfig_ACSource.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.StartLoadValue">
-            <summary>
-            开始拉载值
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.Stride">
-            <summary>
-            步进步幅
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.StepFrequency">
-            <summary>
-            步进步频
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.EndLoadValue">
-            <summary>
-            结束拉载值
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.StepCondition">
-            <summary>
-            步进各条件判定综合判定条件
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.ConditionalValues">
-            <summary>
-            步进允许判定变量列表
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_ACSource.Values">
-            <summary>
-            步进变量判定参数列表
-            </summary>
-        </member>
-        <member name="F:IMX.Function.FunConfig_ACSource.ClassType">
-            <summary>
-            类名
-            </summary>
-        </member>
-        <member name="F:IMX.Function.FunConfig_ACSource.FuntionName">
-            <summary>
-            方法名
-            </summary>
-        </member>
-        <member name="M:IMX.Function.FunConfig_ACSource.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_ACSource.SetStep(System.Object)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Function.FunConfig_ACSource.#ctor">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Function.FunConfig_ACSource.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.Config.FunConfig_ACSourceLoad">
+            <summary>
+            交流源载一体机试验配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.DeviceMode">
+            <summary>
+            源载模式
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseMode">
+            <summary>
+            相线模式
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.Balance">
+            <summary>
+            平衡模式
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OpenAngle">
+            <summary>
+            开机相角
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CloseAngle">
+            <summary>
+            关机相角
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SetValue_A">
+            <summary>
+            A相输出电压/负载拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SetValue_B">
+            <summary>
+            B相输出电压/负载拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SetValue_C">
+            <summary>
+            C相输出电压/负载拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseControl_AB">
+            <summary>
+            AB相位角
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseControl_AC">
+            <summary>
+            AC相位角
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OutputFrequency">
+            <summary>
+            输出频率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OutputFrequencySlope">
+            <summary>
+            输出频率斜率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.VolSlope_A">
+            <summary>
+            A相输出电压斜率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.VolSlope_B">
+            <summary>
+            B相输出电压斜率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.VolSlope_C">
+            <summary>
+            C相输出电压斜率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseLoss_B">
+            <summary>
+            B相缺相
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseLoss_C">
+            <summary>
+            C相缺相
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OpaerateMode">
+            <summary>
+            拉载模式
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CurSlope_A">
+            <summary>
+            A相电流斜率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PowerFactor_A">
+            <summary>
+            A相功率因素
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CurSlope_B">
+            <summary>
+            B相电流斜率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PowerFactor_B">
+            <summary>
+            B相功率因素
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CurSlope_C">
+            <summary>
+            C相电流斜率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PowerFactor_C">
+            <summary>
+            C相功率因素
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_ACSourceLoad.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_ACSourceLoad.SetStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Config.FunConfig_ACSourceLoad.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_AnalogAignals">
+            <summary>
+            CCCP模拟信号试验配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_AnalogAignals.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_AnalogAignals.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_AnalogAignals.ResMode">
+            <summary>
+            CC电阻档
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_AnalogAignals.Dutycycle">
+            <summary>
+            CP占空比
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_AnalogAignals.Frequency">
+            <summary>
+            CP频率
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_AnalogAignals.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_AnalogAignals.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_AnalogAignals.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_RPU">
+            <summary>
+            稳压直流源试验步骤配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_RPU.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_RPU.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_RPU.OperateRange">
+            <summary>
+            设置电压挡位
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_RPU.Set_Vol">
+            <summary>
+            设置电压
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_RPU.Set_Cur">
+            <summary>
+            设置电流
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_RPU.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_RPU.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_RPU.SetStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_RPU.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_RPU.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.FunConfig_APU">
@@ -115,17 +279,10 @@
             设置电流
             </summary>
         </member>
-        <member name="F:IMX.Function.FunConfig_APU.ClassType">
-            <summary>
-            类名
-            </summary>
+        <member name="M:IMX.Function.FunConfig_APU.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
         </member>
-        <member name="F:IMX.Function.FunConfig_APU.FuntionName">
-            <summary>
-            方法名
-            </summary>
-        </member>
-        <member name="M:IMX.Function.FunConfig_APU.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_APU.SetStep(System.Object)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Function.FunConfig_APU.#ctor">
@@ -160,6 +317,11 @@
             设置拉载值(拉载起步值)
             </summary>
         </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.SetLimtValue">
+            <summary>
+            限制值(CV电流上限，CC/CP电压上限)
+            </summary>
+        </member>
         <member name="P:IMX.Function.FunConfig_DCLoad.Set_ParamValue1">
             <summary>
             设置非CV模式下的上升斜率；
@@ -171,67 +333,10 @@
             设置非CV模式下的下降斜率参数
             </summary>
         </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.EnableStepping">
-            <summary>
-            步进使能标志
-            </summary>
+        <member name="M:IMX.Function.FunConfig_DCLoad.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.StartLoadValue">
-            <summary>
-            开始拉载值
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.Stride">
-            <summary>
-            步进步幅
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.StepFrequency">
-            <summary>
-            步进步频
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.EndLoadValue">
-            <summary>
-            结束拉载值
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.StepCondition">
-            <summary>
-            步进各条件判定综合判定条件
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.ConditionalValues">
-            <summary>
-            步进允许判定变量列表
-            </summary>
-        </member>
-        <member name="P:IMX.Function.FunConfig_DCLoad.Values">
-            <summary>
-            步进变量判定参数列表
-            </summary>
-        </member>
-        <member name="F:IMX.Function.FunConfig_DCLoad.ClassType">
-            <summary>
-            类名
-            </summary>
-        </member>
-        <member name="F:IMX.Function.FunConfig_DCLoad.FuntionName">
-            <summary>
-            方法名
-            </summary>
-        </member>
-        <member name="F:IMX.Function.FunConfig_DCLoad.IsOutResult">
-            <summary>
-            超出判断条件
-            </summary>
-        </member>
-        <member name="F:IMX.Function.FunConfig_DCLoad.IsJudge">
-            <summary>
-            进入条件判断循环
-            </summary>
-        </member>
-        <member name="M:IMX.Function.FunConfig_DCLoad.Execute(System.Object)">
+        <member name="M:IMX.Function.FunConfig_DCLoad.SetStep(System.Object)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Function.FunConfig_DCLoad.#ctor">
@@ -329,6 +434,63 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Function.FunConfig_HVDCSource.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.FunConfig_LVDCLoad">
+            <summary>
+            低压直流负载试验配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.Set_ShortState">
+            <summary>
+            短路模式设置
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.Set_Model">
+            <summary>
+            运行模式
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.Set_LoadValue">
+            <summary>
+            设置拉载值(拉载起步值)
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.SetLimtValue">
+            <summary>
+            限制值(CV电流上限，CC/CP电压上限)
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.Set_ParamValue1">
+            <summary>
+            设置非CV模式下的上升斜率；
+            或设置CV模式下的限制电流
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.Set_ParamValue2">
+            <summary>
+            设置非CV模式下的下降斜率参数
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_LVDCLoad.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_LVDCLoad.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_LVDCLoad.SetStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_LVDCLoad.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_LVDCLoad.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.FunConfig_Product">
@@ -501,51 +663,61 @@
         <member name="M:IMX.Function.FunConfig_Relay.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
-        <member name="T:IMX.Function.Function_Step">
+        <member name="T:IMX.Function.FunConfig_Return">
             <summary>
-            允许步进设备配置模板抽象类
+            条件跳出延时试验配置类
             </summary>
         </member>
-        <member name="P:IMX.Function.Function_Step.EnableStepping">
+        <member name="P:IMX.Function.FunConfig_Return.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.StartLoadValue">
+        <member name="P:IMX.Function.FunConfig_Return.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.Stride">
+        <member name="F:IMX.Function.FunConfig_Return.RecordDatas">
+            <summary>
+            是否记录判定期间数据
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_Return.Execut_ExceptStep(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.StepFrequency">
+        <member name="M:IMX.Function.FunConfig_Return.SetStep(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.EndLoadValue">
+        <member name="T:IMX.Function.FunConfig_SignalSource">
+            <summary>
+            信号发生器试验配置类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_SignalSource.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.NeedStepCount">
+        <member name="P:IMX.Function.FunConfig_SignalSource.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.StepCondition">
+        <member name="P:IMX.Function.FunConfig_SignalSource.Freq">
+            <summary>
+            输出频率
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_SignalSource.Ampl">
+            <summary>
+            输出幅度
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_SignalSource.Duty">
+            <summary>
+            输出占空比
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_SignalSource.Execute(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.ConditionalValues">
+        <member name="M:IMX.Function.FunConfig_SignalSource.#ctor">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Function_Step.Values">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Function.Function_Step.Execut_ExceptStep(System.Object)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Function.Function_Step.SetStep(System.Object)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Function.Function_Step.StepOutCheck(System.Collections.Generic.Dictionary{System.String,IMX.Common.ModDeviceReadData})">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Function.Function_Step.#ctor">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Function.Function_Step.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+        <member name="M:IMX.Function.FunConfig_SignalSource.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.IFunction_Result">
@@ -646,7 +818,7 @@
         </member>
         <member name="P:IMX.Function.TestFunction.Step">
             <summary>
-            运行步骤
+            运行步骤 
             </summary>
         </member>
         <member name="P:IMX.Function.TestFunction.Config">
@@ -740,6 +912,11 @@
             DC负载操作模板
             </summary>
         </member>
+        <member name="F:IMX.Function.Base.FuncitonType.LVDCLoad">
+            <summary>
+            低压直流负载操作模板
+            </summary>
+        </member>
         <member name="F:IMX.Function.Base.FuncitonType.ACDCInverter">
             <summary>
             双向源操作模板
@@ -758,6 +935,11 @@
         <member name="F:IMX.Function.Base.FuncitonType.APU">
             <summary>
             直流稳压源操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.RPU">
+            <summary>
+            倒灌电源操作模板
             </summary>
         </member>
         <member name="F:IMX.Function.Base.FuncitonType.Relay">
@@ -828,6 +1010,21 @@
         <member name="F:IMX.Function.Base.FuncitonType.EquipmentResult">
             <summary>
             工装上报结果
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.Return">
+            <summary>
+            跳转延时
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.AnalogAignals">
+            <summary>
+            CCCP模拟信号
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.ACSourceLoad">
+            <summary>
+            交流源载一体机操作模板
             </summary>
         </member>
         <member name="T:IMX.Function.Base.Enumerations.ResultOpereateType">
@@ -957,6 +1154,16 @@
             系统空间地址
             </summary>
         </member>
+        <member name="P:IMX.Function.Base.Function_Config.ClassType">
+            <summary>
+            类名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.FuntionName">
+            <summary>
+            方法名
+            </summary>
+        </member>
         <member name="M:IMX.Function.Base.Function_Config.#ctor">
             <summary>
             不带参构造
@@ -1008,6 +1215,61 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Function.Base.Function_Config.ToJson">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.Base.Function_Step">
+            <summary>
+            允许步进设备配置模板抽象类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.EnableStepping">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.StartLoadValue">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.Stride">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.StepFrequency">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.EndLoadValue">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.NeedStepCount">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.StepCondition">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.ConditionalValues">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Step.Values">
+            <inheritdoc/>
+        </member>
+        <member name="F:IMX.Function.Base.Function_Step.StepCount">
+            <summary>
+            当前单步步进次数
+            </summary>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Step.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Step.Execut_ExceptStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Step.SetStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Step.StepOutCheck(System.Collections.Generic.Dictionary{System.String,IMX.Common.ModDeviceReadData})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Step.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.Base.Function_Step.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.Base.IFuntionConfig">

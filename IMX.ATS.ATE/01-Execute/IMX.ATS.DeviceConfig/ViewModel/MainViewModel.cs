@@ -333,14 +333,14 @@ namespace IMX.ATS.DeviceConfig
             {
                 return;
             }
-            var config = SelectedDevie.Info.Config;
+            DeviceArgs config = SelectedDevie.Info.Config;
             var item = SelectedDevie.Info;
 
             string content = $"{config.Name}[{config.DeviceType.GetDescription()}]通讯成功";
 
             DriveOperate operate = DriveOperate.Creat();
-            OperateResult result = operate.Open(config.DriveConfig);
-            if (!result)
+            OperateResult driveresult = operate.Open(config.DriveConfig);
+            if (!driveresult)
             {
                 content = $"{config.Name}[{config.DeviceType.GetDescription()}]驱动打开失败";
                 ContentName = content;
@@ -353,22 +353,71 @@ namespace IMX.ATS.DeviceConfig
                     Content = content,
                 });
 
-                SuperDHHLoggerManager.Warn(LoggerType.FROMLOG, nameof(IMX.ATS.DeviceConfig.MainViewModel), nameof(LinkTest), content);
+                SuperDHHLoggerManager.Warn(LoggerType.FROMLOG, "接口配置", "通讯测试", content);
                 //return OperateResult.Failed(result.Message);
             }
 
-            
-            ContentName = content;
-            ContentColor = Brushes.Green;
-
-
-
-            Logger.Add(new ViewLogger
+            operate.RegisterDevice(config)
+            .ThenAnd(result => result.Data.Init(config, operate.Drive).ConvertTo(result.Data))
+            .ThenAnd(result=> result.Data.Device_ReadAll().ConvertTo(result.Data))
+            .AttachIfSucceed(result => 
             {
-                RecordTime = DateTime.Now,
-                Level = LoggerLevel.INFO,
-                Content = content,
+                ContentName = content;
+                ContentColor = Brushes.Green;
+
+
+
+                Logger.Add(new ViewLogger
+                {
+                    RecordTime = DateTime.Now,
+                    Level = LoggerLevel.INFO,
+                    Content = content,
+                });
+            })
+            .AttachIfFailed(result => 
+            {
+                content = $"{config.Name}[{config.DeviceType.GetDescription()}]通讯连接失败";
+                ContentName = content;
+                ContentColor = Brushes.Green;
+
+                Logger.Add(new ViewLogger
+                {
+                    RecordTime = DateTime.Now,
+                    Level = LoggerLevel.INFO,
+                    Content = content,
+                });
+
+                SuperDHHLoggerManager.Warn(LoggerType.FROMLOG, "接口配置", "通讯测试", content);
             });
+            //if (!devicerlt) 
+            //{
+            //    content = $"{config.Name}[{config.DeviceType.GetDescription()}]通讯连接失败";
+            //    ContentName = content;
+            //    ContentColor = Brushes.Green;
+
+            //    Logger.Add(new ViewLogger
+            //    {
+            //        RecordTime = DateTime.Now,
+            //        Level = LoggerLevel.INFO,
+            //        Content = content,
+            //    });
+
+            //    SuperDHHLoggerManager.Warn(LoggerType.FROMLOG, "接口配置", "通讯测试", content);
+            //}
+            
+            
+
+            //ContentName = content;
+            //ContentColor = Brushes.Green;
+
+
+
+            //Logger.Add(new ViewLogger
+            //{
+            //    RecordTime = DateTime.Now,
+            //    Level = LoggerLevel.INFO,
+            //    Content = content,
+            //});
         }
 
 

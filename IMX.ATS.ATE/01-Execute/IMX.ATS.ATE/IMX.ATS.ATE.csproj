@@ -187,10 +187,12 @@
     <Reference Include="IMX.Common">
       <HintPath>..\..\Library\IMX.Common\IMX.Common.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Device">
+    <Reference Include="IMX.Device, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Device\IMX.Device.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Device.Common">
+    <Reference Include="IMX.Device.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Device.Common\IMX.Device.Common.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Function, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
@@ -258,7 +260,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\EnvironmentViewModel.cs" />
+    <Compile Include="ViewModel\IncubatorViewModel.cs" />
+    <Compile Include="ViewModel\WaterBathViewModel.cs" />
+    <Compile Include="View\EnvironmentView.xaml.cs">
+      <DependentUpon>EnvironmentView.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\DeviceInitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EnvironmentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

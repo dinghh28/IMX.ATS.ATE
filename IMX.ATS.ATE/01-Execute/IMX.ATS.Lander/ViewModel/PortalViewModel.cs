@@ -99,9 +99,12 @@ namespace IMX.ATS.Lander
         private Dictionary<string, string> dicViewname = new Dictionary<string, string>()
         {
             { "ATEConfig", "项目信息配置" },
+            { "DBCConfig", "DBC配置" },
             { "ATE", "测试管理" },
-            { "UserManage", "用户管理" },
+            { "Manual", "手动操作" },
             { "DIOS", "数据管理" },
+            { "DeviceConfig", "设备管理" },
+            { "UserManage", "用户管理" },
         };
 
 
@@ -153,19 +156,34 @@ namespace IMX.ATS.Lander
 
             Win = win;
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(Win);
-            
-            foreach (var item in dicViewname)
+
+
+            foreach (UserPermissions item in Enum.GetValues(typeof(UserPermissions)))
             {
-                FunModules.Add(new FunModule 
-                { 
-                    ViewmodeName = item.Key,
-                    FunModuleName = item.Value, 
-                    FunModuleVisibility = dicVisibility[item.Key], 
-                    ExeAESKey = dicAESKey[item.Key],
-                    //FunModuleIconURL = $"pack://application:,,,/{SupportConfig.SystemName};component/Resource/Image/{dicIconURL[item.Key]}"
-                    /*, OpenFunmodule = new RelayCommand<object>(DoViewChange)*/ 
-                });
+                if ((GlobalModel.UserInfo.Privilege & (int)item) == (int)item)
+                {
+                    FunModules.Add(new FunModule
+                    {
+                        ViewmodeName = item.GetDescription(),
+                        FunModuleName = item.ToString(),
+                        FunModuleVisibility = dicVisibility[item.GetDescription()],
+                        ExeAESKey = dicAESKey[item.GetDescription()],
+                    });
+                }
             }
+            //foreach (var item in dicViewname)
+            //{
+
+            //    FunModules.Add(new FunModule 
+            //    { 
+            //        ViewmodeName = item.Key,
+            //        FunModuleName = item.Value, 
+            //        FunModuleVisibility = dicVisibility[item.Key], 
+            //        ExeAESKey = dicAESKey[item.Key],
+            //        //FunModuleIconURL = $"pack://application:,,,/{SupportConfig.SystemName};component/Resource/Image/{dicIconURL[item.Key]}"
+            //        /*, OpenFunmodule = new RelayCommand<object>(DoViewChange)*/ 
+            //    });
+            //}
         }
 
         //[DllImport("kernel32.dll")]
@@ -279,7 +297,7 @@ namespace IMX.ATS.Lander
         /// <summary>
         /// 模块显示
         /// </summary>
-        public Visibility FunModuleVisibility { get; set; }
+        public Visibility FunModuleVisibility { get; set; } = Visibility.Visible;
 
         /// <summary>
         /// 模块图标路径

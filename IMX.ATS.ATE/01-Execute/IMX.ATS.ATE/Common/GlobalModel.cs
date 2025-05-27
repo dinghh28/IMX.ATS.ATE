@@ -42,6 +42,11 @@ namespace IMX.ATS.ATE
         /// 试验线程运行状态
         /// </summary>
         public static bool IsTestThreadRun { get; set; } = true;
+
+        /// <summary>
+        /// 窗口打开状态
+        /// </summary>
+        public static bool IsWinOpen { get; set; } = true;
     }
 
     public class DeviceInfo_ALL

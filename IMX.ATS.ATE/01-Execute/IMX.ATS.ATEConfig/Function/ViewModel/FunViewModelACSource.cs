@@ -15,6 +15,7 @@ using Super.Zoo.Framework;
 using System.Windows.Forms;
 using System.Windows.Markup;
 using IMX.Common;
+using IMX.Function.ViewModel.Model;
 
 namespace IMX.ATS.ATEConfig.Function
 {
@@ -47,10 +48,7 @@ namespace IMX.ATS.ATEConfig.Function
                     //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
                 }
 
-                if (config.Values == null)
-                {
-                    config.Values = new List<StepConditionValue>();
-                }
+                config.Values ??= new List<StepConditionValue>();
 
                 for (int i = 0;i < config.Values.Count;i++)
                 {
@@ -138,7 +136,7 @@ namespace IMX.ATS.ATEConfig.Function
             {
                 if (Set(nameof(EnableSetStepValue), ref enablesetstepvalue, value))
                 {
-                    EnableSetValue = value ? false : true;
+                    EnableSetValue = !value;
                 }
             }
         }
@@ -315,6 +313,7 @@ namespace IMX.ATS.ATEConfig.Function
             set => Set(nameof(StepValues), ref stepvalues, value);
         }
         #endregion
+
         #endregion
 
         #region 界面绑定指令

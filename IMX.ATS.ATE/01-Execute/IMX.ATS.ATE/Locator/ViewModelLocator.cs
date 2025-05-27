@@ -16,6 +16,10 @@ namespace IMX.ATS.ATE
             SimpleIoc.Default.Register<DeviceInitViewModel>();
             ContentControlManager.Regiter<DeviceInitView>();
 
+            //环境设备操作界面
+            SimpleIoc.Default.Register<EnvironmentViewModel>();
+            ContentControlManager.Regiter<EnvironmentView>();
+
         }
 
         /// <summary>
@@ -28,5 +32,10 @@ namespace IMX.ATS.ATE
         /// 设备初始化/卸载
         /// </summary>
         public DeviceInitViewModel Init => ServiceLocator.Current.GetInstance<DeviceInitViewModel>();
+
+        /// <summary>
+        /// 环境设备操作
+        /// </summary>
+        public EnvironmentViewModel Environment => ServiceLocator.Current.GetInstance<EnvironmentViewModel>();
     }
 }

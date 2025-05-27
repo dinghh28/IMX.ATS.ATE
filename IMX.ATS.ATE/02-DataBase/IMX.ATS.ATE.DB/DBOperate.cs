@@ -504,6 +504,65 @@ namespace IMX.DB
             }
         }
 
+        #region 开关机流程
+        /// <summary>
+        /// 更新开关机流程
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <param name="processes">流程</param>
+        /// <param name="IsOpen">是否为开机流程</param>
+        /// <returns></returns>
+        public OperateResult UpdataedTestFlow(int id, List<ModTestProcess> processes, bool IsOpen)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdataedTestFlow), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                int row = 0;
+                if (IsOpen)
+                {
+                    row = Sqlite.Update<Test_ProjectInfo>()
+                       .Where(x => x.Id == id)
+                       .Set(x => x.Test_OpenFlows, processes)
+                       .Set(x => x.UpdateTime, DateTime.Now)
+                       .ExecuteAffrows();
+                    if (row < 1)
+                    {
+                        LastError = "开机流程未发生实际变更";
+                        Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
+                        return OperateResult.Failed(LastError);
+                    }
+                }
+                else
+                {
+                    row = Sqlite.Update<Test_ProjectInfo>()
+                       .Where(x => x.Id == id)
+                       .Set(x => x.Test_ShutFlows, processes)
+                       .Set(x => x.UpdateTime, DateTime.Now)
+                       .ExecuteAffrows();
+                    if (row < 1)
+                    {
+                        LastError = "关机流程未发生实际变更";
+                        Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
+                        return OperateResult.Failed(LastError);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdataedTestFlow), LastError);
+                return OperateResult.Excepted(ex);
+            }
+
+            return OperateResult.Succeed();
+        }
+        #endregion
 
         #endregion
 
@@ -1952,6 +2011,54 @@ namespace IMX.DB
         }
 
         /// <summary>
+        /// 插入试验结果条目
+        /// </summary>
+        /// <param name="info">试验结果条目Json字符串</param>
+        /// <returns></returns>
+        public OperateResult<long> InserTestItem(string info) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                return OperateResult<long>.Failed(-1, LastError);
+            }
+            try
+            {
+                if (info == null)
+                {
+                    LastError = $"试验待存储条目不可为空";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
+
+                //string itemtableName = nameof(Test_ItemInfo)+
+                //if (Sqlite.DbFirst.ExistsTable(tableName) == false)
+                //    Sqlite.CodeFirst.SyncStructure(typeof(Test_ItemInfo), tableName);
+
+                var item = JsonConvert.DeserializeObject<Test_ItemInfo>(info);
+
+               long id =  Sqlite.Insert(item).ExecuteIdentity();
+
+                if (id < 1)
+                {
+                    LastError = $"试验条目未实际发生存储";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
+
+                return OperateResult<long>.Succeed(id);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                return OperateResult<long>.Excepted(-1, ex);
+            }
+
+        }
+
+        /// <summary>
         /// 更新试验结果条目
         /// </summary>
         /// <param name="info">更新试验结果条目</param>
@@ -2225,7 +2332,7 @@ namespace IMX.DB
             {
                 if (info == null)
                 {
-                    LastError = $"试验待存储条目不可为空";
+                    LastError = $"试验待存储数据不可为空";
                     Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
                     return OperateResult.Failed(LastError);
                 }
@@ -2241,6 +2348,54 @@ namespace IMX.DB
                 return OperateResult.Excepted(ex);
             }
         }
+
+        ///// <summary>
+        ///// 插入试验项目
+        ///// </summary>
+        ///// <param name="info">试验数据Json字符串</param>
+        ///// <returns></returns>
+        //public OperateResult InserTestData(string info) 
+        //{
+        //    if (!IsInitOK)
+        //    {
+        //        LastError = $"数据库未初始化";
+        //        Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+        //        return OperateResult.Failed(LastError);
+        //    }
+
+        //    try
+        //    {
+        //        if (string.IsNullOrEmpty(info))
+        //        {
+        //            LastError = $"试验待存储数据不可为空";
+        //            Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+        //            return OperateResult.Failed(LastError);
+        //        }
+
+        //        var data = JsonConvert.DeserializeObject<Test_DataInfo>(info);
+
+        //        if (data == null)
+        //        {
+                    
+        //        }
+        //        int row = Sqlite.Insert(data).ExecuteAffrows();
+
+        //        if (row < 1) 
+        //        {
+        //            LastError = $"试验数据未实际发生存储";
+        //            Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+        //            return OperateResult.Failed( LastError);
+        //        }
+
+        //        return OperateResult.Succeed();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LastError = ex.GetMessage();
+        //        Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+        //        return OperateResult.Excepted(ex);
+        //    }
+        //}
 
 
         public OperateResult<List<Test_DataInfo>> GetTestData(int itemid, DateTime StratTime, DateTime StopTime)

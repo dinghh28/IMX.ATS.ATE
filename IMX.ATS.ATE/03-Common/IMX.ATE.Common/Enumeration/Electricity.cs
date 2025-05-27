@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +13,15 @@ namespace IMX.ATE.Common
     /// </summary>
     public enum Electricity
     {
+        /// <summary>
+        /// 单相交流电
+        /// </summary>
+        [Description("单相")]
         Single,
+        /// <summary>
+        /// 三相交流电
+        /// </summary>
+        [Description("三相")]
         Three
     }
 }

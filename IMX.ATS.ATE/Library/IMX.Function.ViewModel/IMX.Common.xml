@@ -9,6 +9,11 @@
             设备数据类
             </summary>
         </member>
+        <member name="P:IMX.Common.ModDeviceReadData.IsSaveData">
+            <summary>
+            是否保存数据
+            </summary>
+        </member>
         <member name="P:IMX.Common.ModDeviceReadData.DataInfo">
             <summary>
             读取信息

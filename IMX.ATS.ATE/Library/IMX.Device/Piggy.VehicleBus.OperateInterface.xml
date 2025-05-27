@@ -376,6 +376,30 @@
             <param name="parameter">[THIS] 交互参数</param>
             <returns>操作结果</returns>
         </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.SetSendTimes(Piggy.VehicleBus.Common.IDBCMessageParameter,System.Int32)">
+            <summary>
+            修改发送次数（所有消息）
+            </summary>
+            <param name="parameter">[THIS] 交互参数</param>
+            <param name="count">
+            <description>发送次数</description>
+            <list type="bullet">
+                <item>
+                    <term>-1</term>
+                    <description>连续发送</description>
+                </item>
+                <item>
+                    <term>0</term>
+                    <description>不发送</description>
+                </item>
+                <item>
+                    <term>N</term>
+                    <description>发送 N 次</description>
+                </item>
+            </list>
+            </param>
+            <returns>操作结果</returns>
+        </member>
         <member name="M:Piggy.VehicleBus.OperateInterface.DBCMessageParameterExtension.SetSendTimes(Piggy.VehicleBus.Common.IDBCMessageParameter,System.UInt32,System.Int32)">
             <summary>
             修改发送次数
@@ -463,84 +487,89 @@
         <member name="T:Piggy.VehicleBus.OperateInterface.MessageInteractor">
             <summary>
             报文交互器
+            </summary>
+            <remarks>
             <para>※※※※※※※※※※※ 注意 ※※※※※※※※※※※</para>
             <description>修改完下发信号值后，需要调用 <see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.CalcMessageValue"/> 计算消息的发送值</description>
             <para>※※※※※※※※※※ 调用顺序 ※※※※※※※※※※</para>
-            <description>
-                <list type="number">
-                    <item>
-                        <term>打开报文交互器</term>
-                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Open"/></description>
-                    </item>
-                    <item>
-                        <term>初始化</term>
-                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Initialize"/></description>
-                    </item>
-                    <item>
-                        <term>加载消息文件</term>
-                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFile(System.String)"/></description>
-                    </item>
-                    <item>
-                        <description>DBC报文交互参数修改</description>
-                        <list type="bullet">
-                            <item>
-                                <term>增加发送信号</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.String)"/></description>
-                            </item>
-                            <item>
-                                <term>增加读取信号</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSignal(System.String)"/></description>
-                            </item>
-                            <item>
-                                <term>增加发送过滤消息</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSkipMessage(System.UInt32)"/></description>
-                            </item>
-                            <item>
-                                <term>增加读取过滤消息</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSkipMessage(System.UInt32)"/></description>
-                            </item>
-                            <item>
-                                <term>设置数据处理器</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetDataProcessor(System.UInt32,Piggy.VehicleBus.Common.IDataProcessor)"/></description>
-                            </item>
-                        </list>
-                    </item>
-                    <item>
-                        <term>打开通讯</term>
-                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StartCommunication"/></description>
-                    </item>
-                    <item>
-                        <description>修改操作</description>
-                        <list type="bullet">
-                            <item>
-                                <term>修改发送次数</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSendCount(System.UInt32,System.Int32)"/></description>
-                            </item>
-                            <item>
-                                <term>修改下发信号值</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSignalValue(System.String,System.Double)"/></description>
-                            </item>
-                            <item>
-                                <term>计算下发报文数据</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.CalcMessageValue"/></description>
-                            </item>
-                            <item>
-                                <term>获取上报信号值</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetSignalValue(System.String)"/></description>
-                            </item>
-                            <item>
-                                <term>修改自定义报文</term>
-                                <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})"/></description>
-                            </item>
-                        </list>
-                    </item>
-                    <item>
-                        <term>关闭通讯</term>
-                        <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StopCommunication"/></description>
-                    </item>
-                </list>
-            </description>
-            </summary>
+            <list type="number">
+                <item>
+                    <term>打开报文交互器</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Open"/></description>
+                </item>
+                <item>
+                    <term>初始化</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Initialize"/></description>
+                </item>
+                <item>
+                    <term>加载消息文件</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.LoadMessageFile(System.String)"/></description>
+                </item>
+                <item>
+                    <description>DBC报文交互参数修改</description>
+                    <list type="bullet">
+                        <item>
+                            <term>增加发送信号</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSignal(System.ValueTuple{System.UInt32,System.String})"/></description>
+                        </item>
+                        <item>
+                            <term>增加读取信号</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSignal(System.ValueTuple{System.UInt32,System.String})"/></description>
+                        </item>
+                        <item>
+                            <term>增加发送过滤消息</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddSendSkipMessage(System.UInt32)"/></description>
+                        </item>
+                        <item>
+                            <term>增加读取过滤消息</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.AddReadSkipMessage(System.UInt32)"/></description>
+                        </item>
+                        <item>
+                            <term>设置数据处理器</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetDataProcessor(System.UInt32,Piggy.VehicleBus.Common.IDataProcessor)"/></description>
+                        </item>
+                    </list>
+                </item>
+                <item>
+                    <term>打开通讯</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StartCommunication"/></description>
+                </item>
+                <item>
+                    <description>修改操作</description>
+                    <list type="bullet">
+                        <item>
+                            <term>修改发送次数</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSendCount(System.UInt32,System.Int32)"/></description>
+                        </item>
+                        <item>
+                            <term>修改下发信号值</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSignalValue(System.String,System.Double)"/></description>
+                        </item>
+                        <item>
+                            <term><see langword="※ 重要 ※"/></term>
+                            <term>计算下发报文数据</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.CalcMessageValue"/></description>
+                        </item>
+                        <item>
+                            <term>获取上报信号值</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.GetSignalValue(System.ValueTuple{System.UInt32,System.String})"/></description>
+                        </item>
+                        <item>
+                            <term>修改自定义报文</term>
+                            <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})"/></description>
+                        </item>
+                    </list>
+                </item>
+                <item>
+                    <term>关闭通讯</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.StopCommunication"/></description>
+                </item>
+                <item>
+                    <term>关闭报文交互器</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Close"/></description>
+                </item>
+            </list>
+            </remarks>
         </member>
         <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.Create(Piggy.VehicleBus.Common.IVehicleBusDevice,Piggy.VehicleBus.Common.IVehicleBusChannel,Piggy.VehicleBus.Common.IRecorder,Super.Zoo.Framework.Logger.ILogger)">
             <summary>
@@ -884,6 +913,9 @@
         <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.ClearDataProcessor">
             <inheritdoc/>
         </member>
+        <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSendCount(System.Int32)">
+            <inheritdoc/>
+        </member>
         <member name="M:Piggy.VehicleBus.OperateInterface.MessageInteractor.SetSendCount(System.UInt32,System.Int32)">
             <inheritdoc/>
         </member>
@@ -969,6 +1001,39 @@
             <summary>
             汽车总线控制器
             </summary>
+            <remarks>
+            <para>※※※※※※※※※※ 调用顺序 ※※※※※※※※※※</para>
+            <list type="number">
+                <item>
+                    <term>打开总线控制器</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.Open(System.Type,Piggy.VehicleBus.Common.IVehicleBusDeviceArgs)"/></description>
+                </item>
+                <item>
+                    <term>启动消息接收</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.StartReceive"/></description>
+                </item>
+                <item>
+                    <term>注册报文交互器</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.RegisterInteractor(Piggy.VehicleBus.Common.IVehicleBusChannelArgs)"/></description>
+                </item>
+                <item>
+                    <term>获取报文交互器</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.FetchInteractor(System.UInt32)"/></description>
+                </item>
+                <item>
+                    <term>反注册报文交互器</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.UnRegisterInteractor(System.UInt32)"/></description>
+                </item>
+                <item>
+                    <term>停止消息接收</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.StopReceive"/></description>
+                </item>
+                <item>
+                    <term>关闭总线控制器</term>
+                    <description><see cref="M:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.Close"/></description>
+                </item>
+            </list>
+            </remarks>
         </member>
         <member name="F:Piggy.VehicleBus.OperateInterface.VehicleBusOperator.interactorOperation">
             <summary>

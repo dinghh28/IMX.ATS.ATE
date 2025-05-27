@@ -112,6 +112,11 @@
             支持的试验方法类型
             </summary>
         </member>
+        <member name="T:IMX.Function.ViewModel.ISteppingFunViewModel">
+            <summary>
+            带步进试验配置方案界面详细操作接口
+            </summary>
+        </member>
         <member name="T:IMX.Function.ViewModel.Model.DBCSendSignal">
             <summary>
             产品下发信号模型类
@@ -205,6 +210,121 @@
         <member name="P:IMX.Function.ViewModel.Model.TestFlowItem.Selcted">
             <summary>
             执行命令
+            </summary>
+        </member>
+        <member name="T:IMX.Function.ViewModel.Model.StepValue">
+            <summary>
+            步进跳出条件变量参数界面类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.StepValue.ValueConditions">
+            <summary>
+            变量判定条件列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.StepValue.ConditionValues">
+            <summary>
+            变量列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.StepValue.ConditionNames">
+            <summary>
+            变量名列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.StepValue.ConditionIndex">
+            <summary>
+            变量名
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.Model.StepValue.ConditionValue">
+            <summary>
+            变量信息
+            </summary>
+        </member>
+        <member name="T:IMX.Function.ViewModel.SteppingFunViewModel">
+            <summary>
+            带步进试验配置方案界面详细操作抽象类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.EnableSetStepValue">
+            <summary>
+            允许步进参数设置标志位
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.EnableSetValue">
+            <summary>
+            非步进模式下的参数设置标志位
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.Set_StepModel">
+            <summary>
+            允许步进设置标志位
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.ConditionValues">
+            <summary>
+            允许参与判定参数列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.Stride">
+            <summary>
+            步进步幅
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.StepFrequency">
+            <summary>
+            步进步频
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.StartLoadValue">
+            <summary>
+            起始拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.EndLoadValue">
+            <summary>
+            结束拉载值
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.Conditions">
+            <summary>
+            步进各参变综合判定条件
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.Condition">
+            <summary>
+            当前选择综合判定条件
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.SelectedValueIndex">
+            <summary>
+            当前选择步进条件地址
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.StepValues">
+            <summary>
+            步进条件列表
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.AddCondition">
+            <summary>
+            新增条件
+            </summary>
+        </member>
+        <member name="P:IMX.Function.ViewModel.SteppingFunViewModel.DeletCondition">
+            <summary>
+            删除条件
+            </summary>
+        </member>
+        <member name="M:IMX.Function.ViewModel.SteppingFunViewModel.Add(System.Collections.ObjectModel.ObservableCollection{IMX.Common.ModDeviceReadData})">
+            <summary>
+            添加判断条件
+            </summary>
+        </member>
+        <member name="M:IMX.Function.ViewModel.SteppingFunViewModel.Delet">
+            <summary>
+            删除条件
             </summary>
         </member>
     </members>

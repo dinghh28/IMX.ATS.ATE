@@ -63,6 +63,10 @@ using IMX.Device.Relay;
 using System.Windows.Input;
 using System.Reflection;
 using System.Runtime.Hosting;
+using System.IO;
+using Newtonsoft.Json;
+using System.Globalization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace IMX.ATS.ATE
 {
@@ -172,6 +176,36 @@ namespace IMX.ATS.ATE
             set => Set(nameof(ATEExecuteInfos), ref ateexecuteinfos, value);
         }
 
+
+        private ObservableCollection<ProcessInfo> processinfos = new ObservableCollection<ProcessInfo>();
+        /// <summary>
+        /// 试验项信息展示
+        /// </summary>
+        public ObservableCollection<ProcessInfo> ProcessInfos
+        {
+            get => processinfos;
+            set => Set(nameof(ProcessInfos), ref processinfos, value);
+        }
+
+        private bool isSelectAll = false;
+        /// <summary>
+        /// 试验项全选
+        /// </summary>
+        public bool IsSelectAll
+        {
+            get => isSelectAll;
+            set
+            {
+                if (Set(nameof(IsSelectAll), ref isSelectAll, value))
+                {
+                    for (int i = 0; i < ProcessInfos.Count; i++)
+                    {
+                        ProcessInfos[i].EnableUse = value;
+                    }
+                }
+            }
+        }
+
         #region 试验结果
         private string testresult;
         /// <summary>
@@ -266,10 +300,14 @@ namespace IMX.ATS.ATE
         public RelayCommand ClearError => new RelayCommand(ClearErrorLED);
 
 
-        /// <summary>
-        /// 扫码枪回车事件
-        /// </summary>
-        public RelayCommand<object> EnterKeyboard => new RelayCommand<object>(FocuseChanged);
+        ///// <summary>
+        ///// 扫码枪回车事件
+        ///// </summary>
+        //public RelayCommand<object> EnterKeyboard => new RelayCommand<object>(FocuseChanged);
+
+        public RelayCommand Save => new RelayCommand(SaveData);
+
+
 
         #region 系统窗口指令
         ///// <summary>
@@ -340,6 +378,141 @@ namespace IMX.ATS.ATE
         #endregion
 
         #region 私有方法
+
+        /// <summary>
+        /// 保存试验数据(由本地转至数据库)
+        /// </summary>
+        private void SaveData()
+        {
+            DirectoryInfo Dirs = new DirectoryInfo(SupportConfig.DataSavePath);
+
+            if (!Dirs.Exists)
+            {
+                MessageBox.Show("不存在本地未上传数据，无需存储","数据存储提醒");
+                return;
+            }
+
+            if (Dirs.GetDirectories().Count() < 1)
+            {
+                MessageBox.Show("不存在本地未上传数据，无需存储", "数据存储提醒");
+                Dirs.Delete(true);
+                return;
+            }
+
+            if (MessageBox.Show("是否将当前试验运行结果存储至数据库？", "数据存储提醒", MessageBoxButton.YesNo) != MessageBoxResult.Yes) 
+            {
+                return;
+            }
+
+            EnableTestBtn = false;
+
+            ContentName = "数据存储中...";
+            ContentColor = Brushes.Blue;
+            StepStr = "正在存储试验数据，请稍后。。。";
+            StepStrShow = Visibility.Visible;
+
+            Task.Run(() => 
+            {
+                foreach (var dir in Dirs.GetDirectories())
+                {
+                    long ID = -1;
+                    string info;
+                    #region 获取项目ID
+                    if (File.Exists($"{dir.FullName}//ID.txt"))
+                    {
+                        if (dir.GetFiles().Length == 1)
+                        {
+                            dir.Delete(true);
+                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", $"删除文件 {dir.FullName} 成功");
+                            continue;
+                        }
+
+                        ID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ID.txt"));
+                    }
+                    else
+                    {
+                        var files = dir.GetFiles("InsterItem*");
+                        if (files.Length == 0)
+                        {
+                            continue;
+                        }
+                        try
+                        {
+                            info = File.ReadAllText(files[0].FullName);
+                            if (info.Length == 0)
+                                ID = DBOperate.Default.InserTestItem(info).Data;
+                            if (ID == -1)
+                            {
+                                continue;
+                            }
+
+                            try
+                            {
+                                File.WriteAllText($"{dir.FullName}//ID.txt", $"{ID}");
+                                foreach (var item in files)
+                                {
+                                    item.Delete();
+                                    Thread.Sleep(10);
+                                    SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
+                                }
+                                //ID = id;
+                            }
+                            catch (Exception ex)
+                            {
+                                SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
+                            continue;
+                        }
+
+                    }
+                    #endregion
+                    if (ID != -1 && dir.GetFiles().Length > 1)
+                    {
+                        foreach (FileInfo item in dir.GetFiles())
+                        {
+                            try
+                            {
+                                if (item.Extension.ToUpper() == "DATA")
+                                {
+
+                                    info = File.ReadAllText(item.FullName);
+                                    var data = JsonConvert.DeserializeObject<Test_DataInfo>(info);
+                                    if (data == null)
+                                    {
+                                        SuperDHHLoggerManager.Fatal(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"{item.FullName}文件内容格式异常");
+                                    }
+
+                                    data.TestItemID = (int)ID;
+                                    DBOperate.Default.InserTestData(data)
+                                        .AttachIfSucceed(result =>
+                                        {
+                                            item.Delete();
+                                            Thread.Sleep(10);
+                                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"删除{item.FullName}成功");
+                                        });
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", ex);
+                            }
+                        }
+                    }
+
+                    //dir.Delete(true);
+                }
+
+                EnableTestBtn = true;
+                StepStrShow = Visibility.Collapsed;
+                ContentName = string.Empty;
+            });
+            
+
+        }
 
         /// <summary>
         /// 指示灯清除
@@ -862,8 +1035,8 @@ namespace IMX.ATS.ATE
             Thread.Sleep(10000);
 #endif
 
-            SaveItem(true, testinfo);
-            test_Data.TestItemID = testinfo.Id;
+            
+            //test_Data.TestItemID = testinfo.Id;
             test_Data.ProductSN = ProductSN;
             test_Data.ProjectName = SelectedProductName;
 
@@ -877,7 +1050,7 @@ namespace IMX.ATS.ATE
                 }
 
                 string flowname = thread.Programme.Test_FlowNames[i];
-
+                errorstr = string.Empty;
 
                 if (!thread.TestFlowsFunction.TryGetValue(flowname, out List<TestFunction> flows))
                 {
@@ -895,6 +1068,18 @@ namespace IMX.ATS.ATE
                     break;
                 }
 
+
+                //本地数据记录地址
+                string datadirectorypath = Path.Combine(SupportConfig.DataSavePath, test_Data.ProjectName, flowname);
+
+                //多次试验数据覆盖机制
+                if (Directory.Exists(datadirectorypath))
+                {
+                    Directory.Delete(datadirectorypath);
+                }
+                Directory.CreateDirectory(datadirectorypath);
+
+
                 //步骤信息记录
                 ObservableCollection<ExecuteStepInfo> stepinfo = new ObservableCollection<ExecuteStepInfo>();
 
@@ -907,6 +1092,7 @@ namespace IMX.ATS.ATE
                     FunctionName = flowname
                 };
 
+                SaveItem(true, datadirectorypath, testinfo);
 
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
@@ -926,6 +1112,7 @@ namespace IMX.ATS.ATE
                     {
                         break;
                     }
+                    
 
                     try
                     {
@@ -984,6 +1171,7 @@ namespace IMX.ATS.ATE
                                     relayoperate_4.SateLedContrcl(LightType.ERROR);
 
                                     testresult = false;
+                                    errorstr += $"{result.Message}\r\n";
                                     TestErrorString += $"{result.Message}\r\n";
                                     if (resultconfig.ResultOpereate == ResultOpereateType.OUTTEST)
                                     {
@@ -1001,6 +1189,7 @@ namespace IMX.ATS.ATE
                             catch (Exception ex)
                             {
                                 relayoperate_4.SateLedContrcl(LightType.ERROR);
+                                errorstr += $"{ex.GetMessage()}\r\n";
                                 TestErrorString += $"{ex.GetMessage()}\r\n";
                                 thread.IsStartThread = false;
                                 ProductSN = string.Empty;
@@ -1009,6 +1198,91 @@ namespace IMX.ATS.ATE
                                 break;
                             }
 
+                        }
+                        else if(config.SupportFuncitonType == FuncitonType.Return)
+                        {
+                            
+                        }
+                        else if (config is IFuntion_Step stepfuntion)
+                        {
+                            //步进状态操作
+                            if (stepfuntion.EnableStepping)
+                            {
+                                Product_CAN_Operate product_CAN = null;
+                                IAcquisition acquisition = null;
+
+                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
+                                {
+                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
+                                }
+                                if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
+                                {
+                                    acquisition = infoac.DeviceOperate as IAcquisition;
+                                }
+
+                                var result = stepfuntion.Execut_ExceptStep(operate);
+                                if (!result)
+                                {
+                                    relayoperate_4.SateLedContrcl(LightType.ERROR);
+                                    thread.IsStartThread = false;
+                                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                                    {
+                                        step.Result = ResultState.FAIL;
+                                    }));
+                                    errorstr += result.Message;
+                                    TestErrorString += result.Message;
+                                    break;
+                                }
+                                int count = stepfuntion.NeedStepCount;
+
+                                //TODO 步进判断数据获取
+                                Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
+                                for (int k = 0; k < stepfuntion.Values.Count; k++)
+                                {
+                                    string device = stepfuntion.Values[i].Value.DeviceTypename;
+                                    string name = stepfuntion.Values[i].Value.DataInfo.Name;
+                                    var value = GlobalModel.DicDeviceInfo[device].DeviceOperate.DicReadInfo[name];
+                                    data.Add(name, value);
+                                }
+                                
+                                while (count-- > 0)
+                                {
+                                    if (stepfuntion.StepOutCheck(data))
+                                    {
+                                        break;
+                                    }
+                                    Thread.Sleep(stepfuntion.StepFrequency);
+                                    stepfuntion.SetStep(operate);
+
+                                }
+
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    step.Result = ResultState.SUCCESS;
+                                }));
+                            }
+                            else
+                            {
+                                var result = stepfuntion.Execute(operate);
+                                if (!result)
+                                {
+                                    relayoperate_4.SateLedContrcl(LightType.ERROR);
+                                    thread.IsStartThread = false;
+                                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                                    {
+                                        step.Result = ResultState.FAIL;
+                                    }));
+
+                                    errorstr += result.Message;
+                                    TestErrorString += result.Message;
+                                    break;
+                                }
+                            }
+
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                step.Result = ResultState.SUCCESS;
+                            }));
                         }
                         else if (config.SupportFuncitonType == FuncitonType.EquipmentResult)
                         {
@@ -1035,12 +1309,14 @@ namespace IMX.ATS.ATE
                             test_Data.Id = 0;
                             test_Data.ErrorInfo = result ? string.Empty : result.Message;
                             test_Data.Result = result ? ResultState.SUCCESS : ResultState.FAIL;
-                            Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
-
+                            //Task.Run(() => { DBOperate.Default.InserTestData(test_Data); });
+                            Task.Run(() => WriteDataToLocal(datadirectorypath, test_Data));
                             if (!result)
                             {
                                 relayoperate_4.SateLedContrcl(LightType.ERROR);
                                 testresult = false;
+
+                                errorstr += $"{result.Message}\r\n";
                                 TestErrorString += $"{result.Message}\r\n";
                                 if (resultconfig.ResultOpereate == ResultOpereateType.OUTTEST)
                                 {
@@ -1055,145 +1331,147 @@ namespace IMX.ATS.ATE
                                 }
                             }
                         }
-                        else if (config.SupportFuncitonType == FuncitonType.DCLoad)
-                        {
-#if DEBUG
-                            continue;
-#endif
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                stepinfo.Add(step);
-                            }));
+                        #region 早期步进设备操作（禁用）
+                        //                        else if (config.SupportFuncitonType == FuncitonType.DCLoad)
+                        //                        {
+                        //#if DEBUG
+                        //                            continue;
+                        //#endif
+                        //                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                            {
+                        //                                stepinfo.Add(step);
+                        //                            }));
 
-                            Product_CAN_Operate product_CAN = null;
-                            IAcquisition acquisition = null;
-                            if (thread.ProjectInfo.IsUseDDBC)
-                            {
-                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
-                                {
-                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
-                                }
-                            }
-                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
-                            {
-                                acquisition = infoac.DeviceOperate as IAcquisition;
-                            }
+                        //                            Product_CAN_Operate product_CAN = null;
+                        //                            IAcquisition acquisition = null;
+                        //                            if (thread.ProjectInfo.IsUseDDBC)
+                        //                            {
+                        //                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
+                        //                                {
+                        //                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
+                        //                                }
+                        //                            }
+                        //                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
+                        //                            {
+                        //                                acquisition = infoac.DeviceOperate as IAcquisition;
+                        //                            }
 
-                            var result = DCLoadExecute(config as FunConfig_DCLoad,
-                                                        operate as IDCLoad,
-                                                        product_CAN,
-                                                        acquisition);
-                            if (!result)
-                            {
-                                relayoperate_4.SateLedContrcl(LightType.ERROR);
-                                thread.IsStartThread = false;
-                                Application.Current.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    step.Result = ResultState.FAIL;
-                                }));
-                                TestErrorString += result.Message;
-                                break;
-                            }
+                        //                            //var result = DCLoadExecute(config as FunConfig_DCLoad,
+                        //                            //                            operate as IDCLoad,
+                        //                            //                            product_CAN,
+                        //                            //                            acquisition);
+                        //                            //if (!result)
+                        //                            //{
+                        //                            //    relayoperate_4.SateLedContrcl(LightType.ERROR);
+                        //                            //    thread.IsStartThread = false;
+                        //                            //    Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                            //    {
+                        //                            //        step.Result = ResultState.FAIL;
+                        //                            //    }));
+                        //                            //    TestErrorString += result.Message;
+                        //                            //    break;
+                        //                            //}
 
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                step.Result = ResultState.SUCCESS;
-                            }));
-                        }
-                        else if (config.SupportFuncitonType == FuncitonType.ACSource)
-                        {
-#if DEBUG
-                            continue;
-#endif
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                stepinfo.Add(step);
-                            }));
+                        //                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                            {
+                        //                                step.Result = ResultState.SUCCESS;
+                        //                            }));
+                        //                        }
+                        //                        else if (config.SupportFuncitonType == FuncitonType.ACSource)
+                        //                        {
+                        //#if DEBUG
+                        //                            continue;
+                        //#endif
+                        //                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                            {
+                        //                                stepinfo.Add(step);
+                        //                            }));
 
-                            Product_CAN_Operate product_CAN = null;
-                            IAcquisition acquisition = null;
-                            if (thread.ProjectInfo.IsUseDDBC)
-                            {
-                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
-                                {
-                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
-                                }
-                            }
-                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
-                            {
-                                acquisition = infoac.DeviceOperate as IAcquisition;
-                            }
+                        //                            Product_CAN_Operate product_CAN = null;
+                        //                            IAcquisition acquisition = null;
+                        //                            if (thread.ProjectInfo.IsUseDDBC)
+                        //                            {
+                        //                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
+                        //                                {
+                        //                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
+                        //                                }
+                        //                            }
+                        //                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
+                        //                            {
+                        //                                acquisition = infoac.DeviceOperate as IAcquisition;
+                        //                            }
 
-                            var result = ACScourceExecute(config as FunConfig_ACSource,
-                                                        operate as IACSource,
-                                                        product_CAN,
-                                                        acquisition);
-                            if (!result)
-                            {
-                                relayoperate_4.SateLedContrcl(LightType.ERROR);
-                                thread.IsStartThread = false;
-                                Application.Current.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    step.Result = ResultState.FAIL;
-                                }));
-                                TestErrorString += result.Message;
-
-
-                                break;
-                            }
-
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                step.Result = ResultState.SUCCESS;
-                            }));
-                        }
-                        else if (config.SupportFuncitonType == FuncitonType.HVDCSource)
-                        {
-#if DEBUG
-                            continue;
-#endif
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                stepinfo.Add(step);
-                            }));
-
-                            Product_CAN_Operate product_CAN = null;
-                            IAcquisition acquisition = null;
-                            if (thread.ProjectInfo.IsUseDDBC)
-                            {
-                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
-                                {
-                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
-                                }
-                            }
-                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
-                            {
-                                acquisition = infoac.DeviceOperate as IAcquisition;
-                            }
-
-                            var result = HVDCSScourceExecute(config as FunConfig_HVDCSource,
-                                                        operate as IHVDCSource,
-                                                        product_CAN,
-                                                        acquisition);
-                            if (!result)
-                            {
-                                relayoperate_4.SateLedContrcl(LightType.ERROR);
-                                thread.IsStartThread = false;
-                                Application.Current.Dispatcher.Invoke(new Action(() =>
-                                {
-                                    step.Result = ResultState.FAIL;
-                                }));
-                                TestErrorString += result.Message;
+                        //                            var result = ACScourceExecute(config as FunConfig_ACSource,
+                        //                                                        operate as IACSource,
+                        //                                                        product_CAN,
+                        //                                                        acquisition);
+                        //                            if (!result)
+                        //                            {
+                        //                                relayoperate_4.SateLedContrcl(LightType.ERROR);
+                        //                                thread.IsStartThread = false;
+                        //                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                                {
+                        //                                    step.Result = ResultState.FAIL;
+                        //                                }));
+                        //                                TestErrorString += result.Message;
 
 
-                                break;
-                            }
+                        //                                break;
+                        //                            }
 
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                step.Result = ResultState.SUCCESS;
-                            }));
-                        }
+                        //                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                            {
+                        //                                step.Result = ResultState.SUCCESS;
+                        //                            }));
+                        //                        }
+                        //                        else if (config.SupportFuncitonType == FuncitonType.HVDCSource)
+                        //                        {
+                        //#if DEBUG
+                        //                            continue;
+                        //#endif
+                        //                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                            {
+                        //                                stepinfo.Add(step);
+                        //                            }));
+
+                        //                            Product_CAN_Operate product_CAN = null;
+                        //                            IAcquisition acquisition = null;
+                        //                            if (thread.ProjectInfo.IsUseDDBC)
+                        //                            {
+                        //                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
+                        //                           }     {
+                        //                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
+                        //                                }
+                        //                            }
+                        //                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
+                        //                            {
+                        //                                acquisition = infoac.DeviceOperate as IAcquisition;
+                        //                            }
+
+                        //                            var result = HVDCSScourceExecute(config as FunConfig_HVDCSource,
+                        //                                                        operate as IHVDCSource,
+                        //                                                        product_CAN,
+                        //                                                        acquisition);
+                        //                            if (!result)
+                        //                            {
+                        //                                relayoperate_4.SateLedContrcl(LightType.ERROR);
+                        //                                thread.IsStartThread = false;
+                        //                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                                {
+                        //                                    step.Result = ResultState.FAIL;
+                        //                                }));
+                        //                                TestErrorString += result.Message;
+
+
+                        //                                break;
+                        //                            }
+
+                        //                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                        //                            {
+                        //                                step.Result = ResultState.SUCCESS;
+                        //                            }));
+                        //
+                        #endregion
                         else
                         {
                             Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -1224,6 +1502,8 @@ namespace IMX.ATS.ATE
                                 {
                                     step.Result = ResultState.FAIL;
                                 }));
+
+                                errorstr += result.Message;
                                 TestErrorString += result.Message;
                                 break;
                             }
@@ -1240,6 +1520,7 @@ namespace IMX.ATS.ATE
                     {
                         relayoperate_4.SateLedContrcl(LightType.ERROR);
                         thread.IsStartThread = false;
+                        errorstr += ex.GetMessage();
                         //ProductSN = string.Empty;
                         //productsnlenth = 0;
                         //IsFocuse = true;
@@ -1248,40 +1529,40 @@ namespace IMX.ATS.ATE
                     }
                 }
                 #endregion
+
+                testinfo.ErrorInfo = errorstr;
+                testinfo.Result = string.IsNullOrEmpty(errorstr)? ResultState.SUCCESS: ResultState.FAIL;
+
+                Application.Current.Dispatcher.Invoke(new Action(() => functioninfo.Result = testinfo.Result));
+                
+                SaveItem(false, datadirectorypath, testinfo);
             }
             #endregion
 
             if (!string.IsNullOrEmpty(TestErrorString))
             {
-                testinfo.ErrorInfo = TestErrorString;
-                testinfo.Result = ResultState.FAIL;
+                //testinfo.ErrorInfo = TestErrorString;
+                //testinfo.Result = ResultState.FAIL;
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-
                     TestResult = "FAIL";
                     TestResultColor = Brushes.Red;
-                    //ProductSN = string.Empty;
-                    //productsnlenth = 0;
-                    //IsFocuse = true;
                 }));
-                //MessageBox.Show(TestErrorString, "试验失败");
             }
             else
             {
-                testinfo.Result = ResultState.SUCCESS;
+                //testinfo.Result = ResultState.SUCCESS;
                 Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
-                    //ContentColor = Brushes.Red;
                     TestResult = "PASS";
                     TestResultColor = Brushes.Green;
 
                 }));
                 relayoperate_4?.SateLedContrcl(LightType.DEFALT);
-                //MessageBox.Show("试验运行完成", "试验成功");
             }
 
-            testinfo.ActualRunTime = DateTime.Now.Ticks - testinfo.CreateTime.Ticks;
-            SaveItem(false, testinfo);
+            //testinfo.ActualRunTime = DateTime.Now.Ticks - testinfo.CreateTime.Ticks;
+            
 
             ShutDown(thread.Programme.TestOff_FlowNames, thread.ProjectInfo.IsUseDDBC);
             if (thread.ProjectInfo.IsUseDDBC)
@@ -1543,279 +1824,279 @@ namespace IMX.ATS.ATE
         }
         #endregion
 
-        /// <summary>
-        /// 负载试验执行
-        /// </summary>
-        /// <returns></returns>
-        private OperateResult DCLoadExecute(FunConfig_DCLoad config, IDCLoad device, Product_CAN_Operate canoperate, IAcquisition aqcoperate)
-        {
-            string errorstring = string.Empty;
-            try
-            {
-                if (device == null)
-                {
-                    errorstring = "设备类型不存在";
-                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
-                    return OperateResult.Failed(errorstring);
-                }
+        ///// <summary>
+        ///// 负载试验执行
+        ///// </summary>
+        ///// <returns></returns>
+        //private OperateResult DCLoadExecute(FunConfig_DCLoad config, IDCLoad device, Product_CAN_Operate canoperate, IAcquisition aqcoperate)
+        //{
+        //    string errorstring = string.Empty;
+        //    try
+        //    {
+        //        if (device == null)
+        //        {
+        //            errorstring = "设备类型不存在";
+        //            SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+        //            return OperateResult.Failed(errorstring);
+        //        }
 
-                if (config == null)
-                {
-                    errorstring = "直流负载配置不可为空";
-                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
-                    return OperateResult.Failed(errorstring);
-                }
-                if (aqcoperate == null)
-                {
-                    errorstring = "采样系统不存在";
-                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
-                    return OperateResult.Failed(errorstring);
-                }
+        //        if (config == null)
+        //        {
+        //            errorstring = "直流负载配置不可为空";
+        //            SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+        //            return OperateResult.Failed(errorstring);
+        //        }
+        //        if (aqcoperate == null)
+        //        {
+        //            errorstring = "采样系统不存在";
+        //            SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+        //            return OperateResult.Failed(errorstring);
+        //        }
 
-                string InfoString = string.Empty;
-
-
-                //短路模式
-                if (config.Set_ShortState == DeviceOutPutState.ON)
-                {
-                    OperateResult result = device.SetShort(config.Set_ShortState);
-                    InfoString = $"设置\n[短路模式] {config.Set_ShortState}成功";
-                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                }
-                else//非短路模式
-                {
-                    #region 启动拉载
-                    OperateResult result = device.SetShort(config.Set_ShortState);
-                    if (!result)
-                    {
-                        errorstring = $"设置\n[短路模式]异常：【{result.Message}】";
-                        SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
-                        return OperateResult.Failed(errorstring);
-                    }
-                    Thread.Sleep(200);
-
-                    double loadvalue = config.EnableStepping ? config.StartLoadValue : config.Set_LoadValue;
-
-                    OperateResult SetRlt = null;
-                    if (string.IsNullOrEmpty(config.Set_Model))
-                    {
-                        SetRlt = device.SetLoadValue(loadvalue);
-                    }
-                    else
-                    {
-                        SetRlt = device.SetModelAndValue(config.Set_Model, loadvalue);
-                    }
-
-                    if (!SetRlt)
-                    {
-                        errorstring = $"设备参数设置异常：【{SetRlt.Message}】";
-                        SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
-                        return OperateResult.Failed(errorstring);
-                    }
-
-                    InfoString = $"设置\n[模式]{config.Set_Model}\n[拉载值]{loadvalue}成功";
-                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-
-                    OperateResult SetParamRlt = device.SetParameters(config.Set_ParamValue1, config.Set_ParamValue2);
-
-                    if (!SetParamRlt)
-                    {
-                        errorstring = $"设备拉载参数设置异常：【{SetParamRlt.Message}】";
-                        SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
-
-                        //Logger.Error(nameof(FunConfig_DCLoad), nameof(Execute), LastError);
-                        return OperateResult.Failed(errorstring);
-                    }
-
-                    InfoString = $"设置\n[模式]{config.Set_Model}\n[参数1]{config.Set_ParamValue1}\n[参数2]{config.Set_ParamValue2}成功";
-                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-
-                    if (config.OperateType != SetOutPutState.Null)
-                    {
-                        Thread.Sleep(200);
-
-                        device.SetOnOff(config.OperateType == SetOutPutState.ON ? DeviceOutPutState.ON : DeviceOutPutState.OFF);
-
-                        InfoString = config.OperateType == SetOutPutState.ON ? "打开" : "关闭";
-                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-
-                        //Logger.Info(nameof(FunConfig_DCLoad), nameof(Execute), $"设备已{InfoString}");
-                    }
-
-                    #endregion
-
-                    //步进模式
-                    if (config.EnableStepping)
-                    {
-                        Thread.Sleep(config.StepFrequency);
-
-                        Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
-
-                        if (canoperate != null)
-                        {
-                            for (int i = 0; i < canoperate?.ReadInfos.Count; i++)
-                            {
-                                data.Add(canoperate.ReadInfos[i].DataInfo.Name, canoperate.ReadInfos[i]);
-                            }
-                        }
-
-                        for (int i = 0; i < aqcoperate?.ReadInfos.Count; i++)
-                        {
-                            data.Add(aqcoperate.ReadInfos[i].DataInfo.Name, aqcoperate.ReadInfos[i]);
-                        }
-
-                        if (Math.Abs(config.EndLoadValue - config.StartLoadValue) >= config.Stride)
-                        {
-
-                            int count = Convert.ToInt16(Math.Abs((((config.EndLoadValue - config.StartLoadValue) % config.Stride) == 0) ? ((config.EndLoadValue - config.StartLoadValue) / config.Stride) : ((config.EndLoadValue - config.StartLoadValue) / config.Stride + 1)));
-                            for (int i = 0; i < count; i++)
-                            {
-                                if (monitor != null && (!monitor.IsStartThread))
-                                {
-                                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "手动退出步进");
-                                    break;
-                                }
-
-                                double setpvol = config.StartLoadValue + config.Stride * (i + 1) * (config.EndLoadValue < config.StartLoadValue ? -1 : 1);
-
-                                setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
-
-                                device.SetLoadValue(setpvol);
-
-                                InfoString = $"设备步进设置拉载值{setpvol}成功";
-
-                                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-
-                                Thread.Sleep(config.StepFrequency);
-
-                                if (canoperate != null)
-                                {
-                                    canoperate?.Device_ReadAll();
-                                }
-
-                                aqcoperate?.Device_ReadAll();
-
-                                //跳出步进条件
-                                if (config.Values != null && config.Values.Count > 0)
-                                {
-                                    //if (config.StepCondition == StepConditions.OR)
-                                    //{
-                                    List<bool> results = new List<bool>();
-                                    for (int j = 0; j < config.Values.Count; j++)
-                                    {
-                                        if (config.Values[j].Value == null)
-                                        {
-                                            continue;
-                                        }
-                                        double readdata = data[config.Values[j].Value.DataInfo.Name].DataInfo.Value;
-                                        switch (config.Values[j].StepValueCondition.ToString())
-                                        {
-                                            case "GREATERTHAN"://大于
-
-                                                results.Add(readdata > config.Values[j].ConditionValue ? true : false);
-                                                //if (config.Values[j].Value.DataInfo.Value > config.Values[j].ConditionValue)
-                                                //{
-                                                //    InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]大于[{Values[j].ConditionValue}]";
-                                                //    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                                                //    return OperateResult.Succeed();
-                                                //}
-                                                break;
-                                            case "LESSTHAN"://小于
-                                                results.Add(readdata < config.Values[j].ConditionValue ? true : false);
-                                                //if (config.Values[j].Value.DataInfo.Value < config.Values[j].ConditionValue)
-                                                //    {
-                                                //        InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]小于[{config.Values[j].ConditionValue}]";
-                                                //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                                                //        return OperateResult.Succeed();
-                                                //    }
-                                                break;
-                                            case "EQUALTO"://等于
-                                                results.Add(readdata == config.Values[j].ConditionValue ? true : false);
-                                                //if (config.Values[j].Value.DataInfo.Value == config.Values[j].ConditionValue)
-                                                //    {
-                                                //        InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]等于[{config.Values[j].ConditionValue}]";
-                                                //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                                                //        return OperateResult.Succeed();
-                                                //    }
-                                                break;
-                                            case "NOTEQUALTO"://不等于
-                                                results.Add(readdata != config.Values[j].ConditionValue ? true : false);
-                                                //if (config.Values[j].Value.DataInfo.Value != config.Values[j].ConditionValue)
-                                                //    {
-                                                //        InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]不等于[{config.Values[j].ConditionValue}]";
-                                                //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                                                //        return OperateResult.Succeed();
-                                                //    }
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }
-                                    //}
-
-                                    if (results.All(x => x == true))
-                                    {
-                                        InfoString = $"达成条件，跳出步进";
-                                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                                        return OperateResult.Succeed();
-                                    }
-                                    else if (results.Any(x => x == true) && config.StepCondition == StepConditions.OR)
-                                    {
-                                        InfoString = $"达成条件，跳出步进";
-                                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                                        return OperateResult.Succeed();
-                                    }
-                                }
+        //        string InfoString = string.Empty;
 
 
-                            }
-                        }
-                        else
-                        {
-                            InfoString = $"步进操作：步进目标值和初始值相同，无需进行步进操作";
-                            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
-                        }
-                    }
-                    //else
-                    //{
-                    //    OperateResult SetRlt = operate.SetModelAndValue(Set_Model, Set_LoadValue);
+        //        //短路模式
+        //        if (config.Set_ShortState == DeviceOutPutState.ON)
+        //        {
+        //            OperateResult result = device.SetShort(config.Set_ShortState);
+        //            InfoString = $"设置\n[短路模式] {config.Set_ShortState}成功";
+        //            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //        }
+        //        else//非短路模式
+        //        {
+        //            #region 启动拉载
+        //            OperateResult result = device.SetShort(config.Set_ShortState);
+        //            if (!result)
+        //            {
+        //                errorstring = $"设置\n[短路模式]异常：【{result.Message}】";
+        //                SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+        //                return OperateResult.Failed(errorstring);
+        //            }
+        //            Thread.Sleep(200);
 
-                    //    if (!SetRlt)
-                    //    {
-                    //        LastError = $"设备参数设置异常：【{SetRlt.Message}】";
-                    //        Logger.Error(ClassType.Name, FuntionName, LastError);
+        //            double loadvalue = config.EnableStepping ? config.StartLoadValue : config.Set_LoadValue;
 
-                    //        //Logger.Error(nameof(FunConfig_DCLoad), nameof(Execute), LastError);
-                    //        return OperateResult.Failed(LastError);
-                    //    }
+        //            OperateResult SetRlt = null;
+        //            if (string.IsNullOrEmpty(config.Set_Model))
+        //            {
+        //                SetRlt = device.SetLoadValue(loadvalue);
+        //            }
+        //            else
+        //            {
+        //                SetRlt = device.SetModelAndValue(config.Set_Model, loadvalue);
+        //            }
 
-                    //    InfoString = $"设置\n[模式]{Set_Model}\n[拉载值]{Set_LoadValue}成功";
-                    //    Logger.Info(ClassType.Name, FuntionName, InfoString);
+        //            if (!SetRlt)
+        //            {
+        //                errorstring = $"设备参数设置异常：【{SetRlt.Message}】";
+        //                SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
+        //                return OperateResult.Failed(errorstring);
+        //            }
 
-                    //    //Logger.Info(nameof(FunConfig_DCLoad), nameof(Execute), InfoString);
-                    //}
+        //            InfoString = $"设置\n[模式]{config.Set_Model}\n[拉载值]{loadvalue}成功";
+        //            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
 
-                    //if (OperateType != SetOutPutState.Null)
-                    //{
-                    //    operate.SetOnOff(OperateType == SetOutPutState.ON ? DeviceOutPutState.ON : DeviceOutPutState.OFF);
+        //            OperateResult SetParamRlt = device.SetParameters(config.Set_ParamValue1, config.Set_ParamValue2);
 
-                    //    InfoString = OperateType == SetOutPutState.ON ? "打开" : "关闭";
-                    //    Logger.Info(ClassType.Name, FuntionName, $"设备已{InfoString}");
+        //            if (!SetParamRlt)
+        //            {
+        //                errorstring = $"设备拉载参数设置异常：【{SetParamRlt.Message}】";
+        //                SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), errorstring);
 
-                    //    //Logger.Info(nameof(FunConfig_DCLoad), nameof(Execute), $"设备已{InfoString}");
-                    //}
+        //                //Logger.Error(nameof(FunConfig_DCLoad), nameof(Execute), LastError);
+        //                return OperateResult.Failed(errorstring);
+        //            }
 
-                }
-                Thread.Sleep(config.DelayAfterRun > 0 ? config.DelayAfterRun : 0);
-                return OperateResult.Succeed();
+        //            InfoString = $"设置\n[模式]{config.Set_Model}\n[参数1]{config.Set_ParamValue1}\n[参数2]{config.Set_ParamValue2}成功";
+        //            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
 
-            }
-            catch (Exception ex)
-            {
-                SuperDHHLoggerManager.Exception(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), ex);
-                return OperateResult.Excepted(ex);
-            }
-        }
+        //            if (config.OperateType != SetOutPutState.Null)
+        //            {
+        //                Thread.Sleep(200);
+
+        //                device.SetOnOff(config.OperateType == SetOutPutState.ON ? DeviceOutPutState.ON : DeviceOutPutState.OFF);
+
+        //                InfoString = config.OperateType == SetOutPutState.ON ? "打开" : "关闭";
+        //                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+
+        //                //Logger.Info(nameof(FunConfig_DCLoad), nameof(Execute), $"设备已{InfoString}");
+        //            }
+
+        //            #endregion
+
+        //            //步进模式
+        //            if (config.EnableStepping)
+        //            {
+        //                Thread.Sleep(config.StepFrequency);
+
+        //                Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
+
+        //                if (canoperate != null)
+        //                {
+        //                    for (int i = 0; i < canoperate?.ReadInfos.Count; i++)
+        //                    {
+        //                        data.Add(canoperate.ReadInfos[i].DataInfo.Name, canoperate.ReadInfos[i]);
+        //                    }
+        //                }
+
+        //                for (int i = 0; i < aqcoperate?.ReadInfos.Count; i++)
+        //                {
+        //                    data.Add(aqcoperate.ReadInfos[i].DataInfo.Name, aqcoperate.ReadInfos[i]);
+        //                }
+
+        //                if (Math.Abs(config.EndLoadValue - config.StartLoadValue) >= config.Stride)
+        //                {
+
+        //                    int count = Convert.ToInt16(Math.Abs((((config.EndLoadValue - config.StartLoadValue) % config.Stride) == 0) ? ((config.EndLoadValue - config.StartLoadValue) / config.Stride) : ((config.EndLoadValue - config.StartLoadValue) / config.Stride + 1)));
+        //                    for (int i = 0; i < count; i++)
+        //                    {
+        //                        if (monitor != null && (!monitor.IsStartThread))
+        //                        {
+        //                            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "手动退出步进");
+        //                            break;
+        //                        }
+
+        //                        double setpvol = config.StartLoadValue + config.Stride * (i + 1) * (config.EndLoadValue < config.StartLoadValue ? -1 : 1);
+
+        //                        setpvol = config.EndLoadValue > config.StartLoadValue ? Math.Min(setpvol, config.EndLoadValue) : Math.Max(setpvol, config.EndLoadValue);
+
+        //                        device.SetLoadValue(setpvol);
+
+        //                        InfoString = $"设备步进设置拉载值{setpvol}成功";
+
+        //                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+
+        //                        Thread.Sleep(config.StepFrequency);
+
+        //                        if (canoperate != null)
+        //                        {
+        //                            canoperate?.Device_ReadAll();
+        //                        }
+
+        //                        aqcoperate?.Device_ReadAll();
+
+        //                        //跳出步进条件
+        //                        if (config.Values != null && config.Values.Count > 0)
+        //                        {
+        //                            //if (config.StepCondition == StepConditions.OR)
+        //                            //{
+        //                            List<bool> results = new List<bool>();
+        //                            for (int j = 0; j < config.Values.Count; j++)
+        //                            {
+        //                                if (config.Values[j].Value == null)
+        //                                {
+        //                                    continue;
+        //                                }
+        //                                double readdata = data[config.Values[j].Value.DataInfo.Name].DataInfo.Value;
+        //                                switch (config.Values[j].StepValueCondition.ToString())
+        //                                {
+        //                                    case "GREATERTHAN"://大于
+
+        //                                        results.Add(readdata > config.Values[j].ConditionValue ? true : false);
+        //                                        //if (config.Values[j].Value.DataInfo.Value > config.Values[j].ConditionValue)
+        //                                        //{
+        //                                        //    InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]大于[{Values[j].ConditionValue}]";
+        //                                        //    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //                                        //    return OperateResult.Succeed();
+        //                                        //}
+        //                                        break;
+        //                                    case "LESSTHAN"://小于
+        //                                        results.Add(readdata < config.Values[j].ConditionValue ? true : false);
+        //                                        //if (config.Values[j].Value.DataInfo.Value < config.Values[j].ConditionValue)
+        //                                        //    {
+        //                                        //        InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]小于[{config.Values[j].ConditionValue}]";
+        //                                        //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //                                        //        return OperateResult.Succeed();
+        //                                        //    }
+        //                                        break;
+        //                                    case "EQUALTO"://等于
+        //                                        results.Add(readdata == config.Values[j].ConditionValue ? true : false);
+        //                                        //if (config.Values[j].Value.DataInfo.Value == config.Values[j].ConditionValue)
+        //                                        //    {
+        //                                        //        InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]等于[{config.Values[j].ConditionValue}]";
+        //                                        //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //                                        //        return OperateResult.Succeed();
+        //                                        //    }
+        //                                        break;
+        //                                    case "NOTEQUALTO"://不等于
+        //                                        results.Add(readdata != config.Values[j].ConditionValue ? true : false);
+        //                                        //if (config.Values[j].Value.DataInfo.Value != config.Values[j].ConditionValue)
+        //                                        //    {
+        //                                        //        InfoString = $"跳出步进：[{config.Values[j].Value.DataInfo.Name}][{config.Values[j].Value.DataInfo.Value}]不等于[{config.Values[j].ConditionValue}]";
+        //                                        //        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //                                        //        return OperateResult.Succeed();
+        //                                        //    }
+        //                                        break;
+        //                                    default:
+        //                                        break;
+        //                                }
+        //                            }
+        //                            //}
+
+        //                            if (results.All(x => x == true))
+        //                            {
+        //                                InfoString = $"达成条件，跳出步进";
+        //                                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //                                return OperateResult.Succeed();
+        //                            }
+        //                            else if (results.Any(x => x == true) && config.StepCondition == StepConditions.OR)
+        //                            {
+        //                                InfoString = $"达成条件，跳出步进";
+        //                                SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //                                return OperateResult.Succeed();
+        //                            }
+        //                        }
+
+
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    InfoString = $"步进操作：步进目标值和初始值相同，无需进行步进操作";
+        //                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), InfoString);
+        //                }
+        //            }
+        //            //else
+        //            //{
+        //            //    OperateResult SetRlt = operate.SetModelAndValue(Set_Model, Set_LoadValue);
+
+        //            //    if (!SetRlt)
+        //            //    {
+        //            //        LastError = $"设备参数设置异常：【{SetRlt.Message}】";
+        //            //        Logger.Error(ClassType.Name, FuntionName, LastError);
+
+        //            //        //Logger.Error(nameof(FunConfig_DCLoad), nameof(Execute), LastError);
+        //            //        return OperateResult.Failed(LastError);
+        //            //    }
+
+        //            //    InfoString = $"设置\n[模式]{Set_Model}\n[拉载值]{Set_LoadValue}成功";
+        //            //    Logger.Info(ClassType.Name, FuntionName, InfoString);
+
+        //            //    //Logger.Info(nameof(FunConfig_DCLoad), nameof(Execute), InfoString);
+        //            //}
+
+        //            //if (OperateType != SetOutPutState.Null)
+        //            //{
+        //            //    operate.SetOnOff(OperateType == SetOutPutState.ON ? DeviceOutPutState.ON : DeviceOutPutState.OFF);
+
+        //            //    InfoString = OperateType == SetOutPutState.ON ? "打开" : "关闭";
+        //            //    Logger.Info(ClassType.Name, FuntionName, $"设备已{InfoString}");
+
+        //            //    //Logger.Info(nameof(FunConfig_DCLoad), nameof(Execute), $"设备已{InfoString}");
+        //            //}
+
+        //        }
+        //        Thread.Sleep(config.DelayAfterRun > 0 ? config.DelayAfterRun : 0);
+        //        return OperateResult.Succeed();
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        SuperDHHLoggerManager.Exception(LoggerType.TESTLOG, nameof(MainViewModel), nameof(DCLoadExecute), ex);
+        //        return OperateResult.Excepted(ex);
+        //    }
+        //}
 
         /// <summary>
         /// 交流源试验执行
@@ -2271,24 +2552,91 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 数据条目存储
         /// </summary>
-        private OperateResult<string> SaveItem(bool isstart, Test_ItemInfo info)
+        private OperateResult SaveItem(bool isstart, string path,Test_ItemInfo info)
         {
             lock (objLock)
             {
-                if (isstart)
+                try
                 {
-                    return DBOperate.Default.InserTestItem(info);
-                }
-                else
-                {
-                    var rlt = DBOperate.Default.UpdateTetsItem(info);
-                    if (!rlt)
+                    if (isstart)
                     {
-                        return OperateResult<string>.Failed(string.Empty, rlt.Message);
+                        //string path = Path.Combine(SupportConfig.DataSavePath, info.ProjectName,info.FlowName);
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        using (FileStream fs = new FileStream(Path.Combine(path, $"InsterItem_{info.ProjectName}_{info.FlowName}.item"), FileMode.CreateNew))
+                        {
+                            using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8)) // Encoding.UTF8 设置编码方式
+                            {
+                                info.CreateTime = DateTime.Now;
+                                writer.WriteLine(JsonConvert.SerializeObject(info));
+                            }
+                        }
                     }
-                    return OperateResult<string>.Succeed(string.Empty);
+                    else
+                    {
+
+                        //string path = Path.Combine(SupportConfig.DataSavePath, info.ProjectName);
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        using (FileStream fs = new FileStream(Path.Combine(path, $"InsterItem.item"), FileMode.OpenOrCreate))
+                        {
+                            using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8)) // Encoding.UTF8 设置编码方式
+                            {
+                                info.UpdateTime =  DateTime.Now;
+                                //info.ActualRunTime = info.UpdateTime.Ticks - info.CreateTime.Ticks;
+                                writer.WriteLine(JsonConvert.SerializeObject(info));
+                            }
+                        }
+                    }
+
+                    return OperateResult.Succeed();
+                }
+                catch (Exception ex)
+                {
+                    SuperDHHLoggerManager.Exception( LoggerType.DBLOG, nameof(SaveItem), "试验数据条目本地记录", ex);
+                    return OperateResult.Excepted(ex);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// 本地数据记录
+        /// </summary>
+        /// <param name="path">数据记录地址</param>
+        /// <param name="dataInfo">数据内容</param>
+        /// <returns></returns>
+        private OperateResult WriteDataToLocal(string path, Test_DataInfo dataInfo) 
+        {
+            lock (objLock) 
+            {
+                try
+                {
+                    dataInfo.CreateTime = DateTime.Now;
+                    string datapath = Path.Combine(path, $"data_{dataInfo.CreateTime:yyyyMMddHHmmssfff}.data");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    using (FileStream fs = new FileStream(datapath, FileMode.CreateNew))
+                    {
+                        using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8)) // Encoding.UTF8 设置编码方式
+                        {
+                            writer.WriteLine(JsonConvert.SerializeObject(dataInfo));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(WriteDataToLocal), "试验数据数据本地记录", ex);
+                    return OperateResult.Failed();
                 }
             }
+            return OperateResult.Succeed();
         }
         #endregion
 
@@ -2959,6 +3307,32 @@ namespace IMX.ATS.ATE
         {
             get => forecolor;
             set => Set(nameof(Forecolor), ref forecolor, value);
+        }
+    }
+
+    /// <summary>
+    /// 流程信息
+    /// </summary>
+    public class ProcessInfo : ViewModelBase
+    {
+        private bool enableuse;
+        /// <summary>
+        /// 试验项执行使能
+        /// </summary>
+        public bool EnableUse
+        {
+            get => enableuse;
+            set => Set(nameof(EnableUse), ref enableuse, value);
+        }
+
+        private string processname;
+        /// <summary>
+        /// 试验项名称
+        /// </summary>
+        public string ProcessName
+        {
+            get => processname;
+            set => Set(nameof(ProcessName), ref processname, value);
         }
     }
 

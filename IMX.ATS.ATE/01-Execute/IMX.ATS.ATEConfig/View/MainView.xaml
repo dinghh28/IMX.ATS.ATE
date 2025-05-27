@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.ATEConfig"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Title="MainView" Height="450" Width="800"
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
@@ -50,8 +50,8 @@
                        Command="{Binding NavChangeCommand}" CommandParameter="ProjectInfo">
                     </RadioButton>
                     <RadioButton Content="&#xe62a;"  Style="{StaticResource LeftMenuItemButtonStlye}" 
-                             ToolTip="DBC配置"
-                       Command="{Binding NavChangeCommand}" CommandParameter="DBCConfig" Visibility="{Binding DBCConfigVisbility}"/>
+                             ToolTip="开关机流程配置"
+                       Command="{Binding NavChangeCommand}" CommandParameter="FixedProcess" Visibility="{Binding DBCConfigVisbility}"/>
                     <!--<RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="示波器参数配置" 
                        Command="{Binding NavChangeCommand}" CommandParameter="TestProcess"

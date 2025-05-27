@@ -32,6 +32,11 @@ namespace IMX.DB.Model
         [Column(IsNullable = false)]
         public string ProjectName { get; set; }
 
+        /// <summary>
+        /// 流程名称
+        /// </summary>
+        public string FlowName { get; set; }
+
         ///// <summary>
         ///// 试验工序
         ///// </summary>
@@ -43,10 +48,30 @@ namespace IMX.DB.Model
         ///// </summary>
         //public uint CalibrationTime { get; set; }
 
+        private long actualruntime = 0;
         /// <summary>
         /// 实际运行时间
         /// </summary>
-        public long ActualRunTime { get; set; }
+        public long ActualRunTime
+        {
+            get 
+            {
+                if (CreateTime == DateTime.MinValue || UpdateTime == DateTime.MinValue)
+                {
+                    return actualruntime = 0;
+                }
+
+                if (CreateTime.Ticks - UpdateTime.Ticks < 0)
+                {
+                    return actualruntime = 0;
+                }
+
+                actualruntime = CreateTime.Ticks - UpdateTime.Ticks;
+
+                return actualruntime;
+            }
+            set => actualruntime = value;
+        }
 
         /// <summary>
         /// 试验结果
@@ -106,6 +131,12 @@ namespace IMX.DB.Model
         public List<ModTestDataInfo> Pro_Data { get; set; }
 
         /// <summary>
+        /// 产品设置数据
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Pro_SetData { get; set; }
+
+        /// <summary>
         /// 产品详细数据
         /// </summary>
         [JsonMap]
@@ -116,6 +147,12 @@ namespace IMX.DB.Model
         /// </summary>
         [JsonMap]
         public List<ModTestDataInfo> Euq_Data { get; set; }
+
+        /// <summary>
+        /// 设备设置数据
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Euq_SetData { get; set; }
 
         /// <summary>
         /// 设备数据

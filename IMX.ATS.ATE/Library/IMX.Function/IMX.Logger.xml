@@ -65,6 +65,70 @@
             保护信息日志接口
             </summary>
         </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.Debug(IMX.Logger.LoggerType,System.String,System.String,System.String)">
+            <summary>
+            调试模式记录
+            </summary>
+            <param name="type"></param>
+            <param name="model"></param>
+            <param name="function"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.Info(IMX.Logger.LoggerType,System.String,System.String,System.String)">
+            <summary>
+            信息记录
+            </summary>
+            <param name="type"></param>
+            <param name="model"></param>
+            <param name="function"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.Warn(IMX.Logger.LoggerType,System.String,System.String,System.String)">
+            <summary>
+            警告记录
+            </summary>
+            <param name="type"></param>
+            <param name="model"></param>
+            <param name="function"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.Error(IMX.Logger.LoggerType,System.String,System.String,System.String)">
+            <summary>
+            错误记录
+            </summary>
+            <param name="type"></param>
+            <param name="model"></param>
+            <param name="function"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.Fatal(IMX.Logger.LoggerType,System.String,System.String,System.String)">
+            <summary>
+            故障记录
+            </summary>
+            <param name="type"></param>
+            <param name="model"></param>
+            <param name="function"></param>
+            <param name="message"></param>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.Exception(IMX.Logger.LoggerType,System.String,System.String,System.Exception)">
+            <summary>
+            异常记录
+            </summary>
+            <param name="type"></param>
+            <param name="model"></param>
+            <param name="function"></param>
+            <param name="exception"></param>
+        </member>
+        <member name="M:IMX.Logger.SuperDHHLoggerManager.Trace(IMX.Logger.LoggerType,System.String,System.String,System.Int32,System.String)">
+            <summary>
+            跟踪记录
+            </summary>
+            <param name="type"></param>
+            <param name="message"></param>
+            <param name="callerFilePath"></param>
+            <param name="callerLineNumber"></param>
+            <param name="callerMemberName"></param>
+        </member>
         <member name="M:IMX.Logger.SuperDHHLoggerManager.GetMessage(IMX.Logger.LoggerType)">
             <summary>
             获取Log最近记录信息

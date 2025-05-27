@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig.Function"
+             
              d:DataContext="{d:DesignInstance Type=local:FunViewModelACSource}"
              xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework" 
              mc:Ignorable="d" 
@@ -21,10 +22,13 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <converter:EnumDescriptionConverter x:Key="EnumValue"/>
+                    
                 </ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
+
+
     </UserControl.Resources>
 
     <UserControl.DataContext>

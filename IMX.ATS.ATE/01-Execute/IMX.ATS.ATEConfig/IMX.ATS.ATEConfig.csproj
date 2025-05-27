@@ -261,16 +261,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Function\ViewModel\FunViewModelACSourceLoad.cs" />
     <Compile Include="Function\ViewModel\FunViewModelACSource.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelAnalogAignals.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelRPU.cs" />
     <Compile Include="Function\ViewModel\FunViewModelAPU.cs" />
     <Compile Include="Function\ViewModel\FunViewModelDCLoad.cs" />
     <Compile Include="Function\ViewModel\FunViewModelEquipmentResult.cs" />
     <Compile Include="Function\ViewModel\FunViewModelHVDCSource.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelLVDCLoad.cs" />
     <Compile Include="Function\ViewModel\FunViewModelPOPUP.cs" />
     <Compile Include="Function\ViewModel\FunViewModelProduct.cs" />
     <Compile Include="Function\ViewModel\FunViewModelProductResult.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelReturn.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelSignalSource.cs" />
     <Compile Include="Function\View\FunViewACSource.xaml.cs">
       <DependentUpon>FunViewACSource.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewACSourceLoad.xaml.cs">
+      <DependentUpon>FunViewACSourceLoad.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewAnalogAignals.xaml.cs">
+      <DependentUpon>FunViewAnalogAignals.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewRPU.xaml.cs">
+      <DependentUpon>FunViewRPU.xaml</DependentUpon>
     </Compile>
     <Compile Include="Function\View\FunViewAPU.xaml.cs">
       <DependentUpon>FunViewAPU.xaml</DependentUpon>
@@ -284,6 +299,9 @@
     <Compile Include="Function\View\FunViewHVDCSource.xaml.cs">
       <DependentUpon>FunViewHVDCSource.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Function\View\FunViewLVDCLoad.xaml.cs">
+      <DependentUpon>FunViewLVDCLoad.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Function\View\FunViewPOPUP.xaml.cs">
       <DependentUpon>FunViewPOPUP.xaml</DependentUpon>
     </Compile>
@@ -293,6 +311,14 @@
     <Compile Include="Function\View\FunViewProductResult.xaml.cs">
       <DependentUpon>FunViewProductResult.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Function\View\FunViewReturn.xaml.cs">
+      <DependentUpon>FunViewReturn.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewSignalSource.xaml.cs">
+      <DependentUpon>FunViewSignalSource.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resource\Converter\ACSourceLoadConverter.cs" />
+    <Compile Include="Resource\Converter\DCLoadConverter.cs" />
     <Compile Include="Resource\Converter\ShortSatetConverter.cs" />
     <Compile Include="Resource\Converter\UseDBCConverter.cs" />
     <Compile Include="ViewModel\DBCConfigViewModel.cs" />
@@ -339,6 +365,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Function\View\FunViewACSourceLoad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewAnalogAignals.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewRPU.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Function\View\FunViewAPU.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -355,6 +393,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Function\View\FunViewLVDCLoad.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Function\View\FunViewPOPUP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -364,6 +406,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Function\View\FunViewProductResult.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewReturn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewSignalSource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

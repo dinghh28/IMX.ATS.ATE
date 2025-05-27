@@ -68,6 +68,10 @@ namespace IMX.ATS.ATEConfig
             SimpleIoc.Default.Register<FunViewModelAPU>();
             ContentControlManager.Regiter<FunViewAPU>();
 
+            //倒灌电源配置
+            SimpleIoc.Default.Register<FunViewModelRPU>();
+            ContentControlManager.Regiter<FunViewRPU>();
+
             //高压直流压源配置
             SimpleIoc.Default.Register<FunViewModelHVDCSource>();
             ContentControlManager.Regiter<FunViewHVDCSource>();
@@ -79,6 +83,10 @@ namespace IMX.ATS.ATEConfig
             //直流负载配置
             SimpleIoc.Default.Register<FunViewModelDCLoad>();
             ContentControlManager.Regiter<FunViewDCLoad>();
+
+            //低压直流负载配置
+            SimpleIoc.Default.Register<FunViewModelLVDCLoad>();
+            ContentControlManager.Regiter<FunViewLVDCLoad>();
 
             //交流负载配置
             SimpleIoc.Default.Register<FunViewModelACSource>();
@@ -96,6 +104,23 @@ namespace IMX.ATS.ATEConfig
             //工装读取结果配置
             SimpleIoc.Default.Register<FunViewModelEquipmentResult>();
             ContentControlManager.Regiter<FunViewEquipmentResult>();
+
+            //条件跳转延时配置
+            SimpleIoc.Default.Register<FunViewModelReturn>();
+            ContentControlManager.Regiter<FunViewReturn>();
+
+            //CCCP模拟信号配置
+            SimpleIoc.Default.Register<FunViewModelAnalogAignals>();
+            ContentControlManager.Regiter<FunViewAnalogAignals>();
+
+
+            //信号模拟器配置
+            SimpleIoc.Default.Register<FunViewModelSignalSource>();
+            ContentControlManager.Regiter<FunViewSignalSource>();
+
+            //原载一体机号配置
+            SimpleIoc.Default.Register<FunViewModelACSourceLoad>();
+            ContentControlManager.Regiter<FunViewACSourceLoad>();
             #endregion
         }
 
@@ -179,6 +204,11 @@ namespace IMX.ATS.ATEConfig
         public FunViewModelAPU FunAPU=> ServiceLocator.Current.GetInstance<FunViewModelAPU>();
 
         /// <summary>
+        /// 倒灌电源配置模板
+        /// </summary>
+        public FunViewModelRPU FunRPU => ServiceLocator.Current.GetInstance<FunViewModelRPU>();
+
+        /// <summary>
         /// 高压直流源配置模板
         /// </summary>
         public FunViewModelHVDCSource FunHVDCSource => ServiceLocator.Current.GetInstance<FunViewModelHVDCSource>();
@@ -192,6 +222,11 @@ namespace IMX.ATS.ATEConfig
         /// 直流负载配置模板
         /// </summary>
         public FunViewModelDCLoad FunDCLoad => ServiceLocator.Current.GetInstance<FunViewModelDCLoad>();
+
+        /// <summary>
+        /// 低压直流负载配置模板
+        /// </summary>
+        public FunViewModelLVDCLoad FunLVDCLoad => ServiceLocator.Current.GetInstance<FunViewModelLVDCLoad>();
 
         /// <summary>
         /// 产品指令配置模板
@@ -208,7 +243,27 @@ namespace IMX.ATS.ATEConfig
         /// 工装结果读取模板
         /// </summary>
         public FunViewModelEquipmentResult FunEquipmentResult => ServiceLocator.Current.GetInstance<FunViewModelEquipmentResult>();
-        
+
+        /// <summary>
+        /// 条件跳转延时模板
+        /// </summary>
+        public FunViewModelReturn FunReturn => ServiceLocator.Current.GetInstance<FunViewModelReturn>();
+
+        /// <summary>
+        /// CCCP模拟信号模板
+        /// </summary>
+        public FunViewModelAnalogAignals FunAnalogAignals=> ServiceLocator.Current.GetInstance<FunViewModelAnalogAignals>();
+
+        /// <summary>
+        /// 信号模拟器模板
+        /// </summary>
+        public FunViewModelSignalSource FunSignalSource => ServiceLocator.Current.GetInstance<FunViewModelSignalSource>();
+
+        /// <summary>
+        /// 源载一体机模板
+        /// </summary>
+        public FunViewModelACSourceLoad FunACSourceLoad => ServiceLocator.Current.GetInstance<FunViewModelACSourceLoad>();
+
         #endregion
 
     }

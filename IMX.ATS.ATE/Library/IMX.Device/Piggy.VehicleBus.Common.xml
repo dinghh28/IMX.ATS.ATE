@@ -61,48 +61,89 @@
             归还对象
             </summary>
         </member>
-        <member name="T:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension">
-            <summary>
-            汽车总线对象池管理器扩展方法
-            </summary>
-        </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.FrameObject)">
-            <summary>
-            归还帧对象
-            </summary>
-            <param name="obj">帧对象</param>
-        </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.VehicleBusState)">
-            <summary>
-            归还汽车总线状态对象
-            </summary>
-            <param name="obj">汽车总线状态对象</param>
-        </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.SendCustomMessage)">
-            <summary>
-            归还待发送自定义报文对象
-            </summary>
-            <param name="obj">待发送自定义报文对象</param>
-        </member>
         <member name="T:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager">
             <summary>
             汽车总线对象池管理器
             </summary>
+            <summary>
+            汽车总线对象池管理器
+            </summary>
+            <summary>
+            汽车总线对象池管理器
+            </summary>
+            <summary>
+            汽车总线对象池管理器
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetFrameObject">
+            <summary>
+            创建并返回一个帧对象
+            </summary>
+            <returns>帧对象</returns>
+            <remarks>
+                <list type="bullet">
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ID"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.Data"/></term><description>&gt; <see langword="true"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.DataLength"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.TimeStamp"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.RemoteFlag"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExternFlag"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.FrameFormat"/></term><description>&gt; <see cref="F:Piggy.VehicleBus.Common.FrameFormat.Unknow"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExtraArgs"/></term><description>&gt; []</description></item>
+                </list>
+            </remarks>
         </member>
         <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetFrameObject(System.UInt32)">
             <summary>
-            创建并返回一个帧对象 [id, <see cref="F:Piggy.VehicleBus.Common.FrameFormat.Unknow"/>]
+            创建并返回一个帧对象
             </summary>
             <param name="id">帧ID</param>
             <returns>帧对象</returns>
+            <remarks>
+                <list type="bullet">
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ID"/></term><description>&gt; <paramref name="id"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.Data"/></term><description>&gt; <see langword="true"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.DataLength"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.TimeStamp"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.RemoteFlag"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExternFlag"/></term><description>&gt; (<paramref name="id"/> &gt; 0x7FF) ? 1 : 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.FrameFormat"/></term><description>&gt; <see cref="F:Piggy.VehicleBus.Common.FrameFormat.Unknow"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExtraArgs"/></term><description>&gt; []</description></item>
+                </list>
+            </remarks>
         </member>
         <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetFrameObject(System.UInt32,Piggy.VehicleBus.Common.FrameFormat)">
             <summary>
-            创建并返回一个帧对象 [id, frameFormat]
+            创建并返回一个帧对象
             </summary>
             <param name="id">帧ID</param>
             <param name="frameFormat">帧格式</param>
             <returns>帧对象</returns>
+            <remarks>
+                <list type="bullet">
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ID"/></term><description>&gt; <paramref name="id"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.Data"/></term><description>&gt; <see langword="true"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.DataLength"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.TimeStamp"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.RemoteFlag"/></term><description>&gt; 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExternFlag"/></term><description>&gt; (<paramref name="id"/> &gt; 0x7FF) ? 1 : 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.FrameFormat"/></term><description>&gt; <paramref name="frameFormat"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExtraArgs"/></term><description>&gt; []</description></item>
+                </list>
+            </remarks>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetSendCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
+            <summary>
+            创建并返回一个待发送自定义报文对象
+            </summary>
+            <param name="customMessage">自定义报文</param>
+            <returns>汽车总线状态对象</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetVehicleBusState">
+            <summary>
+            创建并返回一个汽车总线状态对象 [<see langword="true"/>, 0, "OK", <see cref="P:System.DateTime.Now"/>]
+            </summary>
+            <returns>汽车总线状态对象</returns>
         </member>
         <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetVehicleBusState(System.Boolean,System.Int32,System.String)">
             <summary>
@@ -123,12 +164,55 @@
             <param name="readTime">读取时间</param>
             <returns>汽车总线状态对象</returns>
         </member>
-        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetSendCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
+        <member name="T:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension">
             <summary>
-            创建并返回一个待发送自定义报文对象
+            汽车总线对象池管理器扩展方法
             </summary>
-            <param name="customMessage">自定义报文</param>
-            <returns>汽车总线状态对象</returns>
+            <summary>
+            汽车总线对象池管理器扩展方法
+            </summary>
+            <summary>
+            汽车总线对象池管理器扩展方法
+            </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.FrameObject)">
+            <summary>
+            归还帧对象
+            </summary>
+            <param name="obj">[THIS] 帧对象</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.FrameObject,System.Boolean)">
+            <summary>
+            归还帧对象
+            </summary>
+            <param name="obj">[THIS] 帧对象</param>
+            <param name="execute">是否能执行</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.SendCustomMessage)">
+            <summary>
+            归还待发送自定义报文对象
+            </summary>
+            <param name="obj">[THIS] 待发送自定义报文对象</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.SendCustomMessage,System.Boolean)">
+            <summary>
+            归还待发送自定义报文对象
+            </summary>
+            <param name="obj">[THIS] 待发送自定义报文对象</param>
+            <param name="execute">是否能执行</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.VehicleBusState)">
+            <summary>
+            归还汽车总线状态对象
+            </summary>
+            <param name="obj">[THIS] 汽车总线状态对象</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManagerExtension.Return(Piggy.VehicleBus.Common.VehicleBusState,System.Boolean)">
+            <summary>
+            归还汽车总线状态对象
+            </summary>
+            <param name="obj">[THIS] 汽车总线状态对象</param>
+            <param name="execute">是否能执行</param>
         </member>
         <member name="T:Piggy.VehicleBus.Common.ReceiveMessageDelegate">
             <summary>
@@ -314,96 +398,21 @@
             <returns>数据长度</returns>
             <remarks>
                 <list type="bullet">
+                    <item><term>DLC=0~8  </term><description>  Length=DLC</description></item>
+                    <item><term>DLC=9  </term><description>  Length=12</description></item>
+                    <item><term>DLC=10  </term><description>  Length=16</description></item>
+                    <item><term>DLC=11  </term><description>  Length=20</description></item>
+                    <item><term>DLC=12  </term><description>  Length=24</description></item>
+                    <item><term>DLC=13  </term><description>  Length=32</description></item>
+                    <item><term>DLC=14  </term><description>  Length=48</description></item>
+                    <item><term>DLC=15  </term><description>  Length=64</description></item>
                     <item>
-                        <term>DLC = 0~8</term>
-                        <description>Length = 8</description>
-                    </item>
-                    <item>
-                        <term>DLC = 9</term>
-                        <description>Length = 12</description>
-                    </item>
-                    <item>
-                        <term>DLC = 10</term>
-                        <description>Length = 16</description>
-                    </item>
-                    <item>
-                        <term>DLC = 11</term>
-                        <description>Length = 20</description>
-                    </item>
-                    <item>
-                        <term>DLC = 12</term>
-                        <description>Length = 24</description>
-                    </item>
-                    <item>
-                        <term>DLC = 13</term>
-                        <description>Length = 32</description>
-                    </item>
-                    <item>
-                        <term>DLC = 14</term>
-                        <description>Length = 48</description>
-                    </item>
-                    <item>
-                        <term>DLC = 15</term>
-                        <description>Length = 64</description>
-                    </item>
-                    <item>
-                        <term>DLC = default</term>
-                        <description>Length = 8</description>
+                        <term>default</term>
+                        <description><see cref="T:System.ArgumentOutOfRangeException"/> at <paramref name="dlc"/></description>
                     </item>
                 </list>
             </remarks>
-        </member>
-        <member name="M:Piggy.VehicleBus.Common.DLCConvertUtils.GetDataLengthFromDLC(System.Byte,System.Boolean)">
-            <summary>
-            Convert a CAN DLC value into the actual data length of the CAN/CAN-FD frame.
-            </summary>
-            <param name="dlc">A value between 0 and 15 (CAN and FD DLC range)</param>
-            <param name="isSTD">A value indicating if the msg is a standard CAN (FD Flag not checked)</param>
-            <returns>The length represented by the DLC</returns>
-            <remarks>
-                <list type="bullet">
-                    <item>
-                        <term>DLC = STD</term>
-                        <description>Length = 8</description>
-                    </item>
-                    <item>
-                        <term>DLC = 0~8</term>
-                        <description>Length = DLC</description>
-                    </item>
-                    <item>
-                        <term>DLC = 9</term>
-                        <description>Length = 12</description>
-                    </item>
-                    <item>
-                        <term>DLC = 10</term>
-                        <description>Length = 16</description>
-                    </item>
-                    <item>
-                        <term>DLC = 11</term>
-                        <description>Length = 20</description>
-                    </item>
-                    <item>
-                        <term>DLC = 12</term>
-                        <description>Length = 24</description>
-                    </item>
-                    <item>
-                        <term>DLC = 13</term>
-                        <description>Length = 32</description>
-                    </item>
-                    <item>
-                        <term>DLC = 14</term>
-                        <description>Length = 48</description>
-                    </item>
-                    <item>
-                        <term>DLC = 15</term>
-                        <description>Length = 64</description>
-                    </item>
-                    <item>
-                        <term>DLC = default</term>
-                        <description>Length = DLC</description>
-                    </item>
-                </list>
-            </remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
         <member name="M:Piggy.VehicleBus.Common.DLCConvertUtils.DataLengthToDLC(System.Byte)">
             <summary>
@@ -413,44 +422,21 @@
             <returns>DLC</returns>
             <remarks>
                 <list type="bullet">
+                    <item><term>Length=0~8  </term><description>  DLC=Length</description></item>
+                    <item><term>Length=9~12  </term><description>  DLC=9</description></item>
+                    <item><term>Length=13~16  </term><description>  DLC=10</description></item>
+                    <item><term>Length=17~20  </term><description>  DLC=11</description></item>
+                    <item><term>Length=21~24  </term><description>  DLC=12</description></item>
+                    <item><term>Length=25~32  </term><description>  DLC=13</description></item>
+                    <item><term>Length=33~48  </term><description>  DLC=14</description></item>
+                    <item><term>Length=49~64  </term><description>  DLC=15</description></item>
                     <item>
-                        <term>Length = 0~8</term>
-                        <description>DLC = 8</description>
-                    </item>
-                    <item>
-                        <term>Length = 12</term>
-                        <description>DLC = 9</description>
-                    </item>
-                    <item>
-                        <term>Length = 16</term>
-                        <description>DLC = 10</description>
-                    </item>
-                    <item>
-                        <term>Length = 20</term>
-                        <description>DLC = 11</description>
-                    </item>
-                    <item>
-                        <term>Length = 24</term>
-                        <description>DLC = 12</description>
-                    </item>
-                    <item>
-                        <term>Length = 32</term>
-                        <description>DLC = 13</description>
-                    </item>
-                    <item>
-                        <term>Length = 48</term>
-                        <description>DLC = 14</description>
-                    </item>
-                    <item>
-                        <term>Length = 64</term>
-                        <description>DLC = 15</description>
-                    </item>
-                    <item>
-                        <term>Length = default</term>
-                        <description>DLC = 8</description>
+                        <term>default</term>
+                        <description><see cref="T:System.ArgumentOutOfRangeException"/> at <paramref name="dataLength"/></description>
                     </item>
                 </list>
             </remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
         <member name="T:Piggy.VehicleBus.Common.IVehicleBusChannel">
             <summary>
@@ -810,8 +796,34 @@
         </member>
         <member name="M:Piggy.VehicleBus.Common.FrameObject.#ctor">
             <summary>
-            构造函数（不推荐使用）
+            构造函数（推荐使用: <see cref="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetFrameObject"/>）
             </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.FrameObject.#ctor(System.UInt32)">
+            <summary>
+            构造函数（推荐使用: <see cref="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetFrameObject(System.UInt32)"/>）
+            </summary>
+            <param name="id">帧ID</param>
+            <remarks>
+                <list type="bullet">
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ID"/></term><description>&gt; <paramref name="id"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExternFlag"/></term><description>&gt; (<paramref name="id"/> &gt; 0x7FF) ? 1 : 0</description></item>
+                </list>
+            </remarks>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.FrameObject.#ctor(System.UInt32,Piggy.VehicleBus.Common.FrameFormat)">
+            <summary>
+            构造函数（推荐使用: <see cref="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetFrameObject(System.UInt32,Piggy.VehicleBus.Common.FrameFormat)"/>）
+            </summary>
+            <param name="id">帧ID</param>
+            <param name="frameFormat">帧格式</param>
+            <remarks>
+                <list type="bullet">
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ID"/></term><description>&gt; <paramref name="id"/></description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.ExternFlag"/></term><description>&gt; (<paramref name="id"/> &gt; 0x7FF) ? 1 : 0</description></item>
+                    <item><term><see cref="P:Piggy.VehicleBus.Common.FrameObject.FrameFormat"/></term><description>&gt; <paramref name="frameFormat"/></description></item>
+                </list>
+            </remarks>
         </member>
         <member name="T:Piggy.VehicleBus.Common.VehicleBusState">
             <summary>
@@ -840,8 +852,25 @@
         </member>
         <member name="M:Piggy.VehicleBus.Common.VehicleBusState.#ctor">
             <summary>
-            构造总线状态（不推荐使用）
+            构造函数（推荐使用: <see cref="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetVehicleBusState(System.Boolean,System.Int32,System.String)"/>）
             </summary>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusState.#ctor(System.Boolean,System.Int32,System.String)">
+            <summary>
+            构造函数（推荐使用: <see cref="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetVehicleBusState(System.Boolean,System.Int32,System.String)"/>）
+            </summary>
+            <param name="state">状态</param>
+            <param name="code">状态代码</param>
+            <param name="description">状态描述</param>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.VehicleBusState.#ctor(System.Boolean,System.Int32,System.String,System.DateTime)">
+            <summary>
+            构造函数（推荐使用: <see cref="M:Piggy.VehicleBus.Common.VehicleBusObjectPoolManager.GetVehicleBusState(System.Boolean,System.Int32,System.String,System.DateTime)"/>）
+            </summary>
+            <param name="state">状态</param>
+            <param name="code">状态代码</param>
+            <param name="description">状态描述</param>
+            <param name="readTime">读取时间</param>
         </member>
         <member name="M:Piggy.VehicleBus.Common.VehicleBusState.ToString">
             <summary>
@@ -1547,7 +1576,12 @@
         </member>
         <member name="P:Piggy.VehicleBus.Common.Signal.InitValue">
             <summary>
-            信号初始值
+            信号初始值(实际值)
+            </summary>
+        </member>
+        <member name="P:Piggy.VehicleBus.Common.Signal.InitADValue">
+            <summary>
+            信号初始值(原始值)
             </summary>
         </member>
         <member name="P:Piggy.VehicleBus.Common.Signal.Factor">
@@ -2301,6 +2335,29 @@
             <summary>
             删除数据处理器
             </summary>
+            <returns>操作结果</returns>
+        </member>
+        <member name="M:Piggy.VehicleBus.Common.IMessageInteractor.SetSendCount(System.Int32)">
+            <summary>
+            修改发送次数（所有消息）
+            </summary>
+            <param name="count">
+                <description>发送次数</description>
+                <list type="bullet">
+                    <item>
+                        <term>-1</term>
+                        <description>连续发送</description>
+                    </item>
+                    <item>
+                        <term>0</term>
+                        <description>不发送</description>
+                    </item>
+                    <item>
+                        <term>N</term>
+                        <description>发送 N 次</description>
+                    </item>
+                </list>
+            </param>
             <returns>操作结果</returns>
         </member>
         <member name="M:Piggy.VehicleBus.Common.IMessageInteractor.SetSendCount(System.UInt32,System.Int32)">

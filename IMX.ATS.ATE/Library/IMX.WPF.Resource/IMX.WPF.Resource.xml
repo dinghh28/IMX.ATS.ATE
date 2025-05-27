@@ -9,9 +9,19 @@
             Textbox按键事件
             </summary>
         </member>
+        <member name="F:IMX.WPF.Resource.TextBoxKeyDownBehavior.CommandProperty">
+            <summary>
+            事件命令属性
+            </summary>
+        </member>
         <member name="P:IMX.WPF.Resource.TextBoxKeyDownBehavior.Command">
             <summary>
             事件命令
+            </summary>
+        </member>
+        <member name="F:IMX.WPF.Resource.TextBoxKeyDownBehavior.CommandParameterProperty">
+            <summary>
+            事件自定义传参属性
             </summary>
         </member>
         <member name="P:IMX.WPF.Resource.TextBoxKeyDownBehavior.CommandParameter">
@@ -216,7 +226,35 @@
             hit testing.</param>
             <param name="point">The position to be evaluated on the origin.</param>
         </member>
-        <!-- Badly formed XML comment ignored for member "T:IMX.WPF.Resource.CustomControl1" -->
+        <member name="T:IMX.WPF.Resource.CustomControl1">
+             <summary>
+             按照步骤 1a 或 1b 操作，然后执行步骤 2 以在 XAML 文件中使用此自定义控件。
+            
+             步骤 1a) 在当前项目中存在的 XAML 文件中使用该自定义控件。
+             将此 XmlNamespace 特性添加到要使用该特性的标记文件的根
+             元素中:
+            
+                 xmlns:MyNamespace="clr-namespace:IMX.WPF.Resource"
+            
+            
+             步骤 1b) 在其他项目中存在的 XAML 文件中使用该自定义控件。
+             将此 XmlNamespace 特性添加到要使用该特性的标记文件的根
+             元素中:
+            
+                 xmlns:MyNamespace="clr-namespace:IMX.WPF.Resource;assembly=IMX.WPF.Resource"
+            
+             您还需要添加一个从 XAML 文件所在的项目到此项目的项目引用，
+             并重新生成以避免编译错误:
+            
+                 在解决方案资源管理器中右击目标项目，然后依次单击
+                 “添加引用”->“项目”->[选择此项目]
+            
+            
+             步骤 2)
+             继续操作并在 XAML 文件中使用控件。
+             <CustomControl1/>
+             </summary>
+        </member>
         <member name="T:IMX.WPF.Resource.CustomDataGrid">
             <summary>
             自定义表格（可拖拽换行）

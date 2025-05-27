@@ -24,6 +24,12 @@
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.Close">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
             <inheritdoc/>
         </member>
@@ -32,6 +38,11 @@
         </member>
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Operate.#ctor">
             <inheritdoc/>
+        </member>
+        <member name="T:IMX.Device.Acquisition.Acquisition_AN87330_Warp">
+            <summary>
+            协议：艾诺3.0
+            </summary>
         </member>
         <member name="F:IMX.Device.Acquisition.Acquisition_AN87330_Warp.HEADER">
             <summary>
@@ -50,7 +61,7 @@
         </member>
         <member name="M:IMX.Device.Acquisition.Acquisition_AN87330_Warp.Device_ReadAll">
             <summary>
-            单次扫描读取所有数据
+            单次扫描读取所有数据--暂未使用
             </summary>
             <returns></returns>
         </member>
@@ -96,6 +107,274 @@
             3通道有效电流值
             </summary>
         </member>
+        <member name="T:IMX.Device.Acquisition.Acquisition_AN87600_Operate">
+            <summary>
+            AN87600系列功率分析仪操作类
+            
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.Acquisition_AN87600_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Acquisition.Acquisition_AN87600_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Acquisition.Acquisition_AN87600_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Warp.Device_ReadAll">
+            <summary>
+            单次扫描读取所有数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Acquisition.Acquisition_AN87600_Warp.ModbusCheck_03(System.Collections.Generic.IList{System.Byte})">
+            <summary>
+            modbus_03功能码校验
+            </summary>
+            <param name="value">待校验报文</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Acquisition.AN87600Data">
+            <summary>
+            艾诺AN87600分析仪读取数据类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveHVVol">
+            <summary>
+            通道4高压直流侧电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveHVCur">
+            <summary>
+            通道4高压直流侧电流值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveHVPower">
+            <summary>
+            通道4高压直流侧电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveLVVol">
+            <summary>
+            通道5低压直流侧电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveLVCur">
+            <summary>
+            通道5低压直流侧电流值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveLVPower">
+            <summary>
+            通道5低压直流侧电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveAuVol">
+            <summary>
+            通道6辅电电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveAuCur">
+            <summary>
+            通道6辅电电流值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600Data.EffectiveAuPower">
+            <summary>
+            通道6辅电功率
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Acquisition.AN87600ChannelData">
+            <summary>
+            艾诺AN87600分析仪通道1/2/3读取数据类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600ChannelData.EffectiveVol">
+            <summary>
+            有效电压值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600ChannelData.EffectiveCur">
+            <summary>
+            有效电流值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600ChannelData.EffectiveAPower">
+            <summary>
+            有功功率值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600ChannelData.EffectiveFrequency">
+            <summary>
+            频率
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600ChannelData.EffectivePFactor">
+            <summary>
+            功率因素值
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600ChannelData.EffectiveDCCur">
+            <summary>
+            电流直流分量
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Acquisition.AN87600ChannelData.EffectiveVolPAangle">
+            <summary>
+            电压相间角度
+            </summary>
+        </member>
+        <member name="T:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate">
+            <summary>
+            IT7942EP系列交流源载一体机操作类
+            1.设备操作前需进行remote操作，其他指令才可生效；
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.SetRemote">
+            <summary>
+            开启远程
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动运行
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.SetOperatMode(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.SetCommParameters(IMX.Device.Common.Phase_Mode,IMX.Device.Common.Enumerations.DeviceOutPutState,System.String,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.SetParameters(IMX.Device.Common.Opaerate_Mode,IMX.Device.Common.ConnectionMode,IMX.Device.Common.Enumerations.DeviceOutPutState,System.Double,System.Double,System.String,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.SetValues(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.IT7942EP.ACSourceLoad_IT7942EP_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.PhaseMode">
+            <summary>
+            相线模式：单相、三相
+            </summary>
+        </member>
+        <member name="P:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.opaerate_Mode">
+            <summary>
+            拉载模式
+            </summary>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.SetRemote">
+            <summary>
+            打开远程
+            </summary>
+            SYST:REM
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭负载
+            </summary>
+            OUTP ON 打开电源输出  0|OFF|1|ON
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.Device_SetOPERationMode(System.String)">
+            <summary>
+            电源模式 
+            </summary>
+            <param name="eMode">电源模式：电压源、负载</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.Device_SetCommOperate(IMX.Device.Common.Phase_Mode,IMX.Device.Common.Enumerations.DeviceOutPutState,System.String,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            源/负载模式通用设置
+            SYST:FUNC（相线模式）：ONE|THRee|DIFFerence|MULTichannel 单相/三相/反向/多通道
+            CPD1:DC|AC|DCAC|ACDC  AC 交流方式，DC 直流方式，ACDC 交直流方式
+            CPD2:CH1|CH2|CH3 选择某个通道，这个参数只有在多通道模式下需要输入。
+            SENS ON 设定 sense 使能状态 OFF|ON|0|1
+            启停输出时相位角控制
+            开启时相位角控制 OUTP:ON:PHAS:MODE IMM 
+            设置相位角控 OUTP:ON:PHAS:LEV 30
+            </summary>
+            <param name="Funcmode">相线模式</param>
+            <param name="BalanceState">三相模式下的平衡控制</param>
+            <param name="CPD1">运行模式</param>
+            <param name="CPD2">通道</param>
+            <param name="SenseState">sense状态</param>
+            <param name="PAngleState">相位角控制状态</param>
+            <param name="PAngleValue">相位角</param>
+            <param name="ConnectionMode">三相连接方式： Delta 三角形、Y形</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.Device_SetLoadModeParamters(IMX.Device.Common.Opaerate_Mode,IMX.Device.Common.ConnectionMode,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            负载模式：设置拉载模式的参数
+            </summary>
+            <param name="Pulltmode">负载模式下的拉载模式</param>
+            <param name="ConnectionMode">三相连接方式： Delta 三角形、Y形</param>
+            <param name="PFactor">单位功率因素模式Unit PF</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.Device_SetValue(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)" -->
+        <member name="M:IMX.Device.ACSource_Load.ACSourceLoad_IT7942EP_Warp.Device_SetSourceModeParamters(System.Double,System.Double,System.String,System.Double)">
+            <summary>
+            源模式：设置拉载模式的参数
+            </summary>
+            <param name="FreValue">频率</param>
+            <param name="FreSlope">频率斜率</param>
+            <param name="Anglname">相位角:BA-B;CA-C</param>
+            <param name="Angl">相位角差</param>
+            <returns></returns>
+        </member>
         <member name="T:IMX.Device.ACSource.ACSource_ANFH010S_Operate">
             <summary>
             艾诺ANFH010S系列交流源
@@ -120,6 +399,12 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.ACSource.ACSource_ANFH010S_Operate.#ctor">
@@ -167,6 +452,84 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate">
+            <summary>
+            CCCP模拟信号系列操作类
+            
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.SetOnOff(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            CP启动运行
+            </summary>
+            <param name="channel">CP通道</param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.SetOnOff(System.UInt32,System.Double,System.Double,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            CP频率、占空比
+            </summary>
+            <param name="channel">CP通道</param>
+            <param name="dutyvalue">占空比</param>
+            <param name="frevalue">频率</param>
+            <param name="state">状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.SetCCResValue(IMX.Device.Common.CCResMode)">
+            <summary>
+            CC阻值设置
+            </summary>
+            <param name="mode">CC阻值档位</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.CCCP.AnalogAignals_CCCP_Warp.SetOnOff(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            CP信号启动/关闭
+            </summary>
+            <param name="channel"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.CCCP.AnalogAignals_CCCP_Warp.SetCPValues(System.UInt32,System.Double,System.Double,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            CP信号参数设置：参数1：启动/关闭；参数2：占空比；参数3：频率
+            </summary>
+            <param name="channel"></param>
+            <param name="dutyvalue"></param>
+            <param name="frevalue"></param>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.CCCP.AnalogAignals_CCCP_Warp.SetCCRes(IMX.Device.Common.CCResMode)">
+            <summary>
+            设置CC阻值并启动
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
         <member name="T:IMX.Device.APU.APU_IT6800_Operate">
             <summary>
             IT6800系列直流稳压源操作类
@@ -203,6 +566,12 @@
         <member name="M:IMX.Device.APU.APU_IT6800_Operate.Close">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.APU.APU_IT6800_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.APU.APU_IT6800_Operate.#ctor">
             <inheritdoc/>
         </member>
@@ -211,6 +580,13 @@
         </member>
         <member name="M:IMX.Device.APU.APU_IT6800_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
             <inheritdoc/>
+        </member>
+        <member name="T:IMX.Device.APU.APU_IT6800_Warp">
+            <summary>
+            稳压直流源 
+            型号：IT6832 
+            协议：ModbusTCP
+            </summary>
         </member>
         <member name="F:IMX.Device.APU.APU_IT6800_Warp.HEADER">
             <summary>
@@ -283,19 +659,25 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetCurrSLEW_NEGative(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModelAndValue(IMX.Device.Common.Opaerate_Mode,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetLoadValue(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModel(System.String)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModel(IMX.Device.Common.Opaerate_Mode)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetParameters(System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.#ctor">
@@ -348,7 +730,7 @@
             <param name="eModel"></param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelNum(System.String)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelNum(IMX.Device.Common.Opaerate_Mode)">
             <summary>
             设置拉载模式（斯康达模态）
             </summary>
@@ -383,7 +765,7 @@
             <param name="value">拉载电阻值</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelAndValue(System.String,System.Double,System.Boolean)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelAndValue(IMX.Device.Common.Opaerate_Mode,System.Double,System.Boolean)">
             <summary>
             设置拉载模式和拉载值
             </summary>
@@ -424,25 +806,139 @@
             <param name="value"></param>
             <returns></returns>
         </member>
-        <member name="T:IMX.Device.DCLoad.DCLoad_Model">
+        <member name="T:IMX.Device.DCLoad.DCLoad_IT8924E_Operate">
             <summary>
-            DC负载拉载模式
+            IT8924系列高压直流负载操作类
+            
+            
             </summary>
         </member>
-        <member name="F:IMX.Device.DCLoad.DCLoad_Model.CC">
+        <member name="P:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetRemote">
             <summary>
-            恒电流模式
+            启动远程
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动运行
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModel(IMX.Device.Common.Opaerate_Mode)">
+            <summary>
+            设置拉载模式
+            </summary>
+            <param name="eModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetCurrSLEW_POSitive(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetCurrSLEW_NEGative(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetLoadValue(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetParameters(System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModelAndValue(IMX.Device.Common.Opaerate_Mode,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.opaerate_Mode">
+            <summary>
+            拉载模式
             </summary>
         </member>
-        <member name="F:IMX.Device.DCLoad.DCLoad_Model.CV">
+        <member name="F:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetShortState">
             <summary>
-            恒电压模式
+            短路模式
             </summary>
         </member>
-        <member name="F:IMX.Device.DCLoad.DCLoad_Model.CR">
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetRemote">
             <summary>
-            恒电阻模式
+            打开远程
             </summary>
+            SYST:REM
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetShortONOFF(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            开启/关闭负载短路模式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.Set_Value(System.Double)">
+            <summary>
+            拉载
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetParameters(System.Double,System.Double)">
+            <summary>
+            拉载参数
+            </summary>
+            <param name="maxvalue">上限设定值</param>
+            <param name="limvalue">CR、CV模式下为限定电流值，CC模式为上下电斜率</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetCurrSLEW_POSitive(System.Double)">
+            <summary>
+            上升速率
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetCurrSLEW_NEGative(System.Double)">
+            <summary>
+            下降速率
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.ReadElectrical">
+            <summary>
+            读取电气信息
+            </summary>
+            <returns>操作结果@双精度浮点数列表</returns>
         </member>
         <member name="T:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate">
             <summary>
@@ -467,10 +963,19 @@
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetVol(System.Double)">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetMode(IMX.Device.Common.Opaerate_Mode)">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Close">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.#ctor">
@@ -481,16 +986,6 @@
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
             <inheritdoc/>
-        </member>
-        <member name="F:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.HEADER">
-            <summary>
-            帧头
-            </summary>
-        </member>
-        <member name="F:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.END">
-            <summary>
-            帧尾
-            </summary>
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
@@ -532,6 +1027,229 @@
             查询输出电流
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate">
+            <summary>
+            ITM3912D系列高压直流电源操作类
+            
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动运行
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SetRemote">
+            <summary>
+            开启远程
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SetMode(IMX.Device.Common.Opaerate_Mode)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SetValue(System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SetVol(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Warp.SetRemote">
+            <summary>
+            打开远程
+            </summary>
+            SYST:REM
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Warp.Set_Value(System.Double,System.Double)">
+            <summary>
+            电压电流参数设置
+            </summary>
+            <param name="Vvalue">启动电压</param>
+            <param name="Ivalue">启动电流</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Warp.Set_Vol(System.Double)">
+            <summary>
+            设置电压参数
+            </summary>
+            <param name="value">设置电压</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Warp.Set_Cur(System.Double)">
+            <summary>
+            设置电流参数
+            </summary>
+            <param name="value">设置电流</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate">
+            <summary>
+            IT8906E系列低压直流负载操作类
+            
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetRemote">
+            <summary>
+            启动远程
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动运行
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetModel(IMX.Device.Common.Opaerate_Mode)">
+            <summary>
+            设置拉载模式
+            </summary>
+            <param name="eModel"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetCurrSLEW_POSitive(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetCurrSLEW_NEGative(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetLoadValue(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetParameters(System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetModelAndValue(IMX.Device.Common.Opaerate_Mode,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.opaerate_Mode">
+            <summary>
+            拉载模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetShortState">
+            <summary>
+            短路模式
+            </summary>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetRemote">
+            <summary>
+            打开远程
+            </summary>
+            SYST:REM
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetShortONOFF(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            开启/关闭负载短路模式
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.Set_Value(System.Double)">
+            <summary>
+            拉载
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetParameters(System.Double,System.Double)">
+            <summary>
+            拉载参数
+            </summary>
+            <param name="maxvalue">上限设定值</param>
+            <param name="limvalue">CR、CV模式下为限定电流值，CC模式为上下电斜率</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetCurrSLEW_POSitive(System.Double)">
+            <summary>
+            上升速率
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetCurrSLEW_NEGative(System.Double)">
+            <summary>
+            下降速率
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.ReadElectrical">
+            <summary>
+            读取电气信息
+            </summary>
+            <returns>操作结果@双精度浮点数列表</returns>
         </member>
         <member name="T:IMX.Device.Product.Product_CAN_Operate">
             <summary>
@@ -731,6 +1449,12 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.#ctor">
@@ -1015,6 +1739,193 @@
             故障状态清除
             </summary>
         </member>
+        <member name="T:IMX.Device.Relay.Relay_PLC_Operate">
+            <summary>
+            PLC系列继电器板操作类
+            
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_PLC_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_PLC_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Relay.Relay_PLC_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Init(IMX.Device.Base.Device_Config)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动运行
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetHeartOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动心跳功能
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetHeartBeat">
+            <summary>
+            心跳帧
+            </summary>
+            <param name=""></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_Set(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            高压输出单继电器控制，需多帧发送
+            </summary>
+            <param name="channel">继电器通道</param>
+            <param name="value">状态值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            高压输出所有继电器控制,保留上一次控制状态，组合发送
+            </summary>
+            <param name="channel">继电器通道</param>
+            <param name="value">状态值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetLedAll(IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            状态灯全控
+            </summary>
+            <param name="value1">绿灯</param>
+            <param name="value2">黄灯</param>
+            <param name="value3">红灯</param>
+            <param name="value4">蜂鸣器</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetLed(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            状态灯单控
+            </summary>
+            <param name="channel">状态灯通道</param>
+            <param name="value">状态灯状态</param>
+            <param channel="0">绿灯</param>
+            <param channel="1">黄灯</param>
+            <param channel="2">红灯</param>
+            <param channel="3">蜂鸣器</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <inheritdoc/>
+        </member>
+        <member name="F:IMX.Device.Relay.Relay_PLC_Warp.relayadd">
+            <summary>
+            各通道高压侧输出线路控制地址
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Relay.Relay_PLC_Warp.ledadd">
+            <summary>
+            状态灯控制地址
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动/关闭PLC
+            启动PLC时复位：各继电器状态为：M10-M13、M20为ON，M14-M17为OFF：01 0F 08 0A 00 0B 02 04 07
+            关闭PLC时各继电器状态：M10-M13、M20、M14-M17为OFF
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Set_Reset">
+            <summary>
+            初始化时复位
+            M10-M13、M20为ON，M14-M17为OFF：01 0F 08 0A 00 0B 02 04 07
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.SetHeartOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            心跳开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            心跳功能打开:01 05 08 02 00 00 6E 6A
+            心跳功能关闭:01 05 08 02 FF 00 2F 9A
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.SetHeartBeat">
+            <summary>
+            心跳帧
+            </summary>
+            心跳帧:01 05 08 1E FF 00 EE 5C
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Set_LedAll(IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            状态灯全控
+            </summary>
+            <param name="value1">绿灯</param>
+            <param name="value2">黄灯</param>
+            <param name="value3">红灯</param>
+            <param name="value4">蜂鸣器</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Set_Led(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            状态灯单控
+            </summary>
+            <param name="channel">状态灯通道</param>
+            <param name="value">状态灯状态</param>
+            <param channel="0">绿灯</param>
+            <param channel="1">黄灯</param>
+            <param channel="2">红灯</param>
+            <param channel="3">蜂鸣器</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Set_ValueAll(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            继电器控制M10-M12
+            第1/2/3工位高压输出侧线路通断控制
+            </summary>
+            <param name="channel">对应寄存器地址（从1开始算）</param>
+            <param name="value">输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Set_Value(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            单继电器控制M10-M12
+            第1/2/3工位高压输出侧线路通断控制
+            </summary>
+            <param name="channel">对应寄存器地址（从1开始算）</param>
+            <param name="value">输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Device_Read">
+            <summary>
+            读取继电器状态
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:IMX.Device.Relay.Relay_ZS_Operate">
             <summary>
             中盛继电器操作类
@@ -1045,6 +1956,12 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS_Operate.#ctor">
@@ -1087,7 +2004,7 @@
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS_Warp.Set_Led(IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
-            
+            指示灯设置
             </summary>
             <param name="value1">黄灯</param>
             <param name="value2">绿灯</param>
@@ -1131,6 +2048,12 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_ZS4Bit_Operate.#ctor">
@@ -1187,10 +2110,153 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:IMX.Device.SignalSource.SignalSource_UTG900_Operate">
+            <summary>
+            UTG90系列信号源操作类
+            
+            
+            </summary>
+        </member>
+        <member name="P:IMX.Device.SignalSource.SignalSource_UTG900_Operate.Warp">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.SignalSource.SignalSource_UTG900_Operate.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.SignalSource.SignalSource_UTG900_Operate.DeviceName">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Operate.Close">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            启动运行
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Operate.Set_Value(System.Double,System.Double,System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Device.SignalSource.SignalSource_UTG900_Warp">
+            <summary>
+             UTG90系列信号源操作类
+             1、设备只操作通道1
+             
+            </summary>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Warp.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            设备开关操作
+            </summary>
+            <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Warp.Set_Value(System.Double,System.Double,System.Double)">
+            <summary>
+            拉载操作
+            </summary>
+            <param name="Freqvalue">频率</param>
+            <param name="Amplvalue">幅度</param>
+            <param name="Dutyvalue">占空比</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.SignalSource.SignalSource_UTG900_Warp.ReadElectrical">
+            <summary>
+            读取电气信息
+            </summary>
+            <returns>操作结果@双精度浮点数列表</returns>
+        </member>
         <member name="T:IMX.Device.Base.DeviceInerfaces.IAcquisition">
             <summary>
             采样系统操作接口
             </summary>
+        </member>
+        <member name="T:IMX.Device.Base.DeviceInerfaces.IACSourceLoad">
+            <summary>
+            交流源载一体机操作接口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IACSourceLoad.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭设备
+            </summary>
+            <param name="value">设备输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IACSourceLoad.SetOperatMode(System.String)">
+            <summary>
+            设置设备模式
+            </summary>
+            <param name="mode">设置模式</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IACSourceLoad.SetCommParameters(IMX.Device.Common.Phase_Mode,IMX.Device.Common.Enumerations.DeviceOutPutState,System.String,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            模式参数
+            </summary>
+            <param name="phasemode"></param>
+            <param name="panglemode"></param>
+            <param name="panglevalue"></param>
+            <param name="balanceState"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IACSourceLoad.SetParameters(IMX.Device.Common.Opaerate_Mode,IMX.Device.Common.ConnectionMode,IMX.Device.Common.Enumerations.DeviceOutPutState,System.Double,System.Double,System.String,System.Double)">
+            <summary>
+            源载模式下参数
+            </summary>
+            <param name="pullmode"></param>
+            <param name="connmode"></param>
+            <param name="PFactor"></param>
+            <param name="frevalue"></param>
+            <param name="freslope"></param>
+            <param name="anglename"></param>
+            <param name="anlgevalue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IACSourceLoad.SetValues(System.Double,System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            拉载参数
+            </summary>
+            <param name="Avalue"></param>
+            <param name="Aslope"></param>
+            <param name="Bvalue"></param>
+            <param name="Bslope"></param>
+            <param name="Cvalue"></param>
+            <param name="Cslope"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.DeviceInerfaces.IAnalogAignals">
+            <summary>
+            CCCP模拟信号
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IAnalogAignals.SetOnOff(System.UInt32,System.Double,System.Double,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            打开/关闭设备
+            </summary>
+            <param name="channel">设备通道</param>
+            <param name="dutyvalue">占空比</param>
+            <param name="frevalue">频率</param>
+            <param name="state">设备输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IAnalogAignals.SetCCResValue(IMX.Device.Common.CCResMode)">
+            <summary>
+            CC阻值设置
+            </summary>
+            <param name="mode"></param>
+            <returns></returns>
         </member>
         <member name="T:IMX.Device.Base.DeviceInerfaces.IDCLoad">
             <summary>
@@ -1225,7 +2291,7 @@
             <param name="value"></param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModelAndValue(IMX.Device.Common.Opaerate_Mode,System.Double)">
             <summary>
             设置拉载模式和拉载值
             </summary>
@@ -1240,7 +2306,7 @@
             <param name="value">拉载值</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModel(System.String)">
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModel(IMX.Device.Common.Opaerate_Mode)">
             <summary>
             设置拉载模式
             </summary>
@@ -1253,6 +2319,27 @@
             </summary>
             <param name="value1">cv模式下为限制电流，其他模式下为上升速率</param>
             <param name="value2">CV模式下无效，其他模式下为下降斜率</param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.Device.Base.DeviceInerfaces.ISignalSource">
+            <summary>
+            信号源操作接口
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.ISignalSource.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            
+            </summary>
+            <param name="state"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.DeviceInerfaces.ISignalSource.Set_Value(System.Double,System.Double,System.Double)">
+            <summary>
+            
+            </summary>
+            <param name="Freqvalue"></param>
+            <param name="Amplvalue"></param>
+            <param name="Dutyvalue"></param>
             <returns></returns>
         </member>
         <member name="T:IMX.Device.Base.IACSource">
@@ -1305,6 +2392,13 @@
             打开/关闭设备
             </summary>
             <param name="value">设备输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IHVDCSource.SetMode(IMX.Device.Common.Opaerate_Mode)">
+            <summary>
+            拉载模式
+            </summary>
+            <param name="Mode">电压</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Base.IHVDCSource.SetValue(System.Double,System.Double)">
@@ -1389,6 +2483,9 @@
         <member name="P:IMX.Device.Base.Device_Operate.IsInitOK">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Device.Base.Device_Operate.IsError">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Device.Base.Device_Operate.Warp">
             <inheritdoc/>
         </member>
@@ -1429,7 +2526,13 @@
         <member name="P:IMX.Device.Base.Device_Operate.ReadInfos">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Device.Base.Device_Operate.SetInfos">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Device.Base.Device_Operate.DicReadInfo">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Device.Base.Device_Operate.DicSetInfo">
             <inheritdoc/>
         </member>
         <member name="F:IMX.Device.Base.Device_Operate.outtercom">
@@ -1460,6 +2563,12 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Base.Device_Operate.Device_ReadAll">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Device_ReadError">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Base.Device_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Base.Device_Operate.Close">
@@ -1560,6 +2669,11 @@
             日志注册器
             </summary>
         </member>
+        <member name="P:IMX.Device.Base.DeviceOperate.Device_Warp.Protocol">
+            <summary>
+            通讯协议类型
+            </summary>
+        </member>
         <member name="F:IMX.Device.Base.DeviceOperate.Device_Warp.OutterDrive">
             <summary>
             使用传入驱动
@@ -1618,6 +2732,11 @@
             初始化状态
             </summary>
         </member>
+        <member name="P:IMX.Device.Base.IDeviceOperate.IsError">
+            <summary>
+            故障状态
+            </summary>
+        </member>
         <member name="P:IMX.Device.Base.IDeviceOperate.Warp">
             <summary>
             设备报文
@@ -1656,6 +2775,11 @@
         <member name="P:IMX.Device.Base.IDeviceOperate.DicReadInfo">
             <summary>
             设备读取内容对应index地址
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.IDeviceOperate.DicSetInfo">
+            <summary>
+            设备设置内容对应index地址
             </summary>
         </member>
         <member name="M:IMX.Device.Base.IDeviceOperate.Init(IMX.Device.Base.Device_Config,IMX.Device.Base.DriveOperate.ISuperDrive)">
@@ -1725,6 +2849,11 @@
         <member name="P:IMX.Device.Base.IDeviceWarp.Config">
             <summary>
             设备配置信息
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Base.IDeviceWarp.Protocol">
+            <summary>
+            通讯协议类型
             </summary>
         </member>
         <member name="M:IMX.Device.Base.IDeviceWarp.Device_Init(IMX.Device.Common.DeviceArgs,IMX.Device.Base.DriveOperate.ISuperDrive)">

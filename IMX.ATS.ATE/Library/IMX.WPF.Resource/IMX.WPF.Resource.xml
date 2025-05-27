@@ -49,6 +49,63 @@
             传参
             </summary>
         </member>
+        <member name="T:IMX.WPF.Resource.Converters.EnumValueToEnumNameConverter">
+            <summary>
+            枚举类转换
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.Converters.EnumValueToEnumNameConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.WPF.Resource.Converters.EnumValueToEnumNameConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.WPF.Resource.Converters.EnumExtension">
+            <summary>
+            枚举类扩展方法
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.Converters.EnumExtension.GetEnumDescription(System.Enum)">
+            <summary>
+            获取枚举类描述
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.WPF.Resource.Converters.EnumExtension.GetEnumValueDescription(System.String,System.Type)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="T:IMX.WPF.Resource.Converters.InReangeConverer">
+            <summary>
+            范围颜色转换器
+            </summary>
+        </member>
+        <member name="M:IMX.WPF.Resource.Converters.InReangeConverer.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.WPF.Resource.Converters.InReangeConverer.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
         <member name="T:IMX.WPF.Resource.FocusExtension">
             <summary>
             控件焦点扩展方法

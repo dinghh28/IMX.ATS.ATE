@@ -210,6 +210,16 @@
             <param name="IsUseSerial">串口通讯_是否使用原生串口</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,System.String@,System.String@,System.UInt32@,System.String@)">
+            <summary>
+            根据传入的配置字符串, 解析出对应配置参数;
+            </summary>
+            <param name="configString">配置字符串, 采用"配置名=某值"的方式 且 英文分号隔开</param>
+            <param name="DataBaudrate">数据波特率</param>
+            <param name="CanfdSpeed">CANFD加速器</param>
+            <param name="ChannelIndex">通道地址</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Common.DriveHelper.DecodeConfigString(System.String,System.String@,System.String@,System.UInt32@)">
             <summary>
             根据传入的配置字符串, 解析出对应配置参数;
@@ -299,6 +309,21 @@
             <param name="strParam3">解析的参数3</param>
             <returns>驱动适配资源字符</returns>
         </member>
+        <member name="T:IMX.Device.Common.Enumerations.DeviceOperatMode">
+            <summary>
+            源载一体机运行模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.DeviceOperatMode.VOLT">
+            <summary>
+            电压源模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.DeviceOperatMode.LOAD">
+            <summary>
+            负载模式
+            </summary>
+        </member>
         <member name="T:IMX.Device.Common.Enumerations.DeviceOutPutState">
             <summary>
             设备输出枚举类
@@ -312,6 +337,57 @@
         <member name="F:IMX.Device.Common.Enumerations.DeviceOutPutState.ON">
             <summary>
             开启
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.Enumerations.ProtocolType">
+            <summary>
+            通讯协议类型
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.ModbusRTU">
+            <summary>
+            一种串行通信协议，广泛应用于工业自动化领域。
+            支持RTU（二进制）和ASCII格式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.ModbusTCP">
+            <summary>
+            产品
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.Ethernet">
+            <summary>
+            基于以太网的工业协议，支持实时控制和数据交换
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.CAN">
+            <summary>
+            用于汽车和工业设备的实时通信协议
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.MQTT">
+            <summary>
+            轻量级的发布/订阅协议，适用于低带宽、不稳定的网络环境
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.Profibus">
+            <summary>
+            用于工厂自动化和过程控制的现场总线协议
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.Ainuo3">
+            <summary>
+            艾诺厂家协议
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.SCPI">
+            <summary>
+            SCPI协议
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Enumerations.ProtocolType.DLT">
+            <summary>
+            电表规约协议
             </summary>
         </member>
         <member name="T:IMX.Device.Common.DriveType">
@@ -399,6 +475,11 @@
             DCDC负载
             </summary>
         </member>
+        <member name="F:IMX.Device.Common.EDeviceType.LVDCLoad">
+            <summary>
+            低压直流负载
+            </summary>
+        </member>
         <member name="F:IMX.Device.Common.EDeviceType.Acquisition">
             <summary>
             采集系统
@@ -424,12 +505,167 @@
             高压直流源
             </summary>
         </member>
+        <member name="F:IMX.Device.Common.EDeviceType.ACSourceLoad">
+            <summary>
+            交流源载一体机
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.SignalSource">
+            <summary>
+            信号源
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.EDeviceType.AnalogAignals">
+            <summary>
+            CCCP模拟信号
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.Output_Mode">
+            <summary>
+            输出模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Output_Mode.AC">
+            <summary>
+            交流方式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Output_Mode.DC">
+            <summary>
+            直流方式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Output_Mode.ACDC">
+            <summary>
+            交直流方式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Output_Mode.DCAC">
+            <summary>
+            恒功率模式
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.Opaerate_Mode">
+            <summary>
+            拉载模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Opaerate_Mode.NULL">
+            <summary>
+            无模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Opaerate_Mode.CC">
+            <summary>
+            恒电流模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Opaerate_Mode.CV">
+            <summary>
+            恒电压模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Opaerate_Mode.CR">
+            <summary>
+            恒电阻模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Opaerate_Mode.CP">
+            <summary>
+            恒功率模式
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.Phase_Mode">
+            <summary>
+            相线模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Phase_Mode.ONE">
+            <summary>
+            单相
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Phase_Mode.THREE">
+            <summary>
+            三相模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Phase_Mode.DIFFERENCE">
+            <summary>
+            反向模式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.Phase_Mode.MULTICHANNEL">
+            <summary>
+            多通道模式
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.ConnectionMode">
+            <summary>
+            三相连接方式
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.ConnectionMode.DELTA">
+            <summary>
+            Delta三角形
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.ConnectionMode.Y">
+            <summary>
+            Y星形
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.CCResMode">
+            <summary>
+            CC电阻档位
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.CCResMode.Res_100">
+            <summary>
+            100Ω
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.CCResMode.Res_220">
+            <summary>
+            220Ω
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.CCResMode.Res_680">
+            <summary>
+            680Ω
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.CCResMode.Res_1000">
+            <summary>
+            1000Ω
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.CCResMode.Res_1500">
+            <summary>
+            1500Ω
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.CCResMode.Res_2000">
+            <summary>
+            2000Ω
+            </summary>
+        </member>
+        <member name="F:IMX.Device.Common.CCResMode.Res_3300">
+            <summary>
+            3300Ω
+            </summary>
+        </member>
         <member name="T:IMX.Device.Common.SupportDeviceInfo">
             <summary>
             支持设备相关信息
             </summary>
         </member>
         <member name="P:IMX.Device.Common.SupportDeviceInfo.DeviceRecInfo">
+            <summary>
+            设备上报信息字典[设备型号,上报数据名称字符串]
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.SupportDeviceInfo.DeviceSetInfo">
             <summary>
             设备上报信息字典[设备型号,上报数据名称字符串]
             </summary>

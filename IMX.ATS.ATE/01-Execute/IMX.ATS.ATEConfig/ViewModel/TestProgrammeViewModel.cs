@@ -532,7 +532,7 @@ namespace IMX.ATS.ATEConfig
             set => Set(nameof(SelectedName), ref selectedname, value);
         }
 
-        private ObservableCollection<string> processnames;
+        //private ObservableCollection<string> processnames;
         /// <summary>
         /// 流程列表
         /// </summary>

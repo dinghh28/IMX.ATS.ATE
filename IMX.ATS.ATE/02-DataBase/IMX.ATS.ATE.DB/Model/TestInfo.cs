@@ -10,11 +10,43 @@ using IMX.Common;
 namespace IMX.DB.Model
 {
     /// <summary>
+    /// 实验结果项目信息条目
+    /// </summary>
+    [Table(Name = "Test_ItemInfo_{yyyy}", AsTable = "createtime=2023-1-1(5 year)")]
+    public class Test_ProjectItemInfo : BaseEntity<Test_ProjectItemInfo, int>
+    {
+        /// <summary>
+        /// 项目ID
+        /// </summary>
+        public int ProjectID { get; set; }
+
+        /// <summary>
+        /// 产品编号
+        /// </summary>
+        [Column(IsNullable = false)]
+        public string ProductSN { get; set; }
+
+        /// <summary>
+        /// 项目名称
+        /// </summary>
+        [Column(IsNullable = false)]
+        public string ProjectName { get; set; }
+
+        /// <summary>
+        /// 试验结果条目(导航测试)
+        /// </summary>
+        [Navigate(nameof(Test_ItemInfo.Id))]
+        public List<Test_ItemInfo> Items { get; set; }
+    }
+
+    /// <summary>
     /// 实验结果条目信息
     /// </summary>
     [Table(Name = "Test_ItemInfo_{yyyy}", AsTable = "createtime=2023-1-1(1 year)")]
     public class Test_ItemInfo : BaseEntity<Test_ItemInfo, int>
     {
+        
+
         /// <summary>
         /// 项目ID
         /// </summary>
@@ -87,11 +119,23 @@ namespace IMX.DB.Model
         /// 故障信息
         /// </summary>
         public string ErrorInfo { get; set; } = string.Empty;
+
+        ///// <summary>
+        ///// 项目信息条目(导航测试)
+        ///// </summary>
+        //public Test_ProjectItemInfo ProjectItemInfo { get; set; }
+
+        /// <summary>
+        /// 实验结果数据(导航测试)
+        /// </summary>
+        [Navigate(nameof(Test_DataInfo.Id))]
+        public List<Test_DataInfo> Datas { get; set; }
     }
 
     /// <summary>
     /// 实验结果数据信息
     /// </summary>
+    [Table(Name = "Test_DataInfo_{yyyyMM}", AsTable = "create_time=2022-5-1(1 month)")]
     public class Test_DataInfo : BaseEntity<Test_DataInfo, int>
     {
         /// <summary>
@@ -161,6 +205,18 @@ namespace IMX.DB.Model
         public List<ModDeviceReadData> Euq_DeviceRead { get; set; }
 
         /// <summary>
+        /// 额外数据
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> EX_Data { get; set; }
+
+        /// <summary>
+        /// 设备数据
+        /// </summary>
+        [JsonMap]
+        public List<ModDeviceReadData> EX_DeviceRead { get; set; }
+
+        /// <summary>
         /// 试验结果
         /// </summary>
         public ResultState Result { get; set; } = ResultState.SUCCESS;
@@ -169,5 +225,10 @@ namespace IMX.DB.Model
         /// 故障信息
         /// </summary>
         public string ErrorInfo { get; set; }
+
+        ///// <summary>
+        ///// 试验条目(导航测试)
+        ///// </summary>
+        //public Test_ItemInfo ItemInfo { get; set;}
     }
 }

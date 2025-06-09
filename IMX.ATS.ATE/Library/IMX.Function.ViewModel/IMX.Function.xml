@@ -1022,6 +1022,11 @@
             CCCP模拟信号
             </summary>
         </member>
+        <member name="F:IMX.Function.Base.FuncitonType.SignalSource">
+            <summary>
+            信号发生器
+            </summary>
+        </member>
         <member name="F:IMX.Function.Base.FuncitonType.ACSourceLoad">
             <summary>
             交流源载一体机操作模板

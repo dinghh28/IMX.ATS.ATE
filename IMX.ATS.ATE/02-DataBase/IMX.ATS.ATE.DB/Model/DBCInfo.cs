@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace IMX.DB.Model
 {
@@ -46,6 +47,12 @@ namespace IMX.DB.Model
         /// 文件上传人员
         /// </summary>
         public string Operator { get; set; }
+
+        ///// <summary>
+        ///// DBC配置内容(子项)
+        ///// </summary>
+        //[Navigate(nameof(Test_DBCConfig.Id))]
+        //public List<Test_DBCConfig> DBCConfigs { get; set;}
     }
 
     /// <summary>
@@ -117,12 +124,16 @@ namespace IMX.DB.Model
         [JsonMap]
         public List<Test_DBCInfo> Test_DBCReceiveSignals { get; set; } = new List<Test_DBCInfo>();
 
-
-
         /// <summary>
         /// 上次更新人员
         /// </summary>
         public string UpdateOperator { get; set; }
+
+        ///// <summary>
+        ///// DBC文件(父项)
+        ///// </summary>
+        //[Navigate(nameof(DBCFileID))]
+        //public Test_DBCFileInfo FileInfo { get; set; }
     }
 
     #region 下发帧

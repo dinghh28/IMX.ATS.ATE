@@ -398,6 +398,9 @@ namespace IMX.ATS.ATEConfig
                 //RatedPow = GlobalModel.Test_ProjectInfo.RatedPow;
                 BaudRate = GlobalModel.Test_ProjectInfo.BaudRate;
                 DataBaudRate= GlobalModel.Test_ProjectInfo.DataBaudrate ;
+                DBCConfigName = ProjectInfo.DBCConfigName;
+                Electricity = ProjectInfo.Electricity;
+
             }
             //((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectSelect.WindowClose.Execute("ProjectSelect");
         }

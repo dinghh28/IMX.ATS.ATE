@@ -2144,6 +2144,13 @@
             <param name="signals">信号名字典[信号名, 用户自定义名称]</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetReadSignal(System.Collections.Generic.List{IMX.Device.Common.CANDataInfo})">
+            <summary>
+            设置上报/读取信号
+            </summary>
+            <param name="dataInfos"></param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.ClearReadSignals">
             <summary>
             清除上报/读取列表
@@ -2154,6 +2161,20 @@
             <summary>
             获取上报列表所有信号值
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.GetSignalsValues">
+            <summary>
+            获取上报列表所有信号值(新方法测试)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.GetSignalValue(System.String,System.UInt32)">
+            <summary>
+            获取上报信号
+            </summary>
+            <param name="signal">信号名</param>
+            <param name="messageid">消息ID</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.GetSignalValue(System.String)">
@@ -2168,12 +2189,24 @@
             设置交互器发送信号
             </summary>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignal(System.Collections.Generic.List{IMX.Device.Common.CANDataInfo})">
+            <summary>
+            设置交互器发送信号
+            </summary>
+            <param name="dataInfos"></param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignal(System.Collections.Generic.List{System.String})">
             <summary>
             设置交互器发送信号
             </summary>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalValue(System.String,System.Double)">
+            <summary>
+            设置发送信号值
+            </summary>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalValue(System.UInt32,System.String,System.Double)">
             <summary>
             设置发送信号值
             </summary>
@@ -2185,7 +2218,22 @@
             <param name="signal">信号名</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.StartSignalSend(System.UInt32,System.String)">
+            <summary>
+            信号发送使能
+            </summary>
+            <param name="messageid">消息id</param>
+            <param name="signal">信号名称</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.StartSignalSend(System.Collections.Generic.List{System.String})">
+            <summary>
+            信号发送使能
+            </summary>
+            <param name="signals">信号名列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.StartSignalSend(System.Collections.Generic.List{IMX.Device.Common.CANSignalInfo})">
             <summary>
             信号发送使能
             </summary>
@@ -2199,7 +2247,22 @@
             <param name="signal">信号名</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.StopSignalSend(System.UInt32,System.String)">
+            <summary>
+            信号发送使能
+            </summary>
+            <param name="messageid">消息id</param>
+            <param name="signal">信号名称</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.StopSignalSend(System.Collections.Generic.List{System.String})">
+            <summary>
+            停止信号发送(若消息仍在发送，则发送默认值)
+            </summary>
+            <param name="signals">信号名列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.StopSignalSend(System.Collections.Generic.List{IMX.Device.Common.CANSignalInfo})">
             <summary>
             停止信号发送(若消息仍在发送，则发送默认值)
             </summary>
@@ -2251,6 +2314,13 @@
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadAll">
             <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadAll(System.Int32)">
+            <summary>
+            产品新读取方法（测试）
+            </summary>
+            <param name="x"></param>
+            <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.Device_ReadError">
             <inheritdoc/>
@@ -2345,6 +2415,13 @@
             <param name="signals">信号字典[信号名，用户自定义名称]</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetReadSignal(System.Collections.Generic.List{IMX.Device.Common.CANSignalInfo})">
+            <summary>
+            设置上报列表
+            </summary>
+            <param name="signalInfos">(消息ID,信号名称)列表</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.ClearReadSignal">
             <summary>
             清除上报列表
@@ -2352,6 +2429,12 @@
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.GetSignalsValue">
+            <summary>
+            获取上报列表所有信号值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.GetSignalsValue(System.Collections.Generic.List{IMX.Device.Common.CANSignalInfo})">
             <summary>
             获取上报列表所有信号值
             </summary>
@@ -2373,6 +2456,13 @@
             <summary>
             设置交互器发送信号
             </summary>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetSendSignal(System.Collections.Generic.List{IMX.Device.Common.CANSignalInfo})">
+            <summary>
+            设置交互器发送信号
+            </summary>
+            <param name="signalInfos">(消息ID,信号名称)列表</param>
+            <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.DeleteSendSignal(System.String)">
             <summary>
@@ -2401,7 +2491,29 @@
             <param name="signal">信号名</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.StartSignalSend(System.UInt32,System.String)">
+            <summary>
+            信号发送使能
+            </summary>
+            <param name="signal">信号名</param>
+            <param name="messid">消息ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.StartSignalSend(IMX.Device.Common.CANSignalInfo)">
+            <summary>
+            信号发送使能
+            </summary>
+            <param name="info">信号关参</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.StartSignalSend(System.Collections.Generic.List{System.String})">
+            <summary>
+            信号发送使能
+            </summary>
+            <param name="signals">信号名列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.StartSignalSend(System.Collections.Generic.List{IMX.Device.Common.CANSignalInfo})">
             <summary>
             信号发送使能
             </summary>
@@ -2415,7 +2527,29 @@
             <param name="signal">信号名</param>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.StopSignalSend(System.UInt32,System.String)">
+            <summary>
+            停止信号发送(若消息仍在发送，则发送默认值)
+            </summary>
+            <param name="signal">信号名</param>
+            <param name="messid">消息ID</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.StopSignalSend(System.Collections.Generic.List{System.String})">
+            <summary>
+            停止信号发送(若消息仍在发送，则发送默认值)
+            </summary>
+            <param name="signals">信号名列表</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.StopSignalSend(IMX.Device.Common.CANSignalInfo)">
+            <summary>
+            停止信号发送(若消息仍在发送，则发送默认值)
+            </summary>
+            <param name="info">信号关参</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.StopSignalSend(System.Collections.Generic.List{IMX.Device.Common.CANSignalInfo})">
             <summary>
             停止信号发送(若消息仍在发送，则发送默认值)
             </summary>
@@ -2426,6 +2560,23 @@
             <summary>
             设置发送信号值
             </summary>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetSendSignalValue(System.UInt32,System.String,System.Double)">
+            <summary>
+            设置发送信号值
+            </summary>
+            <param name="messageid">消息ID</param>
+            <param name="signal">信号名称</param>
+            <param name="value">设置值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetSendSignalValue(IMX.Device.Common.CANSignalInfo,System.Double)">
+            <summary>
+            设置发送信号值
+            </summary>
+            <param name="signal">发送信号</param>
+            <param name="value">设置值</param>
+            <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.CalcMessageValue">
             <summary>

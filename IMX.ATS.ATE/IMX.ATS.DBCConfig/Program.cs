@@ -40,7 +40,7 @@ namespace IMX.ATS.DBCConfig
                 MessageBox.Show("进入Main函数体了（参数不可为空）");
                 return;
             }
-            string arg = AES.Decrypt(args[0], "RGV2aWNlQ29uZmln");
+            string arg = AES.Decrypt(args[0], "REJDQ29uZmln");
             var info = JsonConvert.DeserializeObject<UserInfo>(arg);
 #endif
 

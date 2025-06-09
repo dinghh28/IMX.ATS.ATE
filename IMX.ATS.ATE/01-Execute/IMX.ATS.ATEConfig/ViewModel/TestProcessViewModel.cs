@@ -77,6 +77,7 @@ namespace IMX.ATS.ATEConfig
             {
                 if (Set(nameof(SolutionName), ref solutionName, value))
                 {
+                    GlobalModel.NowProcessName = value;
                     SelectSolution();
                 }
             }
@@ -419,6 +420,12 @@ namespace IMX.ATS.ATEConfig
                 {
                     MessageBox.Show($"选择步骤超方案已有步骤范围");
                     return;
+                }
+
+                //开关机指令无显示界面(仅调用前置)
+                if (functionInfos[index].ModType == FuncitonType.NONE || functionInfos[index].ModType == FuncitonType.NONE)
+                {
+                    ConfigContent = null;
                 }
 
                 //string winname = SupportConfig.DicTestFlowItems.First(x => x.Value == FunctionInfos[index].FunctionName).Key;

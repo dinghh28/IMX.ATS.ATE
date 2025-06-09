@@ -158,6 +158,36 @@
             <param name="type"></param>
             <returns></returns>
         </member>
+        <member name="T:IMX.Device.Common.CANDataInfo">
+            <summary>
+            CAN通讯设备读取发送数据格式类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.CANDataInfo.CustomName">
+            <summary>
+            用户自定义名称
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.CANDataInfo.SignalInfo">
+            <summary>
+            信号识别码
+            </summary>
+        </member>
+        <member name="T:IMX.Device.Common.CANSignalInfo">
+            <summary>
+            产品报文关参类
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.CANSignalInfo.SignalName">
+            <summary>
+            信号名称
+            </summary>
+        </member>
+        <member name="P:IMX.Device.Common.CANSignalInfo.MessageID">
+            <summary>
+            消息ID
+            </summary>
+        </member>
         <member name="T:IMX.Device.Common.DriveHelper">
             <summary>
             驱动参数帮助类

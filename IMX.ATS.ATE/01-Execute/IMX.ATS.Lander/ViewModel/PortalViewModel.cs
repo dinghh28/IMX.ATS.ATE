@@ -96,16 +96,16 @@ namespace IMX.ATS.Lander
         //    { "DIOS", false},
         //};
 
-        private Dictionary<string, string> dicViewname = new Dictionary<string, string>()
-        {
-            { "ATEConfig", "项目信息配置" },
-            { "DBCConfig", "DBC配置" },
-            { "ATE", "测试管理" },
-            { "Manual", "手动操作" },
-            { "DIOS", "数据管理" },
-            { "DeviceConfig", "设备管理" },
-            { "UserManage", "用户管理" },
-        };
+        //private Dictionary<string, string> dicViewname = new Dictionary<string, string>()
+        //{
+        //    { "ATEConfig", "项目信息配置" },
+        //    { "DBCConfig", "DBC配置" },
+        //    { "ATE", "测试管理" },
+        //    { "Manual", "手动操作" },
+        //    { "DIOS", "数据管理" },
+        //    { "DeviceConfig", "设备管理" },
+        //    { "UserManage", "用户管理" },
+        //};
 
 
         //private Dictionary<string, string> dicIconURL = new Dictionary<string, string>()
@@ -116,29 +116,29 @@ namespace IMX.ATS.Lander
         //    { "DIOS", "统计.png" },
         //};
 
-        /// <summary>
-        /// 软件AESKey字典
-        /// </summary>
-        private Dictionary<string, string> dicAESKey = new Dictionary<string, string>() 
-        {
-            { "ATEConfig", "QVRFQ29uZmln" },
-            { "UserManage", "VXNlck1hbmFnZQ==" },
-            { "ATE", "QVRF" },
-            { "DIOS", "" },
-        };
+        ///// <summary>
+        ///// 软件AESKey字典
+        ///// </summary>
+        //private Dictionary<string, string> dicAESKey = new Dictionary<string, string>() 
+        //{
+        //    { "ATEConfig", "QVRFQ29uZmln" },
+        //    { "UserManage", "VXNlck1hbmFnZQ==" },
+        //    { "ATE", "QVRF" },
+        //    { "DIOS", "" },
+        //};
 
-        private Dictionary<string, Visibility> dicVisibility = new Dictionary<string, Visibility>()
-        {
-            //{ "ProjectConfig.PCProjectSelectView", (GlobalModel.UserInfo.Privilege & 2) == 2? Visibility.Visible : Visibility.Collapsed },
-            //{ "UserManage.UserMainView",Visibility.Visible },// (GlobalModel.UserInfo.Privilege & 8) == 8 ? Visibility.Visible : Visibility.Collapsed },
-            //{ "TestOperate.TODeviceInitView", Visibility.Visible },
-            //{ "DataOperate.ADOMainView",(GlobalModel.UserInfo.Privilege & 4) == 4? Visibility.Visible : Visibility.Collapsed },
+        //private Dictionary<string, Visibility> dicVisibility = new Dictionary<string, Visibility>()
+        //{
+        //    //{ "ProjectConfig.PCProjectSelectView", (GlobalModel.UserInfo.Privilege & 2) == 2? Visibility.Visible : Visibility.Collapsed },
+        //    //{ "UserManage.UserMainView",Visibility.Visible },// (GlobalModel.UserInfo.Privilege & 8) == 8 ? Visibility.Visible : Visibility.Collapsed },
+        //    //{ "TestOperate.TODeviceInitView", Visibility.Visible },
+        //    //{ "DataOperate.ADOMainView",(GlobalModel.UserInfo.Privilege & 4) == 4? Visibility.Visible : Visibility.Collapsed },
 
-            { "ATEConfig", (GlobalModel.UserInfo.Privilege & 2) == 2? Visibility.Visible : Visibility.Collapsed },
-            { "UserManage",Visibility.Visible },// (GlobalModel.UserInfo.Privilege & 8) == 8 ? Visibility.Visible : Visibility.Collapsed },
-            { "ATE", Visibility.Visible },
-            { "DIOS",(GlobalModel.UserInfo.Privilege & 4) == 4? Visibility.Visible : Visibility.Collapsed },
-        };
+        //    { "ATEConfig", (GlobalModel.UserInfo.Privilege & 2) == 2? Visibility.Visible : Visibility.Collapsed },
+        //    { "UserManage",Visibility.Visible },// (GlobalModel.UserInfo.Privilege & 8) == 8 ? Visibility.Visible : Visibility.Collapsed },
+        //    { "ATE", Visibility.Visible },
+        //    { "DIOS",(GlobalModel.UserInfo.Privilege & 4) == 4? Visibility.Visible : Visibility.Collapsed },
+        //};
 
 
         #endregion
@@ -157,17 +157,59 @@ namespace IMX.ATS.Lander
             Win = win;
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(Win);
 
+            if (GlobalModel.UserInfo.Privilege == (int)UserPermissions.ALL)
+            {
+                foreach (UserPermissions item in Enum.GetValues(typeof(UserPermissions)))
+                {
+                    if (item == UserPermissions.ALL)
+                    {
+                        continue;
+                    }
+
+                    //if ((GlobalModel.UserInfo.Privilege & (int)item) == (int)item)
+                    //{
+
+                    var attribute = item.GetAttribute<UserPermissions, UserPermissionsAttribute>();
+                    if (attribute == null)
+                    {
+                        continue;
+                    }
+
+
+                    FunModules.Add(new FunModule
+                        {
+                            ViewmodeName = attribute.Description,
+                            FunModuleName = item.ToString(),
+                            ExeAESKey = attribute.AESKey,
+                        });
+                    //}
+                }
+
+                return;
+            }
 
             foreach (UserPermissions item in Enum.GetValues(typeof(UserPermissions)))
             {
                 if ((GlobalModel.UserInfo.Privilege & (int)item) == (int)item)
                 {
+                    //FunModules.Add(new FunModule
+                    //{
+                    //    ViewmodeName = item.GetDescription(),
+                    //    FunModuleName = item.ToString(),
+                    //    ExeAESKey = dicAESKey[item.GetAttribute()],
+                    //});
+
+                    var attribute = item.GetAttribute<UserPermissions, UserPermissionsAttribute>();
+                    if (attribute == null)
+                    {
+                        continue;
+                    }
+
                     FunModules.Add(new FunModule
                     {
-                        ViewmodeName = item.GetDescription(),
-                        FunModuleName = item.ToString(),
-                        FunModuleVisibility = dicVisibility[item.GetDescription()],
-                        ExeAESKey = dicAESKey[item.GetDescription()],
+                        FunModuleName = attribute.Description,
+                        ViewmodeName = item.ToString(),
+                        ExeAESKey = attribute.AESKey,
                     });
                 }
             }

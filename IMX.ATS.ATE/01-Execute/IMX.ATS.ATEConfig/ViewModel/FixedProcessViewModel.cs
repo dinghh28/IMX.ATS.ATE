@@ -328,6 +328,11 @@ namespace IMX.ATS.ATEConfig
 
             foreach (var item in SupportConfig.DicTestFlowItems)
             {
+                //剔除开关机
+                if (item.Key == FuncitonType.NONE || item.Key == FuncitonType.NONE)
+                {
+                    continue;
+                }
                 TestFlowItems.Add(new TestFlowItem { Tag = item.Key, Selcted = new RelayCommand<object>(AddFunction) });
             }
 

@@ -34,6 +34,16 @@ namespace IMX.ATS.ATE
         public static Dictionary<string, DeviceInfo_ALL> DicDeviceInfo { get; set; } = new Dictionary<string, DeviceInfo_ALL>();
 
         /// <summary>
+        /// 项目信息
+        /// </summary>
+        public static Test_ProjectInfo ProjectInfo { get; set; }
+
+        /// <summary>
+        /// 紧急下电时序
+        /// </summary>
+        public static List<string> TestOff_FlowNames { get; set; } = new List<string>();
+
+        /// <summary>
         /// 工装初始化状态
         /// </summary>
         public static bool CabinetSate { get; set; } = true;

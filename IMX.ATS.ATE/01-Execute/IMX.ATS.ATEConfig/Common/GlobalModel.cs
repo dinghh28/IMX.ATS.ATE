@@ -37,6 +37,11 @@ namespace IMX.ATS.ATEConfig
         public static Electricity NowElectricity { get; set; }
 
         /// <summary>
+        /// 当前配置试验项
+        /// </summary>
+        public static string NowProcessName { get; set; } = string.Empty;
+
+        /// <summary>
         /// DBC文件配置信息
         /// </summary>
         public static Test_DBCFileInfo TestDBCFileInfo { get; set; } = new Test_DBCFileInfo();

@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
+using IMX.Device.Base;
 using IMX.Device.Base.DeviceInerfaces;
 using IMX.Device.Common;
 using IMX.Device.Common.Enumerations;

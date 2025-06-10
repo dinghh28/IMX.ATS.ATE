@@ -16,6 +16,9 @@ using IMX.Device.Base;
 
 namespace IMX.ATS.Manual
 {
+    /// <summary>
+    /// 低压直流负载
+    /// </summary>
     public class ManualViewModelLVDCLoad : WindowViewModelBaseEx
     {
         #region 私有变量
@@ -236,7 +239,7 @@ namespace IMX.ATS.Manual
                     return;
                 }
 
-                if (!(deviceInfo.DeviceOperate is IDCLoad operate))
+                if (!(deviceInfo.DeviceOperate is ILVDCLoad operate))
                 {
                     MessageBox.Show($"设备类型异常：【{deviceInfo.DeviceOperate.GetType()}】");
                     return;
@@ -255,30 +258,41 @@ namespace IMX.ATS.Manual
                     return;
                 }
 
-                OperateResult result;
-                if (RunModeType == Opaerate_Mode.CC)
-                {
-                    result = operate.SetModel(RunModeType)
-                        .And(operate.SetLoadValue(Set_LoadValue))
-                        .And(operate.SetParameters(Set_UpLimValue, Set_LimValue))
-                        .And(operate.SetCurrSLEW_POSitive(Set_RiseSploeValue))
-                        .And(operate.SetCurrSLEW_NEGative(Set_DownSploeValue));
-                    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
-                        $"[拉载值]{Set_LoadValue}\n" +
-                        $"[上限值]{Set_UpLimValue}\n" +
-                        $"[上升斜率]{Set_RiseSploeValue}\n" +
-                        $"[下降斜率]{Set_DownSploeValue}";
-                }
-                else
-                {
-                    result = operate.SetModel(RunModeType)
-                        .And(operate.SetLoadValue(Set_LoadValue))
-                        .And(operate.SetParameters(Set_UpLimValue, Set_LimValue));
-                    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
-                        $"[拉载值]{Set_LoadValue}\n" +
-                        $"[上限值]{Set_UpLimValue}\n" +
-                        $"[限定电流值]{set_LimValue}";
-                }
+                OperateResult result = operate.SetValue(RunModeType, Set_LoadValue, Set_LimValue, Set_RiseSploeValue, Set_DownSploeValue);
+
+                InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
+                    $"[拉载值]{Set_LoadValue}\n" +
+                    $"[限制值]{Set_LimValue}\n" +
+                    $"[上升斜率]{Set_RiseSploeValue}\n" +
+                    $"[下降斜率]{Set_DownSploeValue}";
+
+                //if (RunModeType == Opaerate_Mode.CC)
+                //{
+                //    result = operate.SetValue(RunModeType, Set_LoadValue, Set_LimValue, Set_RiseSploeValue, Set_DownSploeValue);
+
+                //    //result = operate.SetModel(RunModeType)
+                //    //    .And(operate.SetLoadValue(Set_LoadValue))
+                //    //    .And(operate.SetParameters(Set_UpLimValue, Set_LimValue))
+                //    //    .And(operate.SetCurrSLEW_POSitive(Set_RiseSploeValue))
+                //    //    .And(operate.SetCurrSLEW_NEGative(Set_DownSploeValue));
+                //    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
+                //        $"[拉载值]{Set_LoadValue}\n" +
+                //        $"[上限值]{Set_UpLimValue}\n" +
+                //        $"[上升斜率]{Set_RiseSploeValue}\n" +
+                //        $"[下降斜率]{Set_DownSploeValue}";
+                //}
+                //else
+                //{
+                //    result = operate.SetValue(RunModeType, Set_LoadValue, Set_LimValue, Set_RiseSploeValue, Set_DownSploeValue);
+
+                //    //result = operate.SetModel(RunModeType)
+                //    //    .And(operate.SetLoadValue(Set_LoadValue))
+                //    //    .And(operate.SetParameters(Set_UpLimValue, Set_LimValue));
+                //    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
+                //        $"[拉载值]{Set_LoadValue}\n" +
+                //        $"[上限值]{Set_UpLimValue}\n" +
+                //        $"[限定电流值]{set_LimValue}";
+                //}
 
                 if (!result)
                 {

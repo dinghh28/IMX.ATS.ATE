@@ -26,6 +26,11 @@ namespace IMX.ATS.Manual
 
 
             #region Manual
+
+            //交流源
+            SimpleIoc.Default.Register<ManualViewModelACSource>();
+            ContentControlManager.Regiter<ManualViewACSource>();
+
             //交流源载一体机
             SimpleIoc.Default.Register < ManualViewModelACSourceLoad>();
             ContentControlManager.Regiter<ManualViewACSourceLoad>();
@@ -96,6 +101,10 @@ namespace IMX.ATS.Manual
 
 
         #region Manual
+        /// <summary>
+        /// 交流源
+        /// </summary>
+        public ManualViewModelACSource ACSource=> ServiceLocator.Current.GetInstance<ManualViewModelACSource>();
 
         /// <summary>
         /// 交流源载一体机

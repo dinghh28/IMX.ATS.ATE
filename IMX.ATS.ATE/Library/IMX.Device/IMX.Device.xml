@@ -791,6 +791,15 @@
         <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.InitializeParameter">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.AnalogAignals.CCCP.AnalogAignals_CCCP_Warp.SetOnOff(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             CP信号启动/关闭
@@ -1090,13 +1099,13 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetCurrSLEW_NEGative(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetLoadValue(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModel(System.String)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModel(IMX.Device.Common.Enumerations.Opaerate_Mode)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
@@ -1165,7 +1174,7 @@
             <param name="eModel"></param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelNum(System.String)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelNum(IMX.Device.Common.Enumerations.Opaerate_Mode)">
             <summary>
             设置拉载模式（斯康达模态）
             </summary>
@@ -1200,7 +1209,7 @@
             <param name="value">拉载电阻值</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelAndValue(System.String,System.Double,System.Boolean)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double,System.Boolean)">
             <summary>
             设置拉载模式和拉载值
             </summary>
@@ -1299,10 +1308,14 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
-            <inheritdoc/>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModel(IMX.Device.Common.Enumerations.Opaerate_Mode)">
+            <summary>
+            设置拉载模式
+            </summary>
+            <param name="eModel"></param>
+            <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Set_Value(System.Double,System.Double,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetCurrSLEW_POSitive(System.Double)">
@@ -1311,7 +1324,7 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetCurrSLEW_NEGative(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetLoadValue(System.Double)">
@@ -1473,13 +1486,33 @@
             <param name="value"></param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.Set_Value(System.Double,System.Double,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.Set_Value(System.Double)">
             <summary>
             拉载
             </summary>
             <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetParameters(System.Double,System.Double)">
+            <summary>
+            拉载参数
+            </summary>
             <param name="maxvalue">上限设定值</param>
             <param name="limvalue">CR、CV模式下为限定电流值，CC模式为上下电斜率</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetCurrSLEW_POSitive(System.Double)">
+            <summary>
+            上升速率
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.SetCurrSLEW_NEGative(System.Double)">
+            <summary>
+            下降速率
+            </summary>
+            <param name="value">最大工作设定值</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Warp.ReadElectrical">
@@ -1512,6 +1545,9 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetVol(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.SetMode(IMX.Device.Common.Enumerations.Opaerate_Mode)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_AN50300_Operate.Close">
@@ -1614,10 +1650,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SetOperatMode(IMX.Device.Common.Enumerations.Opaerate_Mode)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Set_Value(System.Double,System.Double)">
+        <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.SetMode(IMX.Device.Common.Enumerations.Opaerate_Mode)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.HVDCSource.HVDCSource_ITM3912D_Operate.Device_ReadAll">
@@ -1887,7 +1920,13 @@
         <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetShort(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Set_Value(System.Double,System.Double,System.Double)">
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetCurrSLEW_POSitive(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetCurrSLEW_NEGative(System.Double)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.SetParameters(System.Double,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Operate.Device_ReadAll">
@@ -2034,13 +2073,33 @@
             <param name="value">ON表示输入打开，OFF 表示输入关闭。</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.Set_Value(System.Double,System.Double,System.Double)">
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.Set_Value(System.Double)">
             <summary>
             拉载
             </summary>
             <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetParameters(System.Double,System.Double)">
+            <summary>
+            拉载参数
+            </summary>
             <param name="maxvalue">上限设定值</param>
             <param name="limvalue">CR、CV模式下为限定电流值，CC模式为上下电斜率</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetCurrSLEW_POSitive(System.Double)">
+            <summary>
+            上升速率
+            </summary>
+            <param name="value">最大工作设定值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.SetCurrSLEW_NEGative(System.Double)">
+            <summary>
+            下降速率
+            </summary>
+            <param name="value">最大工作设定值</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.LVDCLoad.LVDCLoad_IT8906E_Warp.ReadElectrical">
@@ -2585,7 +2644,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetValue(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_Set(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             高压输出单继电器控制，需多帧发送
             </summary>
@@ -2593,7 +2652,7 @@
             <param name="value">状态值</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetValueAll(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             高压输出所有继电器控制,保留上一次控制状态，组合发送
             </summary>
@@ -2610,6 +2669,9 @@
             <param name="value3">红灯</param>
             <param name="value4">蜂鸣器</param>
             <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
+            <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetLed(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
@@ -2630,6 +2692,12 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_ReadTest">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.#ctor">
@@ -3617,7 +3685,7 @@
             <param name="value"></param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double)">
             <summary>
             设置拉载模式和拉载值(暂弃用，待后续优化)
             </summary>
@@ -3831,6 +3899,13 @@
             打开/关闭设备
             </summary>
             <param name="value">设备输出状态</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Base.IHVDCSource.SetMode(IMX.Device.Common.Enumerations.Opaerate_Mode)">
+            <summary>
+            拉载模式
+            </summary>
+            <param name="Mode">电压</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Base.IHVDCSource.SetValue(System.Double,System.Double)">

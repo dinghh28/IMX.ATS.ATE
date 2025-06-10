@@ -78,13 +78,13 @@ namespace IMX.ATS.Manual
         {
             try
             {
-                if (!(GlobalModel.DicDeviceInfo.TryGetValue(EDeviceType.DCLoad.ToString(), out DeviceInfo_ALL deviceInfo)))
+                if (!(GlobalModel.DicDeviceInfo.TryGetValue(EDeviceType.WaterBath.ToString(), out DeviceInfo_ALL deviceInfo)))
                 {
                     MessageBox.Show($"设备初始化异常：【{deviceInfo.GetType()}】");
                     return;
                 }
 
-                if  (!(deviceInfo.DeviceOperate is IDCLoad operate))
+                if  (!(deviceInfo.DeviceOperate is IWaterBath operate))
                 {
                     MessageBox.Show($"设备类型异常：【{deviceInfo.DeviceOperate.GetType()}】");
                     return;
@@ -118,7 +118,7 @@ namespace IMX.ATS.Manual
                     for (int i = 0; i < 3; i++)
                     {
                         //OperateResult OnOffRlt = operate.SetOnOff(i, OperateType == SetOutPutState.ON);
-                        operate.SetOnOff(OperateType == SetOutPutState.ON ? DeviceOutPutState.ON : DeviceOutPutState.OFF);
+                        operate.Device_SetOnOff(0,OperateType == SetOutPutState.ON );
 
                         InfoString = OperateType == SetOutPutState.ON ? "打开" : "关闭";
 

@@ -110,13 +110,25 @@ namespace IMX.DB.Model
         /// 试验存储读取数据列表
         /// </summary>
         [JsonMap]
-        public List<ModTestDataInfo> Test_ReadData { get; set; }
+        public List<ModTestDataInfo> Test_ReadData_Pro { get; set; }
 
         /// <summary>
         /// 试验存储设置数据列表
         /// </summary>
         [JsonMap]
-        public List<ModTestDataInfo> Test_SetData { get; set; }
+        public List<ModTestDataInfo> Test_SetData_Pro { get; set; }
+
+        /// <summary>
+        /// 试验存储读取数据列表
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Test_ReadData_Euq { get; set; }
+
+        /// <summary>
+        /// 试验存储设置数据列表
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Test_SetData_Euq { get; set; }
 
         /// <summary>
         /// 是否允许使用自定义数据

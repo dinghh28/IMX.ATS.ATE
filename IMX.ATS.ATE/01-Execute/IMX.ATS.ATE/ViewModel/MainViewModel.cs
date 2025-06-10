@@ -67,6 +67,10 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Globalization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using Piggy.VehicleBus.Common;
+using FreeSql.DataAnnotations;
+using Force.DeepCloner;
+using System.Runtime.InteropServices;
 
 namespace IMX.ATS.ATE
 {
@@ -133,7 +137,33 @@ namespace IMX.ATS.ATE
         public string SelectedProductName
         {
             get => selectedproductname;
-            set => Set(nameof(SelectedProductName), ref selectedproductname, value);
+            set 
+            {
+                if (Set(nameof(SelectedProductName), ref selectedproductname, value))
+                {
+                    //ProcessInfos.Clear();
+                    //IsSelectAll = false;
+                    //Thread.Sleep(10);
+                    //if (string.IsNullOrEmpty(value))
+                    //{
+                    //    return;
+                    //}
+
+
+                    //DBOperate.Default.GetRunProgrammeNames(dicProject[value])
+                    //    .AttachIfSucceed(result => 
+                    //    {
+                    //        for (int i = 0; i < result.Data?.Count; i++)
+                    //        {
+                    //            ProcessInfos.Add(new ProcessInfo { ProcessName = result.Data[i] });
+                    //        }
+                    //    })
+                    //    .AttachIfFailed(result => 
+                    //    {
+                    //        MessageBox.Show("项目试验阶段获取失败");
+                    //    });
+                }
+            } 
         }
 
         private string productsn;
@@ -163,7 +193,7 @@ namespace IMX.ATS.ATE
         public bool WinFocuse
         {
             get => winfocuse;
-            set => Application.Current.Dispatcher.Invoke(()=> Application.Current.MainWindow.Focus());
+            set => Application.Current.Dispatcher.Invoke(() => Application.Current.MainWindow.Focus());
         }
 
         private ObservableCollection<ExecuteInfo> ateexecuteinfos = new ObservableCollection<ExecuteInfo>();
@@ -299,6 +329,9 @@ namespace IMX.ATS.ATE
         /// </summary>
         public RelayCommand ClearError => new RelayCommand(ClearErrorLED);
 
+        public RelayCommand Select => new RelayCommand(SelectedProject);
+
+
 
         ///// <summary>
         ///// 扫码枪回车事件
@@ -306,8 +339,6 @@ namespace IMX.ATS.ATE
         //public RelayCommand<object> EnterKeyboard => new RelayCommand<object>(FocuseChanged);
 
         public RelayCommand Save => new RelayCommand(SaveData);
-
-
 
         #region 系统窗口指令
         ///// <summary>
@@ -366,6 +397,21 @@ namespace IMX.ATS.ATE
         #region 私有变量
 
         /// <summary>
+        /// 项目名称及其对应ID字典
+        /// </summary>
+        private Dictionary<string, int> dicProject = new Dictionary<string, int>();
+
+        /// <summary>
+        /// 上次试验产品SN
+        /// </summary>
+        private string lastprosn = string.Empty;
+
+        /// <summary>
+        /// 数据存储状态
+        /// </summary>
+        private bool enablesavedata = false;
+
+        /// <summary>
         /// 试验监控线程
         /// </summary>
         private MonitorThread monitor = null;
@@ -379,140 +425,8 @@ namespace IMX.ATS.ATE
 
         #region 私有方法
 
-        /// <summary>
-        /// 保存试验数据(由本地转至数据库)
-        /// </summary>
-        private void SaveData()
-        {
-            DirectoryInfo Dirs = new DirectoryInfo(SupportConfig.DataSavePath);
+        #region 界面按钮
 
-            if (!Dirs.Exists)
-            {
-                MessageBox.Show("不存在本地未上传数据，无需存储","数据存储提醒");
-                return;
-            }
-
-            if (Dirs.GetDirectories().Count() < 1)
-            {
-                MessageBox.Show("不存在本地未上传数据，无需存储", "数据存储提醒");
-                Dirs.Delete(true);
-                return;
-            }
-
-            if (MessageBox.Show("是否将当前试验运行结果存储至数据库？", "数据存储提醒", MessageBoxButton.YesNo) != MessageBoxResult.Yes) 
-            {
-                return;
-            }
-
-            EnableTestBtn = false;
-
-            ContentName = "数据存储中...";
-            ContentColor = Brushes.Blue;
-            StepStr = "正在存储试验数据，请稍后。。。";
-            StepStrShow = Visibility.Visible;
-
-            Task.Run(() => 
-            {
-                foreach (var dir in Dirs.GetDirectories())
-                {
-                    long ID = -1;
-                    string info;
-                    #region 获取项目ID
-                    if (File.Exists($"{dir.FullName}//ID.txt"))
-                    {
-                        if (dir.GetFiles().Length == 1)
-                        {
-                            dir.Delete(true);
-                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", $"删除文件 {dir.FullName} 成功");
-                            continue;
-                        }
-
-                        ID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ID.txt"));
-                    }
-                    else
-                    {
-                        var files = dir.GetFiles("InsterItem*");
-                        if (files.Length == 0)
-                        {
-                            continue;
-                        }
-                        try
-                        {
-                            info = File.ReadAllText(files[0].FullName);
-                            if (info.Length == 0)
-                                ID = DBOperate.Default.InserTestItem(info).Data;
-                            if (ID == -1)
-                            {
-                                continue;
-                            }
-
-                            try
-                            {
-                                File.WriteAllText($"{dir.FullName}//ID.txt", $"{ID}");
-                                foreach (var item in files)
-                                {
-                                    item.Delete();
-                                    Thread.Sleep(10);
-                                    SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
-                                }
-                                //ID = id;
-                            }
-                            catch (Exception ex)
-                            {
-                                SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
-                            continue;
-                        }
-
-                    }
-                    #endregion
-                    if (ID != -1 && dir.GetFiles().Length > 1)
-                    {
-                        foreach (FileInfo item in dir.GetFiles())
-                        {
-                            try
-                            {
-                                if (item.Extension.ToUpper() == "DATA")
-                                {
-
-                                    info = File.ReadAllText(item.FullName);
-                                    var data = JsonConvert.DeserializeObject<Test_DataInfo>(info);
-                                    if (data == null)
-                                    {
-                                        SuperDHHLoggerManager.Fatal(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"{item.FullName}文件内容格式异常");
-                                    }
-
-                                    data.TestItemID = (int)ID;
-                                    DBOperate.Default.InserTestData(data)
-                                        .AttachIfSucceed(result =>
-                                        {
-                                            item.Delete();
-                                            Thread.Sleep(10);
-                                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"删除{item.FullName}成功");
-                                        });
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", ex);
-                            }
-                        }
-                    }
-
-                    //dir.Delete(true);
-                }
-
-                EnableTestBtn = true;
-                StepStrShow = Visibility.Collapsed;
-                ContentName = string.Empty;
-            });
-            
-
-        }
 
         /// <summary>
         /// 指示灯清除
@@ -533,6 +447,52 @@ namespace IMX.ATS.ATE
             IsFocuse = true;
             //MessageBox.Show($"故障指示灯已清除");
         }
+
+        /// <summary>
+        /// 项目选择
+        /// </summary>
+        private void SelectedProject()
+        {
+            if (enablesavedata)
+            {
+                if (MessageBox.Show("试验数据未存储，是否更换试验项目（更换后未存储数据将被清除）", "数据存储提示", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+
+            var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectSelect;
+            Window view = ContentControlManager.GetWindow<ProjectSelectView>(model);
+            ProdectNameChangeLock = false;
+            //if (model.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
+
+            //if (GlobalModel.TestDBCconfig != null || GlobalModel.TestDBCconfig.Id != 0)
+            //{
+            //    if (MessageBox.Show("是否切换当前配置DBC?\r\n若切换请核对试验项操作步骤，避免产品相关指令不符合预期", "DBC配置变更", MessageBoxButton.YesNo) == MessageBoxResult.No)
+            //    {
+            //        return;
+            //    }
+            //}
+            view.Topmost = true;
+            view.Show();
+
+            //Task.Run(() =>
+            //{
+            //    Thread.Sleep(500);
+            //    while (true)
+            //    {
+            //        if (!model.IsOpen)
+            //        {
+            //            dbcconfig = GlobalModel.TestDBCconfig_Change;
+            //            if (dbcconfig != null)
+            //            {
+            //                DBCConfigName = dbcconfig.ConfigName;
+            //            }
+            //        }
+            //    }
+            //});
+        }
+
 
         private int productsnlenth = 0;
         /// <summary>
@@ -583,6 +543,7 @@ namespace IMX.ATS.ATE
             //    return;
             //}
         }
+        #endregion
 
         #region 试验操作
         private void DoTest()
@@ -639,7 +600,14 @@ namespace IMX.ATS.ATE
         /// </summary>
         private void TestStartReady()
         {
+            #region 项目参数校验
             if (string.IsNullOrEmpty(SelectedProductName))
+            {
+                MessageBox.Show("试验项目不可为空，请选择需运行项目", "试验开启失败");
+                return;
+            }
+
+            if (GlobalModel.ProjectInfo == null || GlobalModel.ProjectInfo.Id == 0)
             {
                 MessageBox.Show("试验项目不可为空，请选择需运行项目", "试验开启失败");
                 return;
@@ -650,6 +618,46 @@ namespace IMX.ATS.ATE
                 MessageBox.Show("项目编码不可为空，请填写产品对应编码", "试验开启失败");
                 return;
             }
+            #endregion
+
+            #region 本地数据校验
+            if (enablesavedata) 
+            {
+                if (lastprosn != ProductSN)
+                {
+                    if (MessageBox.Show($"{lastprosn}项目试验数据未存储，是否开启试验（将会清除上次试验产品SN对应数据）", "数据存储提示", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                    {
+                        return;
+                    }
+
+                    DirectoryInfo Dirs = new DirectoryInfo(SupportConfig.DataSavePath);
+                    if (Dirs.Exists)
+                    {
+                        try
+                        {
+                            var files = Dirs.GetFiles();
+                            for (int i = 0; i < files?.Length; i++)
+                            {
+                                if ((files[i].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                                {
+                                    files[i].Attributes ^= FileAttributes.ReadOnly;
+                                }
+                            }
+                            Dirs.Delete(true);
+                        }
+                        catch (IOException io)
+                        {
+                            SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(TestStartReady), "试验准备数据删除", io);
+                        }
+                    }
+
+                }
+                if (MessageBox.Show("试验数据未存储，是否开启试验（未存储的数据，可能会发生覆盖）", "数据存储提示",MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                {
+                    return;
+                }
+            }
+            #endregion
 
             productsnlenth = ProductSN.Length;
             //if (MessageBox.Show("是否开始试验?", "试验开始确认", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.Cancel)
@@ -663,7 +671,8 @@ namespace IMX.ATS.ATE
 
             TestStart();
 
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 EnableTestBtn = true;
             });
         }
@@ -672,28 +681,53 @@ namespace IMX.ATS.ATE
         /// </summary>
         private void TestStart()
         {
-            var rlt = DBOperate.Default.GetProjectInfo_ByName(SelectedProductName);
-            if (!rlt)
+            if (string.IsNullOrEmpty(SelectedProductName))
             {
-                MessageBox.Show($"项目信息获取失败:{rlt.Message}", "试验配置获取异常");
+                MessageBox.Show($"请先选择需进行试验项目", "项目信息检测异常");
                 return;
             }
+           
+            //OperateResult<Test_ProjectInfo> rlt = DBOperate.Default.GetProjectInfo_ByName(SelectedProductName);
+            //if (!rlt)
+            //{
+            //    MessageBox.Show($"项目信息获取失败:{rlt.Message}", "试验配置获取异常");
+            //    return;
+            //}
 
             bool issucced = true;
             Test_DBCFileInfo dbcfileinfo = null;
             Test_DBCConfig dbcconfig = null;
-            Test_Programme programme = null;
+            //Test_Programme programme = null;
             Dictionary<string, List<TestFunction>> process = new Dictionary<string, List<TestFunction>>();
-            Dictionary<string, string> dicreadsignals = new Dictionary<string, string>();
-            List<string> sendsignals_can = new List<string>();
+            Dictionary<string, TestFunctionInfo> flowsfunction = new Dictionary<string, TestFunctionInfo>();
+            //Dictionary<string, string> dicreadsignals = new Dictionary<string, string>();
+            //List<string> sendsignals_can = new List<string>();
             string error = string.Empty;
 
-            Test_ProjectInfo data = rlt.Data;
+            //Test_ProjectInfo data = rlt.Data;
+            Test_ProjectInfo data = GlobalModel.ProjectInfo;
 
             #region DBC配置获取
-            if (data.IsUseDDBC)
+            //if (data.IsUseDDBC)
+            //{
+            var canuse = DBOperate.Default.DBCConfigCanUse(data.DBCConfigID);
+            if (!canuse)
             {
-                DBOperate.Default.GetDBCConfig_ByProjectID(data.Id)
+                MessageBox.Show($"DBC配置获取失败:{canuse.Message}\r\n", "DBC配置获取失败");
+                return;
+                //issucced = false;
+                //error = $"DBC配置获取失败:{canuse.Message}\r\n";
+            }
+            if (!canuse.Data)
+            {
+                MessageBox.Show($"当前DBC配置不可使用，请确认\r\n", "DBC配置获取失败");
+                return;
+                //issucced = false;
+                //error = $"当前DBC配置不可使用，请确认\r\n";
+            }
+
+
+            DBOperate.Default.GetDBCConfig_ByID(data.DBCConfigID)
                 .ThenAnd(dbcresult => DBOperate.Default.GetFile_ByID(dbcresult.Data.DBCFileID)
                 .AttachIfSucceed(result =>
                 {
@@ -704,8 +738,6 @@ namespace IMX.ATS.ATE
                 .AttachIfSucceed(result =>
                 {
                     dbcconfig = result.Data;
-                    //MessageBox.Show("DBC配置获取成功");
-                    //monitor.DicMonitorPage[CabinetID].DBCConfig = result.Data;
                 })
                 .AttachIfFailed(result =>
                 {
@@ -720,69 +752,224 @@ namespace IMX.ATS.ATE
                     //MessageBox.Show($"DBC配置获取异常,请联系上位机工程师:\r\n{result.Message}", "试验配置保存异常"); 
                 });
 
-                if (dbcfileinfo == null || dbcconfig == null)
-                {
-                    issucced = false;
-                    error = "无DBC文件或未配置DBC，请确认配置信息";
-                }
 
-                try
+
+            //DBOperate.Default.GetDBCConfig_ByProjectID(data.Id)
+            //.ThenAnd(dbcresult => DBOperate.Default.GetFile_ByID(dbcresult.Data.DBCFileID)
+            //.AttachIfSucceed(result =>
+            //{
+            //    dbcfileinfo = result.Data;
+            //    //monitor.DicMonitorPage[CabinetID].DBCFileInfo = result.Data;
+            //})
+            //.ConvertTo(dbcresult.Data))
+            //.AttachIfSucceed(result =>
+            //{
+            //    dbcconfig = result.Data;
+            //    //MessageBox.Show("DBC配置获取成功");
+            //    //monitor.DicMonitorPage[CabinetID].DBCConfig = result.Data;
+            //})
+            //.AttachIfFailed(result =>
+            //{
+            //    issucced = false;
+            //    error = $"DBC配置获取失败:{result.Message}\r\n";
+            //    //MessageBox.Show($"DBC配置获取失败:{result.Message}", "试验配置保存异常");
+            //})
+            //.AttachIfExcepted(result =>
+            //{
+            //    issucced = false;
+            //    error = $"DBC配置获取异常:{result.Message}\r\n";
+            //    //MessageBox.Show($"DBC配置获取异常,请联系上位机工程师:\r\n{result.Message}", "试验配置保存异常"); 
+            //});
+
+            if (dbcfileinfo == null || dbcconfig == null)
+            {
+                issucced = false;
+                error = "无DBC文件或未配置DBC，请确认配置信息";
+            }
+
+            List<CANDataInfo> lisreadsignals = new List<CANDataInfo> ();
+            List<CANDataInfo> lissendsignals = new List<CANDataInfo>();
+
+            try
+            {
+                if (issucced)
                 {
-                    if (issucced)
+                    for (int i = 0; i < dbcconfig?.Test_DBCReceiveSignals?.Count; i++)
                     {
-                        for (int i = 0; i < dbcconfig?.Test_DBCReceiveSignals?.Count; i++)
-                        {
-                            var signal = dbcconfig.Test_DBCReceiveSignals[i];
-                            dicreadsignals.Add(signal.Signal_Name, signal.Custom_Name);
-                        }
-
-                        for (int i = 0; i < dbcconfig?.Test_DBCSendSignals?.Count; i++)
-                        {
-                            sendsignals_can.Add(dbcconfig?.Test_DBCSendSignals[i].Signal_Name);
-                        }
+                        var signal = dbcconfig.Test_DBCReceiveSignals[i];
+                        lisreadsignals.Add(new CANDataInfo { CustomName = signal.Custom_Name, SignalInfo = new CANSignalInfo { MessageID = signal.Message_ID, SignalName = signal.Signal_Name} });
+                        //dicreadsignals.Add(signal.Signal_Name, signal.Custom_Name);
                     }
-                }
-                catch (Exception ex)
-                {
-                    error = $"DBC上报列表配置获取失败：\r\n{ex.GetMessage()}";
-                    issucced = false;
+
+                    for (int i = 0; i < dbcconfig?.Test_DBCSendSignals?.Count; i++)
+                    {
+                        var signal = dbcconfig.Test_DBCSendSignals[i];
+                        lissendsignals.Add(new CANDataInfo { CustomName = signal.Custom_Name, SignalInfo = new CANSignalInfo { MessageID = signal.Message_ID, SignalName = signal.Signal_Name } });
+                        //sendsignals_can.Add(dbcconfig?.Test_DBCSendSignals[i].Signal_Name);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                error = $"DBC上报列表配置获取失败：\r\n{ex.GetMessage()}";
+                issucced = false;
+            }
+            //}
             #endregion
 
-            List<string> funtionnames = new List<string>();
-
+            //List<string> funtionnames = new List<string>();
+            List<string> test_flownames = new List<string>();
             if (issucced)
             {
-                ////加载循环方案信息
-                DBOperate.Default.GetProgramme(data.Id)
-                .AttachIfSucceed(result =>
+                
+                for (int i = 0; i < ProcessInfos?.Count; i++) 
                 {
-                    programme = result.Data;
-                }).
-                And(DBOperate.Default.GetFlowsByNameID(data.Id, programme.Test_FlowNames.Distinct().ToList())
-                .AttachIfSucceed(result =>
-                {
-                    var keys = result.ConvertTo(result.Data).Data.Keys.ToList();
-                    for (Int32 i = 0; i < result.Data.Count; i++)
+                    if (ProcessInfos[i].EnableUse)
                     {
-                        List<TestFunction> functions = new List<TestFunction>();
-                        for (int j = 0; j < result.Data[keys[i]].Count; j++)
+                        test_flownames.Add(ProcessInfos[i].ProcessName);
+                    }
+                }
+                ////加载循环方案信息
+                //DBOperate.Default.GetProgramme(data.Id)
+                //.AttachIfSucceed(result =>
+                //{
+                //    programme = result.Data;
+                //}).
+                //And(DBOperate.Default.GetFlowsByNameID(data.Id, programme.Test_FlowNames.Distinct().ToList())
+                #region 兆丰方法
+                //DBOperate.Default.GetFlowsByNameID(data.Id, test_flownames.Distinct().ToList())
+                //.AttachIfSucceed(result =>
+                //{
+                //    var keys = result.ConvertTo(result.Data).Data.Keys.ToList();
+                //    for (int i = 0; i < result.Data.Count; i++)
+                //    {
+                //        List<TestFunction> functions = new List<TestFunction>();
+                //        var value = result.Data[keys[i]];
+                //        for (int j = 0; j < value.Count; j++)
+                //        {
+                //            var funcitontype = (FuncitonType)Enum.Parse(typeof(FuncitonType), value[j].Type);
+                //            if (funcitontype == FuncitonType.NONE)
+                //            {
+                //                continue;
+                //            }
+                //            //加载开机流程
+                //            if (funcitontype == FuncitonType.NONE) 
+                //            {
+                //                for (int k = 0; k < GlobalModel.ProjectInfo.Test_OpenFlows?.Count; k++)
+                //                {
+                //                    var open = GlobalModel.ProjectInfo.Test_OpenFlows[k];
+                //                    var test = TestFunction
+                //                    .Create(Function_Config.DeJson((FuncitonType)Enum.Parse(typeof(FuncitonType), open.Type), open.Funtion).Data);
+                //                    test.Step = (uint)value[j].Step;
+                //                    test.Comments = open.CustomName;
+                //                    functions.Add(test);
+                //                }
+                //            }
+                //            //加载关机流程
+                //            else if (funcitontype == FuncitonType.NONE)
+                //            {
+                //                for (int k = 0; k < GlobalModel.ProjectInfo.Test_ShutFlows?.Count; k++)
+                //                {
+                //                    var shut = GlobalModel.ProjectInfo.Test_ShutFlows[k];
+                //                    var test = TestFunction
+                //                    .Create(Function_Config.DeJson((FuncitonType)Enum.Parse(typeof(FuncitonType), shut.Type), shut.Funtion).Data);
+                //                    test.Step = (uint)value[j].Step;
+                //                    test.Comments = shut.CustomName;
+                //                    functions.Add(test);
+                //                }
+                //            }
+                //            else 
+                //            {
+                //                var test = TestFunction
+                //                .Create(Function_Config.DeJson(funcitontype, value[j].Funtion).Data);
+                //                test.Step = (uint)value[j].Step;
+                //                test.Comments = value[j].CustomName;
+                //                functions.Add(test);
+                //            }
+
+                //        }
+                //        process.Add(keys[i], functions);
+                //    }
+                //})
+                //.AttachIfFailed(result =>
+                //{
+                //    error = $"试验流程获取失败：{result.Message}";
+                //});
+                #endregion
+
+                DBOperate.Default.SelectFlowsByNameID(data.Id, test_flownames.Distinct().ToList())
+                    .AttachIfSucceed(result =>
+                    {
+                        var keys = result.ConvertTo(result.Data).Data.Keys.ToList();
+                        for (int i = 0; i < result.Data.Count; i++)
                         {
                             var value = result.Data[keys[i]];
-                            var test = TestFunction
-                            .Create(Function_Config.DeJson((FuncitonType)Enum.Parse(typeof(FuncitonType), value[j].Type), value[j].Funtion).Data);
-                            test.Step = (uint)value[j].Step;
-                            test.Comments = value[j].CustomName;
-                            functions.Add(test);
-                        }
-                        process.Add(keys[i], functions);
-                    }
+                            var flows = value.Test_Flows;
+                            List<TestFunction> functions = new List<TestFunction>();
 
-                })).AttachIfFailed(result =>
-                {
-                    error = $"试验流程获取失败：{result.Message}";
-                });
+                            //试验流程拆解
+                            for (int j = 0; j < flows.Count; j++)
+                            {
+                                var funcitontype = (FuncitonType)Enum.Parse(typeof(FuncitonType), flows[j].Type);
+                                if (funcitontype == FuncitonType.NONE)
+                                {
+                                    continue;
+                                }
+                                //加载开机流程
+                                if (funcitontype == FuncitonType.NONE)
+                                {
+                                    for (int k = 0; k < GlobalModel.ProjectInfo.Test_OpenFlows?.Count; k++)
+                                    {
+                                        var open = GlobalModel.ProjectInfo.Test_OpenFlows[k];
+                                        var test = TestFunction
+                                        .Create(Function_Config.DeJson((FuncitonType)Enum.Parse(typeof(FuncitonType), open.Type), open.Funtion).Data);
+                                        test.Step = (uint)flows[j].Step;
+                                        test.Comments = open.CustomName;
+                                        functions.Add(test);
+                                    }
+                                }
+                                //加载关机流程
+                                else if (funcitontype == FuncitonType.NONE)
+                                {
+                                    for (int k = 0; k < GlobalModel.ProjectInfo.Test_ShutFlows?.Count; k++)
+                                    {
+                                        var shut = GlobalModel.ProjectInfo.Test_ShutFlows[k];
+                                        var test = TestFunction
+                                        .Create(Function_Config.DeJson((FuncitonType)Enum.Parse(typeof(FuncitonType), shut.Type), shut.Funtion).Data);
+                                        test.Step = (uint)flows[j].Step;
+                                        test.Comments = shut.CustomName;
+                                        functions.Add(test);
+                                    }
+                                }
+                                else
+                                {
+                                    var test = TestFunction
+                                    .Create(Function_Config.DeJson(funcitontype, flows[j].Funtion).Data);
+                                    test.Step = (uint)flows[j].Step;
+                                    test.Comments = flows[j].CustomName;
+                                    functions.Add(test);
+                                }
+
+
+                            }
+
+                            flowsfunction.Add(keys[i], new TestFunctionInfo
+                            {
+                                Functions = functions,
+                                CustomData = value.Test_CustomData,
+                                ReadData_Euq = value.Test_ReadData_Euq,
+                                SetData_Euq = value.Test_SetData_Euq,
+                                SetData_Pro = value.Test_SetData_Pro,
+                                ReadData_Pro = value.Test_ReadData_Pro,
+                            });
+                        }
+
+
+                    })
+                    .AttachIfFailed(result =>
+                    {
+                        error = $"试验流程获取失败：{result.Message}";
+                    });
             }
 
             if (!string.IsNullOrEmpty(error))
@@ -799,18 +986,21 @@ namespace IMX.ATS.ATE
                 OprateThread = new Thread(TestRun) { IsBackground = true },
                 ProjectInfo = data,
                 DBCFile = dbcfileinfo,
-                DicReadSignals_CAN = dicreadsignals,
-                SendSignals_CAN = sendsignals_can,
-                Programme = programme,
-                TestFlowsFunction = process,
+                LisReadSignals_CAN = lisreadsignals,
+                LisSendSignals_CAN = lissendsignals,
+                //DicReadSignals_CAN = dicreadsignals,
+                //SendSignals_CAN = sendsignals_can,
+                Test_FlowNames = test_flownames,
+                //Programme = programme,
+                //TestFlowsFunction = process,
+                 DicTestFlowsFunction = flowsfunction,
             };
 
             Thread.Sleep(1000);
 
             TestResult = "进行中";
             TestResultColor = Brushes.Blue;
-#if DEBUG
-#else
+#if !DEBUG
             try
             {
                 relayoperate_4?.SateLedContrcl(LightType.RUNING);
@@ -826,6 +1016,8 @@ namespace IMX.ATS.ATE
 
             monitor.OprateThread.Start(monitor);
 
+            new Thread(ReadDataThread_Pro) { IsBackground = true }.Start();
+            new Thread(ReadDataThread_Euq) { IsBackground = true }.Start();
 
             ContentName = "运行试验中...";
             ContentColor = Brushes.Green;
@@ -858,6 +1050,7 @@ namespace IMX.ATS.ATE
             }
 
             thread.IsRunning = true;
+            SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), $"试验线程【{thread.ThreadName}】-【{thread.ThreadID}】启动");
             TestErrorString = string.Empty;
             Test_DataInfo test_Data = new Test_DataInfo
             {
@@ -922,9 +1115,12 @@ namespace IMX.ATS.ATE
                     GlobalModel.DicDeviceInfo["Product"].DeviceOperate = canoprate.Data;
                     Product_CAN_Operate operate = (canoprate.Data as Product_CAN_Operate);
 
+                    //var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
+                    //    .And(operate.SetReadSignal(thread.DicReadSignals_CAN))
+                    //    .And(operate.SetSendSignal(thread.SendSignals_CAN));
                     var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
-                        .And(operate.SetReadSignal(thread.DicReadSignals_CAN))
-                        .And(operate.SetSendSignal(thread.SendSignals_CAN));
+                       .And(operate.SetReadSignal(thread.LisReadSignals_CAN))
+                       .And(operate.SetSendSignal(thread.LisSendSignals_CAN));
 
                     if (!cansetrlt)
                     {
@@ -967,10 +1163,10 @@ namespace IMX.ATS.ATE
                     //     .And(operate.SetSendSignal(thread.SendSignals_CAN))
                     //     .ConvertTo(result.Data);
                     //});
-                    for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++)
-                    {
-                        test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
-                    }
+                    //for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++)
+                    //{
+                    //    test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
+                    //}
 
                     //test_Data.Pro_DeviceRead = GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos;
                 }
@@ -1010,13 +1206,12 @@ namespace IMX.ATS.ATE
             {
                 StepStrShow = Visibility.Collapsed;
             }));
-#if DEBUG
-#else
-            for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
-            {
-                test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
-            }
-#endif
+//#if !DEBUG
+//            for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
+//            {
+//                test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
+//            }
+//#endif
 
             //test_Data.Euq_DeviceRead = GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos;
             bool testresult = true;
@@ -1035,13 +1230,14 @@ namespace IMX.ATS.ATE
             Thread.Sleep(10000);
 #endif
 
-            
+            enablesavedata = true;
             //test_Data.TestItemID = testinfo.Id;
             test_Data.ProductSN = ProductSN;
             test_Data.ProjectName = SelectedProductName;
 
             #region 试验方案执行
-            for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
+            //for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
+            for (int i = 0; i < thread.Test_FlowNames?.Count; i++)
             {
 
                 if (!thread.IsStartThread || !GlobalModel.IsTestThreadRun)
@@ -1049,10 +1245,12 @@ namespace IMX.ATS.ATE
                     break;
                 }
 
-                string flowname = thread.Programme.Test_FlowNames[i];
+                //string flowname = thread.Programme.Test_FlowNames[i];
+                string flowname = thread.Test_FlowNames[i];
                 errorstr = string.Empty;
 
-                if (!thread.TestFlowsFunction.TryGetValue(flowname, out List<TestFunction> flows))
+                if (!thread.DicTestFlowsFunction.TryGetValue(flowname, out TestFunctionInfo functionInfo))
+                //if (!thread.TestFlowsFunction.TryGetValue(flowname, out List<TestFunction> flows))
                 {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
@@ -1068,9 +1266,59 @@ namespace IMX.ATS.ATE
                     break;
                 }
 
+                //试验存储数据赋值
+                test_Data.Euq_Data.Clear();
+                test_Data.Pro_Data.Clear();
+                test_Data.Euq_SetData.Clear();
+                test_Data.Pro_SetData.Clear();
+                #region 工装参数加载
+                for (int k = 0; k < functionInfo.ReadData_Euq.Count; k++)
+                {
+                    var datainfo = functionInfo.ReadData_Euq[k];
+                    if (GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.DicReadInfo.TryGetValue(datainfo.Name, out ModDeviceReadData read))
+                    {
+                        test_Data.Euq_Data.Add(read.DataInfo);
+                    }
+                }
+
+                for (int k = 0; k < functionInfo.SetData_Euq.Count; k++)
+                {
+                    var datainfo = functionInfo.SetData_Euq[k];
+                    foreach (var item in GlobalModel.DicDeviceInfo)
+                    {
+                        if (item.Value.DeviceOperate.DicSetInfo.TryGetValue(datainfo.Name, out ModDeviceReadData set))
+                        {
+                            test_Data.Euq_SetData.Add(set.DataInfo);
+                        }
+                    }
+                }
+                #endregion
+                #region 产品参数加载
+                for (int k = 0; k < functionInfo.ReadData_Pro.Count; k++)
+                {
+                    var datainfo = functionInfo.ReadData_Pro[k];
+                    if (GlobalModel.DicDeviceInfo["Product"].DeviceOperate.DicReadInfo.TryGetValue(datainfo.Name, out ModDeviceReadData read))
+                    {
+                        test_Data.Pro_Data.Add(read.DataInfo);
+                    }
+                }
+
+                for (int k = 0; k < functionInfo.SetData_Euq.Count; k++)
+                {
+                    var datainfo = functionInfo.SetData_Euq[k];
+                    if (GlobalModel.DicDeviceInfo["Product"].DeviceOperate.DicSetInfo.TryGetValue(datainfo.Name, out ModDeviceReadData set))
+                    {
+                        test_Data.Pro_SetData.Add(set.DataInfo);
+                    }
+                }
+                #endregion
+                test_Data.EX_Data = functionInfo.CustomData;
+
+                //试验步骤
+                var flows = functionInfo.Functions;
 
                 //本地数据记录地址
-                string datadirectorypath = Path.Combine(SupportConfig.DataSavePath, test_Data.ProjectName, flowname);
+                string datadirectorypath = Path.Combine(SupportConfig.DataSavePath, flowname);
 
                 //多次试验数据覆盖机制
                 if (Directory.Exists(datadirectorypath))
@@ -1112,7 +1360,7 @@ namespace IMX.ATS.ATE
                     {
                         break;
                     }
-                    
+
 
                     try
                     {
@@ -1199,9 +1447,9 @@ namespace IMX.ATS.ATE
                             }
 
                         }
-                        else if(config.SupportFuncitonType == FuncitonType.Return)
+                        else if (config.SupportFuncitonType == FuncitonType.Return)
                         {
-                            
+
                         }
                         else if (config is IFuntion_Step stepfuntion)
                         {
@@ -1244,7 +1492,7 @@ namespace IMX.ATS.ATE
                                     var value = GlobalModel.DicDeviceInfo[device].DeviceOperate.DicReadInfo[name];
                                     data.Add(name, value);
                                 }
-                                
+
                                 while (count-- > 0)
                                 {
                                     if (stepfuntion.StepOutCheck(data))
@@ -1531,10 +1779,10 @@ namespace IMX.ATS.ATE
                 #endregion
 
                 testinfo.ErrorInfo = errorstr;
-                testinfo.Result = string.IsNullOrEmpty(errorstr)? ResultState.SUCCESS: ResultState.FAIL;
+                testinfo.Result = string.IsNullOrEmpty(errorstr) ? ResultState.SUCCESS : ResultState.FAIL;
 
                 Application.Current.Dispatcher.Invoke(new Action(() => functioninfo.Result = testinfo.Result));
-                
+
                 SaveItem(false, datadirectorypath, testinfo);
             }
             #endregion
@@ -1562,17 +1810,17 @@ namespace IMX.ATS.ATE
             }
 
             //testinfo.ActualRunTime = DateTime.Now.Ticks - testinfo.CreateTime.Ticks;
-            
 
-            ShutDown(thread.Programme.TestOff_FlowNames, thread.ProjectInfo.IsUseDDBC);
-            if (thread.ProjectInfo.IsUseDDBC)
-            {
+            ShutDown(GlobalModel.TestOff_FlowNames, true);
+            //ShutDown(thread.Programme.TestOff_FlowNames, thread.ProjectInfo.IsUseDDBC);
+            //if (thread.ProjectInfo.IsUseDDBC)
+            //{
                 CANUnint(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
-            }
+            //}
 
             thread.IsRunning = false;
             GlobalModel.IsTestThreadRun = false;
-
+            SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), $"试验线程【{thread.ThreadName}】-【{thread.ThreadID}】结束");
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 //textbox所在窗口先恢复enbale状态再设置焦点
@@ -1582,10 +1830,10 @@ namespace IMX.ATS.ATE
                 //ProductSN = string.Empty;
                 //productsnlenth = 0;
 
-                //窗口需获取焦点
-                Application.Current.MainWindow.Focus();
-                Thread.Sleep(100);
-                IsFocuse = true;
+                ////窗口需获取焦点
+                //Application.Current.MainWindow.Focus();
+                //Thread.Sleep(100);
+                //IsFocuse = true;
             }));
             //try
             //{
@@ -1824,6 +2072,7 @@ namespace IMX.ATS.ATE
         }
         #endregion
 
+        #region 舍弃执行操作
         ///// <summary>
         ///// 负载试验执行
         ///// </summary>
@@ -2097,6 +2346,7 @@ namespace IMX.ATS.ATE
         //        return OperateResult.Excepted(ex);
         //    }
         //}
+        #endregion
 
         /// <summary>
         /// 交流源试验执行
@@ -2293,7 +2543,7 @@ namespace IMX.ATS.ATE
         /// <param name="canoperate"></param>
         /// <param name="aqcoperate"></param>
         /// <returns></returns>
-        private OperateResult HVDCSScourceExecute(FunConfig_HVDCSource config, IHVDCSource device, Product_CAN_Operate canoperate, IAcquisition aqcoperate) 
+        private OperateResult HVDCSScourceExecute(FunConfig_HVDCSource config, IHVDCSource device, Product_CAN_Operate canoperate, IAcquisition aqcoperate)
         {
             string errorstring = string.Empty;
             try
@@ -2471,12 +2721,12 @@ namespace IMX.ATS.ATE
                 return OperateResult.Excepted(ex);
             }
         }
-        
+
         /// <summary>
         /// 步进跳出判断
         /// </summary>
         /// <returns></returns>
-        private OperateResult StepOutCheck(StepConditions stepcondition, List<StepConditionValue> Values, Dictionary<string, ModDeviceReadData> data, Product_CAN_Operate canoperate, IAcquisition aqcoperate) 
+        private OperateResult StepOutCheck(StepConditions stepcondition, List<StepConditionValue> Values, Dictionary<string, ModDeviceReadData> data, Product_CAN_Operate canoperate, IAcquisition aqcoperate)
         {
             //跳出步进条件
             if (Values != null && Values.Count > 0)
@@ -2519,7 +2769,7 @@ namespace IMX.ATS.ATE
                     }
                 }
 
-                if ((stepcondition == StepConditions.OR && results.Any(x => x == true)) 
+                if ((stepcondition == StepConditions.OR && results.Any(x => x == true))
                     || results.All(x => x == true))
                 {
                     SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ACScourceExecute), "达成条件，跳出步进");
@@ -2552,7 +2802,7 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 数据条目存储
         /// </summary>
-        private OperateResult SaveItem(bool isstart, string path,Test_ItemInfo info)
+        private OperateResult SaveItem(bool isstart, string path, Test_ItemInfo info)
         {
             lock (objLock)
             {
@@ -2586,22 +2836,50 @@ namespace IMX.ATS.ATE
                         {
                             using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8)) // Encoding.UTF8 设置编码方式
                             {
-                                info.UpdateTime =  DateTime.Now;
-                                //info.ActualRunTime = info.UpdateTime.Ticks - info.CreateTime.Ticks;
+                                info.UpdateTime = DateTime.Now;
+                                info.ActualRunTime = info.UpdateTime.Ticks - info.CreateTime.Ticks;
                                 writer.WriteLine(JsonConvert.SerializeObject(info));
                             }
                         }
                     }
-
                     return OperateResult.Succeed();
                 }
                 catch (Exception ex)
                 {
-                    SuperDHHLoggerManager.Exception( LoggerType.DBLOG, nameof(SaveItem), "试验数据条目本地记录", ex);
+                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveItem), "试验数据条目本地记录", ex);
                     return OperateResult.Excepted(ex);
                 }
-
             }
+        }
+
+        private OperateResult SavaProjectItem(string path, Test_ProjectItemInfo info) 
+        {
+            lock (objLock) 
+            {
+                try
+                {
+                    info.CreateTime = DateTime.Now;
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    string datapath = Path.Combine(path, "project", $"project_{info.CreateTime:yyyyMMddHHmmssfff}.pjt");
+                    using (FileStream fs = new FileStream(datapath, FileMode.CreateNew))
+                    {
+                        using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8)) // Encoding.UTF8 设置编码方式
+                        {
+                            writer.WriteLine(JsonConvert.SerializeObject(info));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(WriteDataToLocal), "试验数据数据本地记录", ex);
+                    return OperateResult.Failed();
+                }
+            }
+
+            return OperateResult.Succeed();
         }
 
         /// <summary>
@@ -2610,9 +2888,9 @@ namespace IMX.ATS.ATE
         /// <param name="path">数据记录地址</param>
         /// <param name="dataInfo">数据内容</param>
         /// <returns></returns>
-        private OperateResult WriteDataToLocal(string path, Test_DataInfo dataInfo) 
+        private OperateResult WriteDataToLocal(string path, Test_DataInfo dataInfo)
         {
-            lock (objLock) 
+            lock (objLock)
             {
                 try
                 {
@@ -2637,6 +2915,283 @@ namespace IMX.ATS.ATE
                 }
             }
             return OperateResult.Succeed();
+        }
+
+        /// <summary>
+        /// 保存试验数据(由本地转至数据库)
+        /// </summary>
+        private void SaveData()
+        {
+            DirectoryInfo Dirs = new DirectoryInfo(SupportConfig.DataSavePath);
+
+            if (!Dirs.Exists)
+            {
+                MessageBox.Show("不存在本地未上传数据，无需存储", "数据存储提醒");
+                return;
+            }
+            if (Dirs.GetDirectories().Count() < 1)
+            {
+                MessageBox.Show("不存在本地未上传数据，无需存储", "数据存储提醒");
+                Dirs.Delete(true);
+                return;
+            }
+
+            if (MessageBox.Show("是否将当前试验运行结果存储至数据库？", "数据存储提醒", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            EnableTestBtn = false;
+
+            ContentName = "数据存储中...";
+            ContentColor = Brushes.Blue;
+            StepStr = "正在存储试验数据，请稍后。。。";
+            StepStrShow = Visibility.Visible;
+
+            Task.Run(() =>
+            {
+                   var projectinfo = Dirs.GetDirectories($"{SupportConfig.DataSavePath}//project");
+                    if (projectinfo.Length < 1)
+                    {
+                    Application.Current.Dispatcher.Invoke(new Action(() => 
+                    {
+                        ContentName = "数据存储失败";
+                        ContentColor = Brushes.Red;
+                        StepStr = "数据异常，无法存储。。。";
+                        StepStrShow = Visibility.Visible;
+                    }));
+
+                    return;
+                    }
+
+                long ItemID = -1;
+                #region 试验项目信息条目存储
+                if (File.Exists($"{projectinfo[0].FullName}//ItemID.txt"))
+                {
+                    ItemID = Convert.ToInt32(File.ReadAllText($"{projectinfo[0].FullName}//ItemID.txt"));
+                }
+                else
+                {
+                    var files = projectinfo[0].GetFiles("project*");
+                    if (files.Length == 0)
+                    {
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            ContentName = "数据存储失败";
+                            ContentColor = Brushes.Red;
+                            StepStr = "文件丢失，存储异常，请确认未改动本地数据文件。。。";
+                            StepStrShow = Visibility.Visible;
+                        }));
+                        return;
+                    }
+
+                    try
+                    {
+                      string info = File.ReadAllText(files[0].FullName);
+
+                        if (info.Length == 0) 
+                        {
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                ContentName = "数据存储失败";
+                                ContentColor = Brushes.Red;
+                                StepStr = "文件内容丢失，存储异常，请确认未改动本地数据文件。。。";
+                                StepStrShow = Visibility.Visible;
+                            }));
+                            return;
+                        }
+                        var result = DBOperate.Default.InserTestProjectItem(info);
+                        if (!result)
+                        {
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                ContentName = "数据存储失败";
+                                ContentColor = Brushes.Red;
+                                StepStr = result.Message;
+                                StepStrShow = Visibility.Visible;
+                            }));
+                            return;
+                        }
+                        ItemID = result.Data;
+                    }
+                    catch (Exception ex)
+                    {
+                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验项目信息条目插入文件处理异常", ex);
+                    }
+                }
+                #endregion
+                int timeout = 5;//多次循环确保数据存储成功
+                while (timeout-- > 0)
+                {
+                    if (Dirs.GetDirectories().Length < 2)
+                    {
+                        break;
+                    }
+                    foreach (var dir in Dirs.GetDirectories())
+                    {
+                        long ID = -1;
+                        string info;
+                        #region 获取试验项目信息条目ID
+                        if (dir.FullName == $"{SupportConfig.DataSavePath}//project")
+                        {
+                            if (File.Exists($"{dir.FullName}//ItemID.txt"))
+                            {
+                                ItemID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ItemID.txt"));
+                            }
+                            else
+                            {
+                                var files = dir.GetFiles("InsterItem*");
+                                if (files.Length == 0)
+                                {
+                                    continue;
+                                }
+                                try
+                                {
+                                    info = File.ReadAllText(files[0].FullName);
+                                    if (info.Length != 0)
+                                        ID = DBOperate.Default.InserTestItem(info, ItemID).Data;
+                                    if (ID == -1)
+                                    {
+                                        continue;
+                                    }
+
+                                    try
+                                    {
+                                        File.WriteAllText($"{dir.FullName}//ID.txt", $"{ID}");
+                                        foreach (var item in files)
+                                        {
+                                            item.Delete();
+                                            Thread.Sleep(10);
+                                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
+                                        }
+                                        //ID = id;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
+                                    continue;
+                                }
+                            }
+                        }
+                        #endregion
+                        #region 获取试验条目ID
+                        if (ItemID != -1 && dir.GetFiles().Length > 1)
+                        {
+                            if (File.Exists($"{dir.FullName}//ID.txt"))
+                            {
+                                if (dir.GetFiles().Length == 1)
+                                {
+                                    dir.Delete(true);
+                                    SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", $"删除文件 {dir.FullName} 成功");
+                                    continue;
+                                }
+
+                                ID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ID.txt"));
+                            }
+                            else
+                            {
+                                var files = dir.GetFiles("InsterItem*");
+                                if (files.Length == 0)
+                                {
+                                    continue;
+                                }
+                                try
+                                {
+                                    info = File.ReadAllText(files[0].FullName);
+                                    if (info.Length == 0)
+                                        ID = DBOperate.Default.InserTestItem(info, (int)ItemID).Data;
+                                    if (ID == -1)
+                                    {
+                                        continue;
+                                    }
+
+                                    try
+                                    {
+                                        File.WriteAllText($"{dir.FullName}//ID.txt", $"{ID}");
+                                        foreach (var item in files)
+                                        {
+                                            item.Delete();
+                                            Thread.Sleep(10);
+                                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
+                                        }
+                                        //ID = id;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
+                                    continue;
+                                }
+                            }
+                        }
+
+                        #endregion
+                        if (ID != -1 && dir.GetFiles().Length > 1)
+                        {
+                            foreach (FileInfo item in dir.GetFiles())
+                            {
+                                try
+                                {
+                                    if (item.Extension.ToUpper() == "DATA")
+                                    {
+
+                                        info = File.ReadAllText(item.FullName);
+                                        var data = JsonConvert.DeserializeObject<Test_DataInfo>(info);
+                                        if (data == null)
+                                        {
+                                            SuperDHHLoggerManager.Fatal(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"{item.FullName}文件内容格式异常");
+                                        }
+
+                                        data.TestItemID = (int)ID;
+                                        DBOperate.Default.InserTestData(data)
+                                            .AttachIfSucceed(result =>
+                                            {
+                                                item.Delete();
+                                                Thread.Sleep(10);
+                                                SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"删除{item.FullName}成功");
+                                            });
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", ex);
+                                }
+                            }
+                        }
+
+                        Thread.Sleep(10);
+                    }
+                }
+
+
+                if (Dirs.GetDirectories().Length > 1)
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ContentName = "数据存储失败";
+                        ContentColor = Brushes.Red;
+                        StepStr = "试验数据未完全存储";
+                        StepStrShow = Visibility.Visible;
+                    }));
+                    return;
+                }
+
+                Dirs.Delete(true);
+                enablesavedata = false;
+                EnableTestBtn = true;
+                StepStrShow = Visibility.Collapsed;
+                ContentName = string.Empty;
+                
+            });
         }
         #endregion
 
@@ -2727,9 +3282,9 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 下电操作
         /// </summary>
-        private void ShutDown(List<string> steps, bool isusedbc) 
+        private void ShutDown(List<string> steps, bool isusedbc)
         {
-            for (int i = 0; i < steps?.Count; i++) 
+            for (int i = 0; i < steps?.Count; i++)
             {
                 DeviceInfo_ALL info = null;
                 switch (steps[i])
@@ -2738,25 +3293,25 @@ namespace IMX.ATS.ATE
                     {
                         GlobalModel.DicDeviceInfo.TryGetValue("DCLoad", out info);
                     }
-                        break;
+                    break;
                     case "高压直流源下电关机":
                     {
                         GlobalModel.DicDeviceInfo.TryGetValue("HVDCSource", out info);
                     }
-                        break;
+                    break;
 
                     case "交流源下电关机":
                     {
                         GlobalModel.DicDeviceInfo.TryGetValue("ACSource", out info);
                     }
-                        break;
+                    break;
                     case "稳压直流源下电关机":
                     {
                         GlobalModel.DicDeviceInfo.TryGetValue("APU", out info);
                     }
-                        break;
+                    break;
                     case "产品通讯卸载":
-                        if (!isusedbc) 
+                        if (!isusedbc)
                         {
                             GlobalModel.DicDeviceInfo.TryGetValue("Product", out info);
                         }
@@ -2765,7 +3320,7 @@ namespace IMX.ATS.ATE
                         break;
                 }
 
-                if (info == null || info.DeviceOperate == null) 
+                if (info == null || info.DeviceOperate == null)
                 {
                     continue;
                 }
@@ -2806,12 +3361,55 @@ namespace IMX.ATS.ATE
             IsFocuse = true;
         }
 
+        /// <summary>
+        /// 产品读取线程
+        /// </summary>
+        private void ReadDataThread_Pro() 
+        {
+
+            if (!GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL device))
+            {
+                SuperDHHLoggerManager.Error(LoggerType.THREAD, nameof(ReadDataThread_Pro), "产品读取线程异常", "产品未初始化或初始化异常");
+                return;
+            }
+            Guid ThreadID = Guid.NewGuid();
+            SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Pro), "产品读取线程状态", $"产品读取线程-【{ThreadID}】启动");
+            while (GlobalModel.IsTestThreadRun) 
+            {
+                device.DeviceOperate.Device_ReadAll();
+                Thread.Sleep(100);
+            }
+
+            SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Pro), "产品读取线程状态", $"产品读取线程-【{ThreadID}】结束");
+        }
+
+        /// <summary>
+        /// 工装读取线程
+        /// </summary>
+        private void ReadDataThread_Euq() 
+        {
+            if (!GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL device))
+            {
+                SuperDHHLoggerManager.Error(LoggerType.THREAD, nameof(ReadDataThread_Euq), "工装读取线程异常", "功率计未初始化或初始化异常");
+                return;
+            }
+
+            Guid ThreadID = Guid.NewGuid();
+            SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Euq), "工装读取线程状态", $"工装读取线程-【{ThreadID}】启动");
+            while (GlobalModel.IsTestThreadRun)
+            {
+                device.DeviceOperate.Device_ReadAll();
+                Thread.Sleep(100);
+            }
+            SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Pro), "工装读取线程状态", $"工装读取线程-【{ThreadID}】结束");
+        }
+
         #endregion
 
         #region 界面测试
-        private void TestThread() 
-        {   
-            for (int i = 0; i < 10; i++) 
+        private void TestThread()
+        {
+            for (int i = 0; i < 10; i++)
             {
                 ObservableCollection<ExecuteStepInfo> stepinfo = new ObservableCollection<ExecuteStepInfo>();
 
@@ -2849,7 +3447,7 @@ namespace IMX.ATS.ATE
                         step.Result = ResultState.SUCCESS;
                     }));
                 }
-                
+
 
                 //Application.Current.Dispatcher.Invoke(new Action(() =>
                 //{
@@ -2891,7 +3489,7 @@ namespace IMX.ATS.ATE
         }
         #endregion
 
-#endregion
+        #endregion
 
         #region 保护方法
         protected override void WindowMaxExecute(object obj)
@@ -2913,24 +3511,49 @@ namespace IMX.ATS.ATE
                 DBOperate.Default.Init();
             }
 
-            DBOperate.Default.GetProjectNames()
-                .AttachIfSucceed(result =>
+            DBOperate.Default.GetProjectName_Dic()
+                .AttachIfSucceed(result => 
                 {
+                    dicProject.Clear();
+                    dicProject = result.Data;
+
+                    ProdectNames.Clear();
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        ProdectNames.Clear();
-
-                        for (int i = 0; i < result.Data.Count; i++)
+                        foreach (var item in result.Data)
                         {
-                            string name = result.Data[i];
-                            ProdectNames.Add(name);
+                            ProdectNames.Add(item.Key);
                         }
+                        //for (int i = 0; i < result.Data.Count; i++)
+                        //{
+                        //    string name = result.Data[i];
+                        //    ProdectNames.Add(name);
+                        //}
                     });
                 })
                 .AttachIfFailed(result =>
                 {
                     MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
-                });
+                }); ;
+
+            //DBOperate.Default.GetProjectNames()
+            //    .AttachIfSucceed(result =>
+            //    {
+            //        Application.Current.Dispatcher.Invoke(() =>
+            //        {
+            //            ProdectNames.Clear();
+
+            //            for (int i = 0; i < result.Data.Count; i++)
+            //            {
+            //                string name = result.Data[i];
+            //                ProdectNames.Add(name);
+            //            }
+            //        });
+            //    })
+            //    .AttachIfFailed(result =>
+            //    {
+            //        MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
+            //    });
 
             if (GlobalModel.CabinetSate)
             {
@@ -2939,16 +3562,37 @@ namespace IMX.ATS.ATE
 #if DEBUG
             //new Thread(TestThread) { IsBackground = true }.Start();
 #endif
-        //window = win;
-        //base.WindowLoadedExecute(obj);
-    }
+            //window = win;
+            //base.WindowLoadedExecute(obj);
+        }
 
         protected override void WindowClosedExecute(object obj)
         {
+            if (GlobalModel.IsTestThreadRun)
+            {
+                if (MessageBox.Show("试验正在运行种，是否关闭试验窗口", "试验运行提示", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                {
+                    return;
+                }
+
+                GlobalModel.IsTestThreadRun = false;
+                Thread.Sleep(1000);
+            }
+            else if (enablesavedata)
+            {
+                 if (MessageBox.Show("试验数据未存储，是否关闭试验窗口", "数据存储提示", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                 {
+                     return;
+                 }
+            }
+
+
             if (!(obj is Window win))
             {
                 return;
             }
+
+            
 
             WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(win);
 
@@ -3204,19 +3848,6 @@ namespace IMX.ATS.ATE
             }
         }
 
-        //private Brush forecolor;
-        ///// <summary>
-        ///// 结果字体颜色
-        ///// </summary>
-        //public Brush Forecolor
-        //{
-        //    get => forecolor;
-        //    set
-        //    {
-        //        Set(nameof(Forecolor), ref forecolor, value);
-        //    }
-        //}
-
         /// <summary>
         /// 开始时间
         /// </summary>
@@ -3246,7 +3877,7 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 当前值
         /// </summary>
-        public string NowVlaue {  get; set; }
+        public string NowVlaue { get; set; }
 
         /// <summary>
         /// 下限值
@@ -3288,7 +3919,7 @@ namespace IMX.ATS.ATE
                     //        default:
                     //        break;
                     //}
-                    Forecolor = value== ResultState.SUCCESS?new SolidColorBrush(Colors.Green) :new SolidColorBrush(Colors.Red);
+                    Forecolor = value == ResultState.SUCCESS ? new SolidColorBrush(Colors.Green) : new SolidColorBrush(Colors.Red);
                 }
 
             }
@@ -3315,7 +3946,7 @@ namespace IMX.ATS.ATE
     /// </summary>
     public class ProcessInfo : ViewModelBase
     {
-        private bool enableuse;
+        private bool enableuse = false;
         /// <summary>
         /// 试验项执行使能
         /// </summary>
@@ -3389,15 +4020,74 @@ namespace IMX.ATS.ATE
         public List<string> SendSignals_CAN { get; set; }
 
         /// <summary>
-        /// 试验运行流程
+        /// CAN上报列表
         /// </summary>
-        public Test_Programme Programme { get; set; }
+        public List<CANDataInfo> LisReadSignals_CAN { get; set; }
+
+        /// <summary>
+        /// CAN下发列表
+        /// </summary>
+        public List<CANDataInfo> LisSendSignals_CAN { get; set; }
+
+        ///// <summary>
+        ///// 试验运行流程
+        ///// </summary>
+        //public Test_Programme Programme { get; set; }
+
+        /// <summary>
+        /// 试验流程名称
+        /// </summary>
+        public List<string> Test_FlowNames { get; set; }
+
+        ///// <summary>
+        ///// 下电试验流程名称
+        ///// </summary>
+        //public List<string> TestOff_FlowNames { get; set; }
+
+        ///// <summary>
+        ///// 试验运行流程
+        ///// </summary>
+        //public Dictionary<string, List<TestFunction>> TestFlowsFunction { get; set; } =  new Dictionary<string, List<TestFunction>>();
 
         /// <summary>
         /// 试验运行流程
         /// </summary>
-        public Dictionary<string, List<TestFunction>> TestFlowsFunction = new Dictionary<string, List<TestFunction>>();
+        public Dictionary<string, TestFunctionInfo> DicTestFlowsFunction { get; set; } = new Dictionary<string, TestFunctionInfo>();
+    }
 
+    /// <summary>
+    /// 试验运行流程参数
+    /// </summary>
+    public class TestFunctionInfo 
+    {
+       public List<TestFunction> Functions { get; set; } = new List<TestFunction>();
+        /// <summary>
+        /// 试验存储读取数据列表
+        /// </summary>
 
+        public List<ModTestDataInfo> ReadData_Pro { get; set; } = new List<ModTestDataInfo>();
+
+        /// <summary>
+        /// 试验存储设置数据列表
+        /// </summary>
+
+        public List<ModTestDataInfo> SetData_Pro { get; set; } = new List<ModTestDataInfo>();
+
+        /// <summary>
+        /// 试验存储读取数据列表
+        /// </summary>
+
+        public List<ModTestDataInfo> ReadData_Euq { get; set; } = new List<ModTestDataInfo>();
+
+        /// <summary>
+        /// 试验存储设置数据列表
+        /// </summary>
+
+        public List<ModTestDataInfo> SetData_Euq { get; set; } = new List<ModTestDataInfo>();
+
+        /// <summary>
+        /// 用户自定义数据
+        /// </summary>
+        public List<ModTestDataInfo> CustomData { get; set; } = new List<ModTestDataInfo>();
     }
 }

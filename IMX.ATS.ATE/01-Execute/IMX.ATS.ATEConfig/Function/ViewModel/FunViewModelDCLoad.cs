@@ -51,7 +51,7 @@ namespace IMX.ATS.ATEConfig.Function
     /// <summary>
     /// 直流负载配置模板
     /// </summary>
-    public class FunViewModelDCLoad :SteppingFunViewModel
+    public class FunViewModelDCLoad : SteppingFunViewModel
     {
         #region 公共属性
 
@@ -241,7 +241,7 @@ namespace IMX.ATS.ATEConfig.Function
             }
         }
 
-        public List<Opaerate_Mode> Models { get; } =  new List<Opaerate_Mode> { Opaerate_Mode.CC, Opaerate_Mode.CV, Opaerate_Mode.CR };
+        public List<Opaerate_Mode> Models { get; } = new List<Opaerate_Mode> { Opaerate_Mode.CC, Opaerate_Mode.CV, Opaerate_Mode.CR };
 
         private Opaerate_Mode setmodel = Opaerate_Mode.CC;
         /// <summary>
@@ -249,7 +249,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public Opaerate_Mode SetModel
         {
-            get 
+            get
             {
                 //if ((Func.Config as FunConfig_DCLoad).Set_Model == Opaerate_Mode.NULL)
                 //{
@@ -258,7 +258,7 @@ namespace IMX.ATS.ATEConfig.Function
                 //setmodel = (Func.Config as FunConfig_DCLoad).Set_Model;
                 return setmodel;
             }
-            set 
+            set
             {
                 if (Set(nameof(SetModel), ref setmodel, value))
                 {
@@ -598,45 +598,45 @@ namespace IMX.ATS.ATEConfig.Function
         #endregion
 
         #region 私有方法
-        /// <summary>
-        /// 添加步进跳出条件
-        /// </summary>
-        protected override void Add(ObservableCollection<ModDeviceReadData> obj)
-        {
-            try
-            {
-                StepValue data = new StepValue
-                {
-                    ConditionValue = new StepConditionValue(),
-                    //SelectConditionName = new RelayCommand<object>(StepValuesADD),
-                };
-                //获取功率计设备高压直流侧电压电流数据
-                //SupportDeviceInfo.DeviceRecInfo["AN87330"]
-                //for (int i = 0; i < (Func.Config as FunConfig_DCLoad)?.ConditionalValues.Count; i++)
-                for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
-                {
-                    data.ConditionNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
-                    data.ConditionValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
-                    //data.ConditionValues.Add((Func.Config as FunConfig_DCLoad).ConditionalValues[i]);
-                }
+        ///// <summary>
+        ///// 添加步进跳出条件
+        ///// </summary>
+        //protected override void Add(ObservableCollection<ModDeviceReadData> obj)
+        //{
+        //    try
+        //    {
+        //        StepValue data = new StepValue
+        //        {
+        //            ConditionValue = new StepConditionValue(),
+        //            //SelectConditionName = new RelayCommand<object>(StepValuesADD),
+        //        };
+        //        //获取功率计设备高压直流侧电压电流数据
+        //        //SupportDeviceInfo.DeviceRecInfo["AN87330"]
+        //        //for (int i = 0; i < (Func.Config as FunConfig_DCLoad)?.ConditionalValues.Count; i++)
+        //        for (int i = 0; i < SupportDeviceInfo.DeviceRecInfo["AN87330"].Count; i++)
+        //        {
+        //            data.ConditionNames.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i].DataInfo.Name);
+        //            data.ConditionValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
+        //            //data.ConditionValues.Add((Func.Config as FunConfig_DCLoad).ConditionalValues[i]);
+        //        }
 
-                data.ConditionValue.Value = data.ConditionValues[0];
+        //        data.ConditionValue.Value = data.ConditionValues[0];
 
-                if ((Func.Config as FunConfig_DCLoad).Values == null)
-                {
-                    (Func.Config as FunConfig_DCLoad).Values = new List<StepConditionValue>();
-                }
-                (Func.Config as FunConfig_DCLoad)?.Values.Add(data.ConditionValue);
+        //        if ((Func.Config as FunConfig_DCLoad).Values == null)
+        //        {
+        //            (Func.Config as FunConfig_DCLoad).Values = new List<StepConditionValue>();
+        //        }
+        //        (Func.Config as FunConfig_DCLoad)?.Values.Add(data.ConditionValue);
 
-                StepValues.Add(data);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.GetMessage(), "条件添加异常");
-                return;
-            }
+        //        StepValues.Add(data);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.GetMessage(), "条件添加异常");
+        //        return;
+        //    }
 
-        }
+        //}
         //private void StepValuesADD(object index)
         //{
         //    StepConditionValue stepCondition = (Func.Config as FunConfig_DCLoad)?.Values[SelectedValueIndex];
@@ -647,7 +647,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// <summary>
         /// 删除步进跳出条件
         /// </summary>
-        protected override  void  Delet()
+        protected override void Delet()
         {
             if (SelectedValueIndex == -1)
             {
@@ -691,6 +691,44 @@ namespace IMX.ATS.ATEConfig.Function
         #region 构造方法
         public FunViewModelDCLoad()
         {
+            ConditionValues.Clear();
+
+            if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX value))
+            {
+                return;
+            }
+
+
+            for (int i = 0; i < value.Test_ReadData_Euq.Count; i++)
+            {
+                var data = value.Test_ReadData_Euq[i];
+                ConditionValues.Add(new ModDeviceReadData
+                {
+                    DataInfo = data,
+                });
+            }
+
+            if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+            {
+                for (int i = 0; i < value.Test_ReadData_EX.Count; i++)
+                {
+                    var data = value.Test_ReadData_Euq[i];
+                    ConditionValues.Add(new ModDeviceReadData
+                    {
+                        DataInfo = data,
+                    });
+                }
+            }
+
+            for (int i = 0; i < value.Test_ReadData_Pro.Count; i++)
+            {
+                var data = value.Test_ReadData_Euq[i];
+                ConditionValues.Add(new ModDeviceReadData
+                {
+                    DataInfo = data,
+                });
+            }
+
 
 
         }

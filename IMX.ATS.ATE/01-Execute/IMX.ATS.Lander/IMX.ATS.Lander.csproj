@@ -229,8 +229,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\UserPermissionsAttribute.cs" />
     <Compile Include="Common\GlobalModel.cs" />
     <Compile Include="Common\SupportConfig.cs" />
+    <Compile Include="Common\UserPermissions.cs" />
     <Compile Include="Locator\ViewModelLocator.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\PortalViewModel.cs" />

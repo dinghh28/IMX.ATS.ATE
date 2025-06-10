@@ -304,7 +304,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <WrapPanel Grid.Row="0" Orientation="Horizontal">
-                            <Button Content="新增条件" Margin="10,0,0,0" Command="{Binding AddCondition}" Width="80"/>
+                            <Button Content="新增条件" Margin="10,0,0,0" Command="{Binding AddCondition}" CommandParameter="{Binding ConditionValues}" Width="80"/>
                             <Button Content="删除条件" Margin="10,0,0,0" Command="{Binding DeletCondition}" Width="80"/>
                             <WrapPanel Margin="10,0,0,0">
                                 <Label Content="条件间判定逻辑:"/>

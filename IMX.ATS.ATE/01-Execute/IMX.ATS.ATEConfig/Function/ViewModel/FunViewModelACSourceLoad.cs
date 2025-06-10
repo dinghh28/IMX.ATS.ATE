@@ -24,6 +24,7 @@
 #endregion << 版 本 注 释 >>
 
 using H.WPF.Framework;
+using IMX.Common;
 using IMX.Device.Common;
 using IMX.Device.Common.Enumerations;
 using IMX.Function;
@@ -431,7 +432,46 @@ namespace IMX.ATS.ATEConfig.Function
 
 
         #region 构造方法
-        public FunViewModelACSourceLoad() { }
+        public FunViewModelACSourceLoad() 
+        {
+            ConditionValues.Clear();
+
+            if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX value))
+            {
+                return;
+            }
+
+
+            for (int i = 0; i < value.Test_ReadData_Euq.Count; i++)
+            {
+                var data = value.Test_ReadData_Euq[i];
+                ConditionValues.Add(new ModDeviceReadData
+                {
+                    DataInfo = data,
+                });
+            }
+
+            if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+            {
+                for (int i = 0; i < value.Test_ReadData_EX.Count; i++)
+                {
+                    var data = value.Test_ReadData_EX[i];
+                    ConditionValues.Add(new ModDeviceReadData
+                    {
+                        DataInfo = data,
+                    });
+                }
+            }
+
+            for (int i = 0; i < value.Test_ReadData_Pro.Count; i++)
+            {
+                var data = value.Test_ReadData_Pro[i];
+                ConditionValues.Add(new ModDeviceReadData
+                {
+                    DataInfo = data,
+                });
+            }
+        }
         #endregion
 
     }

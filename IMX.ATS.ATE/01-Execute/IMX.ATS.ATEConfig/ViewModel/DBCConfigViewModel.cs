@@ -178,7 +178,7 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         private IMessageFileLoader messageFileLoader;
 
-        private MainViewModel mainviewmodel;
+        //private MainViewModel mainviewmodel;
 
         #endregion
 

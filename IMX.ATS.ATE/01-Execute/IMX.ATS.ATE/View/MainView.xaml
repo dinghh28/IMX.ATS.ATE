@@ -84,7 +84,9 @@
                         <WrapPanel Grid.Row="0" VerticalAlignment="Center" 
                                    IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}">
                             <Label Content="试验项目：" Margin="0,0,5,0"/>
-                            <ComboBox Width="200" SelectedValue="{Binding SelectedProductName}" ItemsSource="{Binding ProdectNames}" IsReadOnly="True" IsEnabled="{Binding ProdectNameChangeLock}"/>
+                            <TextBox Width="200" IsReadOnly="True" Text="{Binding SelectedProductName}"/>
+                            <Button Content="选择项目" IsEnabled="{Binding ProdectNameChangeLock}"/>
+                            <!--<ComboBox Width="200" SelectedValue="{Binding SelectedProductName}" ItemsSource="{Binding ProdectNames}" IsReadOnly="True" IsEnabled="{Binding ProdectNameChangeLock}"/>-->
                         </WrapPanel>
                         <!--<WrapPanel Grid.Row="1">
                             <Label Content="项目锁"/>
@@ -100,10 +102,10 @@
                                      Text="{Binding ProductSN, UpdateSourceTrigger=PropertyChanged}" 
                                      InputMethod.IsInputMethodEnabled="False"
                                      focuse:FocusExtension.IsFocused="{Binding IsFocuse}">
-                                <i:Interaction.Behaviors>
+                                <!--<i:Interaction.Behaviors>
                                     <focuse:TextBoxKeyDownBehavior Command="{Binding EnterKeyboard}">
                                     </focuse:TextBoxKeyDownBehavior>
-                                </i:Interaction.Behaviors>
+                                </i:Interaction.Behaviors>-->
                             </TextBox>
                         </WrapPanel>
                         <!--<Grid Grid.Row="3">

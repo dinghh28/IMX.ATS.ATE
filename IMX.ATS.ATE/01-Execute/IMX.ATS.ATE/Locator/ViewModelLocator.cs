@@ -12,6 +12,10 @@ namespace IMX.ATS.ATE
             SimpleIoc.Default.Register<MainViewModel>();
             ContentControlManager.Regiter<MainView>();
 
+            //项目选择
+            SimpleIoc.Default.Register<ProjectSelectViewModel>();
+            ContentControlManager.Regiter<ProjectSelectView>();
+
             //设备初始化/卸载界面
             SimpleIoc.Default.Register<DeviceInitViewModel>();
             ContentControlManager.Regiter<DeviceInitView>();
@@ -27,6 +31,10 @@ namespace IMX.ATS.ATE
         /// </summary>
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 
+        /// <summary>
+        /// 项目信息选择
+        /// </summary>
+        public ProjectSelectViewModel ProjectSelect => ServiceLocator.Current.GetInstance<ProjectSelectViewModel>();
 
         /// <summary>
         /// 设备初始化/卸载

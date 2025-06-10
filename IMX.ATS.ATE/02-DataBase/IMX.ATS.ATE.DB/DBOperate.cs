@@ -465,7 +465,7 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_ProjectInfo>().Distinct().ToList(x => x.ProjectName);
+                var items = Sqlite.Select<Test_ProjectInfo>().Distinct().ToList(x=>x.ProjectName);
                 return OperateResult<List<string>>.Succeed(items);
             }
             catch (Exception ex)
@@ -473,6 +473,34 @@ namespace IMX.DB
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
                 return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取项目名称及其对应ID字典
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult<Dictionary<string, int>> GetProjectName_Dic() 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                return OperateResult<Dictionary<string, int>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_ProjectInfo>()
+                    .OrderBy(x=>x.Id)
+                    .Distinct()
+                    .ToDictionary(x=>x.ProjectName, x=>x.Id);
+                return OperateResult<Dictionary<string, int>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                return OperateResult<Dictionary<string, int>>.Excepted(null, ex);
             }
         }
 
@@ -1099,6 +1127,73 @@ namespace IMX.DB
         }
 
         /// <summary>
+        /// 获取DBC配置
+        /// </summary>
+        /// <param name="id">DBC配置ID</param>
+        /// <returns></returns>
+        public OperateResult<Test_DBCConfig> GetDBCConfig_ByID(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetDBCConfig_ByID), LastError);
+                return OperateResult<Test_DBCConfig>.Failed(null, LastError);
+            }
+
+            try
+            {
+                var items  =  Test_DBCConfig.Find(id);
+                //var items = Sqlite.Select<Test_DBCConfig>().Where(x => x.ProjectID == id).ToOne();
+                if (items == null)
+                {
+                    return OperateResult<Test_DBCConfig>.Succeed(new Test_DBCConfig());
+                }
+                return OperateResult<Test_DBCConfig>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetDBCConfig_ByID), LastError);
+                return OperateResult<Test_DBCConfig>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 当前DBC配置使用状态判断
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public OperateResult<bool> DBCConfigCanUse(int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetDBCConfig_ByID), LastError);
+                return OperateResult<bool>.Failed(false, LastError);
+            }
+
+            try
+            {
+                var items = Test_DBCConfig.Find(id);
+                if (items == null)
+                {
+                    return OperateResult<bool>.Succeed(false);
+                }
+
+
+                //var items = Sqlite.Select<Test_DBCConfig>().Where(x => x.DBCFileID == id).ToOne(x=>x.EnableUse&&x.EnableUseReceive&&x.EnableUseSend);
+
+                return OperateResult<bool>.Succeed(items.EnableUse && items.EnableUseReceive && items.EnableUseSend);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetDBCConfig_ByID), LastError);
+                return OperateResult<bool>.Excepted(false, ex);
+            }
+        }
+
+        /// <summary>
         /// 获取所有DBC配置信息
         /// </summary>
         /// <returns></returns>
@@ -1140,7 +1235,7 @@ namespace IMX.DB
             {
                 var items = Sqlite.Select<Test_DBCConfig>()
                     .Where(x=>x.Electricity == electricity)
-                    .Where(x=>x.EnableUse)
+                    //.Where(x=>x.EnableUse)
                     .ToList();
                 return OperateResult<List<Test_DBCConfig>>.Succeed(items);
             }
@@ -1178,6 +1273,35 @@ namespace IMX.DB
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(GetDBCReceiveSignals), LastError);
                 return OperateResult<List<Test_DBCInfo>>.Excepted(null, ex);
+            }
+        }
+        #endregion
+
+        #region DBC文件和配置联合操作
+        public OperateResult<Test_DBCConfig> SelectedDBCByDBCID(int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SelectedDBCByDBCID), LastError);
+                return OperateResult<Test_DBCConfig>.Failed(null, LastError);
+            }
+
+            try
+            {
+                //var items = Test_DBCConfig.Find(id);
+                var items = Sqlite.Select<Test_DBCConfig>().Where(x => x.ProjectID == id).ToOne();
+                if (items == null)
+                {
+                    return OperateResult<Test_DBCConfig>.Succeed(new Test_DBCConfig());
+                }
+                return OperateResult<Test_DBCConfig>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SelectedDBCByDBCID), LastError);
+                return OperateResult<Test_DBCConfig>.Excepted(null, ex);
             }
         }
         #endregion
@@ -1385,7 +1509,7 @@ namespace IMX.DB
             if (!IsInitOK)
             {
                 LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                Logger.Error(nameof(DBOperate), nameof(GetProgrammeName), LastError);
                 return OperateResult<Test_Programme>.Failed(null, LastError);
             }
             try
@@ -1397,7 +1521,7 @@ namespace IMX.DB
             catch (Exception ex)
             {
                 LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                Logger.Error(nameof(DBOperate), nameof(GetProgrammeName), LastError);
                 return OperateResult<Test_Programme>.Excepted(null, ex);
             }
         }
@@ -1407,12 +1531,39 @@ namespace IMX.DB
         /// </summary>
         /// <param name="id">项目ID</param>
         /// <returns></returns>
+        public OperateResult<List<string>> GetRunProgrammeNames(int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetRunProgrammeNames), LastError);
+                return OperateResult<List<string>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne(x => x.Test_FlowNames);
+
+                return OperateResult<List<string>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetRunProgrammeNames), LastError);
+                return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验急停流程
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
         public OperateResult<List<string>> GetOffProgrammeName(int id)
         {
             if (!IsInitOK)
             {
                 LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                Logger.Error(nameof(DBOperate), nameof(GetOffProgrammeName), LastError);
                 return OperateResult<List<string>>.Failed(null, LastError);
             }
             try
@@ -1424,7 +1575,7 @@ namespace IMX.DB
             catch (Exception ex)
             {
                 LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                Logger.Error(nameof(DBOperate), nameof(GetOffProgrammeName), LastError);
                 return OperateResult<List<string>>.Excepted(null, ex);
             }
         }
@@ -1669,6 +1820,12 @@ namespace IMX.DB
             }
         }
 
+        /// <summary>
+        /// 获取试验流程
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="funcnames"></param>
+        /// <returns></returns>
         public OperateResult<Dictionary<string, List<ModTestProcess>>> GetFlowsByNameID(int id, List<string> funcnames)
         {
             if (!IsInitOK)
@@ -1738,6 +1895,84 @@ namespace IMX.DB
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(GetFlowsByNameID), LastError);
                 return OperateResult<Dictionary<string, List<ModTestProcess>>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验流程
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <param name="funcnames"></param>
+        /// <returns></returns>
+        public OperateResult<Dictionary<string, Test_Process>> SelectFlowsByNameID(int id, List<string> funcnames)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SelectFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, Test_Process>>.Failed(null, LastError);
+            }
+
+            if (funcnames == null)
+            {
+                LastError = $"流程方法名称不可为空";
+                Logger.Error(nameof(DBOperate), nameof(SelectFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, Test_Process>>.Failed(null, LastError);
+            }
+
+            if (funcnames.Count < 1)
+            {
+                LastError = $"未获取需检索流程方法名称";
+                Logger.Error(nameof(DBOperate), nameof(SelectFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, Test_Process>>.Failed(null, LastError);
+            }
+
+            try
+            {
+                string sqlStr =
+                $"SELECT\n" +
+                $"    *\n" +
+                $"FROM\n" +
+                $"    Test_Process\n" +
+                $"WHERE\n" +
+                $"    ProjectID = {id}\n" +
+                $"    AND\n" +
+                $"    (\n";
+
+                for (int i = 0; i < funcnames.Count; i++)
+                {
+                    if (i == funcnames.Count - 1)
+                    {
+                        sqlStr += $"        FunctionName = '{funcnames[i]}'\n"
+                            + $"   )";
+                        break;
+                    }
+                    sqlStr += $"        FunctionName = '{funcnames[i]}'\n" + "      OR\n";
+                }
+
+                List<Test_Process> list = Sqlite.Select<Test_Process>().WithSql(sqlStr).ToList();
+
+                if (list.Count < 1)
+                {
+                    LastError = $"相关流程不存在，请确认完成相关配置";
+                    Logger.Error(nameof(DBOperate), nameof(SelectFlowsByNameID), LastError);
+                    return OperateResult<Dictionary<string, Test_Process>>.Failed(null, LastError);
+                }
+
+                Dictionary<string, Test_Process> data = new Dictionary<string, Test_Process>();
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    data.Add(list[i].FunctionName, list[i]);
+                }
+
+                return OperateResult<Dictionary<string, Test_Process>>.Succeed(data);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SelectFlowsByNameID), LastError);
+                return OperateResult<Dictionary<string, Test_Process>>.Excepted(null, ex);
             }
         }
 
@@ -1959,6 +2194,57 @@ namespace IMX.DB
         }
         #endregion
 
+        #region 试验结果项目信息条目操作
+        public OperateResult<long> InserTestProjectItem(string info) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InserTestProjectItem), LastError);
+                return OperateResult<long>.Failed(-1, LastError);
+            }
+            try
+            {
+                if (info == null)
+                {
+                    LastError = $"试验待存储结果项目信息条目不可为空";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestProjectItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
+
+                //string itemtableName = nameof(Test_ItemInfo)+
+                //if (Sqlite.DbFirst.ExistsTable(tableName) == false)
+                //    Sqlite.CodeFirst.SyncStructure(typeof(Test_ItemInfo), tableName);
+
+                var item = JsonConvert.DeserializeObject<Test_ProjectItemInfo>(info);
+
+                if (item == null)
+                {
+                    LastError = $"试验结果结果项目信息条目数据格式异常:\r\n{info}";
+                    Logger.Fatal(nameof(DBOperate), nameof(InserTestProjectItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
+
+                long id = Sqlite.Insert(item).ExecuteIdentity();
+
+                if (id < 1)
+                {
+                    LastError = $"试验条目未实际发生存储";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestProjectItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
+
+                return OperateResult<long>.Succeed(id);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InserTestProjectItem), LastError);
+                return OperateResult<long>.Excepted(-1, ex);
+            }
+        }
+        #endregion
+
         #region 结果条目操作
         /// <summary>
         /// 插入试验结果条目
@@ -2015,7 +2301,7 @@ namespace IMX.DB
         /// </summary>
         /// <param name="info">试验结果条目Json字符串</param>
         /// <returns></returns>
-        public OperateResult<long> InserTestItem(string info) 
+        public OperateResult<long> InserTestItem(string info,long projectid) 
         {
             if (!IsInitOK)
             {
@@ -2037,8 +2323,17 @@ namespace IMX.DB
                 //    Sqlite.CodeFirst.SyncStructure(typeof(Test_ItemInfo), tableName);
 
                 var item = JsonConvert.DeserializeObject<Test_ItemInfo>(info);
+               
+                if (item == null)
+                {
+                    LastError = $"试验结果条目数据格式异常:\r\n{info}";
+                    Logger.Fatal(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
 
-               long id =  Sqlite.Insert(item).ExecuteIdentity();
+                item.ProjectID = (int)projectid;
+
+                long id =  Sqlite.Insert(item).ExecuteIdentity();
 
                 if (id < 1)
                 {

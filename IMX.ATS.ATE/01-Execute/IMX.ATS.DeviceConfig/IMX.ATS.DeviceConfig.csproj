@@ -82,6 +82,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\Framework\H.WPF.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="IMX.Common, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="IMX.Device, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Device\IMX.Device.dll</HintPath>

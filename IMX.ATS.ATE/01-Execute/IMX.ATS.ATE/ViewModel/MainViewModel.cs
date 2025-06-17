@@ -788,7 +788,9 @@ namespace IMX.ATS.ATE
             }
 
             List<CANDataInfo> lisreadsignals = new List<CANDataInfo> ();
+            Dictionary<CANDataInfo, double> dicsendsignal = new Dictionary<CANDataInfo, double>();
             List<CANDataInfo> lissendsignals = new List<CANDataInfo>();
+            Dictionary<uint, uint> dicsendmessages = new Dictionary<uint, uint>();
 
             try
             {
@@ -805,7 +807,15 @@ namespace IMX.ATS.ATE
                     {
                         var signal = dbcconfig.Test_DBCSendSignals[i];
                         lissendsignals.Add(new CANDataInfo { CustomName = signal.Custom_Name, SignalInfo = new CANSignalInfo { MessageID = signal.Message_ID, SignalName = signal.Signal_Name } });
+
+                        dicsendsignal.Add(new CANDataInfo { CustomName = signal.Custom_Name, SignalInfo = new CANSignalInfo { MessageID = signal.Message_ID, SignalName = signal.Signal_Name } }, Convert.ToDouble(signal.SignalInitValue));
                         //sendsignals_can.Add(dbcconfig?.Test_DBCSendSignals[i].Signal_Name);
+                    }
+
+                    for (int i = 0; i < dbcconfig?.Test_DBCSendMessages?.Count; i++)
+                    {
+                        var message = dbcconfig.Test_DBCSendMessages[i];
+                        dicsendmessages.Add(message.Message_ID, message.CycleTime);
                     }
                 }
             }
@@ -987,7 +997,9 @@ namespace IMX.ATS.ATE
                 ProjectInfo = data,
                 DBCFile = dbcfileinfo,
                 LisReadSignals_CAN = lisreadsignals,
-                LisSendSignals_CAN = lissendsignals,
+                //LisSendSignals_CAN = lissendsignals,
+                DicSendSignals_CAN = dicsendsignal,
+                DicMessageCycleTime = dicsendmessages,
                 //DicReadSignals_CAN = dicreadsignals,
                 //SendSignals_CAN = sendsignals_can,
                 Test_FlowNames = test_flownames,
@@ -1059,9 +1071,10 @@ namespace IMX.ATS.ATE
             };
 
             //CAN通讯初始化
-            if (thread.ProjectInfo.IsUseDDBC)
-            {
-                Application.Current.Dispatcher.Invoke(new Action(() =>
+            //if (thread.ProjectInfo.IsUseDDBC)
+            //{
+            #region CAN通讯初始化
+            Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     StepStr = "正在初始化CAN";
                     StepStrShow = Visibility.Visible;
@@ -1120,7 +1133,9 @@ namespace IMX.ATS.ATE
                     //    .And(operate.SetSendSignal(thread.SendSignals_CAN));
                     var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
                        .And(operate.SetReadSignal(thread.LisReadSignals_CAN))
-                       .And(operate.SetSendSignal(thread.LisSendSignals_CAN));
+                       .And(operate.SetSendSignal(thread.DicSendSignals_CAN.Keys.ToList()))
+                       .And(operate.SetSendSignalInitValue(thread.DicSendSignals_CAN))
+                       .And(operate.SetMessageCycleTime(thread.DicMessageCycleTime));
 
                     if (!cansetrlt)
                     {
@@ -1200,7 +1215,8 @@ namespace IMX.ATS.ATE
 
                     return;
                 }
-            }
+            //}
+            #endregion
 
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
@@ -1234,6 +1250,14 @@ namespace IMX.ATS.ATE
             //test_Data.TestItemID = testinfo.Id;
             test_Data.ProductSN = ProductSN;
             test_Data.ProjectName = SelectedProductName;
+
+            Test_ProjectItemInfo projectItemInfo = new Test_ProjectItemInfo
+            {
+                ProductSN = ProductSN,
+                ProjectName = thread.ProjectInfo.ProjectName,
+                ProjectID = thread.ProjectInfo.Id,
+                ProjectSN = thread.ProjectInfo.ProjectSN,
+            };
 
             #region 试验方案执行
             //for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
@@ -4009,25 +4033,35 @@ namespace IMX.ATS.ATE
         /// </summary>
         public Test_DBCFileInfo DBCFile { get; set; }
 
-        /// <summary>
-        /// CAN上报列表
-        /// </summary>
-        public Dictionary<string, string> DicReadSignals_CAN { get; set; }
+        ///// <summary>
+        ///// CAN上报列表
+        ///// </summary>
+        //public Dictionary<string, string> DicReadSignals_CAN { get; set; }
 
-        /// <summary>
-        /// CAN下发列表
-        /// </summary>
-        public List<string> SendSignals_CAN { get; set; }
+        ///// <summary>
+        ///// CAN下发列表
+        ///// </summary>
+        //public List<string> SendSignals_CAN { get; set; }
 
         /// <summary>
         /// CAN上报列表
         /// </summary>
         public List<CANDataInfo> LisReadSignals_CAN { get; set; }
 
+        ///// <summary>
+        ///// CAN下发列表
+        ///// </summary>
+        //public List<CANDataInfo> LisSendSignals_CAN { get; set; }
+
         /// <summary>
         /// CAN下发列表
         /// </summary>
-        public List<CANDataInfo> LisSendSignals_CAN { get; set; }
+        public Dictionary<CANDataInfo, double> DicSendSignals_CAN { get; set; }
+
+        /// <summary>
+        /// 下发消息周期
+        /// </summary>
+        public Dictionary<uint, uint> DicMessageCycleTime { get; set; }
 
         ///// <summary>
         ///// 试验运行流程

@@ -177,7 +177,7 @@
             <Button Grid.Column="2" Content="选择配置" Command="{Binding ChangeDBC}" Width="80" Height="35" Margin="40,0,0,0"/>
         </Grid>
 
-        <Grid Grid.Row="4">
+        <Grid Grid.Row="4" IsEnabled="{Binding EnableEdite}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="1.5*"/>

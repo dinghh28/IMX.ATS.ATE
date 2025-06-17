@@ -13,12 +13,12 @@ namespace IMX.DB.Model
     /// 实验结果项目信息条目
     /// </summary>
     [Table(Name = "Test_ItemInfo_{yyyy}", AsTable = "createtime=2023-1-1(5 year)")]
-    public class Test_ProjectItemInfo : BaseEntity<Test_ProjectItemInfo, int>
+    public class Test_ProjectItemInfo : BaseEntity<Test_ProjectItemInfo, long>
     {
         /// <summary>
         /// 项目ID
         /// </summary>
-        public int ProjectID { get; set; }
+        public long ProjectID { get; set; }
 
         /// <summary>
         /// 产品编号
@@ -33,6 +33,11 @@ namespace IMX.DB.Model
         public string ProjectName { get; set; }
 
         /// <summary>
+        /// 项目编号
+        /// </summary>
+        public string ProjectSN { get; set; }
+
+        /// <summary>
         /// 试验结果条目(导航测试)
         /// </summary>
         [Navigate(nameof(Test_ItemInfo.Id))]
@@ -43,10 +48,8 @@ namespace IMX.DB.Model
     /// 实验结果条目信息
     /// </summary>
     [Table(Name = "Test_ItemInfo_{yyyy}", AsTable = "createtime=2023-1-1(1 year)")]
-    public class Test_ItemInfo : BaseEntity<Test_ItemInfo, int>
+    public class Test_ItemInfo : BaseEntity<Test_ItemInfo, long>
     {
-        
-
         /// <summary>
         /// 项目ID
         /// </summary>
@@ -135,13 +138,13 @@ namespace IMX.DB.Model
     /// <summary>
     /// 实验结果数据信息
     /// </summary>
-    [Table(Name = "Test_DataInfo_{yyyyMM}", AsTable = "create_time=2022-5-1(1 month)")]
-    public class Test_DataInfo : BaseEntity<Test_DataInfo, int>
+    [Table(Name = "Test_DataInfo_{yyyyMM}", AsTable = "create_time=2022-5-1(3 month)")]
+    public class Test_DataInfo : BaseEntity<Test_DataInfo, long>
     {
         /// <summary>
         /// 结果条目ID
         /// </summary>
-        public int TestItemID { get; set; }
+        public long TestItemID { get; set; }
 
         /// <summary>
         /// 项目名称

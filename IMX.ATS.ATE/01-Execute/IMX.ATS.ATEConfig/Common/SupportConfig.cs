@@ -58,6 +58,7 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public static Dictionary<string, ProcessConfig_EX> DicProcessConfig => new()
         {
+            #region 输入电压范围
             {"输入电压范围", new ProcessConfig_EX
                                 {
                                     Name = "输入电压范围",
@@ -95,7 +96,7 @@ namespace IMX.ATS.ATEConfig
                                     },
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
-                                    {                                         
+                                    {
                                         new() { Name="B相瞬时电压",},
                                         new() { Name="B相瞬时电流",},
                                         new() { Name="B相频率",},
@@ -110,6 +111,8 @@ namespace IMX.ATS.ATEConfig
                                     },
                                 }
             },
+            #endregion
+            #region 输入频率范围
             {"输入频率范围", new ProcessConfig_EX
                                 {
                                     Name = "输入频率范围",
@@ -163,7 +166,238 @@ namespace IMX.ATS.ATEConfig
                                     },
                                 }
             },
+            #endregion
+            #region 输入电流
             {"输入电流", new ProcessConfig_EX
+                                {
+                                    Name = "输入电流",
+                                    UseCustomData = false,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="瞬时电压",},
+                                        new() { Name="瞬时电流",},
+                                        new() { Name="A相瞬时电压",},
+                                        new() { Name="A相瞬时电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC瞬时电压",},
+                                        new() { Name="HVDC瞬时电流",},
+                                        new() { Name="HVDC瞬时功率",},
+                                    },
+                                    Test_ReadData_Pro = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="OBC输出瞬时电压",},
+                                        new() { Name="OBC输出瞬时电流",},
+                                        new() { Name="OBC输出瞬时功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="稳压源输出电压",},
+                                        new() { Name="交流源A相输出电压",},
+                                        new() { Name="交流源输出频率",},
+                                        new() { Name="高压源输出电压",},
+                                        new() { Name="负载电压",},
+                                        new() { Name="负载电流",},
+                                    },
+                                    Test_SetData_Pro = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="OBC输出电压",},
+                                        new() { Name="OBC输出最大电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相瞬时电压",},
+                                        new() { Name="B相瞬时电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="C相瞬时电压",},
+                                        new() { Name="C相瞬时电流",},
+                                        new() { Name="C相频率",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相输出电压",},
+                                        new() { Name="交流源C相输出电压",},
+                                    },
+                                }
+            },
+            #endregion
+            #region 启动冲击电流
+            {"启动冲击电流", new ProcessConfig_EX
+                {
+                    Name = "启动冲击电流",
+                    UseCustomData = true,
+                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                    {
+                        new() { Name="瞬时电压",},
+                        new() { Name="瞬时电流",},
+                        new() { Name="A相瞬时电压",},
+                        new() { Name="A相瞬时电流",},
+                        new() { Name="A相频率",},
+                        new() { Name="HVDC瞬时电压",},
+                        new() { Name="HVDC瞬时电流",},
+                        new() { Name="HVDC瞬时功率",},
+                    },
+                    Test_ReadData_Pro = new List<ModTestDataInfo>()
+                    {
+                        new() { Name="OBC输出瞬时电压",},
+                        new() { Name="OBC输出瞬时电流",},
+                        new() { Name="OBC输出瞬时功率",},
+                    },
+                    Test_SetData_Euq = new List<ModTestDataInfo>
+                    {
+                        new() { Name="稳压源输出电压",},
+                        new() { Name="交流源A相输出电压",},
+                        new() { Name="交流源输出频率",},
+                        new() { Name="交流源启动相位角",},
+                        new() { Name="高压源输出电压",},
+                        new() { Name="负载电压",},
+                        new() { Name="负载电流",},
+                    },
+                    Test_SetData_Pro = new List<ModTestDataInfo>()
+                    {
+                        new() { Name="OBC输出电压",},
+                        new() { Name="OBC输出最大电流",},
+                    },
+                    Test_CustomData = new List<ModTestDataInfo>()
+                    {
+                        new ModTestDataInfo{ Name = "过冲电流峰值"},
+                        new ModTestDataInfo{ Name = "稳定后交流电力峰值"},
+                    },
+                    Test_ReadData_EX = new List<ModTestDataInfo>
+                    {
+                        new() { Name="B相瞬时电压",},
+                        new() { Name="B相瞬时电流",},
+                        new() { Name="B相频率",},
+                        new() { Name="C相瞬时电压",},
+                        new() { Name="C相瞬时电流",},
+                        new() { Name="C相频率",},
+                    },
+                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                    {
+                        new() { Name="交流源B相输出电压",},
+                        new() { Name="交流源C相输出电压",},
+                    },
+                }
+            },
+            #endregion
+            #region 功率因素
+            {"功率因素", new ProcessConfig_EX
+                                {
+                                    Name = "功率因素",
+                                    UseCustomData = false,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="瞬时电压",},
+                                        new() { Name="瞬时电流",},
+                                        new() { Name="A相瞬时电压",},
+                                        new() { Name="A相瞬时电流",},
+                                        new() { Name="A相瞬时功率",},
+                                        new() { Name="A相功率因素",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC瞬时电压",},
+                                        new() { Name="HVDC瞬时电流",},
+                                        new() { Name="HVDC瞬时功率",},
+                                    },
+                                    Test_ReadData_Pro = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="OBC输出瞬时电压",},
+                                        new() { Name="OBC输出瞬时电流",},
+                                        new() { Name="OBC输出瞬时功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="稳压源输出电压",},
+                                        new() { Name="交流源A相输出电压",},
+                                        new() { Name="交流源输出频率",},
+                                        new() { Name="高压源输出电压",},
+                                        new() { Name="负载电压",},
+                                        new() { Name="负载电流",},
+                                    },
+                                    Test_SetData_Pro = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="OBC输出电压",},
+                                        new() { Name="OBC输出最大电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相瞬时电压",},
+                                        new() { Name="B相瞬时电流",},
+                                        new() { Name="B相瞬时功率",},
+                                        new() { Name="B相功率因素",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="C相瞬时电压",},
+                                        new() { Name="C相瞬时电流",},                                        
+                                        new() { Name="C相瞬时功率",},
+                                        new() { Name="C相功率因素",},
+                                        new() { Name="C相频率",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相输出电压",},
+                                        new() { Name="交流源C相输出电压",},
+                                    },
+                                }
+            },
+            #endregion
+            #region AC侧电压检测
+            {"AC侧电压检测", new ProcessConfig_EX
+                                {
+                                    Name = "AC侧电压检测",
+                                    UseCustomData = false,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="瞬时电压",},
+                                        new() { Name="瞬时电流",},
+                                        new() { Name="A相瞬时电压",},
+                                        new() { Name="A相瞬时电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相输入电压精度",},
+                                        new() { Name="HVDC瞬时电压",},
+                                        new() { Name="HVDC瞬时电流",},
+                                        new() { Name="HVDC瞬时功率",},
+                                    },
+                                    Test_ReadData_Pro = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="OBC输出瞬时电压",},
+                                        new() { Name="OBC输出瞬时电流",},
+                                        new() { Name="OBC输出瞬时功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="稳压源输出电压",},
+                                        new() { Name="交流源A相输出电压",},
+                                        new() { Name="交流源输出频率",},
+                                        new() { Name="高压源输出电压",},
+                                        new() { Name="负载电压",},
+                                        new() { Name="负载电流",},
+                                    },
+                                    Test_SetData_Pro = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="OBC输出电压",},
+                                        new() { Name="OBC输出最大电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相瞬时电压",},
+                                        new() { Name="B相瞬时电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相输入电压精度",},
+                                        new() { Name="C相瞬时电压",},
+                                        new() { Name="C相瞬时电流",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相输入电压精度",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相输出电压",},
+                                        new() { Name="交流源C相输出电压",},
+                                    },
+                                }
+            },
+            #endregion
+            {"功率因素", new ProcessConfig_EX
                                 {
                                     Name = "输入频率范围",
                                     UseCustomData = false,
@@ -173,6 +407,8 @@ namespace IMX.ATS.ATEConfig
                                         new() { Name="瞬时电流",},
                                         new() { Name="A相瞬时电压",},
                                         new() { Name="A相瞬时电流",},
+                                        new() { Name="A相瞬时功率",},
+                                        new() { Name="A相功率因素",},
                                         new() { Name="A相频率",},
                                         new() { Name="HVDC瞬时电压",},
                                         new() { Name="HVDC瞬时电流",},

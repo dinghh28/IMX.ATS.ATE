@@ -103,25 +103,29 @@ namespace IMX.ATS.Manual
 
         public ManualViewModel()
         {
-            GlobalModel.DicDeviceInfo = new Dictionary<string, DeviceInfo_ALL>
-            {
-                { "ACSourceLoad" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.ACSourceLoad,DeviceModel="AN23600"} } },
-                { "APU" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true, DeviceType = Device.Common.EDeviceType.APU,DeviceModel="AN3800"}} },
-                { "DCLoad" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.DCLoad,DeviceModel="IT8900"} } },
-                { "LVDCLoad" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.LVDCLoad, DeviceModel = "IT8900"} } },
-                { "HVDCSource" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.HVDCSource, DeviceModel = "IT89300"} } },
-                { "AnalogAignals" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.AnalogAignals, DeviceModel = "IT89800"} } },
-                { "Relay" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.Relay, DeviceModel = "ZS24"} } },
-                { "SignalSource" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.SignalSource, DeviceModel = "AN300"} } },
+            //GlobalModel.DicDeviceInfo = new Dictionary<string, DeviceInfo_ALL>
+            //{
+            //    { "ACSourceLoad" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.ACSourceLoad,DeviceModel="AN23600"} } },
+            //    { "APU" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true, DeviceType = Device.Common.EDeviceType.APU,DeviceModel="AN3800"}} },
+            //    { "DCLoad" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.DCLoad,DeviceModel="IT8900"} } },
+            //    { "LVDCLoad" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.LVDCLoad, DeviceModel = "IT8900"} } },
+            //    { "HVDCSource" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.HVDCSource, DeviceModel = "IT89300"} } },
+            //    { "AnalogAignals" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.AnalogAignals, DeviceModel = "IT89800"} } },
+            //    //{ "Relay" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.Relay, DeviceModel = "ZS24"} } },
+            //    { "SignalSource" , new DeviceInfo_ALL(){ Config=new SysteamSupportDeviceConfigInfo(){ EnableManual=true,DeviceType=Device.Common.EDeviceType.SignalSource, DeviceModel = "AN300"} } },
 
-            };
+            //};
             foreach (var item in GlobalModel.DicDeviceInfo)
             {
+                if (!item.Value.Config.EnableManual)
+                {
+                    continue;
+                }
                 OperationViews.Add(new OperateViewModel()
                 {
                     Name = $"{item.Value.Config.DeviceType.GetDescription()}[{ item.Value.Config.DeviceModel}]",
                     VisibilityEnable = item.Value.Config.EnableManual ? Visibility.Visible : Visibility.Collapsed,
-                    Description = item.Value.Config.DeviceType.ToString(),
+                    Description = item.Key.ToString(),
                     SelectView = new RelayCommand<object>(DoNavChange)
                 });
             }

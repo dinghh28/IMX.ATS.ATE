@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
 using IMX.Common;
+using IMX.Device.Common;
 using IMX.Logger;
 using Super.Zoo.Framework;
 using System;
@@ -186,10 +187,93 @@ namespace IMX.ATS.Manual
 
         #endregion
 
+        #region 公共方法
+        /// <summary>
+        /// 开始设备上报线程
+        /// </summary>
+        /// <param name="thread">设备上报线程参数</param>
+        public void StartRefresh(DeviceThread thread)
+        {
+            //if (!SupportConfig.DicSupportDevice.ContainsValue(thread.DeviceType))
+            //{
+            //    return;
+            //}
+
+            if (thread.DeviceType == EDeviceType.Product)
+            {
+                thread.IsReceiveData = false;
+            }
+
+            if (thread.DeviceAddress != null)
+            {
+                if (dicDeviceData.ContainsKey(thread.DeviceAddress))
+                {
+                    dicDeviceData.Remove(thread.DeviceAddress);
+                }
+            }
+
+            var lists = Realtimedatas.ToList().Find(x => x.TypeName == thread.DeviceAddress);
+
+            if (lists == null)
+            {
+                lists = new ModRealtimedata
+                {
+                    TypeName = thread.DeviceAddress,
+                    DeviceType = thread.DeviceType.ToString(),
+                    //Datas = result.Data
+                    Datas = new ObservableCollection<ModDeviceReadData>(),
+                };
+                Realtimedatas.Add(lists);
+            }
+            dicDeviceData.Add(thread.DeviceAddress, lists);
+
+            if (!dicDeviceType.ContainsKey(thread.DeviceAddress))
+            {
+                dicDeviceType.Add(thread.DeviceAddress, thread.DeviceType.ToString().ToUpper());
+            }
+            //dicLastDeviceData.Add(thread.DeviceAddress, lists.Datas.ToList());
+
+            thread.OprateThread = new Thread(RefreshDeviceData) { IsBackground = true };
+
+            thread.ThreadID = Guid.NewGuid().ToString();
+
+            thread.OprateThread.Start(thread);
+
+
+        }
+        #endregion
+
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            //foreach (var thread in GlobalModel.DicDeviceThreads)
+            //{
+            //    var lists = Realtimedatas.ToList().Find(x => x.TypeName == thread.Value.DeviceAddress);
+            //    if (lists == null)
+            //    {
+            //        lists = new ModRealtimedata
+            //        {
+            //            TypeName = thread.Value.DeviceAddress,
+            //            DeviceType = thread.Value.DeviceType.ToString(),
+            //            //Datas = result.Data
+            //            Datas = new ObservableCollection<ModDeviceReadData>(),
+            //        };
+            //        Realtimedatas.Add(lists);
+            //    }
+            //    dicDeviceData.Add(thread.Value.DeviceAddress, lists);
 
+            //    if (!dicDeviceType.ContainsKey(thread.Value.DeviceAddress))
+            //    {
+            //        dicDeviceType.Add(thread.Value.DeviceAddress, thread.Value.DeviceType.ToString().ToUpper());
+            //    }
+            //    //dicLastDeviceData.Add(thread.DeviceAddress, lists.Datas.ToList());
+
+            //    thread.Value.OprateThread = new Thread(RefreshDeviceData) { IsBackground = true };
+
+            //    thread.Value.ThreadID = Guid.NewGuid().ToString();
+
+            //    thread.Value.OprateThread.Start(thread);
+            //}
             //base.WindowLoadedExecute(obj);
         }
 
@@ -207,36 +291,40 @@ namespace IMX.ATS.Manual
 
 
         #region 构造方法
-        public MonitorViewModel() 
+        public MonitorViewModel()
         {
             foreach (var thread in GlobalModel.DicDeviceThreads)
             {
-                var lists = Realtimedatas.ToList().Find(x => x.TypeName == thread.Value.DeviceAddress);
-                if (lists == null)
+                if (!thread.Value.IsRunning)
                 {
-                    lists = new ModRealtimedata
-                    {
-                        TypeName = thread.Value.DeviceAddress,
-                        DeviceType = thread.Value.DeviceType.ToString(),
-                        //Datas = result.Data
-                        Datas = new ObservableCollection<ModDeviceReadData>(),
-                    };
-                    Realtimedatas.Add(lists);
+                   StartRefresh(thread.Value);
                 }
-                dicDeviceData.Add(thread.Value.DeviceAddress, lists);
+                //    var lists = Realtimedatas.ToList().Find(x => x.TypeName == thread.Value.DeviceAddress);
+                //    if (lists == null)
+                //    {
+                //        lists = new ModRealtimedata
+                //        {
+                //            TypeName = thread.Value.DeviceAddress,
+                //            DeviceType = thread.Value.DeviceType.ToString(),
+                //            //Datas = result.Data
+                //            Datas = new ObservableCollection<ModDeviceReadData>(),
+                //        };
+                //        Realtimedatas.Add(lists);
+                //    }
+                //    dicDeviceData.Add(thread.Value.DeviceAddress, lists);
 
-                if (!dicDeviceType.ContainsKey(thread.Value.DeviceAddress))
-                {
-                    dicDeviceType.Add(thread.Value.DeviceAddress, thread.Value.DeviceType.ToString().ToUpper());
-                }
-                //dicLastDeviceData.Add(thread.DeviceAddress, lists.Datas.ToList());
+                //    if (!dicDeviceType.ContainsKey(thread.Value.DeviceAddress))
+                //    {
+                //        dicDeviceType.Add(thread.Value.DeviceAddress, thread.Value.DeviceType.ToString().ToUpper());
+                //    }
+                //    //dicLastDeviceData.Add(thread.DeviceAddress, lists.Datas.ToList());
 
-                thread.Value.OprateThread = new Thread(RefreshDeviceData) { IsBackground = true };
+                //    thread.Value.OprateThread = new Thread(RefreshDeviceData) { IsBackground = true };
 
-                thread.Value.ThreadID = Guid.NewGuid().ToString();
+                //    thread.Value.ThreadID = Guid.NewGuid().ToString();
 
-                thread.Value.OprateThread.Start(thread);
-            } 
+                //    thread.Value.OprateThread.Start(thread);
+            }
 
         }
         #endregion

@@ -138,7 +138,7 @@ namespace IMX.ATS.Manual
             set => Set(nameof(OutputFrequency), ref outputfrequency, value);
         }
 
-        private double outputfrequencyslope = 5000000;
+        private double outputfrequencyslope = 500000;
         /// <summary>
         /// 输出频率斜率
         /// </summary>
@@ -159,7 +159,7 @@ namespace IMX.ATS.Manual
             set => Set(nameof(OutputVol_A), ref outputvol_a, value);
         }
 
-        private double volslope_a;
+        private double volslope_a= 5000;
         /// <summary>
         /// A相电压斜率
         /// </summary>
@@ -191,7 +191,7 @@ namespace IMX.ATS.Manual
             set => Set(nameof(OutputVol_B), ref outputvol_b, value);
         }
 
-        private double volslope_b;
+        private double volslope_b = 5000;
         /// <summary>
         /// B相电压斜率
         /// </summary>
@@ -213,7 +213,7 @@ namespace IMX.ATS.Manual
             set => Set(nameof(OutputVol_C), ref outputvol_c, value);
         }
 
-        private double volslope_c;
+        private double volslope_c= 5000;
         /// <summary>
         /// C相电压斜率
         /// </summary>
@@ -300,7 +300,7 @@ namespace IMX.ATS.Manual
             }
         }
 
-        private double powerfactor_a;
+        private double powerfactor_a = 1;
         /// <summary>
         /// 功率因素
         /// </summary>
@@ -342,7 +342,7 @@ namespace IMX.ATS.Manual
             set => Set(nameof(CurSlope_B), ref curslope_b, value);
         }
 
-        private double powerfactor_b;
+        private double powerfactor_b = 1;
         /// <summary>
         /// 功率因素
         /// </summary>
@@ -374,7 +374,7 @@ namespace IMX.ATS.Manual
             set => Set(nameof(CurSlope_C), ref curslope_c, value);
         }
 
-        private double powerfactor_c;
+        private double powerfactor_c=1;
         /// <summary>
         /// 功率因素
         /// </summary>
@@ -421,8 +421,15 @@ namespace IMX.ATS.Manual
 
 
                 string InfoString = string.Empty;
-                OperateResult result = operate.SetOperatMode(DeviceMode)
-                    .And(operate.SetPhaseMode(PhaseMode))
+                OperateResult result = operate.SetOperatMode(DeviceMode);
+
+                if (!result)
+                {
+                    MessageBox.Show($"设备源载模式设置异常：【{result.Message}】");
+                    return;
+                }
+
+                result = operate.SetPhaseMode(PhaseMode)
                     .And(operate.SetGeneralValue(Balance, OpenAngle, CloseAngle));
 
                 InfoString = $"设置\n[源载模式]{DeviceMode}\n" +
@@ -442,9 +449,9 @@ namespace IMX.ATS.Manual
                 if (DeviceMode == DeviceOperatMode.VOLT)
                 {
                     result = operate.SetVoltValue(
-                        PhaseControl_AB, PhaseControl_AC, OutputFrequency,OutputFrequencySlope,
+                        PhaseControl_AB, PhaseControl_AC, OutputFrequency, OutputFrequencySlope,
                         new List<double> { SetValue_A, SetValue_B, SetValue_C },
-                        new List<double> { VolSlope_A, VolSlope_B, VolSlope_C});
+                        new List<double> { VolSlope_A, VolSlope_B, VolSlope_C });
 
                     InfoString = $"设置\n[AB相位角]{PhaseControl_AB}\n" +
                         $"[AC相位角]{PhaseControl_AC}\n" +
@@ -455,7 +462,7 @@ namespace IMX.ATS.Manual
                         $"[C相拉载值]{SetValue_C}\n" +
                         $"[A相电压斜率]{VolSlope_A}\n" +
                         $"[B相电压斜率]{VolSlope_B}\n" +
-                        $"[C相电压斜率]{VolSlope_C}\n" ;
+                        $"[C相电压斜率]{VolSlope_C}\n";
                 }
                 else
                 {
@@ -473,7 +480,7 @@ namespace IMX.ATS.Manual
                        $"[C相拉载值]{SetValue_C}\n" +
                        $"[A相电压斜率]{VolSlope_A}\n" +
                        $"[B相电压斜率]{VolSlope_B}\n" +
-                       $"[C相电压斜率]{VolSlope_C}\n"+
+                       $"[C相电压斜率]{VolSlope_C}\n" +
                        $"[A相功率因素]{PowerFactor_A}\n" +
                        $"[B相功率因素]{PowerFactor_B}\n" +
                        $"[C相功率因素]{PowerFactor_C}\n";

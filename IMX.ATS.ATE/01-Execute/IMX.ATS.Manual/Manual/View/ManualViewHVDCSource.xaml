@@ -27,7 +27,6 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="95"/>
-                        <RowDefinition Height="80"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Margin="0,15,0,0">
@@ -58,7 +57,7 @@
                         </GroupBox>-->
                         <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Content="参  数  下  发" Margin="0,0,20,0" Height="40"  Width="100" Command="{Binding SetValues}"/>
                     </Grid>
-                    <Grid Grid.Row="1">
+                    <!--<Grid Grid.Row="1">
                         <GroupBox Header="02-输出模式" >
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -70,9 +69,9 @@
                                 </ComboBox>
                             </Grid>
                         </GroupBox>
-                    </Grid>
+                    </Grid>-->
 
-                    <GroupBox Header="03-参数设置" Grid.Row="2" Margin="5">
+                    <GroupBox Header="02-参数设置" Grid.Row="1" Margin="5">
                         <!--<ListBox Background="{x:Null}" ScrollViewer.VerticalScrollBarVisibility="Auto" ItemsSource="{Binding HVDCSourceSetValues}" d:ItemsSource="{d:SampleData ItemCount=1}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>-->
@@ -87,7 +86,7 @@
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
-                                                <Label Grid.Column="0" Content="拉载值：" VerticalAlignment="Center"/>
+                                                <Label Grid.Column="0" Content="设置电压：" VerticalAlignment="Center"/>
                                                 <TextBox Grid.Column="1" Text="{Binding Set_LoadValue, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="30"/>
                                             </Grid>
                                             <Grid Grid.Column="1" Margin="40,0,20,0">
@@ -95,7 +94,7 @@
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
-                                                <Label Grid.Column="0" Content="Von/limit：" VerticalAlignment="Center"/>
+                                                <Label Grid.Column="0" Content="限制电流：" VerticalAlignment="Center"/>
                                                 <TextBox Grid.Column="1" Text="{Binding Set_LimValue, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="30"/>
                                             </Grid>
                                         </Grid>

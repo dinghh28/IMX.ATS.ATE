@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:IMX.ATS.Manual"
+         xmlns:converter="clr-namespace:IMX.ATE.Converts;assembly=IMX.ATE.Converts" 
         mc:Ignorable="d"
         Title="DeviceInitView"  Height="500" Width="450"
          FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
@@ -25,9 +26,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
-                <!--<ResourceDictionary>
+                <ResourceDictionary>
                     <converter:InitStateToIconConverter x:Key="IconConverter"/>
-                </ResourceDictionary>-->
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -87,9 +88,10 @@
                         <DataGridTemplateColumn Header="状态" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Label
-                                VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
-                                FontFamily="{StaticResource iconfont}"/>
+                                    <Label 
+                                        VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" HorizontalContentAlignment="Center" 
+                                        Content="{Binding DeviceSate, Converter={StaticResource IconConverter}}" Foreground="{Binding DeviceSate, Converter={StaticResource IconConverter}, ConverterParameter='Foreground'}"
+                                        FontFamily="{StaticResource iconfont}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

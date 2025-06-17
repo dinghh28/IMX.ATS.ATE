@@ -43,6 +43,10 @@ namespace IMX.ATS.Manual
             SimpleIoc.Default.Register<ManualViewModelAPU>();
             ContentControlManager.Regiter<ManualViewAPU>();
 
+            //倒灌电源
+            SimpleIoc.Default.Register<ManualViewModelRPU>();
+            ContentControlManager.Regiter<ManualViewRPU>();
+
             //高压直流负载
             SimpleIoc.Default.Register<ManualViewModelDCLoad>();
             ContentControlManager.Regiter<ManualViewDCLoad>();
@@ -120,6 +124,11 @@ namespace IMX.ATS.Manual
         /// 稳压直流源
         /// </summary>
         public ManualViewModelAPU APU => ServiceLocator.Current.GetInstance<ManualViewModelAPU>();
+
+        /// <summary>
+        /// 倒灌电源
+        /// </summary>
+        public ManualViewModelRPU RPU => ServiceLocator.Current.GetInstance<ManualViewModelRPU>();
 
         /// <summary>
         /// 高压直流负载

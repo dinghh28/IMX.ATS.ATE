@@ -141,8 +141,11 @@ namespace IMX.ATS.Manual
 
                 string InfoString = string.Empty;
 
-                OperateResult result = operate.SetMode(RunModeType)
+                OperateResult result = operate.SetMode(Opaerate_Mode.CV)
                       .And(operate.SetValue(Set_LoadValue, set_LimValue));
+
+                //OperateResult result =operate.SetValue(Set_LoadValue, set_LimValue);
+
                 if (!result)
                 {
                     MessageBox.Show($"设备参数设置异常：【{result.Message}】");

@@ -4,7 +4,16 @@
              xmlns:local="clr-namespace:IMX.ATS.DIOS"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-        <FontFamily x:Key="iconfont">pack://application:,,,/IMX.ATS.DIOS;component/Resource/Fonts/#iconfont</FontFamily>
+        
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary>
+                    <local:ViewModelLocator x:Key="Locator"/>
+                </ResourceDictionary>
 
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        
     </Application.Resources>
 </Application>

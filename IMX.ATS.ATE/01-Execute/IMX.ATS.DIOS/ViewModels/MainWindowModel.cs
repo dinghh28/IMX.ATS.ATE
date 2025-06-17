@@ -403,7 +403,7 @@ namespace IMX.ATS.DIOS
                     {
                         IsSelect = false,
                         Test_ID = item.ProjectID,
-                        TestItem_ID = item.Id,
+                        TestItem_ID = (int)item.Id,
                         Pro_SN = item.ProductSN,
                         ProjectName = item.ProjectName,
                         Result = item.Result,

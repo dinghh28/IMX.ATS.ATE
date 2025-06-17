@@ -196,7 +196,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\CommonServiceLocator.2.0.2\lib\net47\CommonServiceLocator.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\CommonServiceLocator.2.0.7\lib\net48\CommonServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
@@ -323,6 +324,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\GlobalModel.cs" />
+    <Compile Include="Locator\ViewModelLocator.cs" />
+    <Compile Include="ViewModels\TestDatasViewModel.cs" />
+    <Compile Include="ViewModels\TestItemViewModel.cs" />
+    <Compile Include="ViewModels\TestProjectItemViewModel.cs" />
+    <Compile Include="Views\TestDatasView.xaml.cs">
+      <DependentUpon>TestDatasView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestItemView.xaml.cs">
+      <DependentUpon>TestItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestProjectItemView.xaml.cs">
+      <DependentUpon>TestProjectItemView.xaml</DependentUpon>
+    </Compile>
     <Page Include="Resource\Styles\DefaultStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -341,6 +356,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\TestDatasView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestProjectItemView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

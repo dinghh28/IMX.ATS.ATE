@@ -1,0 +1,90 @@
+﻿<Window x:Class="IMX.ATS.DIOS.Views.TestDatasView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+        xmlns:local="clr-namespace:IMX.ATS.DIOS.Views" 
+        xmlns:viewmodels="clr-namespace:IMX.ATS.DIOS.ViewModels" 
+        d:DataContext="{d:DesignInstance Type=viewmodels:TestDatasViewModel}"
+        mc:Ignorable="d"
+        Title="TestDatasView" Height="450" Width="800"
+        FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
+        WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
+        ResizeMode="NoResize"  x:Name="Win">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Border BorderThickness="1" BorderBrush="Black">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="45"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black"/>
+            <Grid Grid.Row="0" Margin="10,5">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Label Content="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="25"/>
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Button Content="&#xe721;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMin}" CommandParameter="{Binding ElementName=Win}"/>
+                    <Button Content="&#xe720;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>
+                    <Button Content="&#xe71f;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Win}"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="1" Margin="10,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="35"/>
+                </Grid.RowDefinitions>
+                <DataGrid Grid.Row="0"
+                          ItemsSource="{Binding  TestDataTable}"  
+                          CanUserAddRows="False"  
+                          IsReadOnly="True"  
+                          FrozenColumnCount="1"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
+
+
+                <WrapPanel Grid.Row="1" Margin="5">
+                    <Label Content="总数:"/>
+                    <Label Content="{Binding DataCount}"/>
+                    <Label Content="当前页行数:" Margin="5 0 0 0"/>
+                    <Label Content="{Binding ItemCount}" />
+                    <Label Content="当前页/总页数:" Margin="5 0 0 0"/>
+                    <Label Content="{Binding SelectPage}" Margin="5 0 0 0"/>
+                    <Label Content="/"/>
+                    <Label Content="{Binding PageCount}"/>
+                </WrapPanel>
+                <WrapPanel Grid.Row="1" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center">
+                    <Button Content="第一页" 
+                            Command="{Binding SelectNextDataCommand}" CommandParameter="第一页"/>
+                    <Button Content="上一页" 
+                            Margin="5 0 0 0" 
+                            Command="{Binding SelectNextDataCommand}" 
+                            CommandParameter="上一页"/>
+                    <Button Content="下一页" 
+                            Margin="5 0 0 0" 
+                            Command="{Binding SelectNextDataCommand}" CommandParameter="下一页"/>
+                    <Button Content="最后一页" 
+                            Margin="5 0 0 0" 
+                            Command="{Binding SelectNextDataCommand}" CommandParameter="最后一页"/>
+                </WrapPanel>
+            </Grid>
+
+
+        </Grid>
+    </Border>
+</Window>

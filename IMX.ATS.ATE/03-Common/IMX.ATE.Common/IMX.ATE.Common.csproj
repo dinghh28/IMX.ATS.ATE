@@ -154,11 +154,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Config\ConfigDevice\ACSourceLoad_0.xml" />
-    <Content Include="Config\ConfigDevice\AnalogAignals_0.xml" />
-    <Content Include="Config\ConfigDevice\LVDCLoad_0.xml" />
-    <Content Include="Config\ConfigDevice\RPU_0.xml" />
-    <Content Include="Config\ConfigDevice\SignalSource_0.xml" />
+    <None Include="Config\ConfigDevice\ACSourceLoad_0.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ConfigDevice\AnalogAignals_0.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ConfigDevice\LVDCLoad_0.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ConfigDevice\RPU_0.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\ConfigDevice\SignalSource_0.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

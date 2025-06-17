@@ -791,6 +791,15 @@
         <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.InitializeParameter">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.AnalogAignals.CCCP.AnalogAignals_CCCP_Warp.SetOnOff(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             CP信号启动/关闭
@@ -1090,13 +1099,13 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetCurrSLEW_NEGative(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetLoadValue(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModel(System.String)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetModel(IMX.Device.Common.Enumerations.Opaerate_Mode)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Operate.SetOnOff(IMX.Device.Common.Enumerations.DeviceOutPutState)">
@@ -1165,7 +1174,7 @@
             <param name="eModel"></param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelNum(System.String)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelNum(IMX.Device.Common.Enumerations.Opaerate_Mode)">
             <summary>
             设置拉载模式（斯康达模态）
             </summary>
@@ -1200,9 +1209,9 @@
             <param name="value">拉载电阻值</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelAndValue(System.String,System.Double,System.Boolean)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_AN23600E_Warp.Device_SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double,System.Boolean)">
             <summary>
-            设置拉载模式和拉载值(需后续优化设置逻辑，目前逻辑异常)
+            设置拉载模式和拉载值
             </summary>
             <param name="eModel"></param>
             <param name="value"></param>
@@ -1315,7 +1324,7 @@
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetCurrSLEW_NEGative(System.Double)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetLoadValue(System.Double)">
@@ -1334,9 +1343,6 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.Device_ReadTest">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.DCLoad.DCLoad_IT8924E_Operate.#ctor">
@@ -2184,40 +2190,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetMessageCycleTime(System.Collections.Generic.Dictionary{System.UInt32,System.UInt32})">
-            <summary>
-            设置消息循环周期
-            </summary>
-            <param name="messages"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
-            <summary>
-            设置自定义下发报文(自动清空当前已存在自定义报文)
-            </summary>
-            <param name="messages"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
-            <summary>
-            添加自定义报文(覆盖)
-            </summary>
-            <param name="message"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
-            <summary>
-            添加自定义报文(覆盖)
-            </summary>
-            <param name="messages"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.ClearCustomMessage">
-            <summary>
-            清除自定义报文下发列表
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.LockMessages">
             <summary>
             锁定接收发送信号
@@ -2287,20 +2259,6 @@
             <summary>
             设置交互器发送信号
             </summary>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalInitValue(System.Collections.Generic.Dictionary{IMX.Device.Common.CANSignalInfo,System.Double})">
-            <summary>
-            设置发送信号初始值
-            </summary>
-            <param name="values"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalInitValue(System.Collections.Generic.Dictionary{IMX.Device.Common.CANDataInfo,System.Double})">
-            <summary>
-            设置发送信号初始值
-            </summary>
-            <param name="values"></param>
-            <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalValue(System.String,System.Double)">
             <summary>
@@ -2387,6 +2345,27 @@
             <summary>
             计算信号下发值
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
+            <summary>
+            设置自定义下发报文(自动清空当前已存在自定义报文)
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
+            <summary>
+            添加自定义报文(覆盖)
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
+            <summary>
+            添加自定义报文(覆盖)
+            </summary>
+            <param name="messages"></param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.Close">
@@ -2480,13 +2459,6 @@
             设置报文接收状态
             </summary>
             <param name="isStart">是否开启报文接收</param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetMessageCycleTime(System.Collections.Generic.Dictionary{System.UInt32,System.UInt32})">
-            <summary>
-            设置消息循环周期
-            </summary>
-            <param name="messages"></param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.LockMessages">
@@ -2665,21 +2637,6 @@
             <param name="value">设置值</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetSendSignalInitValue(IMX.Device.Common.CANSignalInfo,System.Double)">
-            <summary>
-            设置发送信号初始值
-            </summary>
-            <param name="signal">发送信号</param>
-            <param name="value">设置值</param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetSendSignalInitValue(System.Collections.Generic.Dictionary{IMX.Device.Common.CANSignalInfo,System.Double})">
-            <summary>
-            设置发送信号初始值
-            </summary>
-            <param name="values"></param>
-            <returns></returns>
-        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.CalcMessageValue">
             <summary>
             计算下发信号
@@ -2812,6 +2769,9 @@
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Close">
             <inheritdoc/>
         </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Init(IMX.Device.Base.Device_Config)">
+            <inheritdoc/>
+        </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.InitializeParameter">
             <inheritdoc/>
         </member>
@@ -2835,6 +2795,14 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_Set(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
+            <summary>
+            高压输出单继电器控制，需多帧发送
+            </summary>
+            <param name="channel">继电器通道</param>
+            <param name="value">状态值</param>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             高压输出所有继电器控制,保留上一次控制状态，组合发送
@@ -2852,6 +2820,9 @@
             <param name="value3">红灯</param>
             <param name="value4">蜂鸣器</param>
             <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
+            <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetLed(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
@@ -2874,16 +2845,10 @@
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_ReadTest">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_Set(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
-            <inheritdoc/>
-        </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.Device_SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Device.Relay.Relay_PLC_Operate.SateLedContrcl(IMX.Device.Relay.LightType)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Operate.#ctor">
@@ -2977,26 +2942,13 @@
             <param name="value">输出状态</param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.SetAll(IMX.Device.Common.Enumerations.DeviceOutPutState)">
-            <summary>
-            设备全操作
-            </summary>
-            <param name="value">0表示输入关，1 表示开。</param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Relay.Relay_PLC_Warp.SetAll(System.Collections.Generic.List{IMX.Device.Common.Enumerations.DeviceOutPutState})">
-            <summary>
-            设备全操作
-            </summary>
-            <param name="value">0表示输入关，1 表示开。</param>
-            <returns></returns>
-        </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Set_Value(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
-            单继电器控制
+            单继电器控制M10-M12
+            第1/2/3工位高压输出侧线路通断控制
             </summary>
-            <param name="channel">继电器通道(1开始算起)</param>
-            <param name="value"></param>
+            <param name="channel">对应寄存器地址（从1开始算）</param>
+            <param name="value">输出状态</param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Relay.Relay_PLC_Warp.Device_Read">
@@ -3884,7 +3836,7 @@
             <param name="value"></param>
             <returns></returns>
         </member>
-        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModelAndValue(System.String,System.Double)">
+        <member name="M:IMX.Device.Base.DeviceInerfaces.IDCLoad.SetModelAndValue(IMX.Device.Common.Enumerations.Opaerate_Mode,System.Double)">
             <summary>
             设置拉载模式和拉载值(暂弃用，待后续优化)
             </summary>

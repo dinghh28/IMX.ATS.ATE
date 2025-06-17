@@ -102,7 +102,7 @@ namespace IMX.ATS.Manual
             try
             {
 
-                if (!(GlobalModel.DicDeviceInfo.TryGetValue(EDeviceType.DCLoad.ToString(), out DeviceInfo_ALL deviceInfo)))
+                if (!(GlobalModel.DicDeviceInfo.TryGetValue(EDeviceType.Unknow.ToString(), out DeviceInfo_ALL deviceInfo)))
                 {
                     MessageBox.Show($"设备初始化异常：【{deviceInfo.GetType()}】");
                     return;

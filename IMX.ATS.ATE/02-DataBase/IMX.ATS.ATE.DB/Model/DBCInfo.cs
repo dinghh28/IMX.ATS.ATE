@@ -1,13 +1,13 @@
 ﻿using FreeSql.DataAnnotations;
 using FreeSql;
 using IMX.ATE.Common;
-using Piggy.VehicleBus.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Piggy.VehicleBus.Common;
 
 namespace IMX.DB.Model
 {

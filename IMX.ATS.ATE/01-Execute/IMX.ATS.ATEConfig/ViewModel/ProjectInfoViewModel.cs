@@ -213,6 +213,11 @@ namespace IMX.ATS.ATEConfig
             set => Set(nameof(DataBaudRate), ref databaudrate, value);
         }
 
+        /// <summary>
+        /// 电能类型编辑使能
+        /// </summary>
+        public bool EnableEditElectricity => GlobalModel.IsNewProject;
+
         #endregion
 
         #region 界面绑定指令
@@ -310,7 +315,39 @@ namespace IMX.ATS.ATEConfig
                     DBOperate.Default.InsertProjectInfo(ProjectInfo).AttachIfSucceed(result => 
                     {
                         mainviewmodel.ProjectName = ProjectName;
+                        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
+                        mainviewmodel.DBCConfigVisbility = Visibility.Visible;
                         dbcconfig = null;
+
+                        #region 允许配置测试项列表配置
+                        bool inversion = GlobalModel.NowElectricity == Electricity.SingleANDInversion || GlobalModel.NowElectricity == Electricity.ThreeANDInversion;
+                        bool three = GlobalModel.NowElectricity == Electricity.Three || GlobalModel.NowElectricity == Electricity.ThreeANDInversion;
+
+                        List<string> processnames = SupportConfig.DicProcessConfig
+                            .Where(x => !x.Value.IsThree && !x.Value.IsThree)
+                            .Select(x => x.Key)
+                            .ToList();
+                        List<string> threenames = SupportConfig.DicProcessConfig
+                            .Where(x => x.Value.IsThree)
+                            .Select(x => x.Key)
+                            .ToList();
+                        List<string> inversionnames = SupportConfig.DicProcessConfig
+                            .Where(x => x.Value.IsInversion)
+                            .Select(x => x.Key)
+                            .ToList();
+                        SupportConfig.TestTestProcess.AddRange(processnames);
+                        if (inversion)
+                        {
+                            SupportConfig.TestTestProcess.AddRange(inversionnames);
+                        }
+                        if (three)
+                        {
+                            SupportConfig.TestTestProcess.AddRange(threenames);
+                        }
+
+                        SupportConfig.TestTestProcess = SupportConfig.TestTestProcess.Distinct().ToList();
+                        #endregion
+
                         MessageBox.Show("项目信息保存成功!", "新建项目", MessageBoxButton.OK, MessageBoxImage.Information);
                     }).AttachIfFailed(result=> MessageBox.Show($"项目信息保存失败：\r\n{result.Message}!", "新建项目"));
                 }
@@ -319,6 +356,8 @@ namespace IMX.ATS.ATEConfig
                     DBOperate.Default.UpdataProjectInfo(ProjectInfo).AttachIfSucceed(result => 
                     {
                         dbcconfig = null;
+                        mainviewmodel.FlowConfigVisbility = Visibility.Visible;
+                        mainviewmodel.DBCConfigVisbility = Visibility.Visible;
                         MessageBox.Show("项目信息保存成功!", "项目更新", MessageBoxButton.OK, MessageBoxImage.Information);
                     });
                 }

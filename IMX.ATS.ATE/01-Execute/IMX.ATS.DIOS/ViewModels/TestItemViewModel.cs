@@ -25,7 +25,6 @@
 
 using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
-using IMX.ATS.DIOS.Views;
 using IMX.Common;
 using IMX.DB;
 using IMX.DB.Model;
@@ -35,11 +34,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace IMX.ATS.DIOS.ViewModels
+namespace IMX.ATS.DIOS
 {
     public class TestItemViewModel : ExtendViewModelBase
     {
@@ -70,7 +70,7 @@ namespace IMX.ATS.DIOS.ViewModels
 
         #endregion
 
-        private ObservableCollection<Test_ItemInfo> datas;
+        private ObservableCollection<Test_ItemInfo> datas = new ObservableCollection<Test_ItemInfo>();
         /// <summary>
         /// 测试项数据列表
         /// </summary>

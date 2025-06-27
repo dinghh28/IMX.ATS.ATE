@@ -12,7 +12,7 @@ namespace IMX.DB.Model
     /// <summary>
     /// 实验结果项目信息条目
     /// </summary>
-    [Table(Name = "Test_ItemInfo_{yyyy}", AsTable = "createtime=2023-1-1(5 year)")]
+    [Table(Name = "Test_ProjectItemInfo_{yyyy}", AsTable = "createtime=2023-1-1(5 year)")]
     public class Test_ProjectItemInfo : BaseEntity<Test_ProjectItemInfo, long>
     {
         /// <summary>
@@ -42,6 +42,16 @@ namespace IMX.DB.Model
         /// </summary>
         [Navigate(nameof(Test_ItemInfo.Id))]
         public List<Test_ItemInfo> Items { get; set; }
+
+        //public override Test_ProjectItemInfo Insert()
+        //{
+        //    if (Repository == null)
+        //        Repository = Orm.GetRepository<Test_ProjectItemInfo>();
+        //    Repository.UnitOfWork = _resolveUow?.Invoke();
+        //    return Repository.Insert(this);
+
+        //    return base.Insert();
+        //}
     }
 
     /// <summary>
@@ -138,7 +148,7 @@ namespace IMX.DB.Model
     /// <summary>
     /// 实验结果数据信息
     /// </summary>
-    [Table(Name = "Test_DataInfo_{yyyyMM}", AsTable = "create_time=2022-5-1(3 month)")]
+    [Table(Name = "Test_DataInfo_{yyyyMM}", AsTable = "createtime=2022-5-1(3 month)")]
     public class Test_DataInfo : BaseEntity<Test_DataInfo, long>
     {
         /// <summary>

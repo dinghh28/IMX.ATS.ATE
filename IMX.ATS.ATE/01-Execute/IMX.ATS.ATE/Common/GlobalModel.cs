@@ -51,7 +51,7 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 试验线程运行状态
         /// </summary>
-        public static bool IsTestThreadRun { get; set; } = true;
+        public static bool IsTestThreadRun { get; set; } = false;
 
         /// <summary>
         /// 窗口打开状态

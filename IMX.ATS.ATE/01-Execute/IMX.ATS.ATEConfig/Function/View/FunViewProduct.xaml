@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:IMX.ATS.ATEConfig.Function"
              xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework"     
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" d:DataContext="{d:DesignInstance Type=local:FunViewModelProduct}"
              Name="Win"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -46,15 +46,21 @@
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="报文发送："  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Label Grid.Column="0" Content="产品通讯："  VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <ComboBox Grid.Column="1"  Height="35" MaxWidth="200"  ItemsSource="{Binding OperateTypeList, Converter={StaticResource EnumValue}}" SelectedValue="{Binding OperateType, Converter={StaticResource EnumValue}}">
                         </ComboBox>
                     </Grid>
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Row="1" Header="02-下发指令设置">
-                <DataGrid   Name="dataGridSendMessage"  ItemsSource="{Binding  SendSignals}" AutoGenerateColumns="False"  RowHeaderWidth="0" CanUserAddRows="False" 
-           ScrollViewer.VerticalScrollBarVisibility="Visible"  Margin="5">
+                <DataGrid   Name="dataGridSendMessage"  
+                            ItemsSource="{Binding  SendSignals}" 
+                            AutoGenerateColumns="False"  
+                            RowHeaderWidth="0"
+                            CanUserAddRows="False" 
+                            CanUserDeleteRows="False"
+                            ScrollViewer.VerticalScrollBarVisibility="Visible"  
+                            Margin="5">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>
@@ -68,7 +74,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <!--<DataGridCheckBoxColumn Header="选择发送" Binding="{Binding IsSend}" Width="65"/>-->
-                        <DataGridTextColumn Header="序号" Binding="{Binding DBCSignal.ID}" Width="*"/>
+                        <!--<DataGridTextColumn Header="序号" Binding="{Binding DBCSignal.ID}" Width="*"/>-->
                         <DataGridTextColumn Header="帧ID" Binding="{Binding DBCSignal.MessageID,StringFormat=0x{0:X}}" Width="10*"/>
                         <DataGridTextColumn Header="Message" Binding="{Binding DBCSignal.MessageName}" Width="20*"/>
                         <DataGridTextColumn Header="SiganlName" Binding="{Binding DBCSignal.SignalName}" Width="20*"/>

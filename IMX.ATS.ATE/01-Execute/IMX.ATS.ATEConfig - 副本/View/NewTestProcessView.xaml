@@ -1,0 +1,57 @@
+﻿<Window x:Class="IMX.ATS.ATEConfig.NewTestProcessView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IMX.ATS.ATEConfig"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             d:DataContext="{d:DesignInstance Type=local:NewTestProcessViewModel}"
+             mc:Ignorable="d" Height="250" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Background="#FFF6F7FC" 
+            WindowStyle="None" AllowsTransparency="True" FontSize="15" BorderBrush="Gray" BorderThickness="1" x:Name="Win">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Path="NewTestProcess" Source="{StaticResource Locator}"/>
+    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Label Content="试验项保存" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Black"/>
+            <Button Grid.Column="1" Content="&#xe71f;" Command="{Binding WindowClose}" Foreground="#333" Style="{StaticResource ControlButtonStyle}"
+        CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" HorizontalAlignment="Right" VerticalAlignment="Center"
+        Background="Transparent"  Width="40" Height="40" />
+        </Grid>
+        <GroupBox Grid.Row="1" Header="试验项信息" FontWeight="Normal" Margin="5">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="试验项名称："/>
+                    <ComboBox Width="200" SelectedItem="{Binding SchemeName}" ItemsSource="{Binding SchemeNames}" IsReadOnly="True"/>
+                </WrapPanel>
+                <WrapPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <TextBlock Text="试验项描述："/>
+                    <TextBox Width="200" Height="75" Text="{Binding SchemeDescribe}" TextWrapping="Wrap" />
+                </WrapPanel>
+            </Grid>
+        </GroupBox>
+        <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Height="35" Content="保 存 流 程" FontWeight="Normal" Command="{Binding SaveSchemeCommannd}"  CommandParameter="{Binding .,RelativeSource={RelativeSource AncestorType=Window}}" Width="100"/>
+    </Grid>
+</Window>

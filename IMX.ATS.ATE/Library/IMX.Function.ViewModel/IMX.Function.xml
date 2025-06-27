@@ -37,144 +37,147 @@
         <member name="M:IMX.Function.FunConfig_ACSource.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
-        <member name="T:IMX.Function.Config.FunConfig_ACSourceLoad">
+        <member name="T:IMX.Function.FunConfig_ACSourceLoad">
             <summary>
             交流源载一体机试验配置类
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SupportFuncitonType">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.DeviceAddress">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.DeviceAddress">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.DeviceMode">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.DeviceMode">
             <summary>
             源载模式
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseMode">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PhaseMode">
             <summary>
             相线模式
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.Balance">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.Balance">
             <summary>
             平衡模式
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OpenAngle">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.OpenAngle">
             <summary>
             开机相角
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CloseAngle">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.CloseAngle">
             <summary>
             关机相角
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SetValue_A">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.SetValue_A">
             <summary>
             A相输出电压/负载拉载值
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SetValue_B">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.SetValue_B">
             <summary>
             B相输出电压/负载拉载值
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.SetValue_C">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.SetValue_C">
             <summary>
             C相输出电压/负载拉载值
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseControl_AB">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PhaseControl_AB">
             <summary>
             AB相位角
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseControl_AC">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PhaseControl_AC">
             <summary>
             AC相位角
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OutputFrequency">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.OutputFrequency">
             <summary>
             输出频率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OutputFrequencySlope">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.OutputFrequencySlope">
             <summary>
             输出频率斜率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.VolSlope_A">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.VolSlope_A">
             <summary>
             A相输出电压斜率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.VolSlope_B">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.VolSlope_B">
             <summary>
             B相输出电压斜率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.VolSlope_C">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.VolSlope_C">
             <summary>
             C相输出电压斜率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseLoss_B">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PhaseLoss_B">
             <summary>
             B相缺相
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PhaseLoss_C">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PhaseLoss_C">
             <summary>
             C相缺相
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.OpaerateMode">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.OpaerateMode">
             <summary>
             拉载模式
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CurSlope_A">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.CurSlope_A">
             <summary>
             A相电流斜率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PowerFactor_A">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PowerFactor_A">
             <summary>
             A相功率因素
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CurSlope_B">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.CurSlope_B">
             <summary>
             B相电流斜率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PowerFactor_B">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PowerFactor_B">
             <summary>
             B相功率因素
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.CurSlope_C">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.CurSlope_C">
             <summary>
             C相电流斜率
             </summary>
         </member>
-        <member name="P:IMX.Function.Config.FunConfig_ACSourceLoad.PowerFactor_C">
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.PowerFactor_C">
             <summary>
             C相功率因素
             </summary>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_ACSourceLoad.Execut_ExceptStep(System.Object)">
+        <member name="M:IMX.Function.FunConfig_ACSourceLoad.Execut_ExceptStep(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_ACSourceLoad.SetStep(System.Object)">
+        <member name="M:IMX.Function.FunConfig_ACSourceLoad.SetStep(System.Object)">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Function.Config.FunConfig_ACSourceLoad.#ctor">
+        <member name="M:IMX.Function.FunConfig_ACSourceLoad.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_ACSourceLoad.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.FunConfig_AnalogAignals">
@@ -1030,6 +1033,16 @@
         <member name="F:IMX.Function.Base.FuncitonType.ACSourceLoad">
             <summary>
             交流源载一体机操作模板
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.Startup">
+            <summary>
+            开机流程
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.Shutdown">
+            <summary>
+            关机流程
             </summary>
         </member>
         <member name="T:IMX.Function.Base.Enumerations.ResultOpereateType">

@@ -29,6 +29,7 @@ using H.WPF.Framework;
 using IMX.Common;
 using IMX.DB;
 using IMX.DB.Model;
+using IMX.WPF.Resource;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;
@@ -36,9 +37,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 
-namespace IMX.ATS.DIOS.ViewModels
+namespace IMX.ATS.DIOS
 {
     /// <summary>
     /// 试验数据展示窗口类
@@ -177,7 +180,7 @@ namespace IMX.ATS.DIOS.ViewModels
                     break;
 
             }
-            DBOperate.Default.GetLimitTestData(id, start, end, (int)pagenum, OnePageCount).ThenAnd(result =>
+            DBOperate.Default.GetLimitTestData(ItemId, start, end, (int)pagenum, OnePageCount).ThenAnd(result =>
             {
                 if (datastructure.Columns.Count < 1) 
                 {
@@ -290,6 +293,13 @@ namespace IMX.ATS.DIOS.ViewModels
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            if (!(obj is Window win))
+            {
+                return;
+            }
+
+            WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
+
             if (ItemId <1)
             {
                 return;
@@ -314,7 +324,7 @@ namespace IMX.ATS.DIOS.ViewModels
         public TestDatasViewModel(string wintitle, long itemid, DateTime strattim, DateTime stoptime, long datascount)
         {
             Title = wintitle;
-            id = itemid;
+            ItemId = itemid;
             start = strattim;
             end = stoptime;
             DataCount = datascount;

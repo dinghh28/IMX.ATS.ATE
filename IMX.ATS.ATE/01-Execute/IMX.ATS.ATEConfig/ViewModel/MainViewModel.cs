@@ -23,6 +23,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using FastDeepCloner;
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
 using IMX.ATE.Common;
@@ -53,6 +54,17 @@ namespace IMX.ATS.ATEConfig
             get => projectname;
             set => Set(nameof(ProjectName), ref projectname, value);
         }
+
+        private string functionname;
+        /// <summary>
+        /// 当前所在功能块
+        /// </summary>
+        public string FunctionName
+        {
+            get => functionname;
+            set => Set(nameof(FunctionName), ref functionname, value);
+        }
+
 
         private FrameworkElement _mainContent;
         /// <summary>
@@ -185,10 +197,27 @@ namespace IMX.ATS.ATEConfig
                 return;
             }
 
-            // TODO 此处需增加方案配置内容的判断：如设备初始化、试验循环保存等操作
-
             try
             {
+                
+                switch (obj.ToString())
+                {
+                    case "ProjectInfo":
+                        FunctionName = "项目信息配置";
+                        break;
+                    case "FixedProcess":
+                        FunctionName = "开关机流程配置";
+                        break;
+                    case "TestProcess":
+                        FunctionName = "测试项步骤配置";
+                        break;
+                    case "TestProgramme":
+                        FunctionName = "试验方案流程配置";
+                        break;
+                    default:
+                        break;
+                }
+
                 Type win = Type.GetType($"{SupportConfig.SystemName}.{obj}View");
                 Type model = Type.GetType($"{SupportConfig.SystemName}.{obj}ViewModel");
                 MainContent = ContentControlManager.GetControl(win, ((ViewModelLocator)Application.Current.FindResource("Locator")).GetModel(model));
@@ -221,16 +250,49 @@ namespace IMX.ATS.ATEConfig
             }
             else
             {
-                DBCConfigVisbility = GlobalModel.Test_ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
+                //DBCConfigVisbility = GlobalModel.Test_ProjectInfo.IsUseDDBC ? Visibility.Visible : Visibility.Collapsed;
 
-                if (GlobalModel.Test_ProjectInfo.IsUseDDBC)
+                //if (GlobalModel.Test_ProjectInfo.IsUseDDBC)
+                //{
+                ProjectName = GlobalModel.Test_ProjectInfo.ProjectName;
+
+                #region 允许配置测试项列表配置
+                GlobalModel.NowElectricity = GlobalModel.Test_ProjectInfo.Electricity;
+                bool inversion = GlobalModel.NowElectricity == Electricity.SingleANDInversion || GlobalModel.NowElectricity == Electricity.ThreeANDInversion;
+                bool three = GlobalModel.NowElectricity == Electricity.Three || GlobalModel.NowElectricity == Electricity.ThreeANDInversion;
+                
+                List<string> processnames = SupportConfig.DicProcessConfig
+                    .Where(x => !x.Value.IsThree && !x.Value.IsThree)
+                    .Select(x => x.Key)
+                    .ToList();
+                List<string> threenames = SupportConfig.DicProcessConfig
+                    .Where(x=>x.Value.IsThree)
+                    .Select(x=>x.Key)
+                    .ToList();
+                List<string > inversionnames = SupportConfig.DicProcessConfig
+                    .Where(x => x.Value.IsInversion)
+                    .Select(x => x.Key)
+                    .ToList();
+                SupportConfig.TestTestProcess.AddRange(processnames);
+                if (inversion)
                 {
-                    DBOperate.Default.GetDBCConfig_ByProjectID(GlobalModel.Test_ProjectInfo.Id)
+                    SupportConfig.TestTestProcess.AddRange(inversionnames);
+                }
+                if (three)
+                {
+                    SupportConfig.TestTestProcess.AddRange(threenames);
+                }
+
+                SupportConfig.TestTestProcess = SupportConfig.TestTestProcess.Distinct().ToList();
+                #endregion
+
+                DBOperate.Default.GetDBCConfig_ByID(GlobalModel.Test_ProjectInfo.DBCConfigID)
+                    //DBOperate.Default.GetDBCConfig_ByProjectID(GlobalModel.Test_ProjectInfo.Id)
                         .AttachIfSucceed(result => { GlobalModel.TestDBCconfig = result.Data; })
                         .And(DBOperate.Default.GetFile_ByID(GlobalModel.TestDBCconfig.DBCFileID)
                             .AttachIfSucceed(result => { GlobalModel.TestDBCFileInfo = result.Data == null ? new Test_DBCFileInfo() : result.Data; }))
                         .AttachIfFailed(result => { MessageBox.Show($"DBC信息获取失败：{result.Message}", "DBC通讯配置获取异常"); });
-                }
+                //}
             }
             //base.WindowLoadedExecute(obj);
             base.WindowMaxExecute(obj);

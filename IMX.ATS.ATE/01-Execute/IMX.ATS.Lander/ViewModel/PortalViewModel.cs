@@ -37,6 +37,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using IMX.ATS.Common;
 
 namespace IMX.ATS.Lander
 {
@@ -178,8 +179,8 @@ namespace IMX.ATS.Lander
 
                     FunModules.Add(new FunModule
                         {
-                            ViewmodeName = attribute.Description,
-                            FunModuleName = item.ToString(),
+                            ViewmodeName = item.ToString(),
+                            FunModuleName = attribute.Description,
                             ExeAESKey = attribute.AESKey,
                         });
                     //}

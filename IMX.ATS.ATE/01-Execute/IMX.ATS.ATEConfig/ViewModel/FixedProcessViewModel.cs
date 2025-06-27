@@ -24,6 +24,7 @@
 #endregion << 版 本 注 释 >>
 
 using FastDeepCloner;
+using Force.DeepCloner;
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
 using IMX.DB;
@@ -283,17 +284,30 @@ namespace IMX.ATS.ATEConfig
 
             var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
 
+            
+
             if (!rlt)
             {
                 MessageBox.Show($"操作无法添加:{rlt.Message}");
                 return;
             }
-            IFunViewModel funmodel = rlt.Data;
 
-            if (TsetProcesse.FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
+            IFunViewModel funmodel;
+
+            var viewmodel = TsetProcesse.FunctionInfos.LastOrDefault(x => x.ModType == rlt.Data.SupportFuncitonType);
+            if (viewmodel != null)
             {
-                DeepCloner.CloneTo(TsetProcesse.FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model, funmodel);
-                //funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
+                //FastDeepCloner.DeepCloner.CloneTo(viewmodel.Model, funmodel);
+                funmodel = viewmodel.Model.DeepClone();
+            }
+            //if (FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
+            //{
+            //    DeepCloner.CloneTo(FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model, funmodel);
+            //    //funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
+            //}
+            else
+            {
+                funmodel = rlt.Data;
             }
 
             TsetProcesse.FunctionInfos.Add(new FunctionInfo
@@ -329,7 +343,12 @@ namespace IMX.ATS.ATEConfig
             foreach (var item in SupportConfig.DicTestFlowItems)
             {
                 //剔除开关机
-                if (item.Key == FuncitonType.NONE || item.Key == FuncitonType.NONE)
+                if (item.Key == FuncitonType.Startup 
+                    || item.Key == FuncitonType.Shutdown 
+                    || item.Key == FuncitonType.TestResult
+                    || item.Key == FuncitonType.EquipmentResult
+                    || item.Key == FuncitonType.ProductResult
+                    || item.Key == FuncitonType.Return)
                 {
                     continue;
                 }
@@ -379,6 +398,7 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            GlobalModel.NowProcessName = "开关机流程";
             if (proid == GlobalModel.Test_ProjectInfo.Id)
             {
                 return;

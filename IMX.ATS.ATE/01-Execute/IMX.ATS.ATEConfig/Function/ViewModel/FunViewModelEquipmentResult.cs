@@ -44,6 +44,9 @@ using Super.Zoo.Framework;
 
 namespace IMX.ATS.ATEConfig.Function
 {
+    /// <summary>
+    /// 工装读数结果判断模板
+    /// </summary>
     public class FunViewModelEquipmentResult : FunViewModel
     {
         #region 公共属性
@@ -55,26 +58,69 @@ namespace IMX.ATS.ATEConfig.Function
             {
                 func = value;
                 FunConfig_EquipmentResult config = value.Config as FunConfig_EquipmentResult;
-                var datanames = SupportDeviceInfo.DeviceRecInfo["AN87330"]?.ToDictionary(x => x.DataInfo.Name)?.Keys.ToList();
-                //if (config.DatasName.Count> datanames.Count)
-                //{
-                //    config.DatasName = null;
-                //}
-                
-                config.DatasName ??= datanames;
-                config.DatasName = config.DatasName.Distinct().ToList();
+
+                if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX processconfig))
+                {
+                    return;
+                }
 
                 DataList.Clear();
                 InDatas.Clear();
+                config.DatasName ??= [];
+                config.DatasName.Clear();
+                config.Datas ??= [];
 
-                for (int i = 0; i < config.DatasName?.Count; i++)
+                for (int i = 0; i < processconfig.Test_ReadData_Euq.Count; i++)
                 {
-                    DataList.Add(config.DatasName[i]);
+                    var data = processconfig.Test_ReadData_Euq[i];
+                    DataList.Add(data.Name);
+                    config.DatasName.Add(data.Name);
                 }
 
-                for (int i = 0; i < config.Datas?.Count; i++)
+                if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                   || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
                 {
-                    InDatas.Add(new ProtectProShow 
+                    for (int i = 0; i < processconfig.Test_ReadData_EX.Count; i++)
+                    {
+                        var data = processconfig.Test_ReadData_EX[i];
+                        DataList.Add(data.Name);
+                        config.DatasName.Add(data.Name);
+                    }
+                }
+
+                if (processconfig.UseCalculate)
+                {
+                    for (int i = 0; i < processconfig.Test_CalculateData.Count; i++)
+                    {
+                        var data = processconfig.Test_CalculateData[i];
+                        DataList.Add(data.Name);
+                        config.DatasName.Add(data.Name);
+                    }
+
+                    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                        || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+                    {
+                        for (int i = 0; i < processconfig.Test_CalculateDataEX.Count; i++)
+                        {
+                            var data = processconfig.Test_CalculateDataEX[i];
+                            DataList.Add(data.Name);
+                            config.DatasName.Add(data.Name);
+                        }
+                    }
+                }
+
+                for (int i = (config.Datas.Count - 1); i >= 0; i--)
+                {
+                    int findindex = config.DatasName.FindIndex(x => x == config.Datas[i].DataInfo.Name);
+                    if (findindex == -1)
+                    {
+                        config.Datas.RemoveAt(i);
+                    }
+                }
+
+                for (int i = 0; i < config.Datas.Count; i++)
+                {
+                    InDatas.Add(new ProtectProShow
                     {
                         Function = value,
                         Index = i,
@@ -85,6 +131,7 @@ namespace IMX.ATS.ATEConfig.Function
                         TrageCondition = config.Datas[i].Judgment,
                     });
                 }
+
             }
         }
 

@@ -69,7 +69,6 @@ using System.Globalization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 using Piggy.VehicleBus.Common;
 using FreeSql.DataAnnotations;
-using Force.DeepCloner;
 using System.Runtime.InteropServices;
 
 namespace IMX.ATS.ATE
@@ -137,7 +136,7 @@ namespace IMX.ATS.ATE
         public string SelectedProductName
         {
             get => selectedproductname;
-            set 
+            set
             {
                 if (Set(nameof(SelectedProductName), ref selectedproductname, value))
                 {
@@ -163,7 +162,7 @@ namespace IMX.ATS.ATE
                     //        MessageBox.Show("项目试验阶段获取失败");
                     //    });
                 }
-            } 
+            }
         }
 
         private string productsn;
@@ -340,56 +339,6 @@ namespace IMX.ATS.ATE
 
         public RelayCommand Save => new RelayCommand(SaveData);
 
-        #region 系统窗口指令
-        ///// <summary>
-        ///// 窗口最大化指令
-        ///// </summary>
-        //public RelayCommand<object> WindowMax => new RelayCommand<object>((o) =>
-        //{
-        //    if (!(o is Window win))
-        //    {
-        //        return;
-        //    }
-        //    if (win.WindowState == WindowState.Maximized)
-        //    {
-        //        win.WindowState = WindowState.Normal;
-        //        win.Width = 1000;
-        //        win.Height = 600;
-        //    }
-        //    else if (win.WindowState == WindowState.Normal)
-        //    {
-        //        //double screenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-        //        //double screenHeight = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
-
-        //        win.WindowState = WindowState.Maximized;
-
-        //        //win.Height = SystemParameters.WorkArea.Size.Height;
-        //        //win.Width = SystemParameters.WorkArea.Size.Width;
-
-
-        //        //this.MaxWidth = screenWidth * 0.5; // 设置为屏幕宽度的80%
-        //        //this.MaxHeight = screenHeight * 0.48; // 设置为屏幕高度的80%
-        //        //this.MaxWidth = screenWidth; // 设置为屏幕宽度的80%
-        //        //this.MaxHeight = screenHeight; // 设置为屏幕高度的80%
-
-
-        //        //SystemCommands.MaximizeWindow(win);
-        //    }
-        //});
-
-        ///// <summary>
-        ///// 窗口最小化指令
-        ///// </summary>
-        //public RelayCommand<object> WindowMin => new RelayCommand<object>((o) =>
-        //{
-        //    if (!(o is Window win))
-        //    {
-        //        return;
-        //    }
-        //    win.WindowState = WindowState.Minimized;
-        //});
-        #endregion
-
         #endregion
 
         #endregion
@@ -419,7 +368,27 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 继电器操作句柄
         /// </summary>
-        private Relay_ZS4Bit_Operate relayoperate_4 = null;
+        private Relay_PLC_Operate relayoperate_4 = null;
+
+        /// <summary>
+        /// 功率计操作句柄
+        /// </summary>
+        private IAcquisition acquisition = null;
+
+        /// <summary>
+        /// 产品操作句柄
+        /// </summary>
+        private Product_CAN_Operate product = null;
+
+        /// <summary>
+        /// 计算值列表
+        /// </summary>
+        private List<ModTestDataInfo> liscalculatedata = new List<ModTestDataInfo>();
+
+        /// <summary>
+        /// 工装参与结果判断数据
+        /// </summary>
+        private Dictionary<string, ModTestDataInfo> dicjudge_euq = new Dictionary<string, ModTestDataInfo>();
         // private Window window;
         #endregion
 
@@ -433,15 +402,17 @@ namespace IMX.ATS.ATE
         /// </summary>
         private void ClearErrorLED()
         {
-            if (IsTestRuning)
+            lock (relayoperate_4)
             {
-                relayoperate_4?.SateLedContrcl(LightType.RUNING);
+                if (IsTestRuning)
+                {
+                    relayoperate_4?.SateLedContrcl(LightType.RUNING);
+                }
+                else
+                {
+                    relayoperate_4?.SateLedContrcl(LightType.DEFALT);
+                }
             }
-            else
-            {
-                relayoperate_4?.SateLedContrcl(LightType.DEFALT);
-            }
-
 
             Thread.Sleep(100);
             IsFocuse = true;
@@ -463,7 +434,7 @@ namespace IMX.ATS.ATE
 
             var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).ProjectSelect;
             Window view = ContentControlManager.GetWindow<ProjectSelectView>(model);
-            ProdectNameChangeLock = false;
+            //ProdectNameChangeLock = false;
             //if (model.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
 
             //if (GlobalModel.TestDBCconfig != null || GlobalModel.TestDBCconfig.Id != 0)
@@ -475,22 +446,6 @@ namespace IMX.ATS.ATE
             //}
             view.Topmost = true;
             view.Show();
-
-            //Task.Run(() =>
-            //{
-            //    Thread.Sleep(500);
-            //    while (true)
-            //    {
-            //        if (!model.IsOpen)
-            //        {
-            //            dbcconfig = GlobalModel.TestDBCconfig_Change;
-            //            if (dbcconfig != null)
-            //            {
-            //                DBCConfigName = dbcconfig.ConfigName;
-            //            }
-            //        }
-            //    }
-            //});
         }
 
 
@@ -621,7 +576,7 @@ namespace IMX.ATS.ATE
             #endregion
 
             #region 本地数据校验
-            if (enablesavedata) 
+            if (enablesavedata)
             {
                 if (lastprosn != ProductSN)
                 {
@@ -652,7 +607,7 @@ namespace IMX.ATS.ATE
                     }
 
                 }
-                if (MessageBox.Show("试验数据未存储，是否开启试验（未存储的数据，可能会发生覆盖）", "数据存储提示",MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                if (MessageBox.Show("试验数据未存储，是否开启试验（未存储的数据，可能会发生覆盖）", "数据存储提示", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                 {
                     return;
                 }
@@ -686,7 +641,7 @@ namespace IMX.ATS.ATE
                 MessageBox.Show($"请先选择需进行试验项目", "项目信息检测异常");
                 return;
             }
-           
+
             //OperateResult<Test_ProjectInfo> rlt = DBOperate.Default.GetProjectInfo_ByName(SelectedProductName);
             //if (!rlt)
             //{
@@ -752,8 +707,6 @@ namespace IMX.ATS.ATE
                     //MessageBox.Show($"DBC配置获取异常,请联系上位机工程师:\r\n{result.Message}", "试验配置保存异常"); 
                 });
 
-
-
             //DBOperate.Default.GetDBCConfig_ByProjectID(data.Id)
             //.ThenAnd(dbcresult => DBOperate.Default.GetFile_ByID(dbcresult.Data.DBCFileID)
             //.AttachIfSucceed(result =>
@@ -787,19 +740,19 @@ namespace IMX.ATS.ATE
                 error = "无DBC文件或未配置DBC，请确认配置信息";
             }
 
-            List<CANDataInfo> lisreadsignals = new List<CANDataInfo> ();
+            List<CANDataInfo> lisreadsignals = new List<CANDataInfo>();
             Dictionary<CANDataInfo, double> dicsendsignal = new Dictionary<CANDataInfo, double>();
             List<CANDataInfo> lissendsignals = new List<CANDataInfo>();
-            Dictionary<uint, uint> dicsendmessages = new Dictionary<uint, uint>();
-
+            //Dictionary<uint, uint> dicsendmessages = new Dictionary<uint, uint>();
+            Dictionary<uint, (uint, FrameFormat)> dicsendmessages = new Dictionary<uint, (uint, FrameFormat)>();
             try
             {
                 if (issucced)
                 {
                     for (int i = 0; i < dbcconfig?.Test_DBCReceiveSignals?.Count; i++)
                     {
-                        var signal = dbcconfig.Test_DBCReceiveSignals[i];
-                        lisreadsignals.Add(new CANDataInfo { CustomName = signal.Custom_Name, SignalInfo = new CANSignalInfo { MessageID = signal.Message_ID, SignalName = signal.Signal_Name} });
+                        Test_DBCInfo signal = dbcconfig.Test_DBCReceiveSignals[i];
+                        lisreadsignals.Add(new CANDataInfo { CustomName = signal.Custom_Name, SignalInfo = new CANSignalInfo { MessageID = signal.Message_ID, SignalName = signal.Signal_Name } });
                         //dicreadsignals.Add(signal.Signal_Name, signal.Custom_Name);
                     }
 
@@ -815,7 +768,7 @@ namespace IMX.ATS.ATE
                     for (int i = 0; i < dbcconfig?.Test_DBCSendMessages?.Count; i++)
                     {
                         var message = dbcconfig.Test_DBCSendMessages[i];
-                        dicsendmessages.Add(message.Message_ID, message.CycleTime);
+                        dicsendmessages.Add(message.Message_ID, (message.CycleTime, message.FrameFormat));
                     }
                 }
             }
@@ -831,8 +784,8 @@ namespace IMX.ATS.ATE
             List<string> test_flownames = new List<string>();
             if (issucced)
             {
-                
-                for (int i = 0; i < ProcessInfos?.Count; i++) 
+
+                for (int i = 0; i < ProcessInfos?.Count; i++)
                 {
                     if (ProcessInfos[i].EnableUse)
                     {
@@ -913,7 +866,7 @@ namespace IMX.ATS.ATE
                         var keys = result.ConvertTo(result.Data).Data.Keys.ToList();
                         for (int i = 0; i < result.Data.Count; i++)
                         {
-                            var value = result.Data[keys[i]];
+                            Test_Process value = result.Data[keys[i]];
                             var flows = value.Test_Flows;
                             List<TestFunction> functions = new List<TestFunction>();
 
@@ -926,7 +879,7 @@ namespace IMX.ATS.ATE
                                     continue;
                                 }
                                 //加载开机流程
-                                if (funcitontype == FuncitonType.NONE)
+                                if (funcitontype == FuncitonType.Shutdown)
                                 {
                                     for (int k = 0; k < GlobalModel.ProjectInfo.Test_OpenFlows?.Count; k++)
                                     {
@@ -939,7 +892,7 @@ namespace IMX.ATS.ATE
                                     }
                                 }
                                 //加载关机流程
-                                else if (funcitontype == FuncitonType.NONE)
+                                else if (funcitontype == FuncitonType.Startup)
                                 {
                                     for (int k = 0; k < GlobalModel.ProjectInfo.Test_ShutFlows?.Count; k++)
                                     {
@@ -971,6 +924,7 @@ namespace IMX.ATS.ATE
                                 SetData_Euq = value.Test_SetData_Euq,
                                 SetData_Pro = value.Test_SetData_Pro,
                                 ReadData_Pro = value.Test_ReadData_Pro,
+                                CalculateData = value.Test_CalculateData,
                             });
                         }
 
@@ -999,20 +953,20 @@ namespace IMX.ATS.ATE
                 LisReadSignals_CAN = lisreadsignals,
                 //LisSendSignals_CAN = lissendsignals,
                 DicSendSignals_CAN = dicsendsignal,
-                DicMessageCycleTime = dicsendmessages,
+                DicMessageSet = dicsendmessages,
                 //DicReadSignals_CAN = dicreadsignals,
                 //SendSignals_CAN = sendsignals_can,
                 Test_FlowNames = test_flownames,
                 //Programme = programme,
                 //TestFlowsFunction = process,
-                 DicTestFlowsFunction = flowsfunction,
+                DicTestFlowsFunction = flowsfunction,
             };
 
             Thread.Sleep(1000);
 
             TestResult = "进行中";
             TestResultColor = Brushes.Blue;
-#if !DEBUG
+#if DEBUG
             try
             {
                 relayoperate_4?.SateLedContrcl(LightType.RUNING);
@@ -1027,9 +981,6 @@ namespace IMX.ATS.ATE
 
 
             monitor.OprateThread.Start(monitor);
-
-            new Thread(ReadDataThread_Pro) { IsBackground = true }.Start();
-            new Thread(ReadDataThread_Euq) { IsBackground = true }.Start();
 
             ContentName = "运行试验中...";
             ContentColor = Brushes.Green;
@@ -1067,143 +1018,102 @@ namespace IMX.ATS.ATE
             Test_DataInfo test_Data = new Test_DataInfo
             {
                 Euq_Data = new List<ModTestDataInfo>(),
+                Euq_DeviceRead = new List<ModDeviceReadData>(),
+                Euq_SetData = new List<ModTestDataInfo>(),
                 Pro_Data = new List<ModTestDataInfo>(),
+                Pro_DeviceRead = new List<ModDeviceReadData>(),
+                Pro_SetData = new List<ModTestDataInfo>(),
+                EX_Data = new List<ModTestDataInfo>(),
+                EX_DeviceRead = new List<ModDeviceReadData>(),
             };
 
             //CAN通讯初始化
             //if (thread.ProjectInfo.IsUseDDBC)
             //{
             #region CAN通讯初始化
+            product = null;
+
             Application.Current.Dispatcher.Invoke(new Action(() =>
                 {
                     StepStr = "正在初始化CAN";
                     StepStrShow = Visibility.Visible;
                 }));
 
-                Thread.Sleep(1000);
-                try
-                {
-                    GlobalModel.DicDeviceInfo["Product"].Args.DriveConfig.BaudRate = thread.ProjectInfo.BaudRate;
-                    var canoprate = CANInt(GlobalModel.DicDeviceInfo["Product"].Args);
-                    if (!canoprate)
-                    {
-                        GlobalModel.IsTestThreadRun = false;
-                        thread.IsRunning = false;
-                        SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
-
-                        Thread.Sleep(200);
-
-                        Application.Current.Dispatcher.Invoke(new Action(() =>
-                        {
-                            ContentName = "CAN通讯初始化失败";
-                            ContentColor = Brushes.Red;
-                            StepStrShow = Visibility.Collapsed;
-                            //IsTestRuning = false;
-                            TestResult = "FAIL";
-                            TestResultColor = Brushes.Red;
-
-                            //使能解封
-                            IsTestRuning = false;
-                            //窗口需获取焦点
-                            Application.Current.MainWindow.Focus();
-                            Thread.Sleep(100);
-                            IsFocuse = true;
-                            //IsFocuse = true;
-                        }));
-
-                        try
-                        {
-                            relayoperate_4?.SateLedContrcl(LightType.ERROR);
-                            //(GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate).SateLedContrcl(LightType.ERROR);
-                        }
-                        catch (Exception ex)
-                        {
-                            SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestStart), ex);
-                        }
-
-                        MessageBox.Show(canoprate.Message, "CAN初始化失败");
-                        return;
-                    }
-
-                    GlobalModel.DicDeviceInfo["Product"].DeviceOperate = canoprate.Data;
-                    Product_CAN_Operate operate = (canoprate.Data as Product_CAN_Operate);
-
-                    //var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
-                    //    .And(operate.SetReadSignal(thread.DicReadSignals_CAN))
-                    //    .And(operate.SetSendSignal(thread.SendSignals_CAN));
-                    var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
-                       .And(operate.SetReadSignal(thread.LisReadSignals_CAN))
-                       .And(operate.SetSendSignal(thread.DicSendSignals_CAN.Keys.ToList()))
-                       .And(operate.SetSendSignalInitValue(thread.DicSendSignals_CAN))
-                       .And(operate.SetMessageCycleTime(thread.DicMessageCycleTime));
-
-                    if (!cansetrlt)
-                    {
-                        GlobalModel.IsTestThreadRun = false;
-                        thread.IsRunning = false;
-                        SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
-
-                        Thread.Sleep(200);
-                        Application.Current.Dispatcher.Invoke(new Action(() =>
-                        {
-                            ContentName = "CAN配置参数初始化失败";
-                            ContentColor = Brushes.Red;
-                            StepStrShow = Visibility.Collapsed;
-                            //IsTestRuning = false;
-                            TestResult = "FAIL";
-                            TestResultColor = Brushes.Red;
-                            //ProductSN = string.Empty;
-                            //productsnlenth = 0;
-
-
-                            //使能解封
-                            IsTestRuning = false;
-                            //窗口需获取焦点
-                            Application.Current.MainWindow.Focus();
-                            Thread.Sleep(100);
-                            IsFocuse = true;
-                        }));
-
-                        CANUnint(operate);
-
-                        MessageBox.Show(canoprate.Message, "CAN参数初始化失败");
-                        return;
-                    }
-
-                    //    .ThenAnd(result =>
-                    //{
-                    //    Product_CAN_Operate operate = (result.Data as Product_CAN_Operate);
-                    //    return operate
-                    //     .SetReadSignal(thread.DicReadSignals_CAN)
-                    //     .And(operate.SetSendSignal(thread.SendSignals_CAN))
-                    //     .ConvertTo(result.Data);
-                    //});
-                    //for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++)
-                    //{
-                    //    test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
-                    //}
-
-                    //test_Data.Pro_DeviceRead = GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos;
-                }
-                catch (Exception ex)
+            Thread.Sleep(1000);
+            try
+            {
+                GlobalModel.DicDeviceInfo["Product"].Args.DriveConfig.BaudRate = thread.ProjectInfo.BaudRate;
+                var canoprate = CANInt(GlobalModel.DicDeviceInfo["Product"].Args);
+                if (!canoprate)
                 {
                     GlobalModel.IsTestThreadRun = false;
                     thread.IsRunning = false;
-                    SuperDHHLoggerManager.Exception(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), ex);
-                    MessageBox.Show(ex.GetMessage(), "CAN初始化异常");
+                    SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
+
+                    Thread.Sleep(200);
 
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
-
-
                         ContentName = "CAN通讯初始化失败";
                         ContentColor = Brushes.Red;
                         StepStrShow = Visibility.Collapsed;
+                        //IsTestRuning = false;
+                        TestResult = "FAIL";
+                        TestResultColor = Brushes.Red;
+
+                        //使能解封
+                        IsTestRuning = false;
+                        //窗口需获取焦点
+                        Application.Current.MainWindow.Focus();
+                        Thread.Sleep(100);
+                        IsFocuse = true;
+                        //IsFocuse = true;
+                    }));
+
+                    try
+                    {
+                        relayoperate_4?.SateLedContrcl(LightType.ERROR);
+                        //(GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate).SateLedContrcl(LightType.ERROR);
+                    }
+                    catch (Exception ex)
+                    {
+                        SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestStart), ex);
+                    }
+
+                    MessageBox.Show(canoprate.Message, "CAN初始化失败");
+                    return;
+                }
+
+                GlobalModel.DicDeviceInfo["Product"].DeviceOperate = canoprate.Data;
+                Product_CAN_Operate operate = (canoprate.Data as Product_CAN_Operate);
+
+                //var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
+                //    .And(operate.SetReadSignal(thread.DicReadSignals_CAN))
+                //    .And(operate.SetSendSignal(thread.SendSignals_CAN));
+                var cansetrlt = operate.LoadMessageFile(thread.DBCFile.FileContent, thread.DBCFile.FileExtension)
+                   .And(operate.SetReadSignal(thread.LisReadSignals_CAN))
+                   .And(operate.SetSendSignal(thread.DicSendSignals_CAN.Keys.ToList()))
+                   .And(operate.SetSendSignalInitValue(thread.DicSendSignals_CAN))
+                   .And(operate.SetMessageCycleTimeANDFrameFormat(thread.DicMessageSet));
+
+                if (!cansetrlt)
+                {
+                    GlobalModel.IsTestThreadRun = false;
+                    thread.IsRunning = false;
+                    SuperDHHLoggerManager.Fatal(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), canoprate.Message);
+
+                    Thread.Sleep(200);
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ContentName = "CAN配置参数初始化失败";
+                        ContentColor = Brushes.Red;
+                        StepStrShow = Visibility.Collapsed;
+                        //IsTestRuning = false;
                         TestResult = "FAIL";
                         TestResultColor = Brushes.Red;
                         //ProductSN = string.Empty;
                         //productsnlenth = 0;
-                        //IsFocuse = true;
+
 
                         //使能解封
                         IsTestRuning = false;
@@ -1213,24 +1123,81 @@ namespace IMX.ATS.ATE
                         IsFocuse = true;
                     }));
 
+                    CANUnint(operate);
+
+                    MessageBox.Show(canoprate.Message, "CAN参数初始化失败");
                     return;
                 }
+
+                product = operate;
+                //    .ThenAnd(result =>
+                //{
+                //    Product_CAN_Operate operate = (result.Data as Product_CAN_Operate);
+                //    return operate
+                //     .SetReadSignal(thread.DicReadSignals_CAN)
+                //     .And(operate.SetSendSignal(thread.SendSignals_CAN))
+                //     .ConvertTo(result.Data);
+                //});
+                //for (int i = 0; i < GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos.Count; i++)
+                //{
+                //    test_Data.Pro_Data.Add(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos[i].DataInfo);
+                //}
+
+                //test_Data.Pro_DeviceRead = GlobalModel.DicDeviceInfo["Product"].DeviceOperate.ReadInfos;
+            }
+            catch (Exception ex)
+            {
+                GlobalModel.IsTestThreadRun = false;
+                thread.IsRunning = false;
+                SuperDHHLoggerManager.Exception(LoggerType.THREAD, nameof(MainViewModel), nameof(TestRun), ex);
+                MessageBox.Show(ex.GetMessage(), "CAN初始化异常");
+
+                Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+
+
+                    ContentName = "CAN通讯初始化失败";
+                    ContentColor = Brushes.Red;
+                    StepStrShow = Visibility.Collapsed;
+                    TestResult = "FAIL";
+                    TestResultColor = Brushes.Red;
+                    //ProductSN = string.Empty;
+                    //productsnlenth = 0;
+                    //IsFocuse = true;
+
+                    //使能解封
+                    IsTestRuning = false;
+                    //窗口需获取焦点
+                    Application.Current.MainWindow.Focus();
+                    Thread.Sleep(100);
+                    IsFocuse = true;
+                }));
+
+                return;
+            }
             //}
+            #endregion
+
+            #region 设备读取线程开启
+            new Thread(ReadDataThread_Pro) { IsBackground = true }.Start();
+            new Thread(ReadDataThread_Euq) { IsBackground = true }.Start();
             #endregion
 
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 StepStrShow = Visibility.Collapsed;
             }));
-//#if !DEBUG
-//            for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
-//            {
-//                test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
-//            }
-//#endif
+            //#if !DEBUG
+            //            for (int i = 0; i < GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos.Count; i++)
+            //            {
+            //                test_Data.Euq_Data.Add(GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos[i].DataInfo);
+            //            }
+            //#endif
 
             //test_Data.Euq_DeviceRead = GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.ReadInfos;
+#pragma warning disable CS0219 // 变量已被赋值，但从未使用过它的值
             bool testresult = true;
+#pragma warning restore CS0219 // 变量已被赋值，但从未使用过它的值
             string errorstr = string.Empty;
 
             Test_ItemInfo testinfo = new Test_ItemInfo
@@ -1259,6 +1226,7 @@ namespace IMX.ATS.ATE
                 ProjectSN = thread.ProjectInfo.ProjectSN,
             };
 
+            SavaProjectItem(SupportConfig.DataSavePath, projectItemInfo);
             #region 试验方案执行
             //for (int i = 0; i < thread.Programme.Test_FlowNames?.Count; i++)
             for (int i = 0; i < thread.Test_FlowNames?.Count; i++)
@@ -1271,6 +1239,7 @@ namespace IMX.ATS.ATE
 
                 //string flowname = thread.Programme.Test_FlowNames[i];
                 string flowname = thread.Test_FlowNames[i];
+                testinfo.FlowName = flowname;
                 errorstr = string.Empty;
 
                 if (!thread.DicTestFlowsFunction.TryGetValue(flowname, out TestFunctionInfo functionInfo))
@@ -1290,18 +1259,37 @@ namespace IMX.ATS.ATE
                     break;
                 }
 
+                #region 试验存储数据加载
+                //TODO 试验存储数据加载
                 //试验存储数据赋值
                 test_Data.Euq_Data.Clear();
                 test_Data.Pro_Data.Clear();
                 test_Data.Euq_SetData.Clear();
                 test_Data.Pro_SetData.Clear();
+                dicjudge_euq.Clear();
+                //test_Data.EX_Data.Clear();
                 #region 工装参数加载
                 for (int k = 0; k < functionInfo.ReadData_Euq.Count; k++)
                 {
                     var datainfo = functionInfo.ReadData_Euq[k];
-                    if (GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate.DicReadInfo.TryGetValue(datainfo.Name, out ModDeviceReadData read))
+                    if (acquisition.DicReadInfo.TryGetValue(datainfo.Name, out ModDeviceReadData read))
                     {
                         test_Data.Euq_Data.Add(read.DataInfo);
+                        dicjudge_euq.Add(read.DataInfo.Name, read.DataInfo);
+                    }
+                }
+                
+                //计算数据，加入到工装数据
+                lock (liscalculatedata)
+                {
+                    
+                    liscalculatedata.Clear();
+                    for (int k = 0; k < functionInfo.CalculateData.Count; k++)
+                    {
+                        var datainfo = functionInfo.CalculateData[k];
+                        test_Data.Euq_Data.Add(datainfo);
+                        liscalculatedata.Add(datainfo);
+                        dicjudge_euq.Add(datainfo.Name, datainfo);
                     }
                 }
 
@@ -1310,9 +1298,12 @@ namespace IMX.ATS.ATE
                     var datainfo = functionInfo.SetData_Euq[k];
                     foreach (var item in GlobalModel.DicDeviceInfo)
                     {
-                        if (item.Value.DeviceOperate.DicSetInfo.TryGetValue(datainfo.Name, out ModDeviceReadData set))
+                        if (item.Value.DeviceOperate != null && item.Key != "Product")
                         {
-                            test_Data.Euq_SetData.Add(set.DataInfo);
+                            if (item.Value.DeviceOperate.DicSetInfo.TryGetValue(datainfo.Name, out ModDeviceReadData set))
+                            {
+                                test_Data.Euq_SetData.Add(set.DataInfo);
+                            }
                         }
                     }
                 }
@@ -1321,22 +1312,23 @@ namespace IMX.ATS.ATE
                 for (int k = 0; k < functionInfo.ReadData_Pro.Count; k++)
                 {
                     var datainfo = functionInfo.ReadData_Pro[k];
-                    if (GlobalModel.DicDeviceInfo["Product"].DeviceOperate.DicReadInfo.TryGetValue(datainfo.Name, out ModDeviceReadData read))
+                    if (product.DicReadInfo.TryGetValue(datainfo.Name, out ModDeviceReadData read))
                     {
                         test_Data.Pro_Data.Add(read.DataInfo);
                     }
                 }
 
-                for (int k = 0; k < functionInfo.SetData_Euq.Count; k++)
+                for (int k = 0; k < functionInfo.SetData_Pro.Count; k++)
                 {
-                    var datainfo = functionInfo.SetData_Euq[k];
-                    if (GlobalModel.DicDeviceInfo["Product"].DeviceOperate.DicSetInfo.TryGetValue(datainfo.Name, out ModDeviceReadData set))
+                    var datainfo = functionInfo.SetData_Pro[k];
+                    if (product.DicSetInfo.TryGetValue(datainfo.Name, out ModDeviceReadData set))
                     {
                         test_Data.Pro_SetData.Add(set.DataInfo);
                     }
                 }
                 #endregion
                 test_Data.EX_Data = functionInfo.CustomData;
+                #endregion
 
                 //试验步骤
                 var flows = functionInfo.Functions;
@@ -1347,7 +1339,7 @@ namespace IMX.ATS.ATE
                 //多次试验数据覆盖机制
                 if (Directory.Exists(datadirectorypath))
                 {
-                    Directory.Delete(datadirectorypath);
+                    Directory.Delete(datadirectorypath,true);
                 }
                 Directory.CreateDirectory(datadirectorypath);
 
@@ -1371,7 +1363,7 @@ namespace IMX.ATS.ATE
                     ATEExecuteInfos.Add(functioninfo);
                 }));
                 #region 试验项执行
-                //TODO 试验项执行
+                //TODO 试验项步骤执行
                 for (int j = 0; j < flows?.Count; j++)
                 {
                     bool isoutfunc = false;
@@ -1410,19 +1402,19 @@ namespace IMX.ATS.ATE
                         //TODO 试验步骤执行
                         if (config.SupportFuncitonType == FuncitonType.ProductResult)
                         {
-                            if (!thread.ProjectInfo.IsUseDDBC)
-                            {
-                                continue;
-                            }
+                            //if (!thread.ProjectInfo.IsUseDDBC)
+                            //{
+                            //    continue;
+                            //}
                             try
                             {
-                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL caninfo))
-                                {
-                                    operate = caninfo.DeviceOperate;
-                                }
+                                //if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL caninfo))
+                                //{
+                                //    operate = caninfo.DeviceOperate;
+                                //}
                                 FunConfig_ProductResult resultconfig = config as FunConfig_ProductResult;
 
-                                var result = ProductResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as Product_CAN_Operate);
+                                var result = ProductResultExecute(j + 1, flowname, stepinfo, resultconfig);
 
                                 test_Data.StepName = config.SupportFuncitonType.GetDescription();
                                 test_Data.FlowName = flowname;
@@ -1477,20 +1469,25 @@ namespace IMX.ATS.ATE
                         }
                         else if (config is IFuntion_Step stepfuntion)
                         {
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                stepinfo.Add(step);
+                            }));
+
                             //步进状态操作
                             if (stepfuntion.EnableStepping)
                             {
-                                Product_CAN_Operate product_CAN = null;
-                                IAcquisition acquisition = null;
+                                //Product_CAN_Operate product_CAN = null;
+                                //IAcquisition acquisition = null;
 
-                                if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
-                                {
-                                    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
-                                }
-                                if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
-                                {
-                                    acquisition = infoac.DeviceOperate as IAcquisition;
-                                }
+                                //if (GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL infopro))
+                                //{
+                                //    product_CAN = infopro.DeviceOperate as Product_CAN_Operate;
+                                //}
+                                //if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL infoac))
+                                //{
+                                //    acquisition = infoac.DeviceOperate as IAcquisition;
+                                //}
 
                                 var result = stepfuntion.Execut_ExceptStep(operate);
                                 if (!result)
@@ -1505,7 +1502,7 @@ namespace IMX.ATS.ATE
                                     TestErrorString += result.Message;
                                     break;
                                 }
-                                int count = stepfuntion.NeedStepCount;
+                                
 
                                 //TODO 步进判断数据获取
                                 Dictionary<string, ModDeviceReadData> data = new Dictionary<string, ModDeviceReadData>();
@@ -1516,16 +1513,16 @@ namespace IMX.ATS.ATE
                                     var value = GlobalModel.DicDeviceInfo[device].DeviceOperate.DicReadInfo[name];
                                     data.Add(name, value);
                                 }
-
+                                int count = stepfuntion.NeedStepCount;
+                                if (stepfuntion.StepOutCheck(data)) 
+                                {
+                                    count = -1;
+                                }
                                 while (count-- > 0)
                                 {
-                                    if (stepfuntion.StepOutCheck(data))
-                                    {
-                                        break;
-                                    }
+                                    
                                     Thread.Sleep(stepfuntion.StepFrequency);
                                     stepfuntion.SetStep(operate);
-
                                 }
 
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
@@ -1558,17 +1555,19 @@ namespace IMX.ATS.ATE
                         }
                         else if (config.SupportFuncitonType == FuncitonType.EquipmentResult)
                         {
-#if DEBUG
-                            continue;
-#endif
+//#if DEBUG
+//                            continue;
+//#endif
 
-                            if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL acqinfo))
-                            {
-                                operate = acqinfo.DeviceOperate;
-                            }
+#pragma warning disable CS0162 // 检测到无法访问的代码
+                            //if (GlobalModel.DicDeviceInfo.TryGetValue("Acquisition", out DeviceInfo_ALL acqinfo))
+                            //{
+                            //    operate = acqinfo.DeviceOperate;
+                            //}
+#pragma warning restore CS0162 // 检测到无法访问的代码
 
                             FunConfig_EquipmentResult resultconfig = config as FunConfig_EquipmentResult;
-                            var result = EquipmentResultExecute(j + 1, flowname, stepinfo, resultconfig, operate as IAcquisition);
+                            var result = EquipmentResultExecute(j + 1, flowname, stepinfo, resultconfig);
 
                             test_Data.StepName = config.SupportFuncitonType.GetDescription();
                             test_Data.FlowName = flowname;
@@ -1751,19 +1750,19 @@ namespace IMX.ATS.ATE
                                 stepinfo.Add(step);
                             }));
 
-                            //防止调试过程中频繁勾选DBC使用情况，试验项步骤未变更
-                            if (config.SupportFuncitonType == FuncitonType.Product && !thread.ProjectInfo.IsUseDDBC)
-                            {
-                                step.Result = ResultState.SUCCESS;
-                                continue;
-                            }
+//                            //防止调试过程中频繁勾选DBC使用情况，试验项步骤未变更
+//                            if (config.SupportFuncitonType == FuncitonType.Product && !thread.ProjectInfo.IsUseDDBC)
+//                            {
+//                                step.Result = ResultState.SUCCESS;
+//                                continue;
+//                            }
 
-#if DEBUG
-                            if (config.SupportFuncitonType != FuncitonType.Product)
-                            {
-                                continue;
-                            }
-#endif
+//#if DEBUG
+//                            if (config.SupportFuncitonType != FuncitonType.Product)
+//                            {
+//                                continue;
+//                            }
+//#endif
 
                             var result = config.Execute(operate);
                             if (!result)
@@ -1785,6 +1784,8 @@ namespace IMX.ATS.ATE
                                 step.Result = ResultState.SUCCESS;
                             }));
                         }
+
+                        Task.Run(() => WriteDataToLocal(datadirectorypath, test_Data));
                         Thread.Sleep(0);
                         #endregion
                     }
@@ -1839,7 +1840,7 @@ namespace IMX.ATS.ATE
             //ShutDown(thread.Programme.TestOff_FlowNames, thread.ProjectInfo.IsUseDDBC);
             //if (thread.ProjectInfo.IsUseDDBC)
             //{
-                CANUnint(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
+            CANUnint(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
             //}
 
             thread.IsRunning = false;
@@ -1944,27 +1945,30 @@ namespace IMX.ATS.ATE
         /// 产品试验结果执行
         /// </summary>
         /// <returns></returns>
-        private OperateResult ProductResultExecute(int index, string flowname, ObservableCollection<ExecuteStepInfo> infos, FunConfig_ProductResult config, Product_CAN_Operate operate)
+        private OperateResult ProductResultExecute(int index, 
+            string flowname, 
+            ObservableCollection<ExecuteStepInfo> infos, 
+            FunConfig_ProductResult config)
         {
             string errorstring = string.Empty;
 
             try
             {
-                if (operate == null)
-                {
-                    errorstring = "设备类型不存在";
-                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute), errorstring);
-                    return OperateResult.Failed(errorstring);
-                }
+                //if (operate == null)
+                //{
+                //    errorstring = "设备类型不存在";
+                //    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute), errorstring);
+                //    return OperateResult.Failed(errorstring);
+                //}
 
-                if (config == null)
-                {
-                    errorstring = "产品结果读取配置不可为空";
-                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute), errorstring);
-                    return OperateResult.Failed(errorstring);
-                }
+                //if (config == null)
+                //{
+                //    errorstring = "产品结果读取配置不可为空";
+                //    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(ProductResultExecute), errorstring);
+                //    return OperateResult.Failed(errorstring);
+                //}
 
-                operate.Device_ReadAll();
+                //operate.Device_ReadAll();
 
                 for (int i = 0; i < config.Datas?.Count; i++)
                 {
@@ -1978,7 +1982,8 @@ namespace IMX.ATS.ATE
                         Limit_Upper = data.Limits_Upper.ToString(),
                         ValueConditions = data.Judgment.GetDescription(),
                     };
-                    config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
+
+                    config.Datas[i].DataInfo.Value = product.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
 
                     step.NowVlaue = data.DataInfo.Value.ToString();
 
@@ -2020,26 +2025,28 @@ namespace IMX.ATS.ATE
         /// 工装试验结果执行
         /// </summary>
         /// <returns></returns>
-        private OperateResult EquipmentResultExecute(int index, string flowname, ObservableCollection<ExecuteStepInfo> infos, FunConfig_EquipmentResult config, IAcquisition operate)
+        private OperateResult EquipmentResultExecute(int index, string flowname, 
+            ObservableCollection<ExecuteStepInfo> infos, 
+            FunConfig_EquipmentResult config)
         {
             string errorstring = string.Empty;
             try
             {
-                if (operate == null)
-                {
-                    errorstring = "设备类型不存在";
-                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(EquipmentResultExecute), errorstring);
-                    return OperateResult.Failed(errorstring);
-                }
+                //if (operate == null)
+                //{
+                //    errorstring = "设备类型不存在";
+                //    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(EquipmentResultExecute), errorstring);
+                //    return OperateResult.Failed(errorstring);
+                //}
 
-                if (config == null)
-                {
-                    errorstring = "工装结果读取配置不可为空";
-                    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(EquipmentResultExecute), errorstring);
-                    return OperateResult.Failed(errorstring);
-                }
+                //if (config == null)
+                //{
+                //    errorstring = "工装结果读取配置不可为空";
+                //    SuperDHHLoggerManager.Error(LoggerType.TESTLOG, nameof(MainViewModel), nameof(EquipmentResultExecute), errorstring);
+                //    return OperateResult.Failed(errorstring);
+                //}
 
-                operate.Device_ReadAll();
+                //operate.Device_ReadAll();
 
                 for (int i = 0; i < config.Datas?.Count; i++)
                 {
@@ -2054,7 +2061,7 @@ namespace IMX.ATS.ATE
                         ValueConditions = data.Judgment.GetDescription(),
                     };
 
-                    config.Datas[i].DataInfo.Value = operate.DicReadInfo[config.Datas[i].DataInfo.Name].DataInfo.Value;
+                    config.Datas[i].DataInfo.Value = dicjudge_euq[config.Datas[i].DataInfo.Name].Value;
 
                     step.NowVlaue = data.DataInfo.Value.ToString();
                     //test_Data.StepName = config.SupportFuncitonType.GetDescription();
@@ -2371,7 +2378,7 @@ namespace IMX.ATS.ATE
         //    }
         //}
         #endregion
-
+        #region 暂舍弃操作步骤
         /// <summary>
         /// 交流源试验执行
         /// </summary>
@@ -2745,7 +2752,7 @@ namespace IMX.ATS.ATE
                 return OperateResult.Excepted(ex);
             }
         }
-
+        #endregion
         /// <summary>
         /// 步进跳出判断
         /// </summary>
@@ -2876,18 +2883,19 @@ namespace IMX.ATS.ATE
             }
         }
 
-        private OperateResult SavaProjectItem(string path, Test_ProjectItemInfo info) 
+        private OperateResult SavaProjectItem(string path, Test_ProjectItemInfo info)
         {
-            lock (objLock) 
+            lock (objLock)
             {
                 try
                 {
                     info.CreateTime = DateTime.Now;
-                    if (!Directory.Exists(path))
+                    string projectpath = Path.Combine(path, "project");
+                    if (!Directory.Exists(projectpath))
                     {
-                        Directory.CreateDirectory(path);
+                        Directory.CreateDirectory(projectpath);
                     }
-                    string datapath = Path.Combine(path, "project", $"project_{info.CreateTime:yyyyMMddHHmmssfff}.pjt");
+                    string datapath = Path.Combine(projectpath, $"project_{info.ProjectSN}.pjt");
                     using (FileStream fs = new FileStream(datapath, FileMode.CreateNew))
                     {
                         using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8)) // Encoding.UTF8 设置编码方式
@@ -2974,247 +2982,297 @@ namespace IMX.ATS.ATE
 
             Task.Run(() =>
             {
-                   var projectinfo = Dirs.GetDirectories($"{SupportConfig.DataSavePath}//project");
+                try
+                {
+                    var projectinfo = Dirs.GetDirectories("project");
                     if (projectinfo.Length < 1)
                     {
-                    Application.Current.Dispatcher.Invoke(new Action(() => 
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            ContentName = "数据存储失败";
+                            ContentColor = Brushes.Red;
+                            StepStr = "数据异常，无法存储。。。";
+                            StepStrShow = Visibility.Visible;
+                        }));
+
+                        return;
+                    }
+
+                    long ItemID = -1;
+                    #region 试验项目信息条目存储
+                    if (File.Exists($"{projectinfo[0].FullName}//ItemID.pjt"))
+                    {
+                        ItemID = Convert.ToInt32(File.ReadAllText($"{projectinfo[0].FullName}//ItemID.pjt"));
+                    }
+                    else
+                    {
+                        var files = projectinfo[0].GetFiles("project*");
+                        if (files.Length == 0)
+                        {
+                            Application.Current.Dispatcher.Invoke(new Action(() =>
+                            {
+                                ContentName = "数据存储失败";
+                                ContentColor = Brushes.Red;
+                                StepStr = "文件丢失，存储异常，请确认未改动本地数据文件。。。";
+                                StepStrShow = Visibility.Visible;
+                                EnableTestBtn = true;
+                            }));
+                            return;
+                        }
+
+                        try
+                        {
+                            string info = File.ReadAllText(files[0].FullName);
+
+                            if (info.Length == 0)
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    ContentName = "数据存储失败";
+                                    ContentColor = Brushes.Red;
+                                    StepStr = "文件内容丢失，存储异常，请确认未改动本地数据文件。。。";
+                                    StepStrShow = Visibility.Visible;
+                                }));
+                                return;
+                            }
+                            var result = DBOperate.Default.InserTestProjectItem(info);
+                            if (!result)
+                            {
+                                Application.Current.Dispatcher.Invoke(new Action(() =>
+                                {
+                                    ContentName = "数据存储失败";
+                                    ContentColor = Brushes.Red;
+                                    StepStr = result.Message;
+                                    StepStrShow = Visibility.Visible;
+                                }));
+                                return;
+                            }
+
+                            ItemID = result.Data;
+
+
+                            File.WriteAllText($"{projectinfo[0].FullName}//ItemID.pjt", $"{ItemID}");
+                            foreach (var item in files)
+                            {
+                                item.Delete();
+                                Thread.Sleep(10);
+                                SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验项目信息条目插入文件处理异常", ex);
+                        }
+                    }
+                    #endregion
+                    int timeout = 5;//多次循环确保数据存储成功
+                    long ID = -1;
+
+                    while (timeout-- > 0)
+                    {
+                        if (Dirs.GetDirectories().Length < 2)
+                        {
+                            break;
+                        }
+                        
+                        foreach (var dir in Dirs.GetDirectories())
+                        {
+                            string info;
+                            #region 获取试验项目信息条目ID
+                            if (dir.FullName == $"{SupportConfig.DataSavePath}//project")
+                            {
+                                if (File.Exists($"{dir.FullName}//ItemID.pjt"))
+                                {
+                                    ItemID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ItemID.pjt"));
+                                }
+                                else
+                                {
+                                    var files = dir.GetFiles("InsterItem*");
+                                    if (files.Length == 0)
+                                    {
+                                        continue;
+                                    }
+                                    try
+                                    {
+                                        info = File.ReadAllText(files[0].FullName);
+                                        if (info.Length != 0)
+                                            ID = DBOperate.Default.InserTestItem(info, ItemID).Data;
+                                        if (ID == -1)
+                                        {
+                                            continue;
+                                        }
+
+                                        try
+                                        {
+                                            File.WriteAllText($"{dir.FullName}//ID.itme", $"{ID}");
+                                            foreach (var item in files)
+                                            {
+                                                item.Delete();
+                                                Thread.Sleep(10);
+                                                SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
+                                            }
+                                            //ID = id;
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
+                                        continue;
+                                    }
+                                }
+                            }
+                            #endregion
+                            #region 获取试验条目ID
+                            if (ItemID != -1 && dir.GetFiles().Length > 1)
+                            {
+                                if (File.Exists($"{dir.FullName}//ID.itme"))
+                                {
+                                    if (dir.GetFiles().Length == 1)
+                                    {
+                                        dir.Delete(true);
+                                        SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", $"删除文件 {dir.FullName} 成功");
+                                        continue;
+                                    }
+
+                                    ID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ID.itme"));
+                                }
+                                else
+                                {
+                                    var files = dir.GetFiles("InsterItem*");
+                                    if (files.Length == 0)
+                                    {
+                                        continue;
+                                    }
+                                    try
+                                    {
+                                        info = File.ReadAllText(files[0].FullName);
+                                        if (info.Length > 0)
+                                            ID = DBOperate.Default.InserTestItem(info, (int)ItemID).Data;
+                                        if (ID == -1)
+                                        {
+                                            continue;
+                                        }
+
+                                        try
+                                        {
+                                            File.WriteAllText($"{dir.FullName}//ID.itme", $"{ID}");
+                                            foreach (var item in files)
+                                            {
+                                                item.Delete();
+                                                Thread.Sleep(10);
+                                                SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
+                                            }
+                                            //ID = id;
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
+                                        continue;
+                                    }
+                                }
+                            }
+
+                            #endregion
+                            if (ID != -1 && dir.GetFiles().Length > 1)
+                            {
+                                foreach (FileInfo item in dir.GetFiles())
+                                {
+                                    try
+                                    {
+                                        if (item.Extension.ToUpper() == ".DATA")
+                                        {
+
+                                            info = File.ReadAllText(item.FullName);
+                                            DBOperate.Default.InserTestData(info,ID).AttachIfSucceed(result =>
+                                            {
+                                                item.Delete();
+                                                Thread.Sleep(10);
+                                                SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"删除{item.FullName}成功");
+                                            });
+                                            //var data = JsonConvert.DeserializeObject<Test_DataInfo>(info);
+                                            //if (data == null)
+                                            //{
+                                            //    SuperDHHLoggerManager.Fatal(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"{item.FullName}文件内容格式异常");
+                                            //}
+
+                                            //data.TestItemID = (int)ID;
+                                            //DBOperate.Default.InserTestData(data)
+                                            //    .AttachIfSucceed(result =>
+                                            //    {
+                                            //        item.Delete();
+                                            //        Thread.Sleep(10);
+                                            //        SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"删除{item.FullName}成功");
+                                            //    });
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", ex);
+                                    }
+                                }
+                            }
+
+                            Thread.Sleep(10);
+                            if (dir.GetFiles().Length == 1 
+                            && File.Exists($"{dir.FullName}//ID.itme"))
+                            {
+                                dir.Delete(true);
+                            }
+                        }
+                    }
+
+
+                    if (Dirs.GetDirectories().Length > 1)
+                    {
+                        Application.Current.Dispatcher.Invoke(new Action(() =>
+                        {
+                            ContentName = "数据存储失败";
+                            ContentColor = Brushes.Red;
+                            StepStr = "试验数据未完全存储";
+                            StepStrShow = Visibility.Visible;
+                        }));
+                        return;
+                    }
+
+                    Dirs.Delete(true);
+                    enablesavedata = false;
+
+                    //StepStrShow = Visibility.Collapsed;
+                    //ContentName = string.Empty;
+
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        ContentName = "数据存储完成";
+                        ContentColor = Brushes.Green;
+                        StepStrShow = Visibility.Collapsed;
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", ex);
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
                         ContentName = "数据存储失败";
                         ContentColor = Brushes.Red;
                         StepStr = "数据异常，无法存储。。。";
                         StepStrShow = Visibility.Visible;
                     }));
-
-                    return;
-                    }
-
-                long ItemID = -1;
-                #region 试验项目信息条目存储
-                if (File.Exists($"{projectinfo[0].FullName}//ItemID.txt"))
-                {
-                    ItemID = Convert.ToInt32(File.ReadAllText($"{projectinfo[0].FullName}//ItemID.txt"));
                 }
-                else
+                finally 
                 {
-                    var files = projectinfo[0].GetFiles("project*");
-                    if (files.Length == 0)
-                    {
-                        Application.Current.Dispatcher.Invoke(new Action(() =>
-                        {
-                            ContentName = "数据存储失败";
-                            ContentColor = Brushes.Red;
-                            StepStr = "文件丢失，存储异常，请确认未改动本地数据文件。。。";
-                            StepStrShow = Visibility.Visible;
-                        }));
-                        return;
-                    }
-
-                    try
-                    {
-                      string info = File.ReadAllText(files[0].FullName);
-
-                        if (info.Length == 0) 
-                        {
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                ContentName = "数据存储失败";
-                                ContentColor = Brushes.Red;
-                                StepStr = "文件内容丢失，存储异常，请确认未改动本地数据文件。。。";
-                                StepStrShow = Visibility.Visible;
-                            }));
-                            return;
-                        }
-                        var result = DBOperate.Default.InserTestProjectItem(info);
-                        if (!result)
-                        {
-                            Application.Current.Dispatcher.Invoke(new Action(() =>
-                            {
-                                ContentName = "数据存储失败";
-                                ContentColor = Brushes.Red;
-                                StepStr = result.Message;
-                                StepStrShow = Visibility.Visible;
-                            }));
-                            return;
-                        }
-                        ItemID = result.Data;
-                    }
-                    catch (Exception ex)
-                    {
-                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验项目信息条目插入文件处理异常", ex);
-                    }
-                }
-                #endregion
-                int timeout = 5;//多次循环确保数据存储成功
-                while (timeout-- > 0)
-                {
-                    if (Dirs.GetDirectories().Length < 2)
-                    {
-                        break;
-                    }
-                    foreach (var dir in Dirs.GetDirectories())
-                    {
-                        long ID = -1;
-                        string info;
-                        #region 获取试验项目信息条目ID
-                        if (dir.FullName == $"{SupportConfig.DataSavePath}//project")
-                        {
-                            if (File.Exists($"{dir.FullName}//ItemID.txt"))
-                            {
-                                ItemID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ItemID.txt"));
-                            }
-                            else
-                            {
-                                var files = dir.GetFiles("InsterItem*");
-                                if (files.Length == 0)
-                                {
-                                    continue;
-                                }
-                                try
-                                {
-                                    info = File.ReadAllText(files[0].FullName);
-                                    if (info.Length != 0)
-                                        ID = DBOperate.Default.InserTestItem(info, ItemID).Data;
-                                    if (ID == -1)
-                                    {
-                                        continue;
-                                    }
-
-                                    try
-                                    {
-                                        File.WriteAllText($"{dir.FullName}//ID.txt", $"{ID}");
-                                        foreach (var item in files)
-                                        {
-                                            item.Delete();
-                                            Thread.Sleep(10);
-                                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
-                                        }
-                                        //ID = id;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
-                                    continue;
-                                }
-                            }
-                        }
-                        #endregion
-                        #region 获取试验条目ID
-                        if (ItemID != -1 && dir.GetFiles().Length > 1)
-                        {
-                            if (File.Exists($"{dir.FullName}//ID.txt"))
-                            {
-                                if (dir.GetFiles().Length == 1)
-                                {
-                                    dir.Delete(true);
-                                    SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", $"删除文件 {dir.FullName} 成功");
-                                    continue;
-                                }
-
-                                ID = Convert.ToInt32(File.ReadAllText($"{dir.FullName}//ID.txt"));
-                            }
-                            else
-                            {
-                                var files = dir.GetFiles("InsterItem*");
-                                if (files.Length == 0)
-                                {
-                                    continue;
-                                }
-                                try
-                                {
-                                    info = File.ReadAllText(files[0].FullName);
-                                    if (info.Length == 0)
-                                        ID = DBOperate.Default.InserTestItem(info, (int)ItemID).Data;
-                                    if (ID == -1)
-                                    {
-                                        continue;
-                                    }
-
-                                    try
-                                    {
-                                        File.WriteAllText($"{dir.FullName}//ID.txt", $"{ID}");
-                                        foreach (var item in files)
-                                        {
-                                            item.Delete();
-                                            Thread.Sleep(10);
-                                            SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", $"删除{item.FullName}成功");
-                                        }
-                                        //ID = id;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入文件处理异常", ex);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "试验条目插入", ex);
-                                    continue;
-                                }
-                            }
-                        }
-
-                        #endregion
-                        if (ID != -1 && dir.GetFiles().Length > 1)
-                        {
-                            foreach (FileInfo item in dir.GetFiles())
-                            {
-                                try
-                                {
-                                    if (item.Extension.ToUpper() == "DATA")
-                                    {
-
-                                        info = File.ReadAllText(item.FullName);
-                                        var data = JsonConvert.DeserializeObject<Test_DataInfo>(info);
-                                        if (data == null)
-                                        {
-                                            SuperDHHLoggerManager.Fatal(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"{item.FullName}文件内容格式异常");
-                                        }
-
-                                        data.TestItemID = (int)ID;
-                                        DBOperate.Default.InserTestData(data)
-                                            .AttachIfSucceed(result =>
-                                            {
-                                                item.Delete();
-                                                Thread.Sleep(10);
-                                                SuperDHHLoggerManager.Info(LoggerType.DBLOG, nameof(SaveData), "试验数据插入", $"删除{item.FullName}成功");
-                                            });
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    SuperDHHLoggerManager.Exception(LoggerType.DBLOG, nameof(SaveData), "数据转存数据库", ex);
-                                }
-                            }
-                        }
-
-                        Thread.Sleep(10);
-                    }
+                    EnableTestBtn = true;
                 }
 
 
-                if (Dirs.GetDirectories().Length > 1)
-                {
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
-                    {
-                        ContentName = "数据存储失败";
-                        ContentColor = Brushes.Red;
-                        StepStr = "试验数据未完全存储";
-                        StepStrShow = Visibility.Visible;
-                    }));
-                    return;
-                }
-
-                Dirs.Delete(true);
-                enablesavedata = false;
-                EnableTestBtn = true;
-                StepStrShow = Visibility.Collapsed;
-                ContentName = string.Empty;
-                
             });
         }
         #endregion
@@ -3318,20 +3376,30 @@ namespace IMX.ATS.ATE
                         GlobalModel.DicDeviceInfo.TryGetValue("DCLoad", out info);
                     }
                     break;
+                    case "低压直流负载下电关机":
+                    {
+                        GlobalModel.DicDeviceInfo.TryGetValue("LVDCLoad", out info);
+                    }
+                    break;
                     case "高压直流源下电关机":
                     {
                         GlobalModel.DicDeviceInfo.TryGetValue("HVDCSource", out info);
                     }
                     break;
 
-                    case "交流源下电关机":
+                    case "交流源载一体机":
                     {
-                        GlobalModel.DicDeviceInfo.TryGetValue("ACSource", out info);
+                        GlobalModel.DicDeviceInfo.TryGetValue("ACSourceLoad", out info);
                     }
                     break;
                     case "稳压直流源下电关机":
                     {
                         GlobalModel.DicDeviceInfo.TryGetValue("APU", out info);
+                    }
+                    break;
+                    case "倒灌源下电关机":
+                    {
+                        GlobalModel.DicDeviceInfo.TryGetValue("RPU", out info);
                     }
                     break;
                     case "产品通讯卸载":
@@ -3388,31 +3456,35 @@ namespace IMX.ATS.ATE
         /// <summary>
         /// 产品读取线程
         /// </summary>
-        private void ReadDataThread_Pro() 
+        private void ReadDataThread_Pro()
         {
 
-            if (!GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL device))
+            if (product == null)
             {
                 SuperDHHLoggerManager.Error(LoggerType.THREAD, nameof(ReadDataThread_Pro), "产品读取线程异常", "产品未初始化或初始化异常");
                 return;
             }
             Guid ThreadID = Guid.NewGuid();
             SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Pro), "产品读取线程状态", $"产品读取线程-【{ThreadID}】启动");
-            while (GlobalModel.IsTestThreadRun) 
+            while (GlobalModel.IsTestThreadRun)
             {
-                device.DeviceOperate.Device_ReadAll();
-                Thread.Sleep(100);
-            }
+                if (product.IsInitOK && product.IsSendData)
+                {
+                    product.Device_ReadAll();
+                }
 
+                Thread.Sleep(50);
+            }
+            
             SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Pro), "产品读取线程状态", $"产品读取线程-【{ThreadID}】结束");
         }
 
         /// <summary>
         /// 工装读取线程
         /// </summary>
-        private void ReadDataThread_Euq() 
+        private void ReadDataThread_Euq()
         {
-            if (!GlobalModel.DicDeviceInfo.TryGetValue("Product", out DeviceInfo_ALL device))
+            if (acquisition == null)
             {
                 SuperDHHLoggerManager.Error(LoggerType.THREAD, nameof(ReadDataThread_Euq), "工装读取线程异常", "功率计未初始化或初始化异常");
                 return;
@@ -3422,12 +3494,104 @@ namespace IMX.ATS.ATE
             SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Euq), "工装读取线程状态", $"工装读取线程-【{ThreadID}】启动");
             while (GlobalModel.IsTestThreadRun)
             {
-                device.DeviceOperate.Device_ReadAll();
+                acquisition.Device_ReadAll();
                 Thread.Sleep(100);
+                CalculateData(liscalculatedata);
             }
             SuperDHHLoggerManager.Info(LoggerType.THREAD, nameof(ReadDataThread_Pro), "工装读取线程状态", $"工装读取线程-【{ThreadID}】结束");
         }
 
+        /// <summary>
+        /// 试验过程计算值
+        /// </summary>
+        /// <param name="datas"></param>
+        private void CalculateData(List<ModTestDataInfo> datas)
+        {
+            lock (datas)
+            {
+                for (int i = 0; i < datas?.Count; i++)
+                {
+                    ModTestDataInfo data = datas[i];
+                    double data1 = 0;
+                    double data2 = 0;
+                    switch (data.Name)
+                    {
+                        #region AC侧电压检测
+                        case "A相输入电压精度":
+                            data1 = acquisition.DicReadInfo["A相电压"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入A相电压"].DataInfo.Value;
+
+                            data.Value = (data1 == 0 || data2 == 0 || (data1 - data2) == 0) ? 0 : (data1 - data2) / data1 * 100;
+                            break;
+                        case "B相输入电压精度":
+                            data1 = acquisition.DicReadInfo["B相电压"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入B相电压"].DataInfo.Value;
+
+                            data.Value = (data1 == 0 || data2 == 0 || (data1 - data2) == 0) ? 0 : (data2 - data1) / data1 * 100;
+                            break;
+                        case "C相输入电压精度":
+                            data1 = acquisition.DicReadInfo["C相电压"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入C相电压"].DataInfo.Value;
+
+                            data.Value = (data1 == 0 || data2 == 0 || (data1 - data2) == 0) ? 0 : (data2 - data1) / data1 * 100;
+                            break;
+                        #endregion
+
+                        #region AC侧电流检测
+                        case "A相输入电流精度":
+                            data1 = acquisition.DicReadInfo["A相电流"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入A相电流"].DataInfo.Value;
+
+                            data.Value = (data1 == 0 || data2 == 0 || (data1 - data2) == 0) ? 0 : (data2 - data1) / data1 * 100;
+                            break;
+                        case "B相输入电流精度":
+                            data1 = acquisition.DicReadInfo["B相电流"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入B相电流"].DataInfo.Value;
+
+                            data.Value = (data1 == 0 || data2 == 0 || (data1 - data2) == 0) ? 0 : (data2 - data1) / data1 * 100;
+                            break;
+                        case "C相输入电流精度":
+                            data1 = acquisition.DicReadInfo["C相电流"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入C相电流"].DataInfo.Value;
+
+                            data.Value = (data1 == 0 || data2 == 0 || (data1 - data2) == 0) ? 0 : (data2 - data1) / data1 * 100;
+                            break;
+                        case "A相输入电流误差":
+                            data1 = acquisition.DicReadInfo["A相电流"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入A相电流"].DataInfo.Value;
+
+                            data.Value = data2 - data1;
+                            break;
+                        case "B相输入电流误差":
+                            data1 = acquisition.DicReadInfo["B相电流"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入B相电流"].DataInfo.Value;
+
+                            data.Value = data2 - data1;
+                            break;
+                        case "C相输入电流误差":
+                            data1 = acquisition.DicReadInfo["C相电流"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品输入C相电流"].DataInfo.Value;
+
+                            data.Value = data2 - data1;
+                            break;
+                        #endregion
+
+                        #region HVDC电压检测
+                        case "产品HVDC电压精度":
+                            data1 = acquisition.DicReadInfo["HVDC电压"].DataInfo.Value;
+                            data2 = product.DicReadInfo["产品HVDC电压"].DataInfo.Value;
+
+                            data.Value = (data1 == 0 || data2 == 0 || (data1 - data2) == 0) ? 0 : (data1 - data2) / data1 * 100;
+                            break;
+                        #endregion
+
+                        default:
+                            data.Value = -255;
+                            break;
+                    }
+                }
+            }
+        }
         #endregion
 
         #region 界面测试
@@ -3536,7 +3700,7 @@ namespace IMX.ATS.ATE
             }
 
             DBOperate.Default.GetProjectName_Dic()
-                .AttachIfSucceed(result => 
+                .AttachIfSucceed(result =>
                 {
                     dicProject.Clear();
                     dicProject = result.Data;
@@ -3581,8 +3745,12 @@ namespace IMX.ATS.ATE
 
             if (GlobalModel.CabinetSate)
             {
-                relayoperate_4 = GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_ZS4Bit_Operate;
+                relayoperate_4 = GlobalModel.DicDeviceInfo["Relay"].DeviceOperate as Relay_PLC_Operate;
+                
+                acquisition = GlobalModel.DicDeviceInfo["Acquisition"].DeviceOperate as IAcquisition;
             }
+
+            enablesavedata = Directory.Exists(SupportConfig.DataSavePath);
 #if DEBUG
             //new Thread(TestThread) { IsBackground = true }.Start();
 #endif
@@ -3604,10 +3772,10 @@ namespace IMX.ATS.ATE
             }
             else if (enablesavedata)
             {
-                 if (MessageBox.Show("试验数据未存储，是否关闭试验窗口", "数据存储提示", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
-                 {
-                     return;
-                 }
+                if (MessageBox.Show("试验数据未存储，是否关闭试验窗口", "数据存储提示", MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                {
+                    return;
+                }
             }
 
 
@@ -3616,7 +3784,7 @@ namespace IMX.ATS.ATE
                 return;
             }
 
-            
+
 
             WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(win);
 
@@ -4059,9 +4227,9 @@ namespace IMX.ATS.ATE
         public Dictionary<CANDataInfo, double> DicSendSignals_CAN { get; set; }
 
         /// <summary>
-        /// 下发消息周期
+        /// 下发消息周期及发送帧格式
         /// </summary>
-        public Dictionary<uint, uint> DicMessageCycleTime { get; set; }
+        public Dictionary<uint, (uint, FrameFormat)> DicMessageSet { get; set; }
 
         ///// <summary>
         ///// 试验运行流程
@@ -4092,9 +4260,9 @@ namespace IMX.ATS.ATE
     /// <summary>
     /// 试验运行流程参数
     /// </summary>
-    public class TestFunctionInfo 
+    public class TestFunctionInfo
     {
-       public List<TestFunction> Functions { get; set; } = new List<TestFunction>();
+        public List<TestFunction> Functions { get; set; } = new List<TestFunction>();
         /// <summary>
         /// 试验存储读取数据列表
         /// </summary>
@@ -4123,5 +4291,10 @@ namespace IMX.ATS.ATE
         /// 用户自定义数据
         /// </summary>
         public List<ModTestDataInfo> CustomData { get; set; } = new List<ModTestDataInfo>();
+
+        /// <summary>
+        /// 计算数据列表
+        /// </summary>
+        public List<ModTestDataInfo> CalculateData { get; set; } = new List<ModTestDataInfo>();
     }
 }

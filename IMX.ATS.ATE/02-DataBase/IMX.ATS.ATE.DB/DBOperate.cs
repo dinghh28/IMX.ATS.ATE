@@ -4,22 +4,11 @@ using IMX.Common;
 using IMX.DB.Model;
 using IMX.Logger;
 using Newtonsoft.Json;
-using Piggy.VehicleBus.Common;
 using Super.Zoo.Framework;
 using Super.Zoo.Framework.Logger;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net.NetworkInformation;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using static FreeSql.Internal.GlobalFilter;
 using DataType = FreeSql.DataType;
 
 namespace IMX.DB
@@ -476,6 +465,31 @@ namespace IMX.DB
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
                 return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取所有项目编码
+        /// </summary>
+        /// <returns></returns>
+        public OperateResult<Dictionary<string, int>> GetProjectSNs() 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetProjectSNs), LastError);
+                return OperateResult<Dictionary<string, int>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_ProjectInfo>().Distinct().ToDictionary(x => x.ProjectSN,x=>x.Id);
+                return OperateResult<Dictionary<string,int>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetProjectSNs), LastError);
+                return OperateResult<Dictionary<string, int>>.Excepted(null, ex);
             }
         }
 
@@ -1238,7 +1252,7 @@ namespace IMX.DB
             {
                 var items = Sqlite.Select<Test_DBCConfig>()
                     .Where(x=>x.Electricity == electricity)
-                    //.Where(x=>x.EnableUse)
+                    //.Where(x=>x.EnableUse)SS
                     .ToList();
                 return OperateResult<List<Test_DBCConfig>>.Succeed(items);
             }
@@ -1500,194 +1514,12 @@ namespace IMX.DB
         }
         #endregion
 
-        #region 项目流程操作
+        #region 项目测试项操作
 
         /// <summary>
-        /// 获取试验阶段名字
+        /// 插入测试项
         /// </summary>
-        /// <param name="id">项目ID</param>
-        /// <returns></returns>
-        public OperateResult<Test_Programme> GetProgrammeName(int id)
-        {
-            if (!IsInitOK)
-            {
-                LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(GetProgrammeName), LastError);
-                return OperateResult<Test_Programme>.Failed(null, LastError);
-            }
-            try
-            {
-                Test_Programme items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne();
-
-                return OperateResult<Test_Programme>.Succeed(items);
-            }
-            catch (Exception ex)
-            {
-                LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(GetProgrammeName), LastError);
-                return OperateResult<Test_Programme>.Excepted(null, ex);
-            }
-        }
-
-        /// <summary>
-        /// 获取试验阶段名字
-        /// </summary>
-        /// <param name="id">项目ID</param>
-        /// <returns></returns>
-        public OperateResult<List<string>> GetRunProgrammeNames(int id) 
-        {
-            if (!IsInitOK)
-            {
-                LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(GetRunProgrammeNames), LastError);
-                return OperateResult<List<string>>.Failed(null, LastError);
-            }
-            try
-            {
-                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne(x => x.Test_FlowNames);
-
-                return OperateResult<List<string>>.Succeed(items);
-            }
-            catch (Exception ex)
-            {
-                LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(GetRunProgrammeNames), LastError);
-                return OperateResult<List<string>>.Excepted(null, ex);
-            }
-        }
-
-        /// <summary>
-        /// 获取试验急停流程
-        /// </summary>
-        /// <param name="id">项目ID</param>
-        /// <returns></returns>
-        public OperateResult<List<string>> GetOffProgrammeName(int id)
-        {
-            if (!IsInitOK)
-            {
-                LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(GetOffProgrammeName), LastError);
-                return OperateResult<List<string>>.Failed(null, LastError);
-            }
-            try
-            {
-                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne(x => x.TestOff_FlowNames);
-
-                return OperateResult<List<string>>.Succeed(items);
-            }
-            catch (Exception ex)
-            {
-                LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(GetOffProgrammeName), LastError);
-                return OperateResult<List<string>>.Excepted(null, ex);
-            }
-        }
-
-        /// <summary>
-        /// 更新当前项目试验阶段和下电时序
-        /// </summary>
-        /// <param name="id">项目ID</param>
-        /// <param name="funcname">流程名称</param>
-        /// <param name="processes">试验步骤</param>
-        /// <returns></returns>
-        public OperateResult UpdateProgram(int id, List<string> testprocess, List<string> testpoweroff)
-        {
-            if (!IsInitOK)
-            {
-                LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
-                return OperateResult.Failed(LastError);
-            }
-
-            try
-            {
-                int row = Sqlite.Update<Test_Programme>()
-                            .Where(x => x.ProjectID == id)
-                            .Set(X => X.Test_FlowNames, testprocess)
-                            .Set(X => X.TestOff_FlowNames, testpoweroff)
-                            .Set(x => x.UpdateTime, DateTime.Now)
-                            .ExecuteAffrows();
-
-                if (row < 1)
-                {
-                    LastError = $"试验方案未实际发生变更";
-                    Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
-                    return OperateResult.Failed(LastError);
-                }
-
-                return OperateResult.Succeed();
-            }
-            catch (Exception ex)
-            {
-                LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
-                return OperateResult.Excepted(ex);
-            }
-        }
-
-        /// <summary>
-        /// 是否存在
-        /// </summary>
-        /// <param name="id">项目ID</param>
-        /// <param name="funcname">流程名称</param>
-        /// <param name="processes">试验步骤</param>
-        /// <returns></returns>
-        public OperateResult<Test_Programme> ExistProgram(int id)
-        {
-            if (!IsInitOK)
-            {
-                LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(ExistProgram), LastError);
-                return OperateResult<Test_Programme>.Failed(null, LastError);
-            }
-
-            try
-            {
-                Test_Programme items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne();
-
-                return OperateResult<Test_Programme>.Succeed(items);
-            }
-            catch (Exception ex)
-            {
-                LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
-                return OperateResult<Test_Programme>.Excepted(null, ex);
-            }
-        }
-
-
-        /// <summary>
-        /// 插入试验流程
-        /// </summary>
-        /// <param name="function">试验流程</param>
-        /// <returns></returns>
-        public OperateResult InsertTestProgram(Test_Programme function)
-        {
-            if (!IsInitOK)
-            {
-                LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(InsertTestProgram), LastError);
-                return OperateResult.Failed(LastError);
-            }
-
-            try
-            {
-                function.Insert();
-
-                return OperateResult.Succeed();
-            }
-            catch (Exception ex)
-            {
-                LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(InsertTestProgram), LastError);
-                return OperateResult.Excepted(ex);
-            }
-        }
-
-        /// <summary>
-        /// 插入试验流程
-        /// </summary>
-        /// <param name="function">试验流程</param>
+        /// <param name="function">测试项</param>
         /// <returns></returns>
         public OperateResult InsertTestProccess(Test_Process function)
         {
@@ -1712,6 +1544,7 @@ namespace IMX.DB
                 return OperateResult.Excepted(ex);
             }
         }
+
 
         /// <summary>
         /// 获取流程名字
@@ -2000,6 +1833,7 @@ namespace IMX.DB
                 int row = Sqlite.Update<Test_Process>()
                             .Where(x => x.ProjectID == id && x.FunctionName == funcname)
                             .Set(X => X.Test_Flows, processes)
+                            .Set(x => x.UpdateOperator, UpdateOperator)
                             .Set(x => x.UpdateTime, DateTime.Now)
                             .ExecuteAffrows();
 
@@ -2090,11 +1924,107 @@ namespace IMX.DB
                 return OperateResult.Excepted(ex);
             }
         }
+
+        /// <summary>
+        /// 更新测试项存储数据(仅调试修正可用)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="funcname"></param>
+        /// <param name="eupreaddata"></param>
+        /// <param name="eupsetdata"></param>
+        /// <param name="proreaddata"></param>
+        /// <param name="prosetdata"></param>
+        /// <param name="usecalculate"></param>
+        /// <param name="calculatedata"></param>
+        /// <param name="usecostomread"></param>
+        /// <param name="costomreaddata"></param>
+        /// <returns></returns>
+        public OperateResult UpdateTestProccessSaveData(
+            int id,
+            string funcname,
+            List<ModTestDataInfo> eupreaddata,
+            List<ModTestDataInfo> eupsetdata,
+            List<ModTestDataInfo> proreaddata,
+            List<ModTestDataInfo> prosetdata,
+            bool usecalculate,
+            List<ModTestDataInfo> calculatedata,
+            bool usecostomread,
+            List<ModTestDataInfo> costomreaddata
+            )
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                int row = Sqlite.Update<Test_Process>()
+                            .Where(x => x.ProjectID == id && x.FunctionName == funcname)
+                            .Set(x => x.Test_ReadData_Euq, eupreaddata)
+                            .Set(x => x.Test_SetData_Euq, eupsetdata)
+                            .Set(x => x.Test_ReadData_Pro, proreaddata)
+                            .Set(x => x.Test_SetData_Pro, prosetdata)
+                            .Set(x => x.UseCalculateData, usecalculate)
+                            .Set(x => x.Test_CalculateData, calculatedata)
+                            .Set(x => x.UseCustomData, usecostomread)
+                            .Set(x => x.Test_CustomData, costomreaddata)
+                            .Set(x => x.UpdateTime, DateTime.Now)
+                            .Set(x => x.UpdateOperator, UpdateOperator)
+                            .ExecuteAffrows();
+
+                if (row < 1)
+                {
+                    LastError = $"测试项 【{funcname}】 存储数据 未实际发生变更";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
 #endif
 
         #endregion
 
         #region 项目方案操作
+
+        /// <summary>
+        /// 插入试验流程
+        /// </summary>
+        /// <param name="function">试验流程</param>
+        /// <returns></returns>
+        public OperateResult InsertTestProgram(Test_Programme function)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProgram), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                function.Insert();
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProgram), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
         /// <summary>
         /// 插入试验方案
         /// </summary>
@@ -2195,6 +2125,159 @@ namespace IMX.DB
                 return OperateResult<Test_Programme>.Excepted(null, ex);
             }
         }
+
+        /// <summary>
+        /// 获取试验阶段名字
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<Test_Programme> GetProgrammeName(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetProgrammeName), LastError);
+                return OperateResult<Test_Programme>.Failed(null, LastError);
+            }
+            try
+            {
+                Test_Programme items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne();
+
+                return OperateResult<Test_Programme>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetProgrammeName), LastError);
+                return OperateResult<Test_Programme>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验阶段名字
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<List<string>> GetRunProgrammeNames(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetRunProgrammeNames), LastError);
+                return OperateResult<List<string>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne(x => x.Test_FlowNames);
+
+                return OperateResult<List<string>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetRunProgrammeNames), LastError);
+                return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取试验急停流程
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<List<string>> GetOffProgrammeName(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetOffProgrammeName), LastError);
+                return OperateResult<List<string>>.Failed(null, LastError);
+            }
+            try
+            {
+                var items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne(x => x.TestOff_FlowNames);
+
+                return OperateResult<List<string>>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetOffProgrammeName), LastError);
+                return OperateResult<List<string>>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 更新当前项目试验阶段和下电时序
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <param name="funcname">流程名称</param>
+        /// <param name="processes">试验步骤</param>
+        /// <returns></returns>
+        public OperateResult UpdateProgram(int id, List<string> testprocess, List<string> testpoweroff)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                int row = Sqlite.Update<Test_Programme>()
+                            .Where(x => x.ProjectID == id)
+                            .Set(X => X.Test_FlowNames, testprocess)
+                            .Set(X => X.TestOff_FlowNames, testpoweroff)
+                            .Set(x => x.UpdateTime, DateTime.Now)
+                            .ExecuteAffrows();
+
+                if (row < 1)
+                {
+                    LastError = $"试验方案未实际发生变更";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <param name="funcname">流程名称</param>
+        /// <param name="processes">试验步骤</param>
+        /// <returns></returns>
+        public OperateResult<Test_Programme> ExistProgram(int id)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(ExistProgram), LastError);
+                return OperateResult<Test_Programme>.Failed(null, LastError);
+            }
+
+            try
+            {
+                Test_Programme items = Sqlite.Select<Test_Programme>().Where(x => x.ProjectID == id).ToOne();
+
+                return OperateResult<Test_Programme>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(UpdateProgram), LastError);
+                return OperateResult<Test_Programme>.Excepted(null, ex);
+            }
+        }
         #endregion
 
         #region 试验结果项目信息条目操作
@@ -2233,8 +2316,9 @@ namespace IMX.DB
                     return OperateResult<long>.Failed(-1, LastError);
                 }
 
-                long id = Sqlite.Insert(item).ExecuteIdentity();
 
+                //item.Insert();
+                long id = Sqlite.Insert(item).ExecuteIdentity();
                 if (id < 1)
                 {
                     LastError = $"试验条目未实际发生存储";
@@ -2419,7 +2503,7 @@ namespace IMX.DB
             {
                 //Sqlite.CodeFirst.GetTableByEntity(typeof(Test_ItemInfo)).AsTableImpl.SetDefaultAllTables(value => value.Take(3).ToArray());
                 List<Test_ProjectItemInfo> items = Sqlite.Select<Test_ProjectItemInfo>()
-                    .Where(x =>  x.CreateTime.Between(start, end) && x.ProductSN == productsn)
+                    .Where(x =>  x.CreateTime.Between(start, end) && x.ProductSN.Contains(productsn))
                     .Page(startpage, pagesize)
                     .ToList();
 
@@ -2454,7 +2538,7 @@ namespace IMX.DB
             try
             {
                 long itemscount = Sqlite.Select<Test_ProjectItemInfo>()
-                    .Where(x => x.CreateTime.Between(start, end) && x.ProductSN == productsn)
+                    .Where(x => x.CreateTime.Between(start, end) && x.ProductSN.Contains(productsn))
                     .Count();
 
                 return OperateResult<long>.Succeed(itemscount);
@@ -2575,7 +2659,6 @@ namespace IMX.DB
                 Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
                 return OperateResult<long>.Excepted(-1, ex);
             }
-
         }
 
         /// <summary>
@@ -3031,6 +3114,61 @@ namespace IMX.DB
             }
         }
 
+        /// <summary>
+        /// 插入试验数据
+        /// </summary>
+        /// <param name="info">试验数据Json字符串</param>
+        /// <param name="id">测试项存储ID</param>
+        /// <returns></returns>
+        public OperateResult InserTestData(string info, long id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                if (info == null)
+                {
+                    LastError = $"试验待存储数据不可为空";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                Test_DataInfo item = JsonConvert.DeserializeObject<Test_DataInfo>(info);
+
+                if (item == null)
+                {
+                    LastError = $"[试验数据]数据格式异常:\r\n{info}";
+                    Logger.Fatal(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
+
+                item.TestItemID = id;
+
+                int rows = Sqlite.Insert(item).ExecuteAffrows();
+
+                if (rows < 1)
+                {
+                    LastError = $"试验数据未实际发生存储";
+                    Logger.Error(nameof(DBOperate), nameof(InserTestItem), LastError);
+                    return OperateResult<long>.Failed(-1, LastError);
+                }
+
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InserTestData), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
         ///// <summary>
         ///// 插入试验项目
         ///// </summary>
@@ -3058,7 +3196,7 @@ namespace IMX.DB
 
         //        if (data == null)
         //        {
-                    
+
         //        }
         //        int row = Sqlite.Insert(data).ExecuteAffrows();
 

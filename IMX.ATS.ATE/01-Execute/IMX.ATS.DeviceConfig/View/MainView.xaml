@@ -70,7 +70,8 @@
                 <Grid Grid.Column="0">
                     <ListBox Background="Transparent" 
                                  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 ItemsSource="{Binding Devices}" d:ItemsSource="{d:SampleData ItemCount=5}">
+                                 ItemsSource="{Binding Devices}" d:ItemsSource="{d:SampleData ItemCount=5}"
+                             >
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ListBoxItem}">
                                 <Setter Property="Template">
@@ -81,11 +82,13 @@
                                                     <RadioButton 
                                                         GroupName="device" 
                                                         Style="{StaticResource LeftMenuItemButtonStlye}"
+                                                        Foreground="Black"
+                                                        FontSize="18"
+                                                        FontWeight="Bold"
                                                         Content="{Binding Type, Converter={StaticResource ResourceKey=EnumValue}}"
                                                         Command="{Binding GetDeviceConfigs}"  CommandParameter="{Binding Type}"/>
                                                 </Border>
                                             </ContentControl>
-
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
@@ -149,7 +152,7 @@
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="{Binding SelectedDevie.Info.NormalShow}" VerticalAlignment="Center">
                                         <Label Content="通讯参数："/>
-                                        <ComboBox Margin="10,0,0,0" Width="350" IsReadOnly="True" ItemsSource="{Binding SelectedDevie.Info.DriveResources}" SelectedItem="{Binding Config.DriveConfig.ResourceString}"/>
+                                        <ComboBox Margin="10,0,0,0" Width="350" IsReadOnly="True" ItemsSource="{Binding SelectedDevie.Info.DriveResources}" SelectedIndex="{Binding SelectedDevie.Info.SelectedDriveResourceIndex, Mode=TwoWay}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Row="0" Orientation="Horizontal">
                                         <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="{Binding SelectedDevie.Info.CANMegShow}" VerticalAlignment="Center">

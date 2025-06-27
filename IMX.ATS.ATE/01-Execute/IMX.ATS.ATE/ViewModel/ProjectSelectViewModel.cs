@@ -106,7 +106,12 @@ namespace IMX.ATS.ATE
         public RelayCommand<object> ReturnConfig => new RelayCommand<object>((object obj) =>
         {
 
-           MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
+            if (SelectedInfoIndex == -1)
+            {
+                MessageBox.Show("请选择项目");
+                return;
+            }
+            
 
             if (string.IsNullOrEmpty(SelectedInfo.Tag))
             {
@@ -114,24 +119,29 @@ namespace IMX.ATS.ATE
                 return;
             }
 
+            var result = DBOperate.Default.GetProgramme(SelectedInfo.Info.Id);
 
-            DBOperate.Default.GetProgramme(SelectedInfo.Info.Id)
-                .AttachIfSucceed(result =>
-                {
-                    viewmodel.ProcessInfos.Clear();
-                    viewmodel.IsSelectAll = false;
-                    Thread.Sleep(10);
-                    for (int i = 0; i < result.Data.Test_FlowNames?.Count; i++)
-                    {
-                        viewmodel.ProcessInfos.Add(new ProcessInfo { ProcessName = result.Data.Test_FlowNames[i] });
-                    }
-                    GlobalModel.TestOff_FlowNames.Clear();
-                    GlobalModel.TestOff_FlowNames = result.Data.TestOff_FlowNames;
-                })
-                .AttachIfFailed(result =>
-                {
-                    MessageBox.Show("项目试验阶段获取失败");
-                });
+            if (!result)
+            {
+                MessageBox.Show("项目试验阶段获取失败");
+                return;
+            }
+
+            MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
+            
+            viewmodel.SelectedProductName = SelectedInfo.Info.ProjectName;
+            viewmodel.ProcessInfos.Clear();
+            viewmodel.IsSelectAll = false;
+            Thread.Sleep(10);
+            for (int i = 0; i < result.Data.Test_FlowNames?.Count; i++)
+            {
+                viewmodel.ProcessInfos.Add(new ProcessInfo { ProcessName = result.Data.Test_FlowNames[i] });
+            }
+            GlobalModel.TestOff_FlowNames.Clear();
+            GlobalModel.TestOff_FlowNames = result.Data.TestOff_FlowNames;
+            GlobalModel.ProjectInfo = SelectedInfo.Info;
+
+            Win.Close();
         });
 
         /// <summary>

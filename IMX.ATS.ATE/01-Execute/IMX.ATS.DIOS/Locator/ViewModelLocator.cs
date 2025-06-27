@@ -1,8 +1,6 @@
 ﻿using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
 using H.WPF.Framework;
-using IMX.ATS.DIOS.ViewModels;
-using IMX.ATS.DIOS.Views;
 
 namespace IMX.ATS.DIOS
 {
@@ -13,6 +11,10 @@ namespace IMX.ATS.DIOS
             //数据查询主窗口
             SimpleIoc.Default.Register<MainWindowModel>();
             ContentControlManager.Regiter<MainWindow>();
+
+            //数据查询主窗口
+            SimpleIoc.Default.Register<MainViewModel>();
+            ContentControlManager.Regiter<MainView>();
 
             //试验项目信息条目查询界面
             SimpleIoc.Default.Register<TestProjectItemViewModel>();
@@ -27,6 +29,11 @@ namespace IMX.ATS.DIOS
         /// 数据查询主窗口
         /// </summary>
         public MainWindowModel Main => ServiceLocator.Current.GetInstance<MainWindowModel>();
+
+        /// <summary>
+        /// 数据查询主窗口
+        /// </summary>
+        public MainViewModel Home => ServiceLocator.Current.GetInstance<MainViewModel>();
 
         /// <summary>
         /// 试验项目信息条目查询

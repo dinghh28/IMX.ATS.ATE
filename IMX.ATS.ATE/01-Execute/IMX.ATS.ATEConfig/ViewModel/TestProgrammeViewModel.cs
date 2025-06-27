@@ -212,11 +212,7 @@ namespace IMX.ATS.ATEConfig
 
         public ObservableCollection<string> EPowerOffProcessNames { get; set; } = new ObservableCollection<string>
         {
-            "直流负载下电关机",
-            "高压直流源下电关机",
-            "交流源下电关机",
-            "稳压直流源下电关机",
-            "产品通讯卸载",
+
         };
 
         #endregion
@@ -226,6 +222,21 @@ namespace IMX.ATS.ATEConfig
         private int projectid = -1;
 
         private bool projectError = false;
+
+        /// <summary>
+        /// 下电流程列表
+        /// </summary>
+        private List<string> lispoweroffprocessnames = new List<string>
+        {
+            "直流负载下电关机",
+            "低压直流负载下电关机",
+            "高压直流源下电关机",
+            //"交流源下电关机",
+            "交流源载一体机",
+            "稳压直流源下电关机",
+            "倒灌源下电关机",
+            "产品通讯卸载",
+        };
 
         #endregion
 
@@ -367,8 +378,13 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            if (projectid == GlobalModel.Test_ProjectInfo.Id)
+            {
+                return;
+            }
             //MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
             projectid = GlobalModel.Test_ProjectInfo.Id;
+            
             // = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
             ProcessNames.Clear();
             DBOperate.Default.GetProcessName(projectid)
@@ -403,7 +419,7 @@ namespace IMX.ATS.ATEConfig
                                        {
                                            ProcessNames = ProcessNames,
                                            SelectedName = result.Data.Test_FlowNames[i],
-                                           
+
                                            //NameColor = new SolidColorBrush(Colors.Transparent)
                                        });
                                    }
@@ -413,7 +429,7 @@ namespace IMX.ATS.ATEConfig
                                        {
                                            ProcessNames = ProcessNames,
                                            SelectedName = " ",
-                                           
+
                                            //NameColor = new SolidColorBrush(Colors.Red)
                                        });
                                        //projectError = true;
@@ -423,12 +439,30 @@ namespace IMX.ATS.ATEConfig
                            }
                            if (test_Programme.TestOff_FlowNames.Count > 0)
                            {
-                               EPowerOffProcessNames.Clear();
+                               //EPowerOffProcessNames.Clear();
+                               List<string> names = new List<string>();
                                for (int i = 0; i < test_Programme.TestOff_FlowNames.Count; i++)
                                {
-                                   EPowerOffProcessNames.Add(test_Programme.TestOff_FlowNames[i]);
+                                   if (lispoweroffprocessnames.Contains(test_Programme.TestOff_FlowNames[i]))
+                                   {
+                                       names.Add(test_Programme.TestOff_FlowNames[i]);
+                                       //test_Programme.TestOff_FlowNames.RemoveAt(i);
+                                   }
+                                   //EPowerOffProcessNames.Add(test_Programme.TestOff_FlowNames[i]);
+                               }
+
+                               names.AddRange(lispoweroffprocessnames);
+                               names = names.Distinct().ToList();
+                               //List<string> names = EPowerOffProcessNames.Distinct().ToList();
+                               EPowerOffProcessNames.Clear();
+
+                               for (int i = 0; i < names.Count; i++)
+                               {
+                                   EPowerOffProcessNames.Add(names[i]);
                                }
                            }
+
+
                        }
 
                    }).AttachIfFailed(result =>
@@ -454,6 +488,10 @@ namespace IMX.ATS.ATEConfig
                 //     MessageBox.Show($"无法获取下电试验阶段：\r\n{result.Message}", "下电试验阶段获取异常");
                 // });
 
+            }
+            else
+            {
+                lispoweroffprocessnames.ForEach(EPowerOffProcessNames.Add);
             }
 
             //base.WindowLoadedExecute(obj);

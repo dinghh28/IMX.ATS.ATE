@@ -1,11 +1,11 @@
-﻿<Window x:Class="IMX.ATS.DIOS.Views.TestDatasView"
+﻿<Window x:Class="IMX.ATS.DIOS.TestDatasView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-        xmlns:local="clr-namespace:IMX.ATS.DIOS.Views" 
-        xmlns:viewmodels="clr-namespace:IMX.ATS.DIOS.ViewModels" 
+        xmlns:local="clr-namespace:IMX.ATS.DIOS" 
+        xmlns:viewmodels="clr-namespace:IMX.ATS.DIOS" 
         d:DataContext="{d:DesignInstance Type=viewmodels:TestDatasViewModel}"
         mc:Ignorable="d"
         Title="TestDatasView" Height="450" Width="800"
@@ -35,7 +35,7 @@
             <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black"/>
             <Grid Grid.Row="0" Margin="10,5">
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
-                    <Label Content="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="25"/>
+                    <Label Content="{Binding Title}" VerticalAlignment="Center" FontWeight="Bold" FontSize="20"/>
                 </StackPanel>
 
                 <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">

@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
+using IMX.ATS.Common;
 using IMX.DB;
 using IMX.DB.Model;
 using Super.Zoo.Framework;
@@ -151,10 +152,13 @@ namespace IMX.ATS.UserManage
                     Num = num++,
                     Id = user.Id,
                     UserName = user.UserName,
-                    TestLevel = (user.Privilege & 1) == 1,
-                    ProjectLevel = (user.Privilege & 2) == 2,
-                    DataLevel = (user.Privilege & 4) == 4,
-                    UserLevel = (user.Privilege & 8) == 8,
+                    TestLevel = (user.Privilege & (int)UserPermissions.ATE) == (int)UserPermissions.ATE,
+                    ProjectLevel = (user.Privilege & (int)UserPermissions.ATEConfig) == (int)UserPermissions.ATEConfig,
+                    DataLevel = (user.Privilege & (int)UserPermissions.DIOS) == (int)UserPermissions.DIOS,
+                    UserLevel = (user.Privilege & (int)UserPermissions.UserManage) == (int)UserPermissions.UserManage,
+                    DBC = (user.Privilege & (int)UserPermissions.DBCConfig) == (int)UserPermissions.DBCConfig,
+                    Manual = (user.Privilege & (int)UserPermissions.Manual) == (int)UserPermissions.Manual,
+                    DeviceConfig = (user.Privilege & (int)UserPermissions.DeviceConfig) == (int)UserPermissions.DeviceConfig,
                 });
             }
         }
@@ -271,6 +275,38 @@ namespace IMX.ATS.UserManage
             get => projectLevel;
             set => Set(nameof(ProjectLevel), ref projectLevel, value);
         }
+
+        private bool dbc;
+        /// <summary>
+        /// DBC配置权限
+        /// </summary>
+        public bool DBC
+        {
+            get => dbc;
+            set => Set(nameof(DBC), ref dbc, value);
+        }
+        
+        private bool manual;
+        /// <summary>
+        /// 手动操作权限
+        /// </summary>
+        public bool Manual
+        {
+            get => manual;
+            set => Set(nameof(Manual), ref manual, value);
+        }
+
+        
+        private bool deviceconfig;
+        /// <summary>
+        /// 串口配置权限
+        /// </summary>
+        public bool DeviceConfig
+        {
+            get => deviceconfig;
+            set => Set(nameof(DeviceConfig), ref deviceconfig, value);
+        }
+
         private bool dataLevel;
         /// <summary>
         /// 数据查询权限
@@ -280,6 +316,7 @@ namespace IMX.ATS.UserManage
             get => dataLevel;
             set => Set(nameof(DataLevel), ref dataLevel, value);
         }
+
         private bool userLevel;
         /// <summary>
         /// 用户管理权限
@@ -320,7 +357,12 @@ namespace IMX.ATS.UserManage
         {
             try
             {
-                int privilege = (TestLevel ? 1 : 0) + (ProjectLevel ? 2 : 0) + (DataLevel ? 4 : 0) + (UserLevel ? 8 : 0);
+                int privilege = (TestLevel ? (int)UserPermissions.ATE : 0)
+                            + (DataLevel ? (int)UserPermissions.DIOS : 0)
+                            + (UserLevel ? (int)UserPermissions.UserManage : 0)
+                            + (DBC ? (int)UserPermissions.DBCConfig : 0)
+                            + (DeviceConfig ? (int)UserPermissions.DeviceConfig : 0)
+                            + (Manual ? (int)UserPermissions.Manual : 0);
                 if (MessageBox.Show($"确认修改[{UserName}]用户权限", "提示", MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
                 {
                     OperateResult result = DBOperate.Default.UpdateUserPrivilege(Convert.ToInt32(obj), privilege);

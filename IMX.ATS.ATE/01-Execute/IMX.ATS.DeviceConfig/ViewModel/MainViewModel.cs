@@ -190,7 +190,11 @@ namespace IMX.ATS.DeviceConfig
             DeviceShow = Visibility.Visible;
             var value = SelectedDevie.Info;
 
-            value.BaudRate = SupportConfig.DicSupportBaudRate[value.Drive];
+            if (!SupportConfig.DicSupportBaudRate.TryGetValue(value.Drive, out ObservableCollection<string> baudrates))
+            {
+                baudrates = new ObservableCollection<string>();
+            }
+            value.BaudRate = baudrates;
             value.DriveResources.Clear();
             try
             {
@@ -198,7 +202,7 @@ namespace IMX.ATS.DeviceConfig
                 value.ASRLMegShow = value.Drive == DriveType.ASRL ? Visibility.Visible : Visibility.Collapsed;
                 value.CANMegShow = value.Drive == DriveType.VehicleBus ? Visibility.Visible : Visibility.Collapsed;
                 value.NormalShow = value.Drive != DriveType.VehicleBus ? Visibility.Visible : Visibility.Collapsed;
-
+                int index = -1;
                 switch (value.Drive)
                 {
                     //case DriveType.CAN:
@@ -206,10 +210,17 @@ namespace IMX.ATS.DeviceConfig
                     //    break;
                     case DriveType.TCPIP:
                         var tcpresources = new NationalInstruments.Visa.ResourceManager().Find($"{value.Drive.ToString().ToUpper()}?*SOCKET").ToList();
+                        
                         for (int i = 0; i < tcpresources?.Count; i++)
                         {
                             value.DriveResources.Add(tcpresources[i]);
+                            if (tcpresources[i] == value.Config.DriveConfig.ResourceString)
+                            {
+                                index = i;
+                            }
                         }
+
+                        value.SelectedDriveResourceIndex = index;
 
                         value.ExtShow = Visibility.Collapsed;
                         value.ASRLMegShow = Visibility.Collapsed;
@@ -232,7 +243,13 @@ namespace IMX.ATS.DeviceConfig
                         for (int i = 0; i < resources?.Count; i++)
                         {
                             value.DriveResources.Add(resources[i]);
+                            if (resources[i] == value.Config.DriveConfig.ResourceString)
+                            {
+                                index = i;
+                            }
                         }
+
+                        value.SelectedDriveResourceIndex = index;
 
                         value.ExtShow = value.Drive == DriveType.ASRL ? Visibility.Visible : Visibility.Collapsed;
                         value.ASRLMegShow = value.Drive == DriveType.ASRL ? Visibility.Visible : Visibility.Collapsed;
@@ -336,21 +353,21 @@ namespace IMX.ATS.DeviceConfig
             DeviceArgs config = SelectedDevie.Info.Config;
             var item = SelectedDevie.Info;
 
-            string content = $"{config.Name}[{config.DeviceType.GetDescription()}]通讯成功";
+            string content = $"{config.DeviceType.GetDescription()}[{config.Name}]";
 
             DriveOperate operate = DriveOperate.Creat();
             OperateResult driveresult = operate.Open(config.DriveConfig);
             if (!driveresult)
             {
-                content = $"{config.Name}[{config.DeviceType.GetDescription()}]驱动打开失败";
-                ContentName = content;
+                //content = $"{config.Name}[{config.DeviceType.GetDescription()}]驱动打开失败";
+                ContentName = content+ "驱动打开失败";
                 ContentColor = Brushes.Green;
 
                 Logger.Add(new ViewLogger
                 {
                     RecordTime = DateTime.Now,
-                    Level = LoggerLevel.INFO,
-                    Content = content,
+                    Level = LoggerLevel.WARN,
+                    Content = ContentName,
                 });
 
                 SuperDHHLoggerManager.Warn(LoggerType.FROMLOG, "接口配置", "通讯测试", content);
@@ -362,7 +379,7 @@ namespace IMX.ATS.DeviceConfig
             .ThenAnd(result=> result.Data.Device_ReadAll().ConvertTo(result.Data))
             .AttachIfSucceed(result => 
             {
-                ContentName = content;
+                ContentName = content+"通讯连接成功";
                 ContentColor = Brushes.Green;
 
 
@@ -371,24 +388,26 @@ namespace IMX.ATS.DeviceConfig
                 {
                     RecordTime = DateTime.Now,
                     Level = LoggerLevel.INFO,
-                    Content = content,
+                    Content = ContentName,
                 });
             })
             .AttachIfFailed(result => 
             {
-                content = $"{config.Name}[{config.DeviceType.GetDescription()}]通讯连接失败";
-                ContentName = content;
-                ContentColor = Brushes.Green;
+                //content = $"{config.DeviceType.GetDescription()}[{config.Name}]通讯连接失败";
+                ContentName = content + "通讯连接失败";
+                ContentColor = Brushes.Red;
 
                 Logger.Add(new ViewLogger
                 {
                     RecordTime = DateTime.Now,
-                    Level = LoggerLevel.INFO,
-                    Content = content,
+                    Level = LoggerLevel.ERROR,
+                    Content = ContentName,
                 });
 
                 SuperDHHLoggerManager.Warn(LoggerType.FROMLOG, "接口配置", "通讯测试", content);
             });
+
+            operate.Dispose();
             //if (!devicerlt) 
             //{
             //    content = $"{config.Name}[{config.DeviceType.GetDescription()}]通讯连接失败";
@@ -502,7 +521,7 @@ namespace IMX.ATS.DeviceConfig
                     //    GlobalModel.DicDeviceArgs.Remove(name);
                     //}
 
-                    deviceconfig.GetSections<DeviceArgs>();
+                    //deviceconfig.GetSections<DeviceArgs>();
                     var x = deviceconfig.DeviceConfig;
 
                     //GlobalModel.DicDeviceArgs.Add(name, deviceconfig.DeviceConfig);
@@ -519,12 +538,17 @@ namespace IMX.ATS.DeviceConfig
                     }
 
                     var config = deviceconfig.DeviceConfig;
+                    //if (!SupportConfig.DicSupportBaudRate.TryGetValue(config.DriveConfig.CommunicationType, out ObservableCollection<string> baudrates))
+                    //{
+                    //    baudrates = new ObservableCollection<string>();
+                    //}
+
                     DeviceConfigInfo deviceinfo = new DeviceConfigInfo
                     {
                         Config = config,
                         Drive = config.DriveConfig.CommunicationType,
                         PathName = file.Name.Split('.')[0],
-                        BaudRate = SupportConfig.DicSupportBaudRate[config.DriveConfig.CommunicationType],
+                        //BaudRate = baudrates,
                     };
 
                     if (deviceinfo.Drive == DriveType.VehicleBus)
@@ -725,21 +749,33 @@ namespace IMX.ATS.DeviceConfig
                     CANMegShow = value == DriveType.VehicleBus ? Visibility.Visible : Visibility.Collapsed;
                     NormalShow = value != DriveType.VehicleBus ? Visibility.Visible : Visibility.Collapsed;
 
-                    BaudRate = SupportConfig.DicSupportBaudRate[value];
+                    if (!SupportConfig.DicSupportBaudRate.TryGetValue(value, out ObservableCollection<string> baudrates))
+                    {
+                        baudrates = new ObservableCollection<string>();
+                    }
+                    BaudRate = baudrates;
                     DriveResources.Clear();
                     try
                     {
+                        int index = -1;
                         switch (value)
                         {
                             //case DriveType.CAN:
                             //    DriveResources.Add(Config.DriveConfig.ResourceString);
                             //    break;
                             case DriveType.TCPIP:
+                                
                                 var tcpresources = new NationalInstruments.Visa.ResourceManager().Find($"{value.ToString().ToUpper()}?*SOCKET").ToList();
                                 for (int i = 0; i < tcpresources?.Count; i++) 
                                 {
                                     DriveResources.Add(tcpresources[i]);
+                                    if (tcpresources[i] == Config.DriveConfig.ResourceString)
+                                    {
+                                        index = i;
+                                    }
                                 }
+
+                                SelectedDriveResourceIndex = index;
 
                                 ExtShow = Visibility.Collapsed;
                                 ASRLMegShow = Visibility.Collapsed;
@@ -759,10 +795,17 @@ namespace IMX.ATS.DeviceConfig
                             case DriveType.USB:
                             case DriveType.ASRL:
                                 var resources = new NationalInstruments.Visa.ResourceManager().Find($"{value.ToString().ToUpper()}?*INSTR").ToList();
+                                //int index = -1;
                                 for (int i = 0; i < resources?.Count; i++)
                                 {
                                     DriveResources.Add(resources[i]);
+                                    if (resources[i] == Config.DriveConfig.ResourceString)
+                                    {
+                                        index = i;
+                                    }
                                 }
+
+                                SelectedDriveResourceIndex = index;
 
                                 ExtShow = value == DriveType.ASRL ? Visibility.Visible : Visibility.Collapsed;
                                 ASRLMegShow = value == DriveType.ASRL ? Visibility.Visible : Visibility.Collapsed;
@@ -774,6 +817,12 @@ namespace IMX.ATS.DeviceConfig
                                 //});
                                 //DriveResources = new ResourceManager().Find($"{Config.DriveConfig.CommunicationType.ToString().ToUpper()}?*INSTR").ToList();
                                 break;
+                            default:
+                                CANMegShow = Visibility.Collapsed;
+                                NormalShow = Visibility.Visible;
+                                ExtShow = Visibility.Collapsed;
+                                break;
+
                         }
                     }
                     catch (Exception ex)
@@ -809,6 +858,19 @@ namespace IMX.ATS.DeviceConfig
         {
             get => driveResources;
             set => Set(nameof(DriveResources), ref driveResources, value);
+        }
+
+        private int selecteddriveresourceindex = -1;
+        /// <summary>
+        /// 当前选择资源字符串序号
+        /// </summary>
+        public int SelectedDriveResourceIndex
+        {
+            get
+            {
+                return selecteddriveresourceindex;
+            } 
+            set => Set(nameof(SelectedDriveResourceIndex), ref selecteddriveresourceindex, value);
         }
 
         #region 额外配置

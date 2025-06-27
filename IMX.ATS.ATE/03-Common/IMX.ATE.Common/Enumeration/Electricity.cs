@@ -19,9 +19,19 @@ namespace IMX.ATE.Common
         [Description("单相")]
         Single,
         /// <summary>
+        /// 单相交流电带逆变
+        /// </summary>
+        [Description("单相带逆变")]
+        SingleANDInversion,
+        /// <summary>
         /// 三相交流电
         /// </summary>
         [Description("三相")]
-        Three
+        Three,
+        /// <summary>
+        /// 三相交流电带逆变
+        /// </summary>
+        [Description("三相带逆变")]
+        ThreeANDInversion,
     }
 }

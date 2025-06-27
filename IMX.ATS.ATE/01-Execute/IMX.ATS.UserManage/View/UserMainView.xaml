@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:UserMainViewModel}"
         WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" 
-        Title="UserMainView" Height="500" Width="700" FontSize="14" 
+        Title="UserMainView" Height="500" Width="800" FontSize="14" 
         Name="Window" MouseLeftButtonDown="Border_MouseLeftButtonDown">
 
     <Window.Resources>
@@ -113,9 +113,12 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <!--<DataGridTextColumn Header="用户密码" Binding="{Binding Password}" IsReadOnly="True" Width="1*"/>-->
+                                        <DataGridCheckBoxColumn Header="DBC配置权限" Binding="{Binding DBC,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Width="2*"/>
                                         <DataGridCheckBoxColumn Header="方案配置权限" Binding="{Binding ProjectLevel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Width="2*"/>
-                                        <DataGridCheckBoxColumn Header="测试权限" Binding="{Binding TestLevel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Width="2*"/>
+                                        <DataGridCheckBoxColumn Header="手动调试权限" Binding="{Binding Manual,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Width="2*"/>
+                                        <DataGridCheckBoxColumn Header="平台测试权限" Binding="{Binding TestLevel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Width="2*"/>
                                         <DataGridCheckBoxColumn Header="数据查询权限" Binding="{Binding DataLevel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="2*"/>
+                                        <DataGridCheckBoxColumn Header="驱动配置权限" Binding="{Binding DeviceConfig,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Width="2*"/>
                                         <DataGridCheckBoxColumn Header="用户管理权限" Binding="{Binding UserLevel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  Width="2*"/>
                                         <DataGridTemplateColumn Width="1*">
                                             <DataGridTemplateColumn.CellTemplate>

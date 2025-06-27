@@ -14,7 +14,7 @@ namespace IMX.ATE.Common
         /// <summary>
         /// 上位机软件版本号
         /// </summary>
-        public static string SoftwareVersion => "V1.0.0.20241213_04_RC";
+        public static string SoftwareVersion => "V1.0.0.20250627_01_RC";
 
         /// <summary>
         /// 上位机系统名称

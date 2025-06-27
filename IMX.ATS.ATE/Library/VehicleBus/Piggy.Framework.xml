@@ -1398,6 +1398,731 @@
             <param name="name">实例名称</param>
             <returns>实例</returns>
         </member>
+        <member name="T:Super.Zoo.Framework.Drawing.CMYKColor">
+            <summary>
+            CMYK 模式颜色
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.CMYKColor.Alpha">
+            <summary>
+            透明度 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.CMYKColor.Cyan">
+            <summary>
+            青色 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.CMYKColor.Magenta">
+            <summary>
+            品红色 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.CMYKColor.Yellow">
+            <summary>
+            黄色 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.CMYKColor.Black">
+            <summary>
+            黑色 [0, 1]
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="cyan">青色 [0, 1]</param>
+            <param name="magenta">品红色 [0, 1]</param>
+            <param name="yellow">黄色 [0, 1]</param>
+            <param name="black">黑色 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.#ctor(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="cyan">青色 [0, 1]</param>
+            <param name="magenta">品红色 [0, 1]</param>
+            <param name="yellow">黄色 [0, 1]</param>
+            <param name="black">黑色 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.FromAcmyk(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象
+            </summary>
+            <param name="cyan">青色 [0, 1]</param>
+            <param name="magenta">品红色 [0, 1]</param>
+            <param name="yellow">黄色 [0, 1]</param>
+            <param name="black">黑色 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.FromAcmyk(System.Double,System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="cyan">青色 [0, 1]</param>
+            <param name="magenta">品红色 [0, 1]</param>
+            <param name="yellow">黄色 [0, 1]</param>
+            <param name="black">黑色 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.FromAcmyk(System.Double,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="baseColor">基本颜色</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.CheckValue(System.Double,System.String)">
+            <summary>
+            检查值范围 [0, 1]
+            </summary>
+            <param name="value">值</param>
+            <param name="name">名称</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.Equals(System.Nullable{Super.Zoo.Framework.Drawing.CMYKColor})">
+            <summary>
+            判断两个对象是否相等
+            </summary>
+            <param name="obj">比较对象</param>
+            <returns>是否相等</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Equality(Super.Zoo.Framework.Drawing.CMYKColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Inequality(Super.Zoo.Framework.Drawing.CMYKColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Equality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Inequality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Equality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Inequality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Equality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Inequality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Equality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.CMYKColor.op_Inequality(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="T:Super.Zoo.Framework.Drawing.HSVColor">
+            <summary>
+            HSV 模式颜色
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSVColor.Alpha">
+            <summary>
+            透明度 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSVColor.Hue">
+            <summary>
+            色调 [0, 360)
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSVColor.Saturation">
+            <summary>
+            饱和度 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSVColor.Value">
+            <summary>
+            明度 [0, 1]
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.#ctor(System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="value">明度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="value">明度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.FromAhsv(System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象
+            </summary>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="value">明度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.FromAhsv(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="value">明度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.FromAhsv(System.Double,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="baseColor">基本颜色</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.CheckValue(System.Double,System.String)">
+            <summary>
+            检查值范围 [0, 1]
+            </summary>
+            <param name="value">值</param>
+            <param name="name">名称</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.CheckAngle(System.Double,System.String)">
+            <summary>
+            检查值范围 [0, 360)
+            </summary>
+            <param name="value">值</param>
+            <param name="name">名称</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.Equals(System.Nullable{Super.Zoo.Framework.Drawing.HSVColor})">
+            <summary>
+            判断两个对象是否相等
+            </summary>
+            <param name="obj">比较对象</param>
+            <returns>是否相等</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Equality(Super.Zoo.Framework.Drawing.HSVColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Inequality(Super.Zoo.Framework.Drawing.HSVColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Equality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Inequality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Equality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Inequality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Equality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Inequality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Equality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSVColor.op_Inequality(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="T:Super.Zoo.Framework.Drawing.HSLColor">
+            <summary>
+            HSL 模式颜色
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSLColor.Alpha">
+            <summary>
+            透明度 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSLColor.Hue">
+            <summary>
+            色调 [0, 360)
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSLColor.Saturation">
+            <summary>
+            饱和度 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.HSLColor.Lightness">
+            <summary>
+            亮度 [0, 1]
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.#ctor(System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="lightness">亮度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="lightness">亮度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.FromAhsl(System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象
+            </summary>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="lightness">亮度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.FromAhsl(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="hue">色调 [0, 360)</param>
+            <param name="saturation">饱和度 [0, 1]</param>
+            <param name="lightness">亮度 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.FromAhsl(System.Double,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="baseColor">基本颜色</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.CheckValue(System.Double,System.String)">
+            <summary>
+            检查值范围 [0, 1]
+            </summary>
+            <param name="value">值</param>
+            <param name="name">名称</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.CheckAngle(System.Double,System.String)">
+            <summary>
+            检查值范围 [0, 360)
+            </summary>
+            <param name="value">值</param>
+            <param name="name">名称</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.Equals(System.Nullable{Super.Zoo.Framework.Drawing.HSLColor})">
+            <summary>
+            判断两个对象是否相等
+            </summary>
+            <param name="obj">比较对象</param>
+            <returns>是否相等</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Equality(Super.Zoo.Framework.Drawing.HSLColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Inequality(Super.Zoo.Framework.Drawing.HSLColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Equality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Inequality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Equality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Inequality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Equality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Inequality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Equality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.HSLColor.op_Inequality(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="T:Super.Zoo.Framework.Drawing.RGBColor">
+            <summary>
+            RGB 模式颜色
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.RGBColor.Alpha">
+            <summary>
+            透明度 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.RGBColor.Red">
+            <summary>
+            红色分量 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.RGBColor.Green">
+            <summary>
+            绿色分量 [0, 1]
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.Drawing.RGBColor.Blue">
+            <summary>
+            蓝色分量 [0, 1]
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.#ctor">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.#ctor(System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="red">红色分量 [0, 1]</param>
+            <param name="green">绿色分量 [0, 1]</param>
+            <param name="blue">蓝色分量 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.#ctor(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="red">红色分量 [0, 1]</param>
+            <param name="green">绿色分量 [0, 1]</param>
+            <param name="blue">蓝色分量 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.FromArgb(System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象
+            </summary>
+            <param name="red">红色分量 [0, 1]</param>
+            <param name="green">绿色分量 [0, 1]</param>
+            <param name="blue">蓝色分量 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.FromArgb(System.Double,System.Double,System.Double,System.Double)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="red">红色分量 [0, 1]</param>
+            <param name="green">绿色分量 [0, 1]</param>
+            <param name="blue">蓝色分量 [0, 1]</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.FromArgb(System.Double,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            创建 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象
+            </summary>
+            <param name="alpha">透明度 [0, 1]</param>
+            <param name="baseColor">基本颜色</param>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.CheckValue(System.Double,System.String)">
+            <summary>
+            检查值范围 [0, 1]
+            </summary>
+            <param name="value">值</param>
+            <param name="name">名称</param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.Equals(System.Nullable{Super.Zoo.Framework.Drawing.RGBColor})">
+            <summary>
+            判断两个对象是否相等
+            </summary>
+            <param name="obj">比较对象</param>
+            <returns>是否相等</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.GetHashCode">
+            <inheritdoc/>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Equality(Super.Zoo.Framework.Drawing.RGBColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Inequality(Super.Zoo.Framework.Drawing.RGBColor,System.Drawing.Color)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:System.Drawing.Color"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Equality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Inequality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Equality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Inequality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Equality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Inequality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Equality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are equivalent.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the equality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the equality operator.</param>
+            <returns>true if the two structures are equal; otherwise, false.</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.Drawing.RGBColor.op_Inequality(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            Tests whether two specified structures are different.
+            </summary>
+            <param name="left">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the left of the inequality operator.</param>
+            <param name="right">The <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> that is to the right of the inequality operator.</param>
+            <returns>true if the two structures are different; otherwise, false.</returns>
+        </member>
         <member name="T:Super.Zoo.Framework.IIdentifiedDisposableLoggerObject">
             <summary>
             带标识可释放日志记录对象接口，继承以下 3 个常用接口
@@ -1724,21 +2449,258 @@
             <param name="index">第几位开始截取（范围: 0 ~ 63 | -1 ~ -64，小于 <see langword="0"/> 时从末尾开始计数）</param>
             <returns>计算值（超出取值范围返回 <see langword="0"/>）</returns>
         </member>
-        <member name="T:Super.Zoo.Framework.DeepCloneExtends">
+        <member name="T:Super.Zoo.Framework.DrawingExtends">
             <summary>
-            深拷贝操作扩展
+            绘图扩展
             </summary>
         </member>
-        <member name="M:Super.Zoo.Framework.DeepCloneExtends.CloneObject``1(``0)">
+        <member name="P:Super.Zoo.Framework.DrawingExtends.CompareDigits">
             <summary>
-            深拷贝对象
+            比较截取小数位数
             </summary>
-            <typeparam name="TObject">深拷贝对象类型</typeparam>
-            <param name="obj">[THIS] 待拷贝对象</param>
-            <returns>拷贝对象</returns>
-            <remarks>
-            调用了 `Force.DeepCloner` 项目的 `DeepClone` 方法
-            </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.Compare(System.Object,System.Object)">
+            <summary>
+            比较两个颜色
+            </summary>
+            <param name="left">第一个颜色对象</param>
+            <param name="right">第二个颜色对象</param>
+            <returns>比较结果</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToColor(System.Drawing.Color)">
+            <summary>
+            转为 <see cref="T:System.Drawing.Color"/>
+            </summary>
+            <param name="systemColor">[THIS] <see cref="T:System.Drawing.Color"/> 对象</param>
+            <returns><see cref="T:System.Drawing.Color"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToColor(Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            转为 <see cref="T:System.Drawing.Color"/>
+            </summary>
+            <param name="cmykColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象</param>
+            <returns><see cref="T:System.Drawing.Color"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToColor(Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            转为 <see cref="T:System.Drawing.Color"/>
+            </summary>
+            <param name="hslColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象</param>
+            <returns><see cref="T:System.Drawing.Color"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToColor(Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            转为 <see cref="T:System.Drawing.Color"/>
+            </summary>
+            <param name="hsvColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象</param>
+            <returns><see cref="T:System.Drawing.Color"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToColor(Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            转为 <see cref="T:System.Drawing.Color"/>
+            </summary>
+            <param name="rgbColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象</param>
+            <returns><see cref="T:System.Drawing.Color"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToCMYKColor(System.Drawing.Color)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/>
+            </summary>
+            <param name="systemColor">[THIS] <see cref="T:System.Drawing.Color"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToCMYKColor(Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/>
+            </summary>
+            <param name="cmykColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToCMYKColor(Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/>
+            </summary>
+            <param name="hslColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToCMYKColor(Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/>
+            </summary>
+            <param name="hsvColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToCMYKColor(Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/>
+            </summary>
+            <param name="rgbColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSLColor(System.Drawing.Color)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/>
+            </summary>
+            <param name="systemColor">[THIS] <see cref="T:System.Drawing.Color"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSLColor(Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/>
+            </summary>
+            <param name="cmykColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSLColor(Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/>
+            </summary>
+            <param name="hslColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSLColor(Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/>
+            </summary>
+            <param name="hsvColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSLColor(Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/>
+            </summary>
+            <param name="rgbColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSVColor(System.Drawing.Color)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/>
+            </summary>
+            <param name="systemColor">[THIS] <see cref="T:System.Drawing.Color"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSVColor(Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/>
+            </summary>
+            <param name="cmykColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSVColor(Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/>
+            </summary>
+            <param name="hslColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSVColor(Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/>
+            </summary>
+            <param name="hsvColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToHSVColor(Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/>
+            </summary>
+            <param name="rgbColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToRGBColor(System.Drawing.Color)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/>
+            </summary>
+            <param name="systemColor">[THIS] <see cref="T:System.Drawing.Color"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToRGBColor(Super.Zoo.Framework.Drawing.CMYKColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/>
+            </summary>
+            <param name="cmykColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.CMYKColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToRGBColor(Super.Zoo.Framework.Drawing.HSLColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/>
+            </summary>
+            <param name="hslColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSLColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToRGBColor(Super.Zoo.Framework.Drawing.HSVColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/>
+            </summary>
+            <param name="hsvColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.HSVColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.ToRGBColor(Super.Zoo.Framework.Drawing.RGBColor)">
+            <summary>
+            转为 <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/>
+            </summary>
+            <param name="rgbColor">[THIS] <see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/> 对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.Drawing.RGBColor"/></returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.GenerateGradientColors(System.Drawing.Color,System.Drawing.Color,System.Int32)">
+            <summary>
+            生成渐变颜色
+            </summary>
+            <param name="startColor">起始颜色</param>
+            <param name="endColor">终止颜色</param>
+            <param name="count">数量</param>
+            <returns>渐变颜色列表</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.GenerateGradientColors(Super.Zoo.Framework.Drawing.CMYKColor,Super.Zoo.Framework.Drawing.CMYKColor,System.Int32)">
+            <summary>
+            生成渐变颜色
+            </summary>
+            <param name="startColor">起始颜色</param>
+            <param name="endColor">终止颜色</param>
+            <param name="count">数量</param>
+            <returns>渐变颜色列表</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.GenerateGradientColors(Super.Zoo.Framework.Drawing.HSLColor,Super.Zoo.Framework.Drawing.HSLColor,System.Int32)">
+            <summary>
+            生成渐变颜色
+            </summary>
+            <param name="startColor">起始颜色</param>
+            <param name="endColor">终止颜色</param>
+            <param name="count">数量</param>
+            <returns>渐变颜色列表</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.GenerateGradientColors(Super.Zoo.Framework.Drawing.HSVColor,Super.Zoo.Framework.Drawing.HSVColor,System.Int32)">
+            <summary>
+            生成渐变颜色
+            </summary>
+            <param name="startColor">起始颜色</param>
+            <param name="endColor">终止颜色</param>
+            <param name="count">数量</param>
+            <returns>渐变颜色列表</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.GenerateGradientColors(Super.Zoo.Framework.Drawing.RGBColor,Super.Zoo.Framework.Drawing.RGBColor,System.Int32)">
+            <summary>
+            生成渐变颜色
+            </summary>
+            <param name="startColor">起始颜色</param>
+            <param name="endColor">终止颜色</param>
+            <param name="count">数量</param>
+            <returns>渐变颜色列表</returns>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.Lerp(System.Byte,System.Byte,System.Double)">
+            <summary>
+            线性插值
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.Lerp(System.Double,System.Double,System.Double)">
+            <summary>
+            线性插值
+            </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.DrawingExtends.LerpAngle(System.Double,System.Double,System.Double)">
+            <summary>
+            线性插值
+            </summary>
         </member>
         <member name="T:Super.Zoo.Framework.EnumerableExtends">
             <summary>
@@ -4337,23 +5299,36 @@
             不建议使用构造函数
             </remarks>
         </member>
-        <member name="M:Super.Zoo.Framework.OperateResult.#ctor(System.String)">
+        <member name="M:Super.Zoo.Framework.OperateResult.With(System.Action{Super.Zoo.Framework.OperateResult.UpdateParameter})">
             <summary>
-            使用消息构造操作结果对象 [true, 0, <paramref name="message"/>]
+            更新操作结果对象
             </summary>
-            <param name="message">操作结果消息</param>
+            <param name="action">获取更新参数</param>
+            <returns>操作结果对象</returns>
             <remarks>
-            不建议使用构造函数
+            <list type="bullet">
+                <item>action.Invoke(parameter)</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Success"/> = parameter.Success</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Code"/> = parameter.Code</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Message"/> = parameter.Message</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Exception"/> = parameter.Exception</item>
+            </list>
             </remarks>
         </member>
-        <member name="M:Super.Zoo.Framework.OperateResult.#ctor(System.Int32,System.String)">
+        <member name="M:Super.Zoo.Framework.OperateResult.With(System.Func{Super.Zoo.Framework.OperateResult.UpdateParameter})">
             <summary>
-            使用代码、消息构造操作结果对象 [true, <paramref name="code"/>, <paramref name="message"/>]
+            更新操作结果对象
             </summary>
-            <param name="code">操作结果代码</param>
-            <param name="message">操作结果消息</param>
+            <param name="func">获取更新参数</param>
+            <returns>操作结果对象</returns>
             <remarks>
-            不建议使用构造函数
+            <list type="bullet">
+                <item>action.Invoke(parameter)</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Success"/> = parameter.Success</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Code"/> = parameter.Code</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Message"/> = parameter.Message</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Exception"/> = parameter.Exception</item>
+            </list>
             </remarks>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult.Succeed">
@@ -4424,6 +5399,14 @@
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResult.And(Super.Zoo.Framework.OperateResult,System.Boolean)">
+            <summary>
+            操作结果与操作
+            </summary>
+            <param name="operateResult">操作结果对象</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResult.ThenAnd(System.Func{Super.Zoo.Framework.OperateResult,Super.Zoo.Framework.OperateResult})">
             <summary>
             操作结果与操作
@@ -4433,6 +5416,14 @@
             <remarks>
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResult.ThenAnd(System.Func{Super.Zoo.Framework.OperateResult,Super.Zoo.Framework.OperateResult},System.Boolean)">
+            <summary>
+            操作结果与操作
+            </summary>
+            <param name="func">构造操作结果对象方法</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult.Or(Super.Zoo.Framework.OperateResult)">
             <summary>
@@ -4444,6 +5435,14 @@
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResult.Or(Super.Zoo.Framework.OperateResult,System.Boolean)">
+            <summary>
+            操作结果或操作
+            </summary>
+            <param name="operateResult">操作结果对象</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResult.ThenOr(System.Func{Super.Zoo.Framework.OperateResult,Super.Zoo.Framework.OperateResult})">
             <summary>
             操作结果或操作
@@ -4453,6 +5452,14 @@
             <remarks>
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResult.ThenOr(System.Func{Super.Zoo.Framework.OperateResult,Super.Zoo.Framework.OperateResult},System.Boolean)">
+            <summary>
+            操作结果或操作
+            </summary>
+            <param name="func">构造操作结果对象方法</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult.Then``1(System.Func{Super.Zoo.Framework.OperateResult,``0})">
             <summary>
@@ -4465,10 +5472,25 @@
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResult.Then``1(System.Func{Super.Zoo.Framework.OperateResult,``0},System.Boolean)">
+            <summary>
+            连续操作
+            </summary>
+            <typeparam name="TResult">返回值类型</typeparam>
+            <param name="func">执行方法</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>返回值</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResult.Return">
             <summary>
             归还操作结果对象到操作结果池
             </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResult.Return(System.Boolean)">
+            <summary>
+            归还操作结果对象到操作结果池
+            </summary>
+            <param name="execute">是否能执行</param>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult.ToString">
             <inheritdoc/>
@@ -4493,6 +5515,31 @@
             </summary>
             <param name="operateResult">操作结果对象</param>
             <returns></returns>
+        </member>
+        <member name="T:Super.Zoo.Framework.OperateResult.UpdateParameter">
+            <summary>
+            更新参数模型
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult.UpdateParameter.Success">
+            <summary>
+            操作成功状态
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult.UpdateParameter.Code">
+            <summary>
+            操作结果代码
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult.UpdateParameter.Message">
+            <summary>
+            操作结果消息
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult.UpdateParameter.Exception">
+            <summary>
+            操作结果异常
+            </summary>
         </member>
         <member name="T:Super.Zoo.Framework.OperateResultExtension">
             <summary>
@@ -4566,6 +5613,14 @@
             <see langword="※ 会回收当前对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResultExtension.ToOperateResult``1(Super.Zoo.Framework.OperateResult{``0},System.Boolean)">
+            <summary>
+            转换为 <see cref="T:Super.Zoo.Framework.OperateResult"/> 对象
+            </summary>
+            <param name="operateResult">[THIS] 操作结果对象</param>
+            <param name="returnObject">是否回收当前对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.OperateResult"/> 对象</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``1(Super.Zoo.Framework.OperateResult,``0)">
             <summary>
             转换为 <see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象
@@ -4577,6 +5632,16 @@
             <remarks>
             <see langword="※ 会回收当前对象 ※"/>
             </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``1(Super.Zoo.Framework.OperateResult,``0,System.Boolean)">
+            <summary>
+            转换为 <see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象
+            </summary>
+            <typeparam name="TTo">数据类型</typeparam>
+            <param name="operateResult">[THIS] 操作结果对象</param>
+            <param name="returnObject">是否回收当前对象</param>
+            <param name="data">数据</param>
+            <returns><see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象</returns>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``2(Super.Zoo.Framework.OperateResult{``0},``1)">
             <summary>
@@ -4591,6 +5656,17 @@
             <see langword="※ 会回收当前对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``2(Super.Zoo.Framework.OperateResult{``0},``1,System.Boolean)">
+            <summary>
+            转换为 <see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象
+            </summary>
+            <typeparam name="TFrom">数据类型</typeparam>
+            <typeparam name="TTo">数据类型</typeparam>
+            <param name="operateResult">[THIS] 操作结果对象</param>
+            <param name="returnObject">是否回收当前对象</param>
+            <param name="data">数据</param>
+            <returns><see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``1(Super.Zoo.Framework.OperateResult)">
             <summary>
             转换为 <see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象
@@ -4601,6 +5677,15 @@
             <remarks>
             <see langword="※ 会回收当前对象 ※"/>
             </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``1(Super.Zoo.Framework.OperateResult,System.Boolean)">
+            <summary>
+            转换为 <see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象
+            </summary>
+            <typeparam name="TTo">数据类型</typeparam>
+            <param name="operateResult">[THIS] 操作结果对象</param>
+            <param name="returnObject">是否回收当前对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象</returns>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``2(Super.Zoo.Framework.OperateResult{``0})">
             <summary>
@@ -4613,6 +5698,16 @@
             <remarks>
             <see langword="※ 会回收当前对象 ※"/>
             </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResultExtension.ConvertTo``2(Super.Zoo.Framework.OperateResult{``0},System.Boolean)">
+            <summary>
+            转换为 <see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象
+            </summary>
+            <typeparam name="TFrom">数据类型</typeparam>
+            <typeparam name="TTo">数据类型</typeparam>
+            <param name="operateResult">[THIS] 操作结果对象</param>
+            <param name="returnObject">是否回收当前对象</param>
+            <returns><see cref="T:Super.Zoo.Framework.OperateResult`1"/> 对象</returns>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResultExtension.AutoRetry``1(System.Func{``0},System.Int32)">
             <summary>
@@ -4964,25 +6059,38 @@
             不建议使用构造函数
             </remarks>
         </member>
-        <member name="M:Super.Zoo.Framework.OperateResult`1.#ctor(`0,System.String)">
+        <member name="M:Super.Zoo.Framework.OperateResult`1.With(System.Action{Super.Zoo.Framework.OperateResult{`0}.UpdateParameter{`0}})">
             <summary>
-            使用消息构造操作结果对象 [true, 0, <paramref name="message"/>, <paramref name="data"/>]
+            更新操作结果对象
             </summary>
-            <param name="data">数据</param>
-            <param name="message">操作结果消息</param>
+            <param name="action">更新参数</param>
+            <returns>操作结果对象</returns>
             <remarks>
-            不建议使用构造函数
+            <list type="bullet">
+                <item>action.Invoke(parameter)</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Success"/> = parameter.Success</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Code"/> = parameter.Code</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Message"/> = parameter.Message</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Exception"/> = parameter.Exception</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult`1.Data"/> = parameter.Data</item>
+            </list>
             </remarks>
         </member>
-        <member name="M:Super.Zoo.Framework.OperateResult`1.#ctor(`0,System.Int32,System.String)">
+        <member name="M:Super.Zoo.Framework.OperateResult`1.With(System.Func{Super.Zoo.Framework.OperateResult{`0}.UpdateParameter{`0}})">
             <summary>
-            使用代码、消息构造操作结果对象 [true, <paramref name="code"/>, <paramref name="message"/>, <paramref name="data"/>]
+            更新操作结果对象
             </summary>
-            <param name="data">数据</param>
-            <param name="code">操作结果代码</param>
-            <param name="message">操作结果消息</param>
+            <param name="func">更新参数</param>
+            <returns>操作结果对象</returns>
             <remarks>
-            不建议使用构造函数
+            <list type="bullet">
+                <item>action.Invoke(parameter)</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Success"/> = parameter.Success</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Code"/> = parameter.Code</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Message"/> = parameter.Message</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult.Exception"/> = parameter.Exception</item>
+                <item><see cref="P:Super.Zoo.Framework.OperateResult`1.Data"/> = parameter.Data</item>
+            </list>
             </remarks>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult`1.Succeed(`0)">
@@ -5153,6 +6261,14 @@
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResult`1.And(Super.Zoo.Framework.OperateResult{`0},System.Boolean)">
+            <summary>
+            操作结果与操作
+            </summary>
+            <param name="operateResult">操作结果对象</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResult`1.ThenAnd(System.Func{Super.Zoo.Framework.OperateResult{`0},Super.Zoo.Framework.OperateResult{`0}})">
             <summary>
             操作结果与操作
@@ -5162,6 +6278,14 @@
             <remarks>
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResult`1.ThenAnd(System.Func{Super.Zoo.Framework.OperateResult{`0},Super.Zoo.Framework.OperateResult{`0}},System.Boolean)">
+            <summary>
+            操作结果与操作
+            </summary>
+            <param name="func">构造操作结果对象方法</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult`1.Or(Super.Zoo.Framework.OperateResult{`0})">
             <summary>
@@ -5173,6 +6297,14 @@
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResult`1.Or(Super.Zoo.Framework.OperateResult{`0},System.Boolean)">
+            <summary>
+            操作结果或操作
+            </summary>
+            <param name="operateResult">操作结果对象</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResult`1.ThenOr(System.Func{Super.Zoo.Framework.OperateResult{`0},Super.Zoo.Framework.OperateResult{`0}})">
             <summary>
             操作结果或操作
@@ -5182,6 +6314,14 @@
             <remarks>
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResult`1.ThenOr(System.Func{Super.Zoo.Framework.OperateResult{`0},Super.Zoo.Framework.OperateResult{`0}},System.Boolean)">
+            <summary>
+            操作结果或操作
+            </summary>
+            <param name="func">构造操作结果对象方法</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>操作结果对象</returns>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult`1.Then``1(System.Func{Super.Zoo.Framework.OperateResult{`0},``0})">
             <summary>
@@ -5194,10 +6334,25 @@
             <see langword="※ 会回收未返回对象 ※"/>
             </remarks>
         </member>
+        <member name="M:Super.Zoo.Framework.OperateResult`1.Then``1(System.Func{Super.Zoo.Framework.OperateResult{`0},``0},System.Boolean)">
+            <summary>
+            连续操作
+            </summary>
+            <typeparam name="TResult">返回值类型</typeparam>
+            <param name="func">执行方法</param>
+            <param name="returnObject">是否回收未返回对象</param>
+            <returns>返回值</returns>
+        </member>
         <member name="M:Super.Zoo.Framework.OperateResult`1.Return">
             <summary>
             归还操作结果对象到操作结果池
             </summary>
+        </member>
+        <member name="M:Super.Zoo.Framework.OperateResult`1.Return(System.Boolean)">
+            <summary>
+            归还操作结果对象到操作结果池
+            </summary>
+            <param name="execute">是否能执行</param>
         </member>
         <member name="M:Super.Zoo.Framework.OperateResult`1.ToString">
             <inheritdoc/>
@@ -5222,6 +6377,36 @@
             </summary>
             <param name="operateResult">操作结果对象</param>
             <returns></returns>
+        </member>
+        <member name="T:Super.Zoo.Framework.OperateResult`1.UpdateParameter`1">
+            <summary>
+            更新参数模型
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult`1.UpdateParameter`1.Success">
+            <summary>
+            操作成功状态
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult`1.UpdateParameter`1.Code">
+            <summary>
+            操作结果代码
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult`1.UpdateParameter`1.Message">
+            <summary>
+            操作结果消息
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult`1.UpdateParameter`1.Exception">
+            <summary>
+            操作结果异常
+            </summary>
+        </member>
+        <member name="P:Super.Zoo.Framework.OperateResult`1.UpdateParameter`1.Data">
+            <summary>
+            数据
+            </summary>
         </member>
         <member name="T:Super.Zoo.Framework.ObjectPool`1">
             <summary>
@@ -5324,7 +6509,7 @@
         </member>
         <member name="P:Super.Zoo.Framework.Version.VersionObject.Version">
             <summary>
-            版本号
+            版本号（a.b）
             </summary>
         </member>
         <member name="P:Super.Zoo.Framework.Version.VersionObject.BuildVersion">
@@ -5379,30 +6564,30 @@
             </summary>
             <returns>更新日志</returns>
         </member>
-        <member name="T:Super.Zoo.Framework.Internal.ProjectVersion">
+        <member name="T:Super.Zoo.Framework.ProjectVersion">
             <summary>
             项目版本信息
             </summary>
         </member>
-        <member name="P:Super.Zoo.Framework.Internal.ProjectVersion.Version">
+        <member name="P:Super.Zoo.Framework.ProjectVersion.Version">
             <inheritdoc/>
         </member>
-        <member name="P:Super.Zoo.Framework.Internal.ProjectVersion.UpdateTime">
+        <member name="P:Super.Zoo.Framework.ProjectVersion.UpdateTime">
             <inheritdoc/>
         </member>
-        <member name="P:Super.Zoo.Framework.Internal.ProjectVersion.YearVersion">
+        <member name="P:Super.Zoo.Framework.ProjectVersion.YearVersion">
             <inheritdoc/>
         </member>
-        <member name="P:Super.Zoo.Framework.Internal.ProjectVersion.VersionType">
+        <member name="P:Super.Zoo.Framework.ProjectVersion.VersionType">
             <inheritdoc/>
         </member>
-        <member name="P:Super.Zoo.Framework.Internal.ProjectVersion.TypeVersion">
+        <member name="P:Super.Zoo.Framework.ProjectVersion.TypeVersion">
             <inheritdoc/>
         </member>
-        <member name="P:Super.Zoo.Framework.Internal.ProjectVersion.Assembly">
+        <member name="P:Super.Zoo.Framework.ProjectVersion.Assembly">
             <inheritdoc/>
         </member>
-        <member name="P:Super.Zoo.Framework.Internal.ProjectVersion.UpdateRecordFile">
+        <member name="P:Super.Zoo.Framework.ProjectVersion.UpdateRecordFile">
             <inheritdoc/>
         </member>
         <member name="T:Piggy.Framework.HighResolutionSleep">
@@ -5418,8 +6603,45 @@
         </member>
         <member name="T:Piggy.Framework.NativeMethods">
             <summary>
-            Windows 导入函数
+            Windows 导入函数（ntdll.dll）
             </summary>
+            <summary>
+            Windows 导入函数（kernel32.dll）
+            </summary>
+        </member>
+        <member name="M:Piggy.Framework.NativeMethods.NtSetTimerResolution(System.Int32,System.Boolean,System.Int32@)">
+            <summary>
+            设置系统定时器分辨率
+            </summary>
+            <param name="desiredResolution">[IN] 所需定时器分辨率（毫秒）</param>
+            <param name="setResolution">
+            <para>[IN] 是否同时设置系统范围的分辨率</para>
+                <list type="table">
+                    <item>
+                        <term><see langword="true"/></term>
+                        <description>设置系统范围内的分辨率</description>
+                    </item>
+                    <item>
+                        <term><see langword="false"/></term>
+                        <description>设置当前进程内的分辨率</description>
+                    </item>
+                </list>
+            </param>
+            <param name="actualResolution">[OUT] 系统当前定时器分辨率（毫秒）</param>
+        </member>
+        <member name="M:Piggy.Framework.NativeMethods.NtQueryTimerResolution(System.Int32@,System.Int32@,System.Int32@)">
+            <summary>
+            查询系统定时器分辨率
+            </summary>
+            <param name="minimumResolution">[OUT] 最小可用的定时器分辨率（毫秒）</param>
+            <param name="maximumResolution">[OUT] 最大可用的定时器分辨率（毫秒）</param>
+            <param name="preferredResolution">[OUT] 系统推荐的定时器分辨率（毫秒）</param>
+        </member>
+        <member name="M:Piggy.Framework.NativeMethods.Sleep(System.UInt32)">
+            <summary>
+            延时
+            </summary>
+            <param name="milliseconds">[IN] 延时时长（毫秒）</param>
         </member>
         <member name="M:Piggy.Framework.NativeMethods.WritePrivateProfileString(System.Byte[],System.Byte[],System.Byte[],System.String)">
             <summary>
@@ -5462,104 +6684,11 @@
             <param name="filePath">[IN] 文件路径</param>
             <returns>复制到缓冲区的字符数</returns>
         </member>
-        <member name="M:Piggy.Framework.NativeMethods.NtSetTimerResolution(System.Int32,System.Boolean,System.Int32@)">
-            <summary>
-            设置系统定时器分辨率
-            </summary>
-            <param name="desiredResolution">[IN] 所需定时器分辨率（毫秒）</param>
-            <param name="setResolution">
-            <para>[IN] 是否同时设置系统范围的分辨率</para>
-                <list type="table">
-                    <item>
-                        <term><see langword="true"/></term>
-                        <description>设置系统范围内的分辨率</description>
-                    </item>
-                    <item>
-                        <term><see langword="false"/></term>
-                        <description>设置当前进程内的分辨率</description>
-                    </item>
-                </list>
-            </param>
-            <param name="actualResolution">[OUT] 系统当前定时器分辨率（毫秒）</param>
-        </member>
-        <member name="M:Piggy.Framework.NativeMethods.NtQueryTimerResolution(System.Int32@,System.Int32@,System.Int32@)">
-            <summary>
-            查询系统定时器分辨率
-            </summary>
-            <param name="minimumResolution">[OUT] 最小可用的定时器分辨率（毫秒）</param>
-            <param name="maximumResolution">[OUT] 最大可用的定时器分辨率（毫秒）</param>
-            <param name="preferredResolution">[OUT] 系统推荐的定时器分辨率（毫秒）</param>
-        </member>
-        <member name="M:Piggy.Framework.NativeMethods.Sleep(System.UInt32)">
-            <summary>
-            延时
-            </summary>
-            <param name="milliseconds">[IN] 延时时长（毫秒）</param>
-        </member>
         <member name="M:Piggy.Framework.NativeMethods.IsDebuggerPresent">
             <summary>
             调试模式状态
             </summary>
             <returns>是否被调试器附加</returns>
-        </member>
-        <member name="T:Force.DeepCloner.DeepClonerExtension">
-            <summary>
-            Extensions for object cloning
-            </summary>
-        </member>
-        <member name="M:Force.DeepCloner.DeepClonerExtension.DeepClone``1(``0)">
-            <summary>
-            Performs deep (full) copy of object and related graph
-            </summary>
-        </member>
-        <member name="M:Force.DeepCloner.DeepClonerExtension.DeepCloneTo``2(``0,``1)">
-            <summary>
-            Performs deep (full) copy of object and related graph to existing object
-            </summary>
-            <returns>existing filled object</returns>
-            <remarks>Method is valid only for classes, classes should be descendants in reality, not in declaration</remarks>
-        </member>
-        <member name="M:Force.DeepCloner.DeepClonerExtension.ShallowCloneTo``2(``0,``1)">
-            <summary>
-            Performs shallow copy of object to existing object
-            </summary>
-            <returns>existing filled object</returns>
-            <remarks>Method is valid only for classes, classes should be descendants in reality, not in declaration</remarks>
-        </member>
-        <member name="M:Force.DeepCloner.DeepClonerExtension.ShallowClone``1(``0)">
-            <summary>
-            Performs shallow (only new object returned, without cloning of dependencies) copy of object
-            </summary>
-        </member>
-        <member name="M:Force.DeepCloner.Helpers.DeepClonerCache.ClearCache">
-            <summary>
-            This method can be used when we switch between safe / unsafe variants (for testing)
-            </summary>
-        </member>
-        <member name="T:Force.DeepCloner.Helpers.DeepClonerSafeTypes">
-            <summary>
-            Safe types are types, which can be copied without real cloning. e.g. simple structs or strings (it is immutable)
-            </summary>
-        </member>
-        <member name="T:Force.DeepCloner.Helpers.ShallowObjectCloner">
-            <summary>
-            Internal class but due implementation restriction should be public
-            </summary>
-        </member>
-        <member name="M:Force.DeepCloner.Helpers.ShallowObjectCloner.DoCloneObject(System.Object)">
-            <summary>
-            Abstract method for real object cloning
-            </summary>
-        </member>
-        <member name="M:Force.DeepCloner.Helpers.ShallowObjectCloner.CloneObject(System.Object)">
-            <summary>
-            Performs real shallow object clone
-            </summary>
-        </member>
-        <member name="M:Force.DeepCloner.Helpers.ShallowObjectCloner.SwitchTo(System.Boolean)">
-            <summary>
-            Purpose of this method is testing variants
-            </summary>
         </member>
     </members>
 </doc>

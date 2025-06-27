@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IMX.ATS.Lander" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="PortalView" Height="450" Width="400"
+        Title="PortalView" Height="450" Width="800"
         FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
         WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
         x:Name="Window"

@@ -1,4 +1,4 @@
-﻿using IMX.ATS.DIOS.ViewModels;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace IMX.ATS.DIOS.Views
+namespace IMX.ATS.DIOS
 {
     /// <summary>
     /// TestDatasView.xaml 的交互逻辑

@@ -54,18 +54,67 @@ namespace IMX.ATS.ATEConfig.Function
                 func = value;
                 FunConfig_ProductResult config = value.Config as FunConfig_ProductResult;
 
-                config.DatasName ??= GlobalModel.TestDBCconfig.Test_DBCReceiveSignals?.ToDictionary(x=>x.Custom_Name)?.Keys.ToList();
-                config.DatasName = config.DatasName.Distinct().ToList();
+                //config.DatasName ??= GlobalModel.TestDBCconfig.Test_DBCReceiveSignals?.ToDictionary(x=>x.Custom_Name)?.Keys.ToList();
+                //config.DatasName = config.DatasName.Distinct().ToList();
                 
                 DataList.Clear();
                 InDatas.Clear();
 
-                for (int i = 0; i < config.DatasName?.Count; i++)
+                List<string> names = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals?.ToDictionary(x => x.Custom_Name)?.Keys.ToList();
+
+                config.DatasName ??= [];
+                config.Datas ??= [];
+
+                config.DatasName.Clear();
+
+                //加载数据列表
+                for (int i = 0; i < names.Count; i++)
                 {
-                    DataList.Add(config.DatasName[i]);
+                    DataList.Add(names[i]);
+                    config.DatasName.Add(names[i]);
+                    //var data = config.Datas.Find(x=>x.DataInfo.Name == names[i]);
+                    //if (data!=null)
+                    //{
+                    //    InDatas.Add(new ProtectProShow
+                    //    {
+                    //        Function = value,
+                    //        Index = i,
+                    //        ResultData = data,
+                    //        IsUse = data.IsUse,
+                    //        ResultDatas = DataList,
+                    //        ResultDataName = data.DataInfo.Name,
+                    //        TrageCondition = data.Judgment,
+                    //    });
+                    //}
                 }
 
-                for (int i = 0; i < config.Datas?.Count; i++)
+                //List<int> deletindex = new List<int>();
+                for (int i = (config.Datas.Count - 1); i >= 0; i--)
+                {
+                    int findindex = config.DatasName.FindIndex(x => x == config.Datas[i].DataInfo.Name);
+                    if (findindex == -1)
+                    {
+                        config.Datas.RemoveAt(i);
+                        //deletindex.Add(i);
+                        //InDatas.Add(new ProtectProShow
+                        //{
+                        //    Function = value,
+                        //    Index = findindex,
+                        //    ResultData = config.Datas[i],
+                        //    IsUse = config.Datas[i].IsUse,
+                        //    ResultDatas = DataList,
+                        //    ResultDataName = config.Datas[i].DataInfo.Name,
+                        //    TrageCondition = config.Datas[i].Judgment,
+                        //});
+                    }
+                }
+
+                //for (int i = 0; i < deletindex.Count; i++)
+                //{
+                //    config.Datas.RemoveAt(deletindex[i]);
+                //}
+
+                for (int i = 0; i < config.Datas.Count; i++)
                 {
                     InDatas.Add(new ProtectProShow
                     {
@@ -78,6 +127,20 @@ namespace IMX.ATS.ATEConfig.Function
                         TrageCondition = config.Datas[i].Judgment,
                     });
                 }
+
+                //for (int i = 0; i < config.Datas?.Count; i++)
+                //{
+                //    InDatas.Add(new ProtectProShow
+                //    {
+                //        Function = value,
+                //        Index = i,
+                //        ResultData = config.Datas[i],
+                //        IsUse = config.Datas[i].IsUse,
+                //        ResultDatas = DataList,
+                //        ResultDataName = config.Datas[i].DataInfo.Name,
+                //        TrageCondition = config.Datas[i].Judgment,
+                //    });
+                //}
             }
         }
 

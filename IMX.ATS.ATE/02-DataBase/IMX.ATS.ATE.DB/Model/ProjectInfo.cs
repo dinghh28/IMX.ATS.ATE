@@ -105,7 +105,6 @@ namespace IMX.DB.Model
         [JsonMap]
         public List<ModTestProcess> Test_Flows { get; set; }
 
-
         /// <summary>
         /// 试验存储读取数据列表
         /// </summary>
@@ -129,6 +128,17 @@ namespace IMX.DB.Model
         /// </summary>
         [JsonMap]
         public List<ModTestDataInfo> Test_SetData_Euq { get; set; }
+
+        /// <summary>
+        /// 使用计算值作为数据
+        /// </summary>
+        public bool UseCalculateData { get; set; } = false;
+
+        /// <summary>
+        /// 试验存储计算值数据列表
+        /// </summary>
+        [JsonMap]
+        public List<ModTestDataInfo> Test_CalculateData { get; set; }
 
         /// <summary>
         /// 是否允许使用自定义数据

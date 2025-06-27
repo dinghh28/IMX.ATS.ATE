@@ -37,6 +37,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using IMX.Function.ViewModel.Model;
 using System.Collections.ObjectModel;
+using IMX.Common;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -141,11 +142,64 @@ namespace IMX.ATS.ATEConfig
                 if (SchemeNames.Contains(SchemeName))
                 { MessageBox.Show($"【{SchemeName}】已存在！"); return; }
 
+                var config = SupportConfig.DicProcessConfig[SchemeName];
+
+                List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
+                List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
+                List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
+                List<ModTestDataInfo> prosetdata = new List<ModTestDataInfo>();
+                List<ModTestDataInfo> costomreaddata = new List<ModTestDataInfo>();
+                List<ModTestDataInfo> calculatedata = new List<ModTestDataInfo>();
+
+                for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+                {
+                    proreaddata.Add(new ModTestDataInfo { Name = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i].Custom_Name });
+                }
+
+                for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCSendSignals.Count; i++)
+                {
+                    var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
+                    if (signal.Custom_Name != signal.Signal_Name)
+                    {
+                        proreaddata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
+                    }
+                }
+
+                if (config.UseCustomData)
+                {
+                    costomreaddata.AddRange(config.Test_CustomData);
+                }
+
+                if (config.UseCalculate)
+                {
+                    calculatedata.AddRange(config.Test_CalculateData);
+                    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+                    {
+                        calculatedata.AddRange(config.Test_CalculateDataEX);
+                    }
+                }
+
+                if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+                {
+                    eupreaddata.AddRange(config.Test_ReadData_EX);
+                    eupsetdata.AddRange(config.Test_SetData_Ex);
+                }
+
                 OperateResult DbRtl = DBOperate.Default.InsertTestProccess(new Test_Process
                 {
                     ProjectID = id,
                     FunctionName = SchemeName,
+                    Description = SchemeDescribe,
                     Test_Flows = mod,
+                    Test_ReadData_Euq = eupreaddata,
+                    Test_ReadData_Pro = proreaddata,
+                    Test_SetData_Euq = eupsetdata,
+                    Test_SetData_Pro = prosetdata,
+                    Test_CustomData = costomreaddata,
+                    UseCustomData = config.UseCustomData,
+                    UseCalculateData = config.UseCalculate,
+                    Test_CalculateData = calculatedata,
                     UpdateOperator = GlobalModel.UserInfo?.UserName,
                 });
 

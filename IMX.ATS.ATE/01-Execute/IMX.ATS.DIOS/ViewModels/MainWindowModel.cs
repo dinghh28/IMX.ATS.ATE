@@ -1449,13 +1449,13 @@ namespace IMX.ATS.DIOS
             //TestEndTime = DateTime.Now.AddDays(1);
         }
 
-        public MainWindowModel(string sn, int product_TestID)
-        {
+        //public MainWindowModel(string sn, int product_TestID)
+        //{
 
-            Product_TestSN = sn;
-            Product_TestID = product_TestID;
+        //    Product_TestSN = sn;
+        //    Product_TestID = product_TestID;
 
-        }
+        //}
     }
     public class TestItem : ViewModelBase
     {

@@ -1,11 +1,12 @@
-﻿<UserControl x:Class="IMX.ATS.DIOS.Views.TestProjectItemView"
+﻿<UserControl x:Class="IMX.ATS.DIOS.TestProjectItemView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-             xmlns:local="clr-namespace:IMX.ATS.DIOS.Views" 
-             xmlns:viewmodels="clr-namespace:IMX.ATS.DIOS.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:TestProjectItemViewModel}"
+             xmlns:local="clr-namespace:IMX.ATS.DIOS" 
+             xmlns:viewmodels="clr-namespace:IMX.ATS.DIOS" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:TestProjectItemViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" x:Name="Win">
     <UserControl.DataContext>
@@ -40,11 +41,11 @@
                     <DatePicker Margin="10,0,0,0" Text="{Binding TestEndTime, Mode=TwoWay,StringFormat=yyyy/MM/dd}"/>
                     <Label Content="项目编号" Margin="20,0,0,0"/>
                     <ComboBox Margin="10,0,0,0" Width="150"
-                              SelectedIndex="{Binding Product_TestSNIndex}" 
+                              SelectedIndex="{Binding Product_TestSNIndex, Mode=TwoWay}" 
                               ItemsSource="{Binding Product_Tests}"/>
                     <Label Content="产品编号" Margin="20,0,0,0"/>
                     <TextBox Margin="10,0,0,0" Width="150" Text="{Binding Product_SN}"/>
-                    <Button Content="查询" Margin="50,0,0,0"/>
+                    <Button Content="查询" Width="80" Margin="50,0,0,0" Command="{Binding Search}"/>
                 </WrapPanel>
                 <DataGrid Grid.Row="1"
                           AutoGenerateColumns="False"

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace IMX.ATS.DIOS.Views
+namespace IMX.ATS.DIOS
 {
     /// <summary>
     /// TestProjectItemView.xaml 的交互逻辑

@@ -730,7 +730,7 @@
         </member>
         <member name="P:IMX.Device.Common.SupportDeviceInfo.DeviceSetInfo">
             <summary>
-            设备上报信息字典[设备型号,上报数据名称字符串]
+            设备设置信息字典[设备型号,上报数据名称字符串]
             </summary>
         </member>
         <member name="P:IMX.Device.Common.SupportDeviceInfo.DicDeviceDataInfos">

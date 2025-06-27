@@ -23,6 +23,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using H.Maths.Encryption.AES;
 using H.WPF.Framework;
 using IMX.Common;
 using IMX.Device.Common;
@@ -30,11 +31,15 @@ using IMX.Device.Common.Enumerations;
 using IMX.Function;
 using IMX.Function.Base;
 using IMX.Function.ViewModel;
+using IMX.Function.ViewModel.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace IMX.ATS.ATEConfig.Function
 {
@@ -43,9 +48,94 @@ namespace IMX.ATS.ATEConfig.Function
     /// </summary>
     public class FunViewModelACSourceLoad : SteppingFunViewModel
     {
-        public override TestFunction Func { get; set; } = TestFunction.Create(FuncitonType.ACSource);
+        private TestFunction func = TestFunction.Create(FuncitonType.ACSourceLoad);
+        public override TestFunction Func
+        {
+            get => func;
+            set
+            {
+                func = value;
+                FunConfig_ACSourceLoad config = value.Config as FunConfig_ACSourceLoad;
 
-        public override FuncitonType SupportFuncitonType =>  FuncitonType.ACSource;
+                StepValues.Clear();
+
+                ObservableCollection<string> CondNames = new ObservableCollection<string>();
+                ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+
+                if (ConditionValues.Count < 1)
+                {
+                    if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX processconfig))
+                    {
+                        return;
+                    }
+
+
+                    for (int i = 0; i < processconfig.Test_ReadData_Euq.Count; i++)
+                    {
+                        var data = processconfig.Test_ReadData_Euq[i];
+                        ConditionValues.Add(new ModDeviceReadData
+                        {
+                            DataInfo = data,
+                            DeviceTypename = "Acquisition",
+                        });
+                    }
+
+                    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                        || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+                    {
+                        for (int i = 0; i < processconfig.Test_ReadData_EX.Count; i++)
+                        {
+                            var data = processconfig.Test_ReadData_EX[i];
+                            ConditionValues.Add(new ModDeviceReadData
+                            {
+                                DataInfo = data,
+                                DeviceTypename = "Acquisition",
+                            });
+                        }
+                    }
+
+                    for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+                    {
+                        var data = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i];
+                        ConditionValues.Add(new ModDeviceReadData
+                        {
+                            DataInfo = new ModTestDataInfo { Name = data.Custom_Name },
+                            DeviceTypename = "Product",
+                        });
+                    }
+                }
+
+                for (int i = 0; i < ConditionValues.Count; i++)
+                {
+                    CondNames.Add(ConditionValues[i].DataInfo.Name);
+                    CondValues.Add(ConditionValues[i]);
+                }
+
+                config.Values ??= [];
+
+                for (int i = 0; i < config.Values.Count; i++)
+                {
+                    int findindex = CondNames.ToList().FindIndex(n => n == config.Values[i].Value.DataInfo.Name);
+                    if (findindex == -1) 
+                    {
+                        continue;
+                    }
+
+                    var configvalue = new StepValue
+                    {
+                        ConditionValue = config.Values[i],
+                        ConditionValues = CondValues,
+                        ConditionNames = CondNames,
+                        ConditionIndex = findindex,
+                    };
+                    
+                    StepValues.Add(configvalue);
+                }
+
+            }
+        }
+
+        public override FuncitonType SupportFuncitonType =>  FuncitonType.ACSourceLoad;
 
         public override string SupportFuncitonString => "ACSourceLoad";
 
@@ -60,8 +150,16 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public DeviceOperatMode DeviceMode
         {
-            get => devicemode;
-            set => Set(nameof(DeviceMode), ref devicemode, value);
+            get => devicemode = (Func.Config as FunConfig_ACSourceLoad).DeviceMode;
+            set
+            {
+                if (Set(nameof(DeviceMode), ref devicemode, value))
+                {
+                    VoltShow = value == DeviceOperatMode.VOLT? Visibility.Visible: Visibility.Collapsed;
+                    LoadShow = value == DeviceOperatMode.LOAD? Visibility.Visible: Visibility.Collapsed;
+                    (Func.Config as FunConfig_ACSourceLoad).DeviceMode = value;
+                }
+            }
         }
 
         private Phase_Mode phasemode = Phase_Mode.ONE;
@@ -70,7 +168,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public Phase_Mode PhaseMode
         {
-            get => phasemode;
+            get => phasemode = (Func.Config as FunConfig_ACSourceLoad).PhaseMode;
             set 
             {
                 if (Set(nameof(PhaseMode), ref phasemode, value)) 
@@ -79,6 +177,10 @@ namespace IMX.ATS.ATEConfig.Function
                     {
                         Balance = true;
                     }
+                    Thread.Sleep(10);
+                    EnableBalance = value == Phase_Mode.THREE;
+
+                    (Func.Config as FunConfig_ACSourceLoad).PhaseMode = value;
                 }
             }
         }
@@ -89,15 +191,22 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public bool Balance
         {
-            get => balance;
+            get => balance = (Func.Config as FunConfig_ACSourceLoad).Balance;
             set 
             {
                 if (Set(nameof(Balance), ref balance, value))
                 {
+                    (Func.Config as FunConfig_ACSourceLoad).Balance = value;
+
                     if (!value)
                     {
                         Set_StepModel = false;
                     }
+
+                    BCShow = value ? Visibility.Collapsed : Visibility.Visible;
+                    SetShow = value ? Visibility.Visible : Visibility.Collapsed;
+                    EnableSetBlanceValue = !value;
+                    
                 }
             }
         }
@@ -108,8 +217,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double OpenAngle
         {
-            get => openangle;
-            set => Set(nameof(OpenAngle), ref openangle, value);
+            get => openangle = (Func.Config as FunConfig_ACSourceLoad).OpenAngle;
+            set
+            {
+                if (Set(nameof(OpenAngle), ref openangle, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).OpenAngle = value;
+                }
+            }
         }
 
         private double closeangle = 0;
@@ -118,8 +233,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double CloseAngle
         {
-            get => closeangle;
-            set => Set(nameof(CloseAngle), ref closeangle, value);
+            get => closeangle = (Func.Config as FunConfig_ACSourceLoad).CloseAngle;
+            set
+            {
+                if (Set(nameof(CloseAngle), ref closeangle, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).CloseAngle = value;
+                }
+            }
         }
         #endregion
 
@@ -131,8 +252,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double PhaseControl_AB
         {
-            get => phasecontrol_ab;
-            set => Set(nameof(PhaseControl_AB), ref phasecontrol_ab, value);
+            get => phasecontrol_ab = (Func.Config as FunConfig_ACSourceLoad).PhaseControl_AB;
+            set
+            {
+                if (Set(nameof(PhaseControl_AB), ref phasecontrol_ab, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).PhaseControl_AB = value;
+                }
+            }
         }
 
         private double phasecontrol_ac;
@@ -141,8 +268,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double PhaseControl_AC
         {
-            get => phasecontrol_ac;
-            set => Set(nameof(PhaseControl_AC), ref phasecontrol_ac, value);
+            get => phasecontrol_ac = (Func.Config as FunConfig_ACSourceLoad).PhaseControl_AC;
+            set
+            {
+                if (Set(nameof(PhaseControl_AC), ref phasecontrol_ac, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).PhaseControl_AC = value;
+                }
+            }
         }
 
         private double outputfrequency = 50;
@@ -151,8 +284,13 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double OutputFrequency
         {
-            get => outputfrequency;
-            set => Set(nameof(OutputFrequency), ref outputfrequency, value);
+            get => outputfrequency = (Func.Config as FunConfig_ACSourceLoad).OutputFrequency; set
+            {
+                if (Set(nameof(OutputFrequency), ref outputfrequency, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).OutputFrequency = value;
+                }
+            }
         }
 
         private double outputfrequencyslope = 5000000;
@@ -161,8 +299,13 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double OutputFrequencySlope
         {
-            get => outputfrequencyslope;
-            set => Set(nameof(OutputFrequencySlope), ref outputfrequencyslope, value);
+            get => outputfrequencyslope = (Func.Config as FunConfig_ACSourceLoad).OutputFrequencySlope; set
+            {
+                if (Set(nameof(OutputFrequencySlope), ref outputfrequencyslope, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).OutputFrequencySlope = value;
+                }
+            }
         }
 
         #region A相
@@ -172,8 +315,19 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double OutputVol_A
         {
-            get => outputvol_a;
-            set => Set(nameof(OutputVol_A), ref outputvol_a, value);
+            get => outputvol_a = (Func.Config as FunConfig_ACSourceLoad).SetValue_A;
+            set
+            {
+                if (Set(nameof(OutputVol_A), ref outputvol_a, value))
+                {
+                    if (Balance)
+                    {
+                        OutputVol_B = value;
+                        OutputVol_C = value;
+                    }
+                    (Func.Config as FunConfig_ACSourceLoad).SetValue_A = value;
+                }
+            }
         }
 
         private double volslope_a;
@@ -182,16 +336,17 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double VolSlope_A
         {
-            get => volslope_a;
-            set 
+            get => volslope_a = (Func.Config as FunConfig_ACSourceLoad).VolSlope_A; 
+            set
             {
-                if (Set(nameof(VolSlope_A), ref volslope_a, value)) 
+                if (Set(nameof(VolSlope_A), ref volslope_a, value))
                 {
                     if (Balance)
                     {
                         VolSlope_B = value;
                         VolSlope_C = value;
-                    }
+                    } 
+                    (Func.Config as FunConfig_ACSourceLoad).VolSlope_A = value;
                 }
             }
         }
@@ -214,8 +369,13 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double VolSlope_B
         {
-            get => volslope_b;
-            set => Set(nameof(VolSlope_B), ref volslope_b, value);
+            get => volslope_b = (Func.Config as FunConfig_ACSourceLoad).VolSlope_B; set
+            {
+                if (Set(nameof(VolSlope_B), ref volslope_b, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).VolSlope_B = value;
+                }
+            }
         }
         #endregion
 
@@ -236,8 +396,13 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double VolSlope_C
         {
-            get => volslope_c;
-            set => Set(nameof(VolSlope_C), ref volslope_c, value);
+            get => volslope_c = (Func.Config as FunConfig_ACSourceLoad).VolSlope_C; set
+            {
+                if (Set(nameof(VolSlope_C), ref volslope_c, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).VolSlope_C = value;
+                }
+            }
         }
         #endregion
 
@@ -245,14 +410,92 @@ namespace IMX.ATS.ATEConfig.Function
 
         #region 负载模式参数
 
-        private Opaerate_Mode  opaeratemode;
+        private Opaerate_Mode  opaeratemode = Opaerate_Mode.CC;
         /// <summary>
         /// 拉载模式
         /// </summary>
         public Opaerate_Mode OpaerateMode
         {
-            get => opaeratemode;
-            set => Set(nameof(OpaerateMode), ref opaeratemode, value);
+            get 
+            {
+                opaeratemode = (Func.Config as FunConfig_ACSourceLoad).OpaerateMode;
+                //switch (opaeratemode)
+                //{
+                //    case Opaerate_Mode.CC:
+                //        if (LoadUnit!="A")
+                //        {
+                //            LoadUnit = "A";
+                //        }
+                //        break;
+                //    case Opaerate_Mode.CV:
+                //        if (LoadUnit != "V")
+                //        {
+                //            LoadUnit = "V";
+                //        }
+                //        break;
+                //    case Opaerate_Mode.CR:
+                //        if (LoadUnit != "欧")
+                //        {
+                //            LoadUnit = "欧";
+                //        }
+                //        break;
+                //    case Opaerate_Mode.CP:
+                //        if (LoadUnit != "kW")
+                //        {
+                //            LoadUnit = "kW";
+                //        }
+                //        break;
+                //    case Opaerate_Mode.NULL:
+                //    default:
+                //        if (LoadUnit != "A")
+                //        {
+                //            LoadUnit = "A";
+                //        }
+                //        break;
+                //}
+                return opaeratemode;
+            } 
+            set
+            {
+                if (Set(nameof(OpaerateMode), ref opaeratemode, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).OpaerateMode = value;
+
+                    switch (value)
+                    {
+                        case Opaerate_Mode.CC:
+                            if (LoadUnit != "A")
+                            {
+                                LoadUnit = "A";
+                            }
+                            LoadExShow = Visibility.Visible;
+                            break;
+                        case Opaerate_Mode.CR:
+                            if (LoadUnit != "欧")
+                            {
+                                LoadUnit = "欧";
+                            }
+                            LoadExShow = Visibility.Collapsed;
+                            break;
+                        case Opaerate_Mode.CP:
+                            if (LoadUnit != "kW")
+                            {
+                                LoadUnit = "kW";
+                            }
+                            LoadExShow = Visibility.Visible;
+                            break;
+                        case Opaerate_Mode.CV:
+                        case Opaerate_Mode.NULL:
+                        default:
+                            if (LoadUnit != "A")
+                            {
+                                LoadUnit = "A";
+                            }
+                            LoadExShow = Visibility.Collapsed;
+                            break;
+                    }
+                }
+            }
         }
 
         private bool phaseloss_b;
@@ -261,8 +504,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public bool PhaseLoss_B
         {
-            get => phaseloss_b;
-            set => Set(nameof(PhaseLoss_B), ref phaseloss_b, value);
+            get => phaseloss_b = (Func.Config as FunConfig_ACSourceLoad).PhaseLoss_B; 
+            set
+            {
+                if (Set(nameof(PhaseLoss_B), ref phaseloss_b, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).PhaseLoss_B = value;
+                }
+            }
         }
 
         private bool phaseloss_c;
@@ -271,8 +520,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public bool PhaseLoss_C
         {
-            get => phaseloss_c;
-            set => Set(nameof(PhaseLoss_C), ref phaseloss_c, value);
+            get => phaseloss_c = (Func.Config as FunConfig_ACSourceLoad).PhaseLoss_C; 
+            set
+            {
+                if (Set(nameof(PhaseLoss_C), ref phaseloss_c, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).PhaseLoss_C = value;
+                }
+            }
         }
 
         #region 拉载值
@@ -283,7 +538,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double SetValue_A
         {
-            get => setvalue_a;
+            get => setvalue_a = (Func.Config as FunConfig_ACSourceLoad).SetValue_A; 
             set
             {
                 if (Set(nameof(SetValue_A), ref setvalue_a, value))
@@ -292,7 +547,8 @@ namespace IMX.ATS.ATEConfig.Function
                     {
                         SetValue_B = value;
                         SetValue_C = value;
-                    }
+                    } 
+                    (Func.Config as FunConfig_ACSourceLoad).SetValue_A = value;
                 }
             }
         }
@@ -303,7 +559,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double CurSlope_A
         {
-            get => curslope_a;
+            get => curslope_a = (Func.Config as FunConfig_ACSourceLoad).CurSlope_A;
             set
             {
                 if (Set(nameof(CurSlope_A), ref curslope_a, value))
@@ -313,6 +569,8 @@ namespace IMX.ATS.ATEConfig.Function
                         CurSlope_B = value;
                         CurSlope_C = value;
                     }
+
+                    (Func.Config as FunConfig_ACSourceLoad).CurSlope_A = value;
                 }
             }
         }
@@ -323,7 +581,7 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double PowerFactor_A
         {
-            get => powerfactor_a;
+            get => powerfactor_a = (Func.Config as FunConfig_ACSourceLoad).PowerFactor_A;
             set
             {
                 if (Set(nameof(PowerFactor_A), ref powerfactor_a, value))
@@ -333,6 +591,8 @@ namespace IMX.ATS.ATEConfig.Function
                         PowerFactor_B = value;
                         PowerFactor_C = value;
                     }
+
+                    (Func.Config as FunConfig_ACSourceLoad).PowerFactor_A = value;
                 }
             }
         }
@@ -345,8 +605,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double SetValue_B
         {
-            get => setvalue_b;
-            set => Set(nameof(SetValue_B), ref setvalue_b, value);
+            get => setvalue_b = (Func.Config as FunConfig_ACSourceLoad).SetValue_B; 
+            set
+            {
+                if (Set(nameof(SetValue_B), ref setvalue_b, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).SetValue_B = value;
+                }
+            }
         }
 
         private double curslope_b = 250;
@@ -355,8 +621,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double CurSlope_B
         {
-            get => curslope_b;
-            set => Set(nameof(CurSlope_B), ref curslope_b, value);
+            get => curslope_b = (Func.Config as FunConfig_ACSourceLoad).CurSlope_B; 
+            set
+            {
+                if (Set(nameof(CurSlope_B), ref curslope_b, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).CurSlope_B = value;
+                }
+            }
         }
 
         private double powerfactor_b;
@@ -365,8 +637,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double PowerFactor_B
         {
-            get => powerfactor_b;
-            set => Set(nameof(PowerFactor_B), ref powerfactor_b, value);
+            get => powerfactor_b = (Func.Config as FunConfig_ACSourceLoad).PowerFactor_B; 
+            set
+            {
+                if (Set(nameof(PowerFactor_B), ref powerfactor_b, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).PowerFactor_B = value;
+                }
+            }
         }
         #endregion
 
@@ -377,8 +655,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double SetValue_C
         {
-            get => setvalue_c;
-            set => Set(nameof(SetValue_C), ref setvalue_c, value);
+            get => setvalue_c = (Func.Config as FunConfig_ACSourceLoad).SetValue_C; 
+            set
+            {
+                if (Set(nameof(SetValue_C), ref setvalue_c, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).SetValue_C = value;
+                }
+            }
         }
 
         private double curslope_c = 250;
@@ -387,8 +671,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double CurSlope_C
         {
-            get => curslope_c;
-            set => Set(nameof(CurSlope_C), ref curslope_c, value);
+            get => curslope_c = (Func.Config as FunConfig_ACSourceLoad).CurSlope_C; 
+            set
+            {
+                if (Set(nameof(CurSlope_C), ref curslope_c, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).CurSlope_C = value;
+                }
+            }
         }
 
         private double powerfactor_c;
@@ -397,11 +687,99 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public double PowerFactor_C
         {
-            get => powerfactor_c;
-            set => Set(nameof(PowerFactor_C), ref powerfactor_c, value);
+            get => powerfactor_c = (Func.Config as FunConfig_ACSourceLoad).PowerFactor_C; 
+            set
+            {
+                if (Set(nameof(PowerFactor_C), ref powerfactor_c, value))
+                {
+                    (Func.Config as FunConfig_ACSourceLoad).PowerFactor_C = value;
+                }
+            }
         }
         #endregion
+
+        private string loadunit = "A";
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string LoadUnit
+        {
+            get => loadunit;
+            set => Set(nameof(LoadUnit), ref loadunit, value);
+        }
+
         #endregion
+
+        #endregion
+
+        #region 界面呈现逻辑参数
+        private bool enablebalance = false;
+        /// <summary>
+        /// 允许设置平衡状态
+        /// </summary>
+        public bool EnableBalance
+        {
+            get => enablebalance;
+            set => Set(nameof(EnableBalance), ref enablebalance, value);
+        }
+
+        private Visibility voltshow = Visibility.Visible;
+        /// <summary>
+        /// 电源数据显示
+        /// </summary>
+        public Visibility VoltShow
+        {
+            get => voltshow;
+            set => Set(nameof(VoltShow), ref voltshow, value);
+        }
+
+        private Visibility loadshow = Visibility.Collapsed;
+        /// <summary>
+        /// 负载数据显示
+        /// </summary>
+        public Visibility LoadShow
+        {
+            get => loadshow;
+            set => Set(nameof(LoadShow), ref loadshow, value);
+        }
+
+        private Visibility bcshow = Visibility.Collapsed;
+        /// <summary>
+        /// 是否显示BC相数据
+        /// </summary>
+        public Visibility BCShow
+        {
+            get => bcshow;
+            set => Set(nameof(BCShow), ref bcshow, value);
+        }
+
+        private Visibility setshow = Visibility.Visible;
+
+        public Visibility SetShow
+        {
+            get => setshow;
+            set => Set(nameof(SetShow), ref setshow, value);
+        }
+
+        private Visibility loadexshow = Visibility.Visible;
+        /// <summary>
+        /// 负载额外数据
+        /// </summary>
+        public Visibility LoadExShow
+        {
+            get => loadexshow;
+            set => Set(nameof(LoadExShow), ref loadexshow, value);
+        }
+
+        private bool enablesetblancevalue = false;
+        /// <summary>
+        /// 是否允许设置不平衡相关参数
+        /// </summary>
+        public bool EnableSetBlanceValue
+        {
+            get => enablesetblancevalue;
+            set => Set(nameof(EnableSetBlanceValue), ref enablesetblancevalue, value);
+        }
 
         #endregion
 
@@ -419,6 +797,17 @@ namespace IMX.ATS.ATEConfig.Function
         #endregion
 
         #region 保护方法
+
+        protected override void Add(ObservableCollection<ModDeviceReadData> obj)
+        {
+            if (GlobalModel.NowProcessName == "开关机流程")
+            {
+                MessageBox.Show($"当前【{GlobalModel.NowProcessName}】无法使用步进功能");
+                return;
+            }
+            base.Add(obj);
+        }
+
         protected override void WindowLoadedExecute(object obj)
         {
             //base.WindowLoadedExecute(obj);
@@ -434,43 +823,43 @@ namespace IMX.ATS.ATEConfig.Function
         #region 构造方法
         public FunViewModelACSourceLoad() 
         {
-            ConditionValues.Clear();
+            //ConditionValues.Clear();
 
-            if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX value))
-            {
-                return;
-            }
+            //if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX value))
+            //{
+            //    return;
+            //}
 
 
-            for (int i = 0; i < value.Test_ReadData_Euq.Count; i++)
-            {
-                var data = value.Test_ReadData_Euq[i];
-                ConditionValues.Add(new ModDeviceReadData
-                {
-                    DataInfo = data,
-                });
-            }
+            //for (int i = 0; i < value.Test_ReadData_Euq.Count; i++)
+            //{
+            //    var data = value.Test_ReadData_Euq[i];
+            //    ConditionValues.Add(new ModDeviceReadData
+            //    {
+            //        DataInfo = data,
+            //    });
+            //}
 
-            if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
-            {
-                for (int i = 0; i < value.Test_ReadData_EX.Count; i++)
-                {
-                    var data = value.Test_ReadData_EX[i];
-                    ConditionValues.Add(new ModDeviceReadData
-                    {
-                        DataInfo = data,
-                    });
-                }
-            }
+            //if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+            //{
+            //    for (int i = 0; i < value.Test_ReadData_EX.Count; i++)
+            //    {
+            //        var data = value.Test_ReadData_EX[i];
+            //        ConditionValues.Add(new ModDeviceReadData
+            //        {
+            //            DataInfo = data,
+            //        });
+            //    }
+            //}
 
-            for (int i = 0; i < value.Test_ReadData_Pro.Count; i++)
-            {
-                var data = value.Test_ReadData_Pro[i];
-                ConditionValues.Add(new ModDeviceReadData
-                {
-                    DataInfo = data,
-                });
-            }
+            //for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+            //{
+            //    var data = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i];
+            //    ConditionValues.Add(new ModDeviceReadData
+            //    {
+            //        DataInfo = new ModTestDataInfo { Name = data.Custom_Name},
+            //    });
+            //}
         }
         #endregion
 

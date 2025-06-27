@@ -23,7 +23,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
-using Force.DeepCloner;
+
 using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
 using IMX.DB;
@@ -45,6 +45,8 @@ using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
 using FastDeepCloner;
+using Force.DeepCloner;
+using IMX.Common;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -79,6 +81,7 @@ namespace IMX.ATS.ATEConfig
                 {
                     GlobalModel.NowProcessName = value;
                     SelectSolution();
+                    
                 }
             }
         }
@@ -235,6 +238,7 @@ namespace IMX.ATS.ATEConfig
                     {
                         SolutionNames.Add(result.Data[i]);
                     }
+                    GlobalModel.NowProcessName = SolutionNames[0];
                     SolutionName = SolutionNames[0];
                 });
 
@@ -399,6 +403,18 @@ namespace IMX.ATS.ATEConfig
                         Thread.Sleep(10);
                     }
                     break;
+                case "CLEAR":
+                    if (MessageBox.Show($"是否清空当前测试项【{SolutionName}】操作步骤","清空提示",MessageBoxButtons.OKCancel)!=DialogResult.OK) 
+                    {
+                        return;
+                    }
+
+                    lock (FunctionInfos)
+                    {
+                        FunctionInfos.Clear();
+                        Thread.Sleep(10);
+                    }
+                    break;
             }
         }
 
@@ -423,9 +439,10 @@ namespace IMX.ATS.ATEConfig
                 }
 
                 //开关机指令无显示界面(仅调用前置)
-                if (functionInfos[index].ModType == FuncitonType.NONE || functionInfos[index].ModType == FuncitonType.NONE)
+                if (functionInfos[index].ModType == FuncitonType.Startup || functionInfos[index].ModType == FuncitonType.Shutdown)
                 {
                     ConfigContent = null;
+                    return;
                 }
 
                 //string winname = SupportConfig.DicTestFlowItems.First(x => x.Value == FunctionInfos[index].FunctionName).Key;
@@ -458,35 +475,49 @@ namespace IMX.ATS.ATEConfig
             }
 
             //CAN相关配置
-            if (type == FuncitonType.Product || type == FuncitonType.ProductResult)
+            //if (type == FuncitonType.Product || type == FuncitonType.ProductResult)
+            //{
+            //    //if (!GlobalModel.Test_ProjectInfo.IsUseDDBC)
+            //    //{
+            //    //    MessageBox.Show("当前项目无产品通讯，请勿使用相关模板！（如需使用，请先切至产品信息界面开启 DBC 通讯）","产品相关模板添加失败");
+            //    //    return;
+            //    //}
+            //    //else if (GlobalModel.TestDBCconfig == null || GlobalModel.TestDBCconfig.Id == 0)
+            //    //{
+            //    //    MessageBox.Show("当前项目未配置DBC信息，请配置后使用相关模板", "产品相关模板添加失败");
+            //    //    return;
+            //    //}
+            //}
+
+            IFunViewModel funmodel = null;
+
+            if (type != FuncitonType.Startup && type != FuncitonType.Shutdown)
             {
-                if (!GlobalModel.Test_ProjectInfo.IsUseDDBC)
+                var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
+
+                if (!rlt)
                 {
-                    MessageBox.Show("当前项目无产品通讯，请勿使用相关模板！（如需使用，请先切至产品信息界面开启 DBC 通讯）","产品相关模板添加失败");
+                    MessageBox.Show($"操作无法添加:{rlt.Message}");
                     return;
                 }
-                else if (GlobalModel.TestDBCconfig == null || GlobalModel.TestDBCconfig.Id == 0)
+                var viewmodel = FunctionInfos.LastOrDefault(x => x.ModType == rlt.Data.SupportFuncitonType);
+                if (viewmodel != null) 
                 {
-                    MessageBox.Show("当前项目未配置DBC信息，请配置后使用相关模板", "产品相关模板添加失败");
-                    return;
+                    //FastDeepCloner.DeepCloner.CloneTo(viewmodel.Model, funmodel);
+                    funmodel = viewmodel.Model.DeepClone();
+                }
+                //if (FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
+                //{
+                //    DeepCloner.CloneTo(FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model, funmodel);
+                //    //funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
+                //}
+                else
+                {
+                    funmodel = rlt.Data;
                 }
             }
 
 
-            var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
-
-            if (!rlt)
-            {
-                MessageBox.Show($"操作无法添加:{rlt.Message}");
-                return;
-            }
-            IFunViewModel funmodel = rlt.Data;
-
-            if (FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
-            {
-                DeepCloner.CloneTo( FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model, funmodel);
-                //funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
-            }
 
             FunctionInfos.Add(new FunctionInfo
             {
@@ -553,23 +584,26 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show($"无法获取当前{obj}类型操作步骤", "步骤添加异常");
                 return;
             }
-
-            var jsonrlt = Function_Config.DeJson(type, obj.Funtion?.ToString());
-            if (!jsonrlt)
+            IFunViewModel model = null;
+            if (type != FuncitonType.Startup && type != FuncitonType.Shutdown)
             {
-                MessageBox.Show($"JSON错误:{jsonrlt.Message}");
-                return;
-            }
+                var jsonrlt = Function_Config.DeJson(type, obj.Funtion?.ToString());
+                if (!jsonrlt)
+                {
+                    MessageBox.Show($"JSON错误:{jsonrlt.Message}");
+                    return;
+                }
 
-            var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
+                var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
 
-            if (!rlt)
-            {
-                MessageBox.Show($"操作无法添加:{rlt.Message}");
-                return;
+                if (!rlt)
+                {
+                    MessageBox.Show($"操作无法添加:{rlt.Message}");
+                    return;
+                }
+                model = rlt.Data;
+                model.Func = TestFunction.Create(jsonrlt.Data);
             }
-            var model = rlt.Data;
-            model.Func = TestFunction.Create(jsonrlt.Data);
 
             FunctionInfos.Add(new FunctionInfo
             {
@@ -595,8 +629,12 @@ namespace IMX.ATS.ATEConfig
 
             foreach (var item in FunctionInfos)
             {
-
-                OperateResult<string> result = item.Model.Func.Config.ToJson();
+                OperateResult<string> result =  OperateResult<string>.Succeed(string.Empty);
+                if (item.ModType != FuncitonType.Startup && item.ModType != FuncitonType.Shutdown)
+                {
+                    result = item.Model.Func.Config.ToJson();
+                }
+               
 
                 mod.Add(new ModTestProcess
                 {
@@ -609,7 +647,61 @@ namespace IMX.ATS.ATEConfig
                 });
             }
 
+            #region 调试数据存储
+            //var config = SupportConfig.DicProcessConfig[SolutionName];
+
+            //List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
+            //List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
+            //List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
+            //List<ModTestDataInfo> prosetdata = new List<ModTestDataInfo>();
+            //List<ModTestDataInfo> costomreaddata = new List<ModTestDataInfo>();
+            //List<ModTestDataInfo> calculatedata = new List<ModTestDataInfo>();
+
+            //for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+            //{
+            //    proreaddata.Add(new ModTestDataInfo { Name = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i].Custom_Name });
+            //}
+
+            //for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCSendSignals.Count; i++)
+            //{
+            //    var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
+            //    if (signal.Custom_Name != signal.Signal_Name)
+            //    {
+            //        prosetdata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
+            //    }
+            //}
+
+            //if (config.UseCustomData)
+            //{
+            //    costomreaddata.AddRange(config.Test_CustomData);
+            //}
+
+            //if (config.UseCalculate)
+            //{
+            //    calculatedata.AddRange(config.Test_CalculateData);
+            //    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+            //    {
+            //        calculatedata.AddRange(config.Test_CalculateDataEX);
+            //    }
+            //}
+
+
+            //if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+            //    || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+            //{
+            //    eupreaddata.AddRange(config.Test_ReadData_EX);
+            //    eupsetdata.AddRange(config.Test_SetData_Ex);
+            //}
+
+            //DBOperate.Default.UpdateTestProccessSaveData(projectid, SolutionName,
+            //    eupreaddata, eupsetdata,
+            //    proreaddata, prosetdata,
+            //    config.UseCalculate, calculatedata,
+            //    config.UseCustomData, costomreaddata);
+            #endregion
+
             DBOperate.Default.UpdateProcess(projectid, SolutionName, mod)
+            
                              .AttachIfSucceed(result =>
                              {
                                  MessageBox.Show($"配置信息保存成功");
@@ -837,6 +929,11 @@ namespace IMX.ATS.ATEConfig
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            if (!string.IsNullOrEmpty(SolutionName))
+            {
+                GlobalModel.NowProcessName = SolutionName;
+            }
+            
             //base.WindowLoadedExecute(obj);
         }
 

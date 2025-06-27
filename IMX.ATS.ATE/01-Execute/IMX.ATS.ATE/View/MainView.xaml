@@ -75,9 +75,11 @@
                 <GroupBox Header="试验信息" Grid.Column="0" BorderBrush="Black" IsEnabled="{Binding EnableRunTest}">
                     <Grid >
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="45"/>
+                            <RowDefinition Height="45"/>
                             <RowDefinition/>
                             <RowDefinition/>
-                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="7*"/>
                             <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
 
@@ -85,14 +87,20 @@
                                    IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}">
                             <Label Content="试验项目：" Margin="0,0,5,0"/>
                             <TextBox Width="200" IsReadOnly="True" Text="{Binding SelectedProductName}"/>
-                            <Button Content="选择项目" IsEnabled="{Binding ProdectNameChangeLock}"/>
+                            <!--<Button Content="清除故障灯" Margin="20,0,0,0" Command="{Binding ClearError}"/>
+                            <Button Content="选择项目" IsEnabled="{Binding ProdectNameChangeLock}" Command="{Binding Select}"
+                                    Margin="130,0,0,0"/>-->
+                            
                             <!--<ComboBox Width="200" SelectedValue="{Binding SelectedProductName}" ItemsSource="{Binding ProdectNames}" IsReadOnly="True" IsEnabled="{Binding ProdectNameChangeLock}"/>-->
                         </WrapPanel>
-                        <!--<WrapPanel Grid.Row="1">
-                            <Label Content="项目锁"/>
-                            <CheckBox Style="{StaticResource Switch_CK}" IsChecked="{Binding ProdectNameChangeLock}"/>
-                            <Button Content="清除故障灯" Margin="50,0,0,0" Command="{Binding ClearError}"/>
-                        </WrapPanel>-->
+                        <WrapPanel Grid.Row="2" IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}">
+                            <Button Content="选择项目" Command="{Binding Select}" Height="40" Margin="20,0,0,0"/>
+                            <Button Content="存储试验数据" Command="{Binding Save}" Margin="80,0,0,0"/>
+                        </WrapPanel>
+
+                        <WrapPanel Grid.Row="3">
+                            <Button Content="清除故障灯" Height="40" Command="{Binding ClearError}" Background="Green"/>
+                        </WrapPanel>
 
                         <WrapPanel Grid.Row="1" VerticalAlignment="Center" 
                                    IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}"
@@ -115,8 +123,16 @@
                                    VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Grid>-->
 
-                        <DataGrid Grid.Row="2"
-                                  ItemsSource="{Binding ProcessInfos}">
+                        <DataGrid Grid.Row="4"
+                                  ItemsSource="{Binding ProcessInfos}"
+                                  AutoGenerateColumns="False"
+                                  CanUserReorderColumns="False"
+                                  CanUserDeleteRows="False"
+                                  CanUserAddRows="False"
+                                  CanUserResizeRows="False"
+                                  CanUserSortColumns="False"
+                                  Margin="0,0,0,10"
+                                  IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn>
                                     <DataGridTemplateColumn.Header>
@@ -129,11 +145,11 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="试验项名称" Binding="{Binding ProcessName}"/>
+                                <DataGridTextColumn Header="试验项名称" Binding="{Binding ProcessName}" Width="*"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                            
-                        <Button Grid.Row="4" FontSize="16"
+                        
+                        <Button Grid.Row="5" FontSize="16"
                                 Content="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='String'}" 
                                 Background="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Brush'}"
                                 IsEnabled="{Binding EnableTestBtn}"

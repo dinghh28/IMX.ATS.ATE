@@ -36,7 +36,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace IMX.ATS.DIOS.ViewModels
+namespace IMX.ATS.DIOS
 {
     public class TestProjectItemViewModel : ExtendViewModelBase
     {
@@ -191,9 +191,9 @@ namespace IMX.ATS.DIOS.ViewModels
 
         #region 私有变量
         /// <summary>
-        /// 项目信息字典[项目名称，项目信息]
+        /// 项目信息字典[项目名称，项目ID]
         /// </summary>
-        Dictionary<string, Test_ProjectInfo> dicProjectInfo = new Dictionary<string, Test_ProjectInfo>();
+        Dictionary<string, int> dicProjectInfo = new Dictionary<string, int>();
 
         /// <summary>
         /// 单页数据数量
@@ -213,6 +213,7 @@ namespace IMX.ATS.DIOS.ViewModels
 
         private int lastprodectid = -1;
         #endregion
+
         #endregion
 
         #endregion
@@ -222,19 +223,22 @@ namespace IMX.ATS.DIOS.ViewModels
         #region 数据初始化
         private void GetAllProject()
         {
-            OperateResult<List<Test_ProjectInfo>> Testidresult = DBOperate.Default.SelectedProjectInfo_All();
+            var Testidresult = DBOperate.Default.GetProjectSNs();
             if (Testidresult)
             {
                 if (Testidresult.Data.Count > 0)
                 {
-                    dicProjectInfo.Clear();
+                    //dicProjectInfo.Clear();
 
-                    Product_Tests?.Clear();
-                    Testidresult.Data.ForEach(x =>
+                    Product_Tests.Clear();
+
+                    dicProjectInfo = Testidresult.Data;
+                    foreach (var item in Testidresult.Data)
                     {
-                        Product_Tests.Add(x.ProjectSN);
-                        dicProjectInfo.Add(x.ProjectSN, x);
-                    });
+                        Product_Tests.Add(item.Key);
+                    }
+
+                    product_TestSNIndex = -1;
                 }
             }
         }
@@ -255,22 +259,25 @@ namespace IMX.ATS.DIOS.ViewModels
 
             start = TestStartTime.Date;
             end = TestEndTime.AddDays(1).Date;
-            lastprojectsn = Product_Tests[Product_TestSNIndex];
-            
+            lastprojectsn = string.Empty;
+            lastprodectid = -1;
+
             if (!isnotesttext && !isnotestsn)
             {
-                lastprodectid = dicProjectInfo[lastprojectsn].Id;
+                lastprojectsn = Product_SN;
+                lastprodectid = dicProjectInfo[Product_Tests[Product_TestSNIndex]];
                 Countresult = DBOperate.Default.SelectTestProjectItem_Count(lastprodectid, Product_SN, start, end);
                 Testidresult = DBOperate.Default.SelectTestProjectItem(lastprodectid, Product_SN, start, end, 1, OnePageCount);// : DBOperate.Default.GetTestItemByIDandTime(Product_SN, TestStartTime, TestEndTime);
             }
             else if (!isnotestsn)
             {
+                lastprojectsn = Product_SN;
                 Countresult = DBOperate.Default.SelectTestProjectItem_Count(Product_SN, start, end);
                 Testidresult = DBOperate.Default.SelectTestProjectItem(Product_SN, start, end, 1, OnePageCount);
             }
             else
             {
-                lastprodectid = dicProjectInfo[lastprojectsn].Id;
+                lastprodectid = dicProjectInfo[Product_Tests[Product_TestSNIndex]];
                 Countresult = DBOperate.Default.SelectTestProjectItem_Count(lastprodectid,start, end);
                 Testidresult = DBOperate.Default.SelectTestProjectItem(lastprodectid, start, end, 1, OnePageCount);
             }
@@ -295,6 +302,9 @@ namespace IMX.ATS.DIOS.ViewModels
             {
                 Datas.Add(Testidresult.Data[i]);
             }
+            ItemCount = Datas.Count;
+
+            ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Home.RightBtnVis = System.Windows.Visibility.Collapsed;
         }
 
         private void GetTestDataLimit(object pagename) 
@@ -333,12 +343,11 @@ namespace IMX.ATS.DIOS.ViewModels
             OperateResult<List<Test_ProjectItemInfo>> Testidresult;
             if (!isnotesttext && !isnotestsn)
             {
-                Testidresult = DBOperate.Default.SelectTestProjectItem(lastprodectid, Product_SN, start, end, (int)pagenum, OnePageCount);// : DBOperate.Default.GetTestItemByIDandTime(Product_SN, TestStartTime, TestEndTime);
+                Testidresult = DBOperate.Default.SelectTestProjectItem(lastprodectid, lastprojectsn, start, end, (int)pagenum, OnePageCount);// : DBOperate.Default.GetTestItemByIDandTime(Product_SN, TestStartTime, TestEndTime);
             }
             else if (!isnotestsn)
             {
-                
-                Testidresult = DBOperate.Default.SelectTestProjectItem(Product_SN, start, end, (int)pagenum, OnePageCount);
+                Testidresult = DBOperate.Default.SelectTestProjectItem(lastprojectsn, start, end, (int)pagenum, OnePageCount);
             }
             else
             {
@@ -365,7 +374,11 @@ namespace IMX.ATS.DIOS.ViewModels
 
         private void ReturnToItem()
         {
-            Product_SN = SelectIndex.ToString();
+            GlobalModel.ProjectItemId = lastprodectid;
+            var model = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Home;
+            model.LeftBtnVis = System.Windows.Visibility.Visible;
+            model.RightBtnVis = System.Windows.Visibility.Collapsed;
+            model.ChangePage("Item");
         }
         #endregion
 

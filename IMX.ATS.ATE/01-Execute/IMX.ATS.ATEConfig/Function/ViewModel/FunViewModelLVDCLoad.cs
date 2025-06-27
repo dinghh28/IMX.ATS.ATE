@@ -55,26 +55,76 @@ namespace IMX.ATS.ATEConfig.Function
                 StepValues.Clear();
 
                 ObservableCollection<string> CondNames = new ObservableCollection<string>();
-                //ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+                ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+
+                if (ConditionValues.Count < 1)
+                {
+                    if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX processconfig))
+                    {
+                        return;
+                    }
+
+
+                    for (int i = 0; i < processconfig.Test_ReadData_Euq.Count; i++)
+                    {
+                        var data = processconfig.Test_ReadData_Euq[i];
+                        ConditionValues.Add(new ModDeviceReadData
+                        {
+                            DataInfo = data,
+                            DeviceTypename = "Acquisition",
+                        });
+                    }
+
+                    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                        || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+                    {
+                        for (int i = 0; i < processconfig.Test_ReadData_EX.Count; i++)
+                        {
+                            var data = processconfig.Test_ReadData_EX[i];
+                            ConditionValues.Add(new ModDeviceReadData
+                            {
+                                DataInfo = data,
+                                DeviceTypename = "Acquisition",
+                            });
+                        }
+                    }
+
+                    for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+                    {
+                        var data = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i];
+                        ConditionValues.Add(new ModDeviceReadData
+                        {
+                            DataInfo = new ModTestDataInfo { Name = data.Custom_Name },
+                            DeviceTypename = "Product",
+                        });
+                    }
+                }
 
                 for (int i = 0; i < ConditionValues.Count; i++)
                 {
                     CondNames.Add(ConditionValues[i].DataInfo.Name);
-                    //CondValues.Add(SupportDeviceInfo.DeviceRecInfo["AN87330"][i]);
-                    //data.ConditionValues.Add((Func.Config as FunConfig_ACSource).ConditionalValues[i]);
+                    CondValues.Add(ConditionValues[i]);
                 }
 
                 config.Values ??= [];
 
                 for (int i = 0; i < config.Values.Count; i++)
                 {
-                    StepValues.Add(new StepValue
+                    int findindex = CondNames.ToList().FindIndex(n => n == config.Values[i].Value.DataInfo.Name);
+                    if (findindex == -1)
+                    {
+                        continue;
+                    }
+
+                    var configvalue = new StepValue
                     {
                         ConditionValue = config.Values[i],
-                        ConditionValues = ConditionValues,
+                        ConditionValues = CondValues,
                         ConditionNames = CondNames,
-                        ConditionIndex = CondNames.ToList().FindIndex(n => n == config.Values[i].Value.DataInfo.Name),
-                    });
+                        ConditionIndex = findindex,
+                    };
+
+                    StepValues.Add(configvalue);
                 }
 
                 if (config.Set_Model == Opaerate_Mode.NULL)
@@ -310,43 +360,43 @@ namespace IMX.ATS.ATEConfig.Function
         #region 构造方法
         public FunViewModelLVDCLoad() 
         {
-            ConditionValues.Clear();
+            //ConditionValues.Clear();
 
-            if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX value))
-            {
-                return;
-            }
+            //if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX value))
+            //{
+            //    return;
+            //}
 
 
-            for (int i = 0; i < value.Test_ReadData_Euq.Count; i++)
-            {
-                var data = value.Test_ReadData_Euq[i];
-                ConditionValues.Add(new ModDeviceReadData
-                {
-                    DataInfo = data,
-                });
-            }
+            //for (int i = 0; i < value.Test_ReadData_Euq.Count; i++)
+            //{
+            //    var data = value.Test_ReadData_Euq[i];
+            //    ConditionValues.Add(new ModDeviceReadData
+            //    {
+            //        DataInfo = data,
+            //    });
+            //}
 
-            if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
-            {
-                for (int i = 0; i < value.Test_ReadData_EX.Count; i++)
-                {
-                    var data = value.Test_ReadData_EX[i];
-                    ConditionValues.Add(new ModDeviceReadData
-                    {
-                        DataInfo = data,
-                    });
-                }
-            }
+            //if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+            //{
+            //    for (int i = 0; i < value.Test_ReadData_EX.Count; i++)
+            //    {
+            //        var data = value.Test_ReadData_EX[i];
+            //        ConditionValues.Add(new ModDeviceReadData
+            //        {
+            //            DataInfo = data,
+            //        });
+            //    }
+            //}
 
-            for (int i = 0; i < value.Test_ReadData_Pro.Count; i++)
-            {
-                var data = value.Test_ReadData_Pro[i];
-                ConditionValues.Add(new ModDeviceReadData
-                {
-                    DataInfo = data,
-                });
-            }
+            //for (int i = 0; i < value.Test_ReadData_Pro.Count; i++)
+            //{
+            //    var data = value.Test_ReadData_Pro[i];
+            //    ConditionValues.Add(new ModDeviceReadData
+            //    {
+            //        DataInfo = data,
+            //    });
+            //}
         }
         #endregion
 

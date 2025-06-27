@@ -37,20 +37,73 @@ namespace IMX.ATS.ATEConfig.Function
                 {
                     func = value;
 
-
                     FunConfig_Product config = (value.Config as FunConfig_Product);
 
+                    (Func.Config as FunConfig_Product).SendSignals ??= [];
                     if ((Func?.Config as FunConfig_Product)?.SendSignals?.Count > 0)
                     {
-                        sendSignals.Clear();
-                        (Func.Config as FunConfig_Product).SendSignals.ForEach(x =>
+                        SendSignals.Clear();
+                        foreach (var item in GlobalModel.TestDBCconfig.Test_DBCSendSignals)
                         {
-                            sendSignals.Add(new SendSignalModel
+                            SendSignalModel model = new SendSignalModel
                             {
-                                IsSelected = x.IsSend,
-                                DBCSignal = x
+                                IsSelected = false,
+                                DBCSignal = new DBCSendSignal
+                                {
+                                    CustomName = item.Custom_Name,
+                                    MessageName = item.MessageName,
+                                    MessageID = item.Message_ID,
+                                    SignalName = item.Signal_Name,
+                                    SignalValue = item.SignalInitValue,
+                                }
+                            };
+
+                            var signal = (Func.Config as FunConfig_Product).SendSignals
+                                .Find(x => x.MessageID == item.Message_ID 
+                                && x.SignalName == item.Signal_Name);
+
+                            if (signal != null)
+                            {
+                                model.IsSelected = signal.IsSend;
+                                model.DBCSignal.SignalValue = signal.SignalValue;
+                            }
+
+                            SendSignals.Add(model);
+                        }
+
+                        //(Func.Config as FunConfig_Product).SendSignals.ForEach(x =>
+                        //{
+                        //    sendSignals.Add(new SendSignalModel
+                        //    {
+                        //        IsSelected = x.IsSend,
+                        //        DBCSignal = x
+                        //    });
+                        //});
+                    }
+                    else
+                    {
+                        SendSignals.Clear();
+                        foreach (var item in GlobalModel.TestDBCconfig.Test_DBCSendSignals)
+                        {
+                            SendSignals.Add(new SendSignalModel
+                            {
+                                IsSelected = false,
+                                DBCSignal = new DBCSendSignal
+                                {
+                                    CustomName = item.Custom_Name,
+                                    MessageName = item.MessageName,
+                                    MessageID = item.Message_ID,
+                                    SignalName = item.Signal_Name,
+                                    SignalValue = item.SignalInitValue,
+                                }
                             });
-                        });
+                        }
+                    }
+
+                    (Func.Config as FunConfig_Product).SendSignals.Clear();
+                    for (int i = 0; i < SendSignals.Count; i++)
+                    {
+                        (Func.Config as FunConfig_Product).SendSignals.Add(SendSignals[i].DBCSignal);
                     }
                 }
             }
@@ -122,104 +175,104 @@ namespace IMX.ATS.ATEConfig.Function
         {
             //deviceNameIndex = DeviceAddress[0];
 
-            if ((Func?.Config as FunConfig_Product)?.SendSignals?.Count > 0)
-            {
-                var signals = (Func.Config as FunConfig_Product).SendSignals;
-                SendSignals.Clear();
-                for (int i = 0; i < signals.Count; i++)
-                {
-                    SendSignals[i].DBCSignal = signals[i];
-                    SendSignals[i].IsSelected = signals[i].IsSend;
-                }
-                return;
-            }
-            try
-            {
-                List<DBCSendSignal> dBCSignalModel = new List<DBCSendSignal>();
+            //if ((Func?.Config as FunConfig_Product)?.SendSignals?.Count > 0)
+            //{
+            //    var signals = (Func.Config as FunConfig_Product).SendSignals;
+            //    SendSignals.Clear();
+            //    for (int i = 0; i < signals.Count; i++)
+            //    {
+            //        SendSignals[i].DBCSignal = signals[i];
+            //        SendSignals[i].IsSelected = signals[i].IsSend;
+            //    }
+            //    return;
+            //}
+            //try
+            //{
+            //    List<DBCSendSignal> dBCSignalModel = new List<DBCSendSignal>();
 
-//#if DEBUG //后续从数据库中调入DBC文件内容
+            //    //#if DEBUG //后续从数据库中调入DBC文件内容
 
-//                string DBCFileName = "BEV_E0X_OT_Car RMCU V3.72 Draft_202311220825";
-//                string path = Path.Combine(@"C:\Users\Administrator\Desktop", DBCFileName + ".dbc");
+            //    //                string DBCFileName = "BEV_E0X_OT_Car RMCU V3.72 Draft_202311220825";
+            //    //                string path = Path.Combine(@"C:\Users\Administrator\Desktop", DBCFileName + ".dbc");
 
-//                OperateResult<IMessageFileLoader> rltCreate = MessageFileLoader.Create(Path.GetExtension(path), SuperDHHLoggerManager.DeviceLogger);
-//                if (!rltCreate)
-//                {
-//                    MessageBox.Show($"DBC文件加载失败:{rltCreate.Message}", "DBC文件解析异常");
-//                    return;
-//                }
+            //    //                OperateResult<IMessageFileLoader> rltCreate = MessageFileLoader.Create(Path.GetExtension(path), SuperDHHLoggerManager.DeviceLogger);
+            //    //                if (!rltCreate)
+            //    //                {
+            //    //                    MessageBox.Show($"DBC文件加载失败:{rltCreate.Message}", "DBC文件解析异常");
+            //    //                    return;
+            //    //                }
 
-//                IMessageFileLoader messageFileLoader = rltCreate.Data;
+            //    //                IMessageFileLoader messageFileLoader = rltCreate.Data;
 
-//                var rltLoad = rltCreate.Data.Paser(path);
-//                if (!rltLoad)
-//                {
-//                    MessageBox.Show($"DBC解析失败:{rltLoad.Message}", "DBC文件解析异常");
-//                    return;
-//                }
+            //    //                var rltLoad = rltCreate.Data.Paser(path);
+            //    //                if (!rltLoad)
+            //    //                {
+            //    //                    MessageBox.Show($"DBC解析失败:{rltLoad.Message}", "DBC文件解析异常");
+            //    //                    return;
+            //    //                }
 
-//                messageFileLoader.MessageDic.ToList().ForEach(m =>
-//                {
-//                    m.Value.Signals.ForEach(sig =>
-//                    {
-//                        dBCSignalModel.Add(new DBCSendSignal
-//                        {
-//                            MessageID = m.Key,
-//                            MessageName = m.Value.Name,
-//                            SignalName = sig.Name,
-//                            SignalValue = sig.InitValue.ToString(),
-//                        });
-//                    });
+            //    //                messageFileLoader.MessageDic.ToList().ForEach(m =>
+            //    //                {
+            //    //                    m.Value.Signals.ForEach(sig =>
+            //    //                    {
+            //    //                        dBCSignalModel.Add(new DBCSendSignal
+            //    //                        {
+            //    //                            MessageID = m.Key,
+            //    //                            MessageName = m.Value.Name,
+            //    //                            SignalName = sig.Name,
+            //    //                            SignalValue = sig.InitValue.ToString(),
+            //    //                        });
+            //    //                    });
 
-//                });
+            //    //                });
 
-//                //从数据库中获取到已配置好的DBC发送模型
-//                Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
-//                test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
-//                {
-//                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
-//                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
-//                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
-//                };
+            //    //                //从数据库中获取到已配置好的DBC发送模型
+            //    //                Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
+            //    //                test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
+            //    //                {
+            //    //                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
+            //    //                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
+            //    //                    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
+            //    //                };
 
-//#else
-                //从数据库中获取到已配置好的DBC发送模型
-                //Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
-                //test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
-                //{
-                //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
-                //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
-                //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
-                //};
+            //    //#else
+            //    //从数据库中获取到已配置好的DBC发送模型
+            //    //Test_DBCConfig test_DBCConfig = new Test_DBCConfig();
+            //    //test_DBCConfig.Test_DBCSendSignals = new List<Test_DBCInfo>
+            //    //{
+            //    //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_CrashOutputSts" },
+            //    //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_Resd1"},
+            //    //    new Test_DBCInfo{ Message_ID = 0x21, Signal_Name = "ACU_3_RollgCntr1"}
+            //    //};
 
-//#endif
+            //    //#endif
 
-                SendSignals.Clear();
-                foreach (var item in GlobalModel.TestDBCconfig.Test_DBCSendSignals)
-                {
-                    SendSignals.Add(new SendSignalModel
-                    {
-                        IsSelected = false,
-                        DBCSignal = new DBCSendSignal
-                        {
-                            CustomName = item.Custom_Name,
-                            MessageName = item.MessageName,
-                            MessageID = item.Message_ID,
-                            SignalName = item.Signal_Name,
-                            SignalValue = item.SignalInitValue,
-                        }
-                    });
-                }
-                for (Int32 i = 0; i < SendSignals.Count; i++)
-                {
-                    (Func.Config as FunConfig_Product).SendSignals.Add(SendSignals[i].DBCSignal);
-                }
+            //    SendSignals.Clear();
+            //    foreach (var item in GlobalModel.TestDBCconfig.Test_DBCSendSignals)
+            //    {
+            //        SendSignals.Add(new SendSignalModel
+            //        {
+            //            IsSelected = false,
+            //            DBCSignal = new DBCSendSignal
+            //            {
+            //                CustomName = item.Custom_Name,
+            //                MessageName = item.MessageName,
+            //                MessageID = item.Message_ID,
+            //                SignalName = item.Signal_Name,
+            //                SignalValue = item.SignalInitValue,
+            //            }
+            //        });
+            //    }
+            //    for (int i = 0; i < SendSignals.Count; i++)
+            //    {
+            //        (Func.Config as FunConfig_Product).SendSignals.Add(SendSignals[i].DBCSignal);
+            //    }
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
         #endregion

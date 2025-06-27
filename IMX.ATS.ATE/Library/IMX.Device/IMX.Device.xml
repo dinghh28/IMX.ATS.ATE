@@ -791,15 +791,6 @@
         <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.InitializeParameter">
             <inheritdoc/>
         </member>
-        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
-            <inheritdoc/>
-        </member>
-        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
-            <inheritdoc/>
-        </member>
         <member name="M:IMX.Device.AnalogAignals.CCCP.AnalogAignals_CCCP_Warp.SetOnOff(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">
             <summary>
             CP信号启动/关闭

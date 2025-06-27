@@ -279,11 +279,11 @@ namespace IMX.ATS.Manual
             return SupportDeviceConfigXml.WriteXml(new List<SysteamSupportDeviceConfigInfo>
             {
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Product,  DeviceNum = 1, Description = "Product",DeviceModel = "Product_CAN", TypeName = "Product_CAN", FuncitonType = FuncitonType.Product, EnableFlow = true, EnableDriveInit = false, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Unknow,  DeviceNum = 0, Description = "未知设备",DeviceModel = "未知设备", TypeName = "未知设备", FuncitonType = FuncitonType.ProductResult, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Acquisition,  DeviceNum = 1, Description = "Acquisition", DeviceModel = "MCx", TypeName = "MCx", FuncitonType = FuncitonType.EquipmentResult, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.DCLoad,  DeviceNum = 1, Description = "DCLoad", DeviceModel = "AN23600E", TypeName = "AN23600E", FuncitonType = FuncitonType.DCLoad, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.HVDCSource,  DeviceNum = 1, Description = "HVDCSource", DeviceModel = "AN50300", TypeName = "AN50300", FuncitonType = FuncitonType.DCSource, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.APU,  DeviceNum = 1, Description = "APU", DeviceModel = "IT6800", TypeName = "IT6800", FuncitonType = FuncitonType.APU, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.RPU,  DeviceNum = 1, Description = "RPU", DeviceModel = "IT6800", TypeName = "IT6800", FuncitonType = FuncitonType.RPU, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.ACSource,  DeviceNum = 1, Description = "ACSource", DeviceModel = "ANFH010S", TypeName = "ANFH010S", FuncitonType = FuncitonType.ACSource, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Relay,  DeviceNum = 1, Description = "Relay", DeviceModel = "ZS4Bit", TypeName = "ZS4Bit", FuncitonType = FuncitonType.Relay, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
             });
@@ -436,51 +436,77 @@ namespace IMX.ATS.Manual
                             continue;
                         }
 
-                        result.Data.Close()
-                            .AttachIfSucceed(result1 =>
-                            {
-                                item.Value.DeviceOperate = result.Data;
-                                item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
-                                if (item.Key == "Product")
-                                {
-                                    GlobalModel.DicDeviceThreads.Add(item.Key, new DeviceThread { DeviceName = item.Key, IsReceiveData = true, IsStratCommunication = true,IsProduct=true });
+                        result.Data.Close().And(result.Data.InitializeParameter())
+                         .AttachIfSucceed(result1 =>
+                         {
+                             item.Value.DeviceOperate = result.Data;
+                             item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
 
-                                }
-                                else
-                                {
-                                    GlobalModel.DicDeviceThreads.Add(item.Key, new DeviceThread { DeviceName = item.Key, IsReceiveData = true, IsStratCommunication = true,IsProduct=false });
+                             Thread.Sleep(10);
+                             Application.Current.Dispatcher.Invoke(() =>
+                             {
+                                 dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                             });
 
-                                }
-                                Thread.Sleep(10);
-                                Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
-                                });
-                            })
-                            .AttachIfFailed(result1 =>
-                            {
+                             //开启设备实时监控
+                             if (!GlobalModel.DicDeviceThreads.TryGetValue(item.Key, out DeviceThread thread))
+                             {
+                                 thread = new DeviceThread
+                                 {
+                                     ThreadName = item.Key,
+                                     IsStratCommunication = true,
+                                     DeviceOperate = result.Data,
+                                     DeviceAddress = item.Key,
+                                     DeviceType = item.Value.Args.DeviceType,
+                                     DelayTime = item.Value.Drive.DriveConfig.BeforeReadDelayMS,
+                                     IsProduct = item.Key.Contains("PRODUCT"),
+                                     ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
+                                 };
+
+                                 GlobalModel.DicDeviceThreads.Add(item.Key, thread);
+                             }
+
+                             if (item.Value.Drive.DriveConfig.CommunicationType == Device.Common.DriveType.USB)
+                             {
+                                 thread.DelayTime = 500;
+                             }
+
+                             thread.DeviceOperate = result.Data;
+                             thread.IsStratCommunication = true;
+
+
+                             //if (!thread.IsRunning)
+                             //{
+                             //    ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(thread);
+                             //}
+
+                             
+                         })
+
+                         .AttachIfFailed(result1 =>
+                         {
 #if DEBUG
-                                if (item.Key == "Relay")
-                                {
-                                    item.Value.DeviceOperate = result.Data;
-                                    item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
-                                    Thread.Sleep(10);
-                                    Application.Current.Dispatcher.Invoke(() =>
-                                    {
-                                        dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
-                                    });
+                             if (item.Key == "Relay")
+                             {
+                                 item.Value.DeviceOperate = result.Data;
+                                 item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
+                                 Thread.Sleep(10);
+                                 Application.Current.Dispatcher.Invoke(() =>
+                                 {
+                                     dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                                 });
 
-                                    return;
-                                }
+                                 return;
+                             }
 #endif
-                                ErrorStr += $"{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result1.Message}\r\n";
-                                GlobalModel.CabinetSate = false;
-                                Thread.Sleep(10);
-                                Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
-                                });
-                            });
+                             ErrorStr += $"[{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result1.Message}\r\n]";
+                             GlobalModel.CabinetSate = false;
+                             Thread.Sleep(10);
+                             Application.Current.Dispatcher.Invoke(() =>
+                             {
+                                 dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
+                             });
+                         });
 
                         //.ThenAnd(result => result.Data.Device_ReadAll()
                         //.ConvertTo(result.Data))

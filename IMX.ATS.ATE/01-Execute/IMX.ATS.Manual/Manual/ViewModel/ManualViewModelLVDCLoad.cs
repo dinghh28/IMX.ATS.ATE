@@ -247,16 +247,7 @@ namespace IMX.ATS.Manual
 
 
                 string InfoString = string.Empty;
-                if (Set_ShortState == DeviceOutPutState.ON)
-                {
-                    operate.SetShort(Set_ShortState).AttachIfFailed(result => { MessageBox.Show($"设备短路设置异常：【{result.Message}】"); })
-                        .AttachIfSucceed(result =>
-                        {
-                            InfoString = $"设备短路设置成功";
-                            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelLVDCLoad), nameof(SetedValues), InfoString);
-                        });
-                    return;
-                }
+
 
                 OperateResult result = operate.SetValue(RunModeType, Set_LoadValue, Set_LimValue, Set_RiseSploeValue, Set_DownSploeValue);
 
@@ -312,6 +303,15 @@ namespace IMX.ATS.Manual
 
                     SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelLVDCLoad), nameof(SetedValues), $"设备已{InfoString}");
                 }
+
+
+                operate.SetShort(Set_ShortState).AttachIfFailed(result => { MessageBox.Show($"设备短路设置异常：【{result.Message}】"); })
+                    .AttachIfSucceed(result =>
+                    {
+                        InfoString = $"设备短路设置成功";
+                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelLVDCLoad), nameof(SetedValues), InfoString);
+                    });
+
             }
             catch (Exception ex)
             {

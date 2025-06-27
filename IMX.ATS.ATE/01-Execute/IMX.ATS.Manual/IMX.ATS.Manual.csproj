@@ -99,11 +99,11 @@
     <Reference Include="IMX.Common">
       <HintPath>..\..\Library\IMX.Common\IMX.Common.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Device, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="IMX.Device, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Device\IMX.Device.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.Device.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+    <Reference Include="IMX.Device.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\IMX.Device\IMX.Device.Common.dll</HintPath>
     </Reference>
@@ -133,6 +133,9 @@
       <HintPath>..\..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.119.0\lib\net46\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -151,6 +154,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Manual\ViewModel\ManualViewModelRPU.cs" />
+    <Compile Include="Manual\View\ManualViewRPU.xaml.cs">
+      <DependentUpon>ManualViewRPU.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Resource\Convter\ACSourceLoadConverter.cs" />
     <Compile Include="Manual\ViewModel\ManualViewModelACSource.cs" />
     <Compile Include="Manual\ViewModel\ManualViewModelACSourceLoad.cs" />
@@ -219,6 +226,10 @@
     <Page Include="Manual\View\ManualViewAnalogAignals.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Manual\View\ManualViewRPU.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Manual\View\ManualViewAPU.xaml">
       <SubType>Designer</SubType>

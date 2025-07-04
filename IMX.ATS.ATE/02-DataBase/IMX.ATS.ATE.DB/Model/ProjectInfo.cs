@@ -44,6 +44,16 @@ namespace IMX.DB.Model
         public bool IsUseDDBC { get; set; } = false;
 
         /// <summary>
+        /// 当前项目是否可用于自动试验
+        /// </summary>
+        public bool EnableUse { get; set; } = false;
+
+        /// <summary>
+        /// 是否能发送DBC
+        /// </summary>
+        public bool CanSendDBC { get; set; } = true;
+
+        /// <summary>
         /// 对应DBC配置ID
         /// </summary>
         public int DBCConfigID { get; set; } = -1;

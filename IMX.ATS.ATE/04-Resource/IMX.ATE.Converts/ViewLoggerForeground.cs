@@ -32,7 +32,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace IMX.ATS.DBCConfig.Resuoce
+namespace IMX.ATE.Converts
 {
     /// <summary>
     /// 界面日志记录字体颜色

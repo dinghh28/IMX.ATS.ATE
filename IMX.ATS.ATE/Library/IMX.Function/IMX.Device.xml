@@ -294,16 +294,6 @@
             停机相角
             </summary>
         </member>
-        <member name="F:IMX.Device.ACSourceLoad.ACSourceLoad_IT7942EP_Operate.m_phasecontrol_ab">
-            <summary>
-            B对A相角度差
-            </summary>
-        </member>
-        <member name="F:IMX.Device.ACSourceLoad.ACSourceLoad_IT7942EP_Operate.m_phasecontrol_ac">
-            <summary>
-            C对A相角度差
-            </summary>
-        </member>
         <member name="F:IMX.Device.ACSourceLoad.ACSourceLoad_IT7942EP_Operate.m_frequencyslope">
             <summary>
             输出频率斜率

@@ -262,7 +262,7 @@ namespace IMX.ATS.ATEConfig
                 bool three = GlobalModel.NowElectricity == Electricity.Three || GlobalModel.NowElectricity == Electricity.ThreeANDInversion;
                 
                 List<string> processnames = SupportConfig.DicProcessConfig
-                    .Where(x => !x.Value.IsThree && !x.Value.IsThree)
+                    .Where(x => !x.Value.IsInversion && !x.Value.IsThree)
                     .Select(x => x.Key)
                     .ToList();
                 List<string> threenames = SupportConfig.DicProcessConfig
@@ -303,6 +303,21 @@ namespace IMX.ATS.ATEConfig
             if (!(obj is Window win))
             {
                 return;
+            }
+
+            if (!GlobalModel.Test_ProjectInfo.CanSendDBC)
+            {
+               var result = MessageBox.Show("当前项目信息DBC配置发生过改变，是否已确认测试项内产品指令下发配置完成同步(若需要再度确认请点击取消按钮)？","DBC配置确认提醒",MessageBoxButton.YesNoCancel);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    DBOperate.Default.SetDBCSendState_Singleton(GlobalModel.Test_ProjectInfo.Id, true);
+                }
             }
 
             //WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(win);

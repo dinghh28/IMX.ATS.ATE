@@ -321,6 +321,7 @@ namespace IMX.ATS.ATEConfig
                 Model = funmodel
             });
 
+            Thread.Sleep(100);
             TsetProcesse.FunctionInfoIndex = TsetProcesse.FunctionInfos.Count - 1;
             if (TsetProcesse.FunctionInfos.Count > 0)
             {
@@ -348,7 +349,9 @@ namespace IMX.ATS.ATEConfig
                     || item.Key == FuncitonType.TestResult
                     || item.Key == FuncitonType.EquipmentResult
                     || item.Key == FuncitonType.ProductResult
-                    || item.Key == FuncitonType.Return)
+                    || item.Key == FuncitonType.Return
+                    || item.Key == FuncitonType.CustomRevData
+                    || item.Key == FuncitonType.POPUP)
                 {
                     continue;
                 }
@@ -744,8 +747,8 @@ namespace IMX.ATS.ATEConfig
                         FunctionInfos.Insert(index - 1, FunctionInfos[index]);
                         FunctionInfos.RemoveAt(index + 1);
                         FunctionInfoIndex = index - 1;
-
                         ReNumber();
+                        Thread.Sleep(10);
                     }
                     break;
                     case "DOWN":
@@ -756,6 +759,7 @@ namespace IMX.ATS.ATEConfig
                         FunctionInfos.RemoveAt(index);
                         FunctionInfoIndex = index + 1;
                         ReNumber();
+                        Thread.Sleep(10);
                     }
                     break;
                     case "DELETE":

@@ -132,6 +132,8 @@ namespace IMX.ATS.ATEConfig.Function
                     StepValues.Add(configvalue);
                 }
 
+                //步进状态赋值
+                CanUseStep = Balance;
             }
         }
 
@@ -202,6 +204,8 @@ namespace IMX.ATS.ATEConfig.Function
                     {
                         Set_StepModel = false;
                     }
+                    Thread.Sleep (5);
+                    CanUseStep = value;
 
                     BCShow = value ? Visibility.Collapsed : Visibility.Visible;
                     SetShow = value ? Visibility.Visible : Visibility.Collapsed;
@@ -722,6 +726,17 @@ namespace IMX.ATS.ATEConfig.Function
             get => enablebalance;
             set => Set(nameof(EnableBalance), ref enablebalance, value);
         }
+
+        private bool canusestep = true;
+        /// <summary>
+        /// 是否允许使用步进模式
+        /// </summary>
+        public bool CanUseStep
+        {
+            get => canusestep;
+            set => Set(nameof(CanUseStep), ref canusestep, value);
+        }
+
 
         private Visibility voltshow = Visibility.Visible;
         /// <summary>

@@ -194,6 +194,10 @@
       <Project>{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}</Project>
       <Name>IMX.ATE.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\04-Resource\IMX.ATE.Converts\IMX.ATE.Converts.csproj">
+      <Project>{e097f188-c3fc-4f85-8710-e384ee3d3c75}</Project>
+      <Name>IMX.ATE.Converts</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resource\" />

@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -94,9 +95,13 @@ namespace IMX.ATS.DIOS
             switch (name)
             {
                 case "Project":
+                    RightBtnVis = Visibility.Visible;
+                    LeftBtnVis = Visibility.Collapsed;
                     MainContent = ContentControlManager.GetControl<TestProjectItemView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Project);
                     break;
                 case "Item":
+                    RightBtnVis = Visibility.Collapsed;
+                    LeftBtnVis = Visibility.Visible;
                     MainContent = ContentControlManager.GetControl<TestItemView>(((ViewModelLocator)Application.Current.FindResource("Locator")).TestItem);
                     break;
                 default:
@@ -112,6 +117,7 @@ namespace IMX.ATS.DIOS
         #endregion
 
         #region 保护方法
+
         protected override void WindowLoadedExecute(object obj)
         {
             if (!(obj is Window win))
@@ -119,8 +125,10 @@ namespace IMX.ATS.DIOS
                 return;
             }
 
+            base.WindowMaxExecute(obj);
+            Thread.Sleep(5);
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
-            WindowMax.Execute(win);
+            
            
             if (!DBOperate.Default.IsInitOK)
             {

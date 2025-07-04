@@ -12,6 +12,9 @@
         <member name="P:IMX.Function.FunConfig_ACSource.SupportFuncitonType">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_ACSource.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Function.FunConfig_ACSource.DeviceAddress">
             <inheritdoc/>
         </member>
@@ -43,6 +46,9 @@
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_ACSourceLoad.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ACSourceLoad.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_ACSourceLoad.DeviceAddress">
@@ -188,6 +194,9 @@
         <member name="P:IMX.Function.FunConfig_AnalogAignals.SupportFuncitonType">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_AnalogAignals.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Function.FunConfig_AnalogAignals.DeviceAddress">
             <inheritdoc/>
         </member>
@@ -215,12 +224,101 @@
         <member name="M:IMX.Function.FunConfig_AnalogAignals.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
+        <member name="T:IMX.Function.FunConfig_CustomMessage">
+            <summary>
+            自定义帧发送配置
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomMessage.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomMessage.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomMessage.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomMessage.CustomSendMessages">
+            <summary>
+            自定义帧下发列表
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_CustomMessage.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_CustomMessage.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_CustomMessage.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="T:IMX.Function.CustomSendMessage">
+            <summary>
+            自定帧下发消息模型类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.CustomSendMessage.Message_ID">
+            <summary>
+            消息ID
+            </summary>
+        </member>
+        <member name="P:IMX.Function.CustomSendMessage.CycleTime">
+            <summary>
+            消息发送周期（毫秒）
+            </summary>
+        </member>
+        <member name="P:IMX.Function.CustomSendMessage.FrameFormat">
+            <summary>
+            消息报文格式
+            </summary>
+        </member>
+        <member name="P:IMX.Function.CustomSendMessage.SendCount">
+            <summary>
+            发送次数
+            </summary>
+        </member>
+        <member name="P:IMX.Function.CustomSendMessage.Data">
+            <summary>
+            发送十六进制数据
+            </summary>
+        </member>
+        <member name="T:IMX.Function.FunConfig_CustomRevData">
+            <summary>
+            用户自定义上报信息录入配置模板类
+            </summary>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomRevData.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomRevData.DeviceAddress">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomRevData.SupportDeviceType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_CustomRevData.Datas">
+            <summary>
+            上报参数列表
+            </summary>
+        </member>
+        <member name="M:IMX.Function.FunConfig_CustomRevData.Execute(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_CustomRevData.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_CustomRevData.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
         <member name="T:IMX.Function.FunConfig_RPU">
             <summary>
             稳压直流源试验步骤配置类
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_RPU.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_RPU.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_RPU.DeviceAddress">
@@ -264,6 +362,9 @@
         <member name="P:IMX.Function.FunConfig_APU.SupportFuncitonType">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_APU.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Function.FunConfig_APU.DeviceAddress">
             <inheritdoc/>
         </member>
@@ -300,6 +401,9 @@
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_DCLoad.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_DCLoad.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_DCLoad.DeviceAddress">
@@ -376,6 +480,9 @@
         <member name="P:IMX.Function.FunConfig_EquipmentResult.SupportFuncitonType">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_EquipmentResult.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Function.FunConfig_EquipmentResult.DeviceAddress">
             <inheritdoc/>
         </member>
@@ -409,6 +516,9 @@
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_HVDCSource.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_HVDCSource.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_HVDCSource.DeviceAddress">
@@ -445,6 +555,9 @@
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_LVDCLoad.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_LVDCLoad.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_LVDCLoad.DeviceAddress">
@@ -501,10 +614,10 @@
             产品下发指令配置类
             </summary>
         </member>
-        <member name="P:IMX.Function.FunConfig_Product.Identify">
+        <member name="P:IMX.Function.FunConfig_Product.SupportFuncitonType">
             <inheritdoc/>
         </member>
-        <member name="P:IMX.Function.FunConfig_Product.SupportFuncitonType">
+        <member name="P:IMX.Function.FunConfig_Product.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_Product.DeviceAddress">
@@ -579,6 +692,9 @@
         <member name="P:IMX.Function.FunConfig_POPUP.SupportFuncitonType">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_POPUP.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Function.FunConfig_POPUP.DeviceAddress">
             <inheritdoc/>
         </member>
@@ -612,6 +728,9 @@
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_ProductResult.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_ProductResult.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_ProductResult.DeviceAddress">
@@ -649,6 +768,9 @@
         <member name="P:IMX.Function.FunConfig_Relay.SupportFuncitonType">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_Relay.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Function.FunConfig_Relay.DeviceAddress">
             <inheritdoc/>
         </member>
@@ -674,6 +796,9 @@
         <member name="P:IMX.Function.FunConfig_Return.SupportFuncitonType">
             <inheritdoc/>
         </member>
+        <member name="P:IMX.Function.FunConfig_Return.SupportDeviceType">
+            <inheritdoc/>
+        </member>
         <member name="P:IMX.Function.FunConfig_Return.DeviceAddress">
             <inheritdoc/>
         </member>
@@ -694,6 +819,9 @@
             </summary>
         </member>
         <member name="P:IMX.Function.FunConfig_SignalSource.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.FunConfig_SignalSource.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.FunConfig_SignalSource.DeviceAddress">
@@ -900,6 +1028,11 @@
             产品下发指令模板
             </summary>
         </member>
+        <member name="F:IMX.Function.Base.FuncitonType.CustomMessage">
+            <summary>
+            产品自定义帧模板
+            </summary>
+        </member>
         <member name="F:IMX.Function.Base.FuncitonType.ACSource">
             <summary>
             AC源操作模板
@@ -1013,6 +1146,11 @@
         <member name="F:IMX.Function.Base.FuncitonType.EquipmentResult">
             <summary>
             工装上报结果
+            </summary>
+        </member>
+        <member name="F:IMX.Function.Base.FuncitonType.CustomRevData">
+            <summary>
+            自定义上报信息录入
             </summary>
         </member>
         <member name="F:IMX.Function.Base.FuncitonType.Return">
@@ -1146,6 +1284,9 @@
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.Base.Function_Config.SupportFuncitonType">
+            <inheritdoc/>
+        </member>
+        <member name="P:IMX.Function.Base.Function_Config.SupportDeviceType">
             <inheritdoc/>
         </member>
         <member name="P:IMX.Function.Base.Function_Config.DeviceAddress">
@@ -1320,6 +1461,11 @@
             支持的试验方法类型
             </summary>
         </member>
+        <member name="P:IMX.Function.Base.IFuntionConfig.SupportDeviceType">
+            <summary>
+            支持的设备类型
+            </summary>
+        </member>
         <member name="M:IMX.Function.Base.IFuntionConfig.Execute(System.Object)">
             <summary>
             试验执行方法
@@ -1331,46 +1477,6 @@
             Json序列化转换
             </summary>
             <returns></returns>
-        </member>
-        <member name="T:IMX.Funciton.DBCSendSignal">
-            <summary>
-            产品下发信号模型类
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.IsSend">
-            <summary>
-            是否发送信号
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.ID">
-            <summary>
-            序号
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.MessageID">
-            <summary>
-            信号ID
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.MessageName">
-            <summary>
-            消息名
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.SignalName">
-            <summary>
-            信号名
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.CustomName">
-            <summary>
-            自定义信号名
-            </summary>
-        </member>
-        <member name="P:IMX.Funciton.DBCSendSignal.SignalValue">
-            <summary>
-            发送值
-            </summary>
         </member>
     </members>
 </doc>

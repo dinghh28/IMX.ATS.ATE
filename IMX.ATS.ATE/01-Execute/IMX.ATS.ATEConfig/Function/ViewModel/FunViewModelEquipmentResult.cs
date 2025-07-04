@@ -109,6 +109,16 @@ namespace IMX.ATS.ATEConfig.Function
                     }
                 }
 
+                if (processconfig.UseCustomData)
+                {
+                    for (int i = 0; i < processconfig.Test_CustomData.Count; i++)
+                    {
+                        var data = processconfig.Test_CustomData[i];
+                        DataList.Add(data.Name);
+                        config.DatasName.Add(data.Name);
+                    }
+                }
+
                 for (int i = (config.Datas.Count - 1); i >= 0; i--)
                 {
                     int findindex = config.DatasName.FindIndex(x => x == config.Datas[i].DataInfo.Name);

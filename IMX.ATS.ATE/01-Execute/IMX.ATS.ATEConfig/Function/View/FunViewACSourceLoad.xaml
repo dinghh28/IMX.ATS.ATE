@@ -110,7 +110,7 @@
                                 <CheckBox  Margin="30,0,0,0" Content="平衡模式" 
                                            VerticalAlignment="Center"
                                            IsEnabled="{Binding EnableBalance}"
-                                           IsChecked="{Binding Balance, Mode=TwoWay}"/>
+                                           IsChecked="{Binding Balance, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
                             </StackPanel>
                         </GroupBox>
@@ -130,9 +130,9 @@
                                     <RowDefinition/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
-                                <Grid IsEnabled="{Binding Balance}">
+                                <Grid IsEnabled="{Binding CanUseStep}">
                                     <CheckBox Content="步进模式" VerticalAlignment="Center" 
-                                          IsChecked="{Binding Set_StepModel,Mode=TwoWay}"/>
+                                          IsChecked="{Binding Set_StepModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                 </Grid>
 
 
@@ -569,6 +569,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Column="0" Content="起始值:" VerticalAlignment="Center"/>
                                                 <TextBox Grid.Column="1" Text="{Binding StartLoadValue}" VerticalAlignment="Center"/>
+                                                <Label Grid.Column="2" Content="{Binding LoadUnit}" VerticalAlignment="Center"/>
                                             </Grid>
                                             <Grid Grid.Row="1">
                                                 <Grid.ColumnDefinitions>
@@ -578,6 +579,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Column="0" Content="结束值:" VerticalAlignment="Center"/>
                                                 <TextBox Grid.Column="1" Text="{Binding EndLoadValue}" VerticalAlignment="Center"/>
+                                                <Label Grid.Column="2" Content="{Binding LoadUnit}" VerticalAlignment="Center"/>
                                             </Grid>
                                             <Grid Grid.Row="2">
                                                 <Grid.ColumnDefinitions>
@@ -587,6 +589,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Column="0" Content="步幅:" VerticalAlignment="Center"/>
                                                 <TextBox Grid.Column="1" Text="{Binding Stride}" VerticalAlignment="Center"/>
+                                                <Label Grid.Column="2" Content="{Binding LoadUnit}" VerticalAlignment="Center"/>
                                             </Grid>
                                             <Grid Grid.Row="3">
                                                 <Grid.ColumnDefinitions>
@@ -596,6 +599,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Label Grid.Column="0" Content="步频:" VerticalAlignment="Center"/>
                                                 <TextBox Grid.Column="1" Text="{Binding StepFrequency}" VerticalAlignment="Center"/>
+                                                <Label Grid.Column="2" Content="毫秒" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Grid>
                                     </GroupBox>

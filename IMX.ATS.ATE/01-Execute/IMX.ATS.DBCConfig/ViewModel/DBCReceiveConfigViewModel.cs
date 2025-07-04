@@ -419,6 +419,7 @@ namespace IMX.ATS.DBCConfig
                         config.Config.Signal_Name = info.Signal_Name;
                         config.Config.Message_ID = info.Message_ID;
                         config.Config.MessageName = info.MessageName;
+                        config.IsConfiged = true;
                     }
 
                     SignalConfigs.Add(config);

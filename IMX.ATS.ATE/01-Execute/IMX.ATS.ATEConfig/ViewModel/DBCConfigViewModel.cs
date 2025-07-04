@@ -192,12 +192,19 @@ namespace IMX.ATS.ATEConfig
 
                 if (viewstr == "UPLOAD")
                 {
+
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {
-                        if (((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
+                        var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload;
+                        Window mainwindow = ContentControlManager.GetWindow<DBCFileUploadView>(model);
+                        if (!mainwindow.IsVisible)
+                        {
+                            model.IsOpen = false;
+                        }
+                        if (model.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
 
-                        Window DBCfilewindow = ContentControlManager.GetWindow<DBCFileUploadView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload);
-                        DBCfilewindow.Show();
+                        //Window DBCfilewindow = ContentControlManager.GetWindow<DBCFileUploadView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileUpload);
+                        mainwindow.Show();
                     }));
                 }
                 else if (viewstr == "CHANGE")
@@ -205,10 +212,19 @@ namespace IMX.ATS.ATEConfig
                     var result = MessageBox.Show("是否切换当前项目DBC文件，若切换将自动清空当前配置信号", "DBC文件变更", MessageBoxButton.YesNo);
 
                     if (result == MessageBoxResult.No) { return; }
+                    var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange;
+                    Window mainwindow = ContentControlManager.GetWindow<DBCFileChangeView>(model);
+                    if (!mainwindow.IsVisible)
+                    {
+                        model.IsOpen = false;
+                    }
+                    if (model.IsOpen) 
+                    { 
+                        MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); 
+                        return; 
+                    }
 
-                    if (((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange.IsOpen) { MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButton.OK, MessageBoxImage.Information); return; }
-
-                    Window mainwindow = ContentControlManager.GetWindow<DBCFileChangeView>(((ViewModelLocator)Application.Current.FindResource("Locator")).DBCFileChange);
+          
                     mainwindow.Show();
 
                     ////清空上报配置

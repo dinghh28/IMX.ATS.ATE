@@ -278,11 +278,37 @@ namespace IMX.ATS.ATEConfig.Function
         {
             get
             {
-                //if ((Func.Config as FunConfig_DCLoad).Set_Model == Opaerate_Mode.NULL)
-                //{
-                //    (Func.Config as FunConfig_DCLoad).Set_Model = setmodel;
-                //}
-                //setmodel = (Func.Config as FunConfig_DCLoad).Set_Model;
+                if ((Func.Config as FunConfig_DCLoad).Set_Model == Opaerate_Mode.NULL)
+                {
+                    (Func.Config as FunConfig_DCLoad).Set_Model = setmodel;
+                }
+                else
+                {
+                    setmodel = (Func.Config as FunConfig_DCLoad).Set_Model;
+                }
+                switch (setmodel)
+                {
+                    case Opaerate_Mode.CC:
+                        Unit = "A";
+                        ParamUnit = "A/us";
+                        ParamName = "上升斜率：";
+                        break;
+                    case Opaerate_Mode.CV:
+                        Unit = "V";
+                        ParamUnit = "A";
+                        ParamName = "限制电流：";
+                        break;
+                    case Opaerate_Mode.CR:
+                        Unit = "R";
+                        ParamUnit = "A/us";
+                        ParamName = "上升斜率：";
+                        break;
+                    case Opaerate_Mode.CP:
+                    case Opaerate_Mode.NULL:
+                    default:
+                        break;
+                }
+
                 return setmodel;
             }
             set
@@ -290,6 +316,28 @@ namespace IMX.ATS.ATEConfig.Function
                 if (Set(nameof(SetModel), ref setmodel, value))
                 {
                     (Func.Config as FunConfig_DCLoad).Set_Model = value;
+                    switch (value)
+                    {
+                        case Opaerate_Mode.CC:
+                            Unit = "A";
+                            ParamUnit = "A/us";
+                            ParamName = "上升斜率：";
+                            break;
+                        case Opaerate_Mode.CV:
+                            Unit = "V";
+                            ParamUnit = "A";
+                            ParamName = "限制电流：";
+                            break;
+                        case Opaerate_Mode.CR:
+                            Unit = "R";
+                            ParamUnit = "A/us";
+                            ParamName = "上升斜率：";
+                            break;
+                        case Opaerate_Mode.CP:
+                        case Opaerate_Mode.NULL:
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -384,36 +432,36 @@ namespace IMX.ATS.ATEConfig.Function
             }
         }
 
-        //private string unit = "A";
-        ///// <summary>
-        ///// 拉载值单位
-        ///// </summary>
-        //public string Unit
-        //{
-        //    get => unit;
-        //    set => Set(nameof(Unit), ref unit, value);
-        //}
+        private string unit = "A";
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string Unit
+        {
+            get => unit;
+            set => Set(nameof(Unit), ref unit, value);
+        }
 
-        //private string paramunit = "A/us";
-        ///// <summary>
-        ///// 各模式下参数单位
-        ///// </summary>
-        //public string ParamUnit
-        //{
-        //    get => paramunit;
-        //    set => Set(nameof(ParamUnit), ref paramunit, value);
-        //}
+        private string paramunit = "A/us";
+        /// <summary>
+        /// 各模式下参数单位
+        /// </summary>
+        public string ParamUnit
+        {
+            get => paramunit;
+            set => Set(nameof(ParamUnit), ref paramunit, value);
+        }
 
-        //private string paramName;
+        private string paramName;
 
-        ///// <summary>
-        ///// 拉载值单位
-        ///// </summary>
-        //public string ParamName
-        //{
-        //    get => paramName;
-        //    set => Set(nameof(ParamName), ref paramName, value);
-        //}
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string ParamName
+        {
+            get => paramName;
+            set => Set(nameof(ParamName), ref paramName, value);
+        }
 
         private double setlimit;
         /// <summary>

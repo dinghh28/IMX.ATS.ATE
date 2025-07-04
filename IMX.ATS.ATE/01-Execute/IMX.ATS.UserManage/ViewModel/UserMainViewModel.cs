@@ -3,6 +3,7 @@ using H.WPF.Framework;
 using IMX.ATS.Common;
 using IMX.DB;
 using IMX.DB.Model;
+using IMX.WPF.Resource;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;
@@ -167,13 +168,17 @@ namespace IMX.ATS.UserManage
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
-            Window win = MouseLeft(obj);
-            if (win != null) { Win = win; }
-
+            if (!(obj is Window win))
+            {
+                return;
+            }
+            Win = win;
+            WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
             if (!DBOperate.Default.IsInitOK)
             {
                 DBOperate.Default.Init();
             }
+
             UserName = GlobalModel.UserInfo.UserName;
             UserMannage = (GlobalModel.UserInfo.Privilege & 8) == 8 ? Visibility.Visible : Visibility.Collapsed;
 
@@ -223,24 +228,6 @@ namespace IMX.ATS.UserManage
         //}
 
         #endregion
-
-        public Window MouseLeft(object WindowsName)
-        {
-            if (!(WindowsName is Window win))
-            {
-                return null;
-            }
-
-            //获取当前窗口
-            //Win = win;
-
-            win.MouseLeftButtonDown += (s, e) =>
-            {
-                if (e.LeftButton == MouseButtonState.Pressed)
-                    win.DragMove();
-            };
-            return win;
-        }
     }
     public class UsersModel : ExtendViewModelBase
     {

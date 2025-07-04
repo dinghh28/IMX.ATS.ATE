@@ -72,8 +72,6 @@ namespace IMX.ATS.Lander
             get => funModules;
             set => Set(nameof(FunModules), ref funModules, value);
         }
-
-
         #endregion
 
         #region 界面绑定指令
@@ -85,6 +83,10 @@ namespace IMX.ATS.Lander
 
         private Window Win = null;
 
+        /// <summary>
+        /// 进程字典
+        /// </summary>
+        private Dictionary<string, Process> dicProcess = new Dictionary<string, Process>();
         //public Dictionary<string, bool> dicViewopen = new Dictionary<string, bool>()
         //{
         //    //{ "ProjectConfig.PCProjectSelectView", false },
@@ -145,6 +147,37 @@ namespace IMX.ATS.Lander
         #endregion
 
         #region 私有方法
+        //private void OpenedFun(object objWindow) 
+        //{
+        //    try
+        //    {
+        //        string ViewmodeName = objWindow.ToString();
+        //        if (string.IsNullOrEmpty(ViewmodeName))
+        //        {
+        //            return;
+        //        }
+
+        //        string pathStr = AppDomain.CurrentDomain.BaseDirectory + string.Format($"IMX.ATS.{ViewmodeName}.exe");
+
+        //        if (ViewmodeName == "DIOS")
+        //        {
+        //            Process p = Process.Start(pathStr);
+        //            return;
+        //        }
+        //        else
+        //        {
+        //            string info = JsonConvert.SerializeObject(GlobalModel.UserInfo);
+        //            string arg = AES.Encrypt(info, ExeAESKey);
+        //            Process p = Process.Start(pathStr, arg);
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+
+        //}
         #endregion
 
         #region 保护方法
@@ -182,7 +215,8 @@ namespace IMX.ATS.Lander
                             ViewmodeName = item.ToString(),
                             FunModuleName = attribute.Description,
                             ExeAESKey = attribute.AESKey,
-                        });
+                        DicProcess = dicProcess,
+                    });
                     //}
                 }
 
@@ -303,6 +337,25 @@ namespace IMX.ATS.Lander
 
         protected override void WindowClosedExecute(object obj)
         {
+            if (MessageBox.Show("是否关闭门户界面，这将关闭所有已打开功能界面", "门户界面关闭提醒", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
+            {
+                return;
+            }
+
+            if (dicProcess.Count > 0)
+            {
+                foreach (var item in dicProcess.Values)
+                {
+                    if (!item.HasExited)
+                    {
+                        if(!item.CloseMainWindow())
+                        item.Close();
+                        //item.Kill();
+                    }
+                    
+                }  
+            }
+
             WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(Win);
             (obj as Window).Close();
             base.WindowClosedExecute(obj);
@@ -358,26 +411,65 @@ namespace IMX.ATS.Lander
 
         //public RelayCommand<object> OpenFunmodule { get; set; }
 
+        public string EXEPathstr => AppDomain.CurrentDomain.BaseDirectory + string.Format($"IMX.ATS.{ViewmodeName}.exe");
 
+        /// <summary>
+        /// 进程字典
+        /// </summary>
+        public Dictionary<string, Process> DicProcess { get; set; }
 
-        public RelayCommand<object> OpenFunmodule => new RelayCommand<object>((objWindow) =>
+        public RelayCommand<object> OpenFunmodule
+            =>
+            new RelayCommand<object>((objWindow) =>
         {
             try
             {
                 string pathStr = AppDomain.CurrentDomain.BaseDirectory + string.Format($"IMX.ATS.{ViewmodeName}.exe");
 
+                Process p = null;
                 if (ViewmodeName == "DIOS")
                 {
-                    Process p = Process.Start(pathStr);
-                    return;
+                    p = Process.Start(pathStr);
                 }
                 else
                 {
+                    if (ViewmodeName == "ATE")
+                    {
+                        if (DicProcess.TryGetValue("Manual", out Process process))
+                        {
+                            if (!process.HasExited)
+                            {
+                                MessageBox.Show("请先关闭手动操作平台后，再开启测试平台");
+                                return;
+                            }
+                        }
+                    }
+                    if (ViewmodeName == "Manual")
+                    {
+                        if (DicProcess.TryGetValue("ATE", out Process process))
+                        {
+                            if (!process.HasExited)
+                            {
+                                MessageBox.Show("请先关闭手动操作平台后，再开启测试平台");
+                                return;
+                            }
+                        }
+                    }
+
                     string info = JsonConvert.SerializeObject(GlobalModel.UserInfo);
                     string arg = AES.Encrypt(info, ExeAESKey);
-                    Process p = Process.Start(pathStr, arg);
+                    p = Process.Start(pathStr, arg);
                 }
 
+                if (DicProcess.ContainsKey(ViewmodeName))
+                {
+                    DicProcess[ViewmodeName] = p;
+                }
+                else
+                {
+                    DicProcess.Add(ViewmodeName, p);
+                }
+               
 
 
                 //string enco = AES.Decrypt(arg, "UserManage");
@@ -385,7 +477,7 @@ namespace IMX.ATS.Lander
                 //var result = WinExec(pathStr, 7);
                 //Process p = Process.Start(pathStr, arg);
                 //dicViewopen[obj.ToString()] = true;
-                
+
 
                 //Type win = Type.GetType($"IMX.ATS.BIS.Main.{viewmodeName}");
                 //Type model = Type.GetType($"IMX.ATS.BIS.Main.{viewmodeName}");
@@ -397,7 +489,6 @@ namespace IMX.ATS.Lander
                 MessageBox.Show($"界面切换异常:{ex.GetMessage()}");
             }
         });
-
     }
 
 

@@ -57,10 +57,10 @@
                              ToolTip="下发信号配置" 
                        Command="{Binding NavChangeCommand}" CommandParameter="DBCSendConfig"
                              Visibility="{Binding MessageConfigVisbility}"/>
-                    <RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
+                    <!--<RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="自定义消息配置"
                        Command="{Binding NavChangeCommand}" CommandParameter="CustomConfig" 
-                             Visibility="{Binding MessageConfigVisbility}"/>
+                             Visibility="{Binding MessageConfigVisbility}"/>-->
 
                 </StackPanel>
             </Grid>

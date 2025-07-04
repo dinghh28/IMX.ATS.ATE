@@ -4,7 +4,7 @@ using IMX.Device.Base;
 using IMX.Device.Base.DeviceInerfaces;
 using IMX.Device.Common;
 using IMX.Device.Product;
-using IMX.Funciton;
+using IMX.Function;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;

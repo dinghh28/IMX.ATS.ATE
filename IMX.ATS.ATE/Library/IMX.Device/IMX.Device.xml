@@ -294,16 +294,6 @@
             停机相角
             </summary>
         </member>
-        <member name="F:IMX.Device.ACSourceLoad.ACSourceLoad_IT7942EP_Operate.m_phasecontrol_ab">
-            <summary>
-            B对A相角度差
-            </summary>
-        </member>
-        <member name="F:IMX.Device.ACSourceLoad.ACSourceLoad_IT7942EP_Operate.m_phasecontrol_ac">
-            <summary>
-            C对A相角度差
-            </summary>
-        </member>
         <member name="F:IMX.Device.ACSourceLoad.ACSourceLoad_IT7942EP_Operate.m_frequencyslope">
             <summary>
             输出频率斜率
@@ -789,6 +779,15 @@
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.InitializeParameter">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Device.AnalogAignals.AnalogAignals_CCCP_Operate.#ctor(Super.Zoo.Framework.Logger.ILogger,IMX.Device.Base.DriveOperate.ISuperDrive)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Device.AnalogAignals.CCCP.AnalogAignals_CCCP_Warp.SetOnOff(System.UInt32,IMX.Device.Common.Enumerations.DeviceOutPutState)">

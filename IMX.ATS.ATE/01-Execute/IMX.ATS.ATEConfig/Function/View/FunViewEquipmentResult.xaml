@@ -71,7 +71,7 @@
                                             </Grid>
                                             <WrapPanel Grid.Column="1" Margin="0,0,10,0">
                                                 <Label Content="参数："/>
-                                                <ComboBox Width="150" ItemsSource="{Binding ResultDatas}" SelectedValue="{Binding ResultDataName}"/>
+                                                <ComboBox Width="200" ItemsSource="{Binding ResultDatas}" SelectedValue="{Binding ResultDataName}"/>
                                                 <WrapPanel Margin="0,0,10,0">
                                                     <Label Content="判断条件:"/>
                                                     <ComboBox Width="85"  ItemsSource="{Binding TrageConditions, Converter={StaticResource EnumValue}}" 

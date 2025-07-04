@@ -50,15 +50,19 @@
                 <Button 
                     DockPanel.Dock="Left" 
                     VerticalAlignment="Center"
-                    Style="{StaticResource ControlButtonStyle}"
-                    Content="左"
+                    Content="&#xe675;"
+                    FontFamily="{StaticResource iconfont}"
+                    Background="Green"
+                    Height="80"
                     Visibility="{Binding LeftBtnVis}"
                     Command="{Binding Change}" CommandParameter="Project"/>
                 <Button 
                     DockPanel.Dock="Right" 
                     VerticalAlignment="Center" 
-                    Content="右"
-                    Style="{StaticResource ControlButtonStyle}"
+                    Content="&#xe677;"
+                    FontFamily="{StaticResource iconfont}"
+                    Background="Green"
+                    Height="80"
                     Visibility="{Binding RightBtnVis}"
                     Command="{Binding Change}" CommandParameter="Item"/>
                 <ContentControl Content="{Binding MainContent}"/>

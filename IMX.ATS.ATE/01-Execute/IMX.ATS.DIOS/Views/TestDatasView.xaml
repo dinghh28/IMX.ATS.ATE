@@ -53,7 +53,7 @@
                           ItemsSource="{Binding  TestDataTable}"  
                           CanUserAddRows="False"  
                           IsReadOnly="True"  
-                          FrozenColumnCount="1"
+                          FrozenColumnCount="6"
                           ScrollViewer.VerticalScrollBarVisibility="Visible" 
                           ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
 

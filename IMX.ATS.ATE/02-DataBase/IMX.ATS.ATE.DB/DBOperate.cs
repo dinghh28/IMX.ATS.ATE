@@ -9,6 +9,7 @@ using Super.Zoo.Framework.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml.Linq;
 using DataType = FreeSql.DataType;
 
 namespace IMX.DB
@@ -531,7 +532,7 @@ namespace IMX.DB
             if (!IsInitOK)
             {
                 LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                Logger.Error(nameof(DBOperate), nameof(GetProjectInfo_ByName), LastError);
                 return OperateResult<Test_ProjectInfo>.Failed(null, LastError);
             }
 
@@ -544,7 +545,35 @@ namespace IMX.DB
             catch (Exception ex)
             {
                 LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(GetProjectNames), LastError);
+                Logger.Error(nameof(DBOperate), nameof(GetProjectInfo_ByName), LastError);
+                return OperateResult<Test_ProjectInfo>.Excepted(null, ex);
+            }
+        }
+
+        /// <summary>
+        /// 获取项目详细信息(通过项目ID)
+        /// </summary>
+        /// <param name="id">项目ID</param>
+        /// <returns></returns>
+        public OperateResult<Test_ProjectInfo> GetProjectInfo_ByID(int id) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(GetProjectInfo_ByID), LastError);
+                return OperateResult<Test_ProjectInfo>.Failed(null, LastError);
+            }
+
+            try
+            {
+                var items = Test_ProjectInfo.Find(id);
+
+                return OperateResult<Test_ProjectInfo>.Succeed(items);
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(GetProjectInfo_ByID), LastError);
                 return OperateResult<Test_ProjectInfo>.Excepted(null, ex);
             }
         }
@@ -606,6 +635,88 @@ namespace IMX.DB
             }
 
             return OperateResult.Succeed();
+        }
+        #endregion
+
+        #region DBC配置联动
+        /// <summary>
+        /// 设置DBC下发状态
+        /// </summary>
+        /// <param name="dbcid">DBC配置ID</param>
+        /// <param name="cansend">允许发送标志</param>
+        /// <returns></returns>
+        public OperateResult SetDBCSendState(int dbcid,bool cansend) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                var affrows = Sqlite.Update<Test_ProjectInfo>()
+                    .Set(x=>x.CanSendDBC, cansend)
+                    .Where(x=>x.DBCConfigID == dbcid)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"DBC配置未与项目同步，请注意产品指令下发模板配置内容";
+                    Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 设置DBC下发状态
+        /// </summary>
+        /// <param name="id">项目id</param>
+        /// <param name="cansend">允许发送标志</param>
+        /// <returns></returns>
+        public OperateResult SetDBCSendState_Singleton(int id, bool cansend) 
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                Test_ProjectInfo.Find(id).CanSendDBC = cansend;
+
+                var affrows = Sqlite.Update<Test_ProjectInfo>()
+                    .Set(x => x.CanSendDBC, cansend)
+                    .Where(x => x.Id == id)
+                    .ExecuteAffrows();
+
+                if (affrows < 1)
+                {
+                    LastError = $"DBC配置未与项目同步，请注意产品指令下发模板配置内容";
+                    Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                return OperateResult.Excepted(ex);
+            }
         }
         #endregion
 
@@ -1616,7 +1727,9 @@ namespace IMX.DB
 
             try
             {
-                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id).ToDictionary(x => x.FunctionName, x => x.Description);
+                var items = Sqlite.Select<Test_Process>()
+                    .Where(x => x.ProjectID == id && !x.IsDeleted)
+                    .ToDictionary(x => x.FunctionName, x => x.Description);
 
                 return OperateResult<Dictionary<string, string>>.Succeed(items);
             }
@@ -3336,7 +3449,7 @@ namespace IMX.DB
                 //var ufos = Sqlite.GetGuidRepository<Test_DataInfo>(null, oldname => tablename);
                 long count = Sqlite
                     .Select<Test_DataInfo>()
-                    .Where(x => x.TestItemID == itemid && x.CreateTime.BetweenEnd(StratTime,StopTime)).Count();
+                    .Where(x => x.TestItemID == itemid && x.CreateTime.Between(StratTime,StopTime)).Count();
                 //var items = Sqlite.Select<Test_DataInfo>().Where(x => x.TestItemID == itemid).ToList();
 
                 return OperateResult<long>.Succeed(count);

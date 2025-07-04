@@ -374,10 +374,11 @@ namespace IMX.ATS.DIOS
 
         private void ReturnToItem()
         {
-            GlobalModel.ProjectItemId = lastprodectid;
+            GlobalModel.ProjectItemId = Datas[SelectIndex].Id;
+            
             var model = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Home;
-            model.LeftBtnVis = System.Windows.Visibility.Visible;
-            model.RightBtnVis = System.Windows.Visibility.Collapsed;
+            //model.LeftBtnVis = System.Windows.Visibility.Visible;
+            //model.RightBtnVis = System.Windows.Visibility.Collapsed;
             model.ChangePage("Item");
         }
         #endregion

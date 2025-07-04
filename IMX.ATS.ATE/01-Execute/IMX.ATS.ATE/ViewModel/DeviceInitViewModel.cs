@@ -396,15 +396,16 @@ namespace IMX.ATS.ATE
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Unknow,  DeviceNum = 0, Description = "未知设备",DeviceModel = "未知设备", TypeName = "未知设备", FuncitonType = FuncitonType.ProductResult, EnableFlow = true, EnableDriveInit = false, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Acquisition,  DeviceNum = 1, Description = "Acquisition", DeviceModel = "AN87600", TypeName = "AN87600", FuncitonType = FuncitonType.EquipmentResult, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.DCLoad,  DeviceNum = 1, Description = "DCLoad", DeviceModel = "AN23600E", TypeName = "AN23600E", FuncitonType = FuncitonType.DCLoad, EnableFlow = true, EnableDriveInit = false, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.HVDCSource,  DeviceNum = 1, Description = "HVDCSource", DeviceModel = "ITM3912D", TypeName = "ITM3912D", FuncitonType = FuncitonType.HVDCSource, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.APU,  DeviceNum = 1, Description = "APU", DeviceModel = "IT6800", TypeName = "IT6800", FuncitonType = FuncitonType.APU, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.HVDCSource,  DeviceNum = 1, Description = "HVDCSource", DeviceModel = "ITM3912D", TypeName = "ITM3912D", FuncitonType = FuncitonType.HVDCSource, EnableFlow = true, EnableDriveInit = true, EnableManual = true, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.APU,  DeviceNum = 1, Description = "APU", DeviceModel = "IT6800", TypeName = "IT6800", FuncitonType = FuncitonType.APU, EnableFlow = true, EnableDriveInit = true, EnableManual = true, EnableMonitor = true},
 
                new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.Relay,  DeviceNum = 1, Description = "Relay", DeviceModel = "PLC", TypeName = "PLC", FuncitonType = FuncitonType.Relay, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.RPU,  DeviceNum = 1, Description = "RPU", DeviceModel = "IT6800", TypeName = "IT6800", FuncitonType = FuncitonType.RPU, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.LVDCLoad,  DeviceNum = 1, Description = "LVDCLoad", DeviceModel = "IT8906E", TypeName = "IT8906E", FuncitonType = FuncitonType.LVDCLoad, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.ACSourceLoad,  DeviceNum = 1, Description = "ACSourceLoad", DeviceModel = "IT7942EP", TypeName = "IT7942EP", FuncitonType = FuncitonType.ACSourceLoad, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.AnalogAignals,  DeviceNum = 1, Description = "AnalogAignals", DeviceModel = "CCCP", TypeName = "CCCP", FuncitonType = FuncitonType.AnalogAignals, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
-               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.SignalSource,  DeviceNum = 1, Description = "SignalSource", DeviceModel = "UTG900", TypeName = "UTG900", FuncitonType = FuncitonType.SignalSource, EnableFlow = true, EnableDriveInit = true, EnableManual = false, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.RPU,  DeviceNum = 1, Description = "RPU", DeviceModel = "IT6800", TypeName = "IT6800", FuncitonType = FuncitonType.RPU, EnableFlow = true, EnableDriveInit = true, EnableManual = true, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.LVDCLoad,  DeviceNum = 1, Description = "LVDCLoad", DeviceModel = "IT8906E", TypeName = "IT8906E", FuncitonType = FuncitonType.LVDCLoad, EnableFlow = true, EnableDriveInit = true, EnableManual = true, EnableMonitor = true},
+
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.AnalogAignals,  DeviceNum = 1, Description = "AnalogAignals", DeviceModel = "CCCP", TypeName = "CCCP", FuncitonType = FuncitonType.AnalogAignals, EnableFlow = true, EnableDriveInit = true, EnableManual = true, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.SignalSource,  DeviceNum = 1, Description = "SignalSource", DeviceModel = "UTG900", TypeName = "UTG900", FuncitonType = FuncitonType.SignalSource, EnableFlow = true, EnableDriveInit = true, EnableManual = true, EnableMonitor = true},
+               new SysteamSupportDeviceConfigInfo { DeviceType = EDeviceType.ACSourceLoad,  DeviceNum = 1, Description = "ACSourceLoad", DeviceModel = "IT7942EP", TypeName = "IT7942EP", FuncitonType = FuncitonType.ACSourceLoad, EnableFlow = true, EnableDriveInit = true, EnableManual = true, EnableMonitor = true},
             });
         }
 
@@ -683,8 +684,9 @@ namespace IMX.ATS.ATE
             window = win;
 
             Title = IsInit ? "功能测试平台上电初始化" : "功能测试平台下电复原";
+#if DEBUG
             WriteSupportDeviceConfig();
-
+#endif
             if (IsInit)
             {
                 InitInfos.Clear();
@@ -757,7 +759,7 @@ namespace IMX.ATS.ATE
                 base.WindowClosedExecute(obj);
             }));
         }
-        #endregion
+#endregion
 
 
         #region 构造方法

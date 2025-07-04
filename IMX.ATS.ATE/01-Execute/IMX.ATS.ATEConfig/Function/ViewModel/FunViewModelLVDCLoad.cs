@@ -43,7 +43,7 @@ namespace IMX.ATS.ATEConfig.Function
     {
         #region 公共属性
 
-        private TestFunction func = TestFunction.Create(FuncitonType.DCLoad);
+        private TestFunction func = TestFunction.Create(FuncitonType.LVDCLoad);
         public override TestFunction Func
         {
             get => func;
@@ -127,14 +127,14 @@ namespace IMX.ATS.ATEConfig.Function
                     StepValues.Add(configvalue);
                 }
 
-                if (config.Set_Model == Opaerate_Mode.NULL)
-                {
-                    config.Set_Model = Opaerate_Mode.CC;
-                }
-                else
-                {
-                    config.Set_Model = SetModel;
-                }
+                //if (config.Set_Model == Opaerate_Mode.NULL)
+                //{
+                //    config.Set_Model = Opaerate_Mode.CC;
+                //}
+                //else
+                //{
+                //    config.Set_Model = SetModel;
+                //}
             }
         }
 
@@ -143,9 +143,6 @@ namespace IMX.ATS.ATEConfig.Function
 
         public override string SupportFuncitonString => "LVDCLoad";
         #region 界面绑定属性
-        #endregion
-
-        #region 界面绑定指令
         private bool enableSetValue = true;
         /// <summary>
         /// 拉载设置标志位
@@ -259,7 +256,7 @@ namespace IMX.ATS.ATEConfig.Function
         {
             get
             {
-                return setmodel;
+                return setmodel = (Func.Config as FunConfig_LVDCLoad).Set_Model;
             }
             set
             {
@@ -334,6 +331,10 @@ namespace IMX.ATS.ATEConfig.Function
                 }
             }
         }
+        #endregion
+
+        #region 界面绑定指令
+
         #endregion
 
         #endregion

@@ -317,6 +317,7 @@ namespace IMX.ATS.ATEConfig
                         mainviewmodel.ProjectName = ProjectName;
                         mainviewmodel.FlowConfigVisbility = Visibility.Visible;
                         mainviewmodel.DBCConfigVisbility = Visibility.Visible;
+                        GlobalModel.TestDBCconfig = dbcconfig;
                         dbcconfig = null;
 
                         #region 允许配置测试项列表配置
@@ -355,6 +356,10 @@ namespace IMX.ATS.ATEConfig
                 {
                     DBOperate.Default.UpdataProjectInfo(ProjectInfo).AttachIfSucceed(result => 
                     {
+                        if (GlobalModel.TestDBCconfig == null || GlobalModel.TestDBCconfig.Id <1)
+                        {
+                            GlobalModel.TestDBCconfig = dbcconfig;
+                        }
                         dbcconfig = null;
                         mainviewmodel.FlowConfigVisbility = Visibility.Visible;
                         mainviewmodel.DBCConfigVisbility = Visibility.Visible;

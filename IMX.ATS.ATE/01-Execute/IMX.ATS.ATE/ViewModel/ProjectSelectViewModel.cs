@@ -126,7 +126,11 @@ namespace IMX.ATS.ATE
                 MessageBox.Show("项目试验阶段获取失败");
                 return;
             }
-
+            if (result.Data.Test_FlowNames == null || result.Data.Test_FlowNames.Count<1)
+            {
+                MessageBox.Show("当前项目未配置试验项或未完成试验方案配置，无法进行自动测试");
+                return;
+            }
             MainViewModel viewmodel = ((ViewModelLocator)Application.Current.FindResource("Locator")).Main;
             
             viewmodel.SelectedProductName = SelectedInfo.Info.ProjectName;

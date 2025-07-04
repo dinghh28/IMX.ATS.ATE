@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Ioc;
 using H.WPF.Framework;
 using IMX.ATS.ATEConfig.Function;
+using IMX.Function;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -121,6 +122,14 @@ namespace IMX.ATS.ATEConfig
             //原载一体机号配置
             SimpleIoc.Default.Register<FunViewModelACSourceLoad>();
             ContentControlManager.Regiter<FunViewACSourceLoad>();
+
+            //自定消息配置
+            SimpleIoc.Default.Register<FunViewModelCustomMessage>();
+            ContentControlManager.Regiter<FunViewCustomMessage>();
+
+            //自定上报信息配置
+            SimpleIoc.Default.Register<FunViewModelCustomRevData>();
+            ContentControlManager.Regiter<FunViewCustomRevData>();
             #endregion
         }
 
@@ -264,6 +273,15 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         public FunViewModelACSourceLoad FunACSourceLoad => ServiceLocator.Current.GetInstance<FunViewModelACSourceLoad>();
 
+        /// <summary>
+        /// 自定义消息模板
+        /// </summary>
+        public FunViewModelCustomMessage FunCustomMessage=> ServiceLocator.Current.GetInstance<FunViewModelCustomMessage>();
+
+        /// <summary>
+        /// 自定义上报信息模板
+        /// </summary>
+        public FunViewModelCustomRevData FunCustomRevData => ServiceLocator.Current.GetInstance<FunViewModelCustomRevData>();
         #endregion
 
     }

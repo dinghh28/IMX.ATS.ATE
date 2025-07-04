@@ -74,7 +74,7 @@ namespace IMX.ATS.Lander
         {
             try
             {
-#if !DEBUG
+#if HOME || Debug
                 UserName = "admin";
                 Password = "111111";
 #endif

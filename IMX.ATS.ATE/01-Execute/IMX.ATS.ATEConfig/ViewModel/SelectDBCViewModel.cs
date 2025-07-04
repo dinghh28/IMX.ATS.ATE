@@ -200,6 +200,9 @@ namespace IMX.ATS.ATEConfig
 
         protected override void WindowClosedExecute(object obj)
         {
+            LsDBCConfigInfos.Clear();
+            SearchDBCConfigInfos.Clear();
+
             IsOpen = false;
 
             WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(Win);

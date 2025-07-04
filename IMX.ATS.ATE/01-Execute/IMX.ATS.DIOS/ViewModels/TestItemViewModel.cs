@@ -171,7 +171,7 @@ namespace IMX.ATS.DIOS
 
             Test_ItemInfo item = Datas[index];
 
-           var result =  DBOperate.Default.GetTestDataCount(item.Id, item.CreateTime, item.UpdateTime);
+           var result =  DBOperate.Default.GetTestDataCount(item.Id, item.CreateTime, item.UpdateTime.AddSeconds(1));
 
             if (!result)
             {

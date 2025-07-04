@@ -98,6 +98,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="H.Maths, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Library\H.Maths.dll</HintPath>
+    </Reference>
     <Reference Include="H.Maths.Encryption">
       <HintPath>..\..\Library\H.Maths.Encryption.dll</HintPath>
     </Reference>
@@ -167,6 +171,8 @@
     <Compile Include="Function\ViewModel\FunViewModelACSourceLoad.cs" />
     <Compile Include="Function\ViewModel\FunViewModelACSource.cs" />
     <Compile Include="Function\ViewModel\FunViewModelAnalogAignals.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelCustomMessage.cs" />
+    <Compile Include="Function\ViewModel\FunViewModelCustomRevData.cs" />
     <Compile Include="Function\ViewModel\FunViewModelRPU.cs" />
     <Compile Include="Function\ViewModel\FunViewModelAPU.cs" />
     <Compile Include="Function\ViewModel\FunViewModelDCLoad.cs" />
@@ -186,6 +192,12 @@
     </Compile>
     <Compile Include="Function\View\FunViewAnalogAignals.xaml.cs">
       <DependentUpon>FunViewAnalogAignals.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewCustomMessage.xaml.cs">
+      <DependentUpon>FunViewCustomMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Function\View\FunViewCustomRevData.xaml.cs">
+      <DependentUpon>FunViewCustomRevData.xaml</DependentUpon>
     </Compile>
     <Compile Include="Function\View\FunViewRPU.xaml.cs">
       <DependentUpon>FunViewRPU.xaml</DependentUpon>
@@ -273,6 +285,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Function\View\FunViewAnalogAignals.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewCustomMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Function\View\FunViewCustomRevData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

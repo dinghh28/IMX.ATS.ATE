@@ -211,11 +211,17 @@ namespace IMX.ATS.ATEConfig
 
         #endregion
 
+        /// <summary>
+        /// 测试项对应描述字典[测试项名称,描述]
+        /// </summary>
+        public Dictionary<string, string> DicDescription { get; set; } = new Dictionary<string, string>();
         #endregion
 
         #region 私有变量
         private int projectid = -1;
         private string projectname = "";
+
+
         #endregion
 
         #region 私有方法
@@ -228,33 +234,46 @@ namespace IMX.ATS.ATEConfig
             try
             {
                 SolutionNames.Clear();
-                DBOperate.Default.GetProcessName(projectid).AttachIfSucceed(result =>
+                DBOperate.Default.GetProcessNaemAndDescription(projectid).AttachIfSucceed(result =>
                 {
-                    if (result.Data.Count < 1)
+                    if (result.Data.Count<1)
                     {
                         return;
                     }
-                    for (int i = 0; i < result.Data.Count; i++)
-                    {
-                        SolutionNames.Add(result.Data[i]);
-                    }
-                    GlobalModel.NowProcessName = SolutionNames[0];
-                    SolutionName = SolutionNames[0];
-                });
+                    DicDescription = result.Data;
 
-                DBOperate.Default.GetProcessDescription(projectid).AttachIfSucceed(result =>
-                {
-                    if (result.Data.Count < 1)
+                    foreach (var item in result.Data.Keys)
                     {
-                        return;
+                        SolutionNames.Add(item);
                     }
-
-                    for (int i = 0; i < result.Data.Count; i++)
-                    {
-                        SolutionDescriptions.Add(result.Data[i]);
-                    }
-                    SolutionDescription = SolutionDescriptions[0];
                 });
+                //DBOperate.Default.GetProcessName(projectid).AttachIfSucceed(result =>
+                //{
+                //    if (result.Data.Count < 1)
+                //    {
+                //        return;
+                //    }
+                //    for (int i = 0; i < result.Data.Count; i++)
+                //    {
+                //        SolutionNames.Add(result.Data[i]);
+                //    }
+                //    GlobalModel.NowProcessName = SolutionNames[0];
+                //    SolutionName = SolutionNames[0];
+                //});
+
+                //DBOperate.Default.GetProcessDescription(projectid).AttachIfSucceed(result =>
+                //{
+                //    if (result.Data.Count < 1)
+                //    {
+                //        return;
+                //    }
+
+                //    for (int i = 0; i < result.Data.Count; i++)
+                //    {
+                //        SolutionDescriptions.Add(result.Data[i]);
+                //    }
+                //    SolutionDescription = SolutionDescriptions[0];
+                //});
 
                 //OperateResult<DataTable> relt = DBOperate.Default.GetTestFunctions(GlobalModel.TestInfo.Test_ID)
                 //    .AttachIfSucceed(result => {
@@ -491,6 +510,12 @@ namespace IMX.ATS.ATEConfig
 
             IFunViewModel funmodel = null;
 
+            if (type == FuncitonType.CustomRevData && !SupportConfig.DicProcessConfig[GlobalModel.NowProcessName].UseCustomData) 
+            {
+                MessageBox.Show("当前测试项不支持自定义上报信息指令");
+                return;
+            }
+
             if (type != FuncitonType.Startup && type != FuncitonType.Shutdown)
             {
                 var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[type]);
@@ -500,20 +525,26 @@ namespace IMX.ATS.ATEConfig
                     MessageBox.Show($"操作无法添加:{rlt.Message}");
                     return;
                 }
+
+                funmodel = rlt.Data;
+
                 var viewmodel = FunctionInfos.LastOrDefault(x => x.ModType == rlt.Data.SupportFuncitonType);
                 if (viewmodel != null) 
                 {
-                    //FastDeepCloner.DeepCloner.CloneTo(viewmodel.Model, funmodel);
-                    funmodel = viewmodel.Model.DeepClone();
-                }
-                //if (FunctionInfos.ToList().FindAll(x => x.ModType == rlt.Data.SupportFuncitonType).Count > 1)
-                //{
-                //    DeepCloner.CloneTo(FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model, funmodel);
-                //    //funmodel = FunctionInfos.Last(x => x.ModType == rlt.Data.SupportFuncitonType).Model.DeepClone();
-                //}
-                else
-                {
-                    funmodel = rlt.Data;
+                    var configrlt = viewmodel.Model.Func.Config.ToJson();
+                    if (!configrlt)
+                    {
+                        MessageBox.Show($"操作无法添加:{configrlt.Message}");
+                        return;
+                    }
+                    string jsonstr = configrlt.Data;
+                    var jsonrlt = Function_Config.DeJson(type, jsonstr);
+                    if (!jsonrlt)
+                    {
+                        MessageBox.Show($"JSON错误:{jsonrlt.Message}");
+                        return;
+                    }
+                    funmodel.Func = TestFunction.Create(jsonrlt.Data);
                 }
             }
 
@@ -529,7 +560,7 @@ namespace IMX.ATS.ATEConfig
                 ModType = type,
                 Model = funmodel
             });
-
+            Thread.Sleep(100);
             FunctionInfoIndex = FunctionInfos.Count - 1;
             if (FunctionInfos.Count < 2)
             {
@@ -548,6 +579,12 @@ namespace IMX.ATS.ATEConfig
             if (string.IsNullOrEmpty(SolutionName))
             {
                 return;
+            }
+
+            SolutionDescription = string.Empty;
+            if (DicDescription.TryGetValue(SolutionName, out string des))
+            {
+                SolutionDescription = des;
             }
 
             //OperateResult<List<ModTestFunction>> result = DBOperate.Default.GetTestFunctionByFuncName(SolutionName);
@@ -721,7 +758,10 @@ namespace IMX.ATS.ATEConfig
             {
                 NewTestProcessViewModel model = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).NewTestProcess;
                 Window newwindow = ContentControlManager.GetWindow<NewTestProcessView>(model);
-
+                if (!newwindow.IsVisible)
+                {
+                    model.IsOpen = false;
+                }
                 if (model.IsOpen) 
                 {
                     MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButtons.OK, MessageBoxIcon.Information); return;
@@ -729,7 +769,7 @@ namespace IMX.ATS.ATEConfig
 
                 model.SchemeNames.Clear();
 
-                List<string> canaddschemenames = SupportConfig.DicProcessConfig.Keys.ToList().Except(SolutionNames.ToList()).ToList();
+                List<string> canaddschemenames = SupportConfig.TestTestProcess.Except(SolutionNames.ToList()).ToList();
 
                 for (int i = 0; i < canaddschemenames.Count; i++)
                 {

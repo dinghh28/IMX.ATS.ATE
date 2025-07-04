@@ -43,8 +43,6 @@ namespace IMX.ATS.ATEConfig
 {
     public class NewTestProcessViewModel : ExtendViewModelBase
     {
-              
-
         #region 公共属性
 
         #region 界面绑定属性
@@ -102,24 +100,7 @@ namespace IMX.ATS.ATEConfig
                 var funtion = testprocess.FunctionInfos;
                 List<string> SchemeNames = testprocess.SolutionNames.ToList();
 
-                List<ModTestProcess> mod = new List<ModTestProcess>();
 
-                for (int i = 0; i < funtion?.Count; i++)
-                {
-                    FunctionInfo item = funtion[i];
-                    OperateResult<string> result = item.Model.Func.Config.ToJson();
-
-                    mod.Add(new ModTestProcess
-                    {
-
-                        Step = item.Step,
-                        CustomName = item.CutomFuncName,
-                        Description = item.Content,
-                        FuntionName = item.FunctionName,
-                        Type = item.ModType.ToString(),
-                        Funtion = result ? result.Data : string.Empty,
-                    });
-                }
 
                 //foreach (var item in funtion)
                 //{
@@ -142,8 +123,41 @@ namespace IMX.ATS.ATEConfig
                 if (SchemeNames.Contains(SchemeName))
                 { MessageBox.Show($"【{SchemeName}】已存在！"); return; }
 
+
+                List<ModTestProcess> mod = new List<ModTestProcess>();
                 var config = SupportConfig.DicProcessConfig[SchemeName];
 
+                if (MessageBox.Show($"是否引用测试项【{testprocess.SolutionName}】的测试步骤?","操作步骤复制提醒", MessageBoxButton.YesNo)== MessageBoxResult.Yes)
+                {
+                    for (int i = 0; i < funtion?.Count; i++)
+                    {
+                        FunctionInfo item = funtion[i];
+                        string data = string.Empty;
+                        if (item.ModType is not IMX.Function.Base.FuncitonType.Startup and not IMX.Function.Base.FuncitonType.Shutdown)
+                        {
+                            item.Model.Func.Config.ToJson()
+                                .AttachIfSucceed(result => data = result.Data);
+                        }
+
+                        if (!config.UseCustomData && item.ModType== IMX.Function.Base.FuncitonType.CustomRevData)
+                        {
+                            continue;
+                        }
+
+                        mod.Add(new ModTestProcess
+                        {
+
+                            Step = item.Step,
+                            CustomName = item.CutomFuncName,
+                            Description = item.Content,
+                            FuntionName = item.FunctionName,
+                            Type = item.ModType.ToString(),
+                            Funtion = data,
+                        });
+                    }
+                }
+                
+                #region 试验存储数据加载
                 List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
                 List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
                 List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
@@ -185,6 +199,7 @@ namespace IMX.ATS.ATEConfig
                     eupreaddata.AddRange(config.Test_ReadData_EX);
                     eupsetdata.AddRange(config.Test_SetData_Ex);
                 }
+                #endregion
 
                 OperateResult DbRtl = DBOperate.Default.InsertTestProccess(new Test_Process
                 {
@@ -211,13 +226,13 @@ namespace IMX.ATS.ATEConfig
 
                 //添加方案名称至SolutionTestFlow
                 testprocess.SolutionNames.Add(SchemeName);
-
+                testprocess.DicDescription.Add(SchemeName, SchemeDescribe);
                 Thread.Sleep(10);
 
                 //修改方案名称至SolutionTestFlow
                 testprocess.SolutionName = SchemeName;
-                //修改方案描述至SolutionTestFlow
-                testprocess.SolutionDescription = SchemeDescribe;
+                ////修改方案描述至SolutionTestFlow
+                //testprocess.SolutionDescription = SchemeDescribe;
 
                 MessageBox.Show($"【{SchemeName}】保存成功！");
 
@@ -245,7 +260,6 @@ namespace IMX.ATS.ATEConfig
             base.WindowClosedExecute(obj);
         }
         #endregion
-
 
         #region 构造方法
         public NewTestProcessViewModel() { }

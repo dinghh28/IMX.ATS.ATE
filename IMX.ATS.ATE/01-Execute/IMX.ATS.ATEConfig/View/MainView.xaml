@@ -47,22 +47,22 @@
                 </Grid.RowDefinitions>-->
                 <StackPanel Grid.Row="0" VerticalAlignment="Center">
                     <RadioButton Content="&#xe6a6;" IsChecked="True" Style="{StaticResource LeftMenuItemButtonStlye}" ToolTip="主页面"
-                       Command="{Binding NavChangeCommand}" CommandParameter="ProjectInfo">
+                       Command="{Binding NavChangeCommand,Delay=20}" CommandParameter="ProjectInfo">
                     </RadioButton>
                     <RadioButton Content="&#xe62a;"  Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="开关机流程配置"
-                       Command="{Binding NavChangeCommand}" CommandParameter="FixedProcess" Visibility="{Binding FlowConfigVisbility}"/>
+                       Command="{Binding NavChangeCommand,Delay=20}" CommandParameter="FixedProcess" Visibility="{Binding FlowConfigVisbility}"/>
                     <!--<RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="示波器参数配置" 
                        Command="{Binding NavChangeCommand}" CommandParameter="TestProcess"
                              Visibility="{Binding FlowConfigVisbility}"/>-->
                     <RadioButton Content="&#xe636;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="试验步骤配置" 
-                       Command="{Binding NavChangeCommand}" CommandParameter="TestProcess"
+                       Command="{Binding NavChangeCommand,Delay=20}" CommandParameter="TestProcess"
                              Visibility="{Binding FlowConfigVisbility}"/>
                     <RadioButton Content="&#xe614;" Style="{StaticResource LeftMenuItemButtonStlye}" 
                              ToolTip="试验方案配置"
-                       Command="{Binding NavChangeCommand}" CommandParameter="TestProgramme" 
+                       Command="{Binding NavChangeCommand,Delay=20}" CommandParameter="TestProgramme" 
                              Visibility="{Binding FlowConfigVisbility}"/>
 
                 </StackPanel>

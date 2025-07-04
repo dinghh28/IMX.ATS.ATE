@@ -155,7 +155,6 @@
     </ApplicationDefinition>
     <Compile Include="Common\SupportConfig.cs" />
     <Compile Include="Resuoce\Converter\CustomConfigEnableConverter.cs" />
-    <Compile Include="Resuoce\Converter\ViewLoggerForeground.cs" />
     <Compile Include="ViewModel\CustomConfigViewModel.cs" />
     <Compile Include="ViewModel\DBCConfigViewModel.cs" />
     <Compile Include="ViewModel\DBCFileChangeViewModel.cs" />
@@ -267,6 +266,10 @@
     <ProjectReference Include="..\..\03-Common\IMX.ATE.Framework\IMX.ATE.Framework.csproj">
       <Project>{05d26bee-0051-4e45-b4c6-e2bb01b24212}</Project>
       <Name>IMX.ATE.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\04-Resource\IMX.ATE.Converts\IMX.ATE.Converts.csproj">
+      <Project>{e097f188-c3fc-4f85-8710-e384ee3d3c75}</Project>
+      <Name>IMX.ATE.Converts</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -99,6 +99,11 @@ namespace IMX.ATS.ATEConfig.Function
                             DeviceTypename = "Product",
                         });
                     }
+                    //ConditionValues.Add(new ModDeviceReadData 
+                    //{
+                    //    DataInfo = new ModTestDataInfo { Name = "持续时间"},
+                    //    DeviceTypename = "计算值",
+                    //});
                 }
 
                 for (int i = 0; i < ConditionValues.Count; i++)
@@ -122,7 +127,7 @@ namespace IMX.ATS.ATEConfig.Function
                         ConditionValue = config.Values[i],
                         ConditionValues = CondValues,
                         ConditionNames = CondNames,
-                        ConditionIndex = findindex,
+                        ConditionIndex = i,
                     };
 
                     StepValues.Add(configvalue);

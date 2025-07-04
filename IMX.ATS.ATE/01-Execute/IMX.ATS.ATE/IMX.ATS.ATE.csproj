@@ -261,16 +261,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\CustomRevDataSetViewModel.cs" />
     <Compile Include="ViewModel\EnvironmentViewModel.cs" />
     <Compile Include="ViewModel\IncubatorViewModel.cs" />
     <Compile Include="ViewModel\ProjectSelectViewModel.cs" />
     <Compile Include="ViewModel\WaterBathViewModel.cs" />
+    <Compile Include="View\CustomRevDataSetView.xaml.cs">
+      <DependentUpon>CustomRevDataSetView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\EnvironmentView.xaml.cs">
       <DependentUpon>EnvironmentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ProjectSelectView.xaml.cs">
       <DependentUpon>ProjectSelectView.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\CustomRevDataSetView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DeviceInitView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

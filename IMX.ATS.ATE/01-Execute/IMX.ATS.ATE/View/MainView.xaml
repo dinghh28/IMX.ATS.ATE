@@ -99,7 +99,10 @@
                         </WrapPanel>
 
                         <WrapPanel Grid.Row="3">
-                            <Button Content="清除故障灯" Height="40" Command="{Binding ClearError}" Background="Green"/>
+                            <Button Content="清除故障灯" Margin="20,0,0,0" Height="40" Command="{Binding ClearError}" Background="Green"/>
+                            <Button Content="更新试验项" Margin="63,0,0,0"
+                                    Command="{Binding Update}"
+                                    IsEnabled="{Binding IsTestRuning, Converter={StaticResource StateConverter}, ConverterParameter='Bool'}"/>
                         </WrapPanel>
 
                         <WrapPanel Grid.Row="1" VerticalAlignment="Center" 
@@ -136,7 +139,7 @@
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn>
                                     <DataGridTemplateColumn.Header>
-                                        <CheckBox Content="全选" IsChecked="{Binding DataContext.IsSelectAll, RelativeSource={RelativeSource AncestorType=UserControl, AncestorLevel=1 }}"/>
+                                        <CheckBox Content="全选" IsChecked="{Binding DataContext.IsSelectAll, RelativeSource={RelativeSource AncestorType=Window, AncestorLevel=1 }}"/>
                                     </DataGridTemplateColumn.Header>
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:IMX.ATS.DeviceConfig"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
         xmlns:converter="clr-namespace:H.WPF.Framework.Converters;assembly=H.WPF.Framework"
-        xmlns:converterbak='clr-namespace:IMX.ATS.DeviceConfig'
+        xmlns:loggerconverter ="clr-namespace:IMX.ATE.Converts;assembly=IMX.ATE.Converts"
         xmlns:drivetype="clr-namespace:IMX.Device.Common;assembly=IMX.Device.Common" 
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
@@ -30,6 +30,7 @@
                 <ResourceDictionary>
                     <converter:EnumDescriptionConverter x:Key="EnumValue"/>
                     <converter:RadioBtConvter x:Key="RadioBtConvter"/>
+                    <loggerconverter:ViewLoggerForeground x:Key="LoggerForeground"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -206,7 +207,7 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Grid.Row="1" Header="日志">
+                    <!--<GroupBox Grid.Row="1" Header="日志">
                         <DataGrid HeadersVisibility="Column" 
                                   AutoGenerateColumns="False"
                                   CanUserAddRows="False"
@@ -224,6 +225,70 @@
                                 <DataGridTextColumn Header="" Width="*" Binding="{Binding Content}"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                    </GroupBox>-->
+
+                    <GroupBox Grid.Row="1" Header="日志" FontSize="14" FontWeight="Bold">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+
+                            <DataGrid Grid.Column="0"
+                                  HeadersVisibility="None" 
+                                  AutoGenerateColumns="False"
+                                  CanUserAddRows="False"
+                                  CanUserDeleteRows="False"
+                                  CanUserReorderColumns="False"
+                                  CanUserResizeRows="False"
+                                  CanUserSortColumns="False"
+                                  CanUserResizeColumns="False"
+                                  IsReadOnly="True"
+                                  ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                  FontSize="14"
+                                  FontWeight="Medium"
+                                  ItemsSource="{Binding Logger}">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="150">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                Text="{Binding RecordTime,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+                                Foreground="{Binding Level,Converter={StaticResource LoggerForeground}}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <!--<DataGridTextColumn Header="时间" Width="150" Binding="{Binding RecordTime,StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>-->
+                                    <DataGridTemplateColumn Width="80">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
+                               Text="{Binding Level}"
+                               Foreground="{Binding Level,Converter={StaticResource LoggerForeground}}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="*">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left"
+                               TextWrapping="WrapWithOverflow"
+                               Text="{Binding Content}"  
+                               Foreground="{Binding Level,Converter={StaticResource LoggerForeground}}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <!--<DataGridTextColumn Header="" Width="80" Binding="{Binding Level}"/>-->
+                                    <!--<DataGridTextColumn Header="" Width="*" Binding="{Binding Content}"/>-->
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <Button Content="清&#x0a;空&#x0a;日&#x0a;志&#x0a;" Grid.Column="1" Command="{Binding ClearLogger}">
+                                <!--<Button.LayoutTransform>
+                                <RotateTransform Angle="270"/>
+                            </Button.LayoutTransform>-->
+                            </Button>
+                        </Grid>
+
                     </GroupBox>
                 </Grid>
             </Grid>

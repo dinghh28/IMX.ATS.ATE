@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IMX.ATS.DBCConfig" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-        xmlns:converter="clr-namespace:IMX.ATS.DBCConfig.Resuoce"
+        xmlns:converter="clr-namespace:IMX.ATE.Converts;assembly=IMX.ATE.Converts"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:FileUpLoadViewModel}"
         Title="FileUpLoadView" Height="768" Width="1024" 

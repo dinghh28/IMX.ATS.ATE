@@ -281,6 +281,7 @@ namespace IMX.ATS.DBCConfig
                 #endregion
 
                 DBOperate.Default.UpdateSendSignals(GlobalModel.Test_DBC.Id, dbcconfigs,messageinfos)
+                    .And(DBOperate.Default.SetDBCSendState(GlobalModel.Test_DBC.Id, false))
                     .AttachIfSucceed(result => MessageBox.Show("下发信号保存成功!"))
                     .AttachIfFailed(result => MessageBox.Show("下发信号保存失败!"));
             }
@@ -774,7 +775,7 @@ namespace IMX.ATS.DBCConfig
         }
         #endregion
 
-            #region 保护方法
+        #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
             if (fileid != GlobalModel.Test_DBCFileInfo.Id && GlobalModel.Test_DBCFileInfo.Id != 0)

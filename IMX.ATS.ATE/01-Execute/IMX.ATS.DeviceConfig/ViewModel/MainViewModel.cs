@@ -158,7 +158,10 @@ namespace IMX.ATS.DeviceConfig
         /// </summary>
         public RelayCommand Link => new RelayCommand(LinkTest);
 
-
+        /// <summary>
+        /// 清除日志内容
+        /// </summary>
+        public RelayCommand ClearLogger => new(() => { Logger.Clear(); });
         #endregion
 
         #endregion
@@ -279,10 +282,24 @@ namespace IMX.ATS.DeviceConfig
                 return;
             }
 
+
             Device_Config devicedonfig = new Device_Config(SelectedDevie.PathName);
             var config = SelectedDevie.Info.Config;
             var item = SelectedDevie.Info;
             config.DriveConfig.CommunicationType = item.Drive;
+
+            if (item.SelectedDriveResourceIndex == -1)
+            {
+                Logger.Add(new ViewLogger
+                {
+                    RecordTime = DateTime.Now,
+                    Level = LoggerLevel.WARN,
+                    Content = $"{item.Config.Name}[{item.Config.DeviceType.GetDescription()}]配置保存失败",
+                });
+                MessageBox.Show($"设备[{item.PathName}]配置保存异常:未配置驱动通讯参数");
+                return;
+            }
+
             if (SelectedDevie.Info.Drive == DriveType.VehicleBus)
             {
                 string configstring = string.Empty;
@@ -316,7 +333,7 @@ namespace IMX.ATS.DeviceConfig
             //    MessageBox.Show($"设备[{item.PathName}]配置保存异常:{result.Message}");
             //    return;
             //});
-
+            item.Config.DriveConfig.ResourceString = item.DriveResources[item.SelectedDriveResourceIndex];
             item.Config.Name = SelectedDevie.DeviceName;
             item.Config.DeviceType = SelectedDevie.Type;
 
@@ -371,6 +388,7 @@ namespace IMX.ATS.DeviceConfig
                 });
 
                 SuperDHHLoggerManager.Warn(LoggerType.FROMLOG, "接口配置", "通讯测试", content);
+                return;
                 //return OperateResult.Failed(result.Message);
             }
 
@@ -381,8 +399,6 @@ namespace IMX.ATS.DeviceConfig
             {
                 ContentName = content+"通讯连接成功";
                 ContentColor = Brushes.Green;
-
-
 
                 Logger.Add(new ViewLogger
                 {

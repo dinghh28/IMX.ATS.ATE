@@ -180,7 +180,7 @@ namespace IMX.ATS.DIOS
                     break;
 
             }
-            DBOperate.Default.GetLimitTestData(ItemId, start, end, (int)pagenum, OnePageCount).ThenAnd(result =>
+            DBOperate.Default.GetLimitTestData(ItemId, start, end.AddSeconds(1), (int)pagenum, OnePageCount).ThenAnd(result =>
             {
                 if (datastructure.Columns.Count < 1) 
                 {
@@ -231,6 +231,12 @@ namespace IMX.ATS.DIOS
                 // 遍历并添加列到DataTable  
                 value[0].Euq_Data.ForEach(token => table.Columns.Add(token.Name));
                 value[0].Euq_SetData.ForEach(token => table.Columns.Add(token.Name));
+                
+                if (value[0].EX_Data.Count > 1)
+                {
+                    value[0].EX_Data.ForEach(token => table.Columns.Add(token.Name));
+                }
+                
 
                 table.Columns.Add("试验结果");
                 table.Columns.Add("异常信息");
@@ -280,6 +286,12 @@ namespace IMX.ATS.DIOS
                 {
                     row[y.Name] = Math.Round(y.Value, 3);
                 });
+
+                if (x.EX_Data.Count>1)
+                {
+                    x.EX_Data.ForEach(y => { row[y.Name] = Math.Round(y.Value, 3); });
+                }
+                
 
                 row["试验结果"] = x.Result == ResultState.SUCCESS ? "OK" : "NG";
                 row["异常信息"] = x.ErrorInfo;

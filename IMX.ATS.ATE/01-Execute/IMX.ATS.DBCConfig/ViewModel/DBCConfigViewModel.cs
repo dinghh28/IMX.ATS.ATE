@@ -25,7 +25,7 @@
 
 
 using FastDeepCloner;
-using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
 using IMX.ATE.Common;
 using IMX.DB;

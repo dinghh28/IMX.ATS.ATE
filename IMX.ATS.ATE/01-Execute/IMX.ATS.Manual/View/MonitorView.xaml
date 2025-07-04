@@ -8,7 +8,7 @@
       xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:converter="clr-namespace:IMX.WPF.Resource.Converters;assembly=IMX.WPF.Resource" 
       d:DataContext="{d:DesignInstance Type=local:MonitorViewModel}"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"  x:Name="Window"
       d:DesignHeight="450" d:DesignWidth="800">
     <Window.DataContext>
         <Binding Path="Monitor" Source="{StaticResource Locator}"/>
@@ -33,18 +33,27 @@
     </Window.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition  Width="auto"/>
             <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" MinHeight="300">
-            <ContentControl Content="{Binding  DeviceManual}" Visibility="{Binding ManualShow}"/>
-        </Grid>
+        </Grid.ColumnDefinitions>-->
 
-        <StackPanel Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Grid Grid.Row="0" Grid.Column="1" >
+            <Button Content="配置CAN设备参数" HorizontalAlignment="Right" Width="150" Command="{Binding ShowCanInit}"/>
+        </Grid>
+        <ScrollViewer Grid.Column="0" Grid.Row="1"  VerticalScrollBarVisibility="Auto">
+            <ContentControl Content="{Binding  DeviceManual}"/> <!--Visibility="{Binding ManualShow}"/>-->
+        </ScrollViewer>
+        <Line StrokeThickness="1"/>
+        <!--<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button Content="{Binding BtnShow}" Command="{Binding ShowManual}" Style="{StaticResource ResourceKey=ControlButtonStyle}" ToolTip="设备操作" Cursor="Hand"/>
-        </StackPanel>
-        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="30,0,0,0" IsDeferredScrollingEnabled="True">
+        </StackPanel>-->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" IsDeferredScrollingEnabled="True">
             <Grid>
                 <ItemsControl ItemsSource="{Binding Realtimedatas}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                     <ItemsControl.ItemsPanel>

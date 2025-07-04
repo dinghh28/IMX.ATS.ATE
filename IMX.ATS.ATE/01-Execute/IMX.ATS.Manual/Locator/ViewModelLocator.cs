@@ -24,6 +24,14 @@ namespace IMX.ATS.Manual
             SimpleIoc.Default.Register<ManualViewModel>();
             ContentControlManager.Regiter<ManualView>();
 
+            //CAN通讯参数配置
+            SimpleIoc.Default.Register<CanInfoViewModel>();
+            ContentControlManager.Regiter<CanInfoView>();
+
+            //DBC文件及指令配置
+            SimpleIoc.Default.Register<SelectDBCViewModel>();
+            ContentControlManager.Regiter<SelectDBCView>();
+
 
             #region Manual
 
@@ -86,6 +94,18 @@ namespace IMX.ATS.Manual
         /// 功能测试主
         /// </summary>
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+
+        /// <summary>
+        /// CAN通讯参数配置
+        /// </summary>
+        public CanInfoViewModel CanInfo => ServiceLocator.Current.GetInstance<CanInfoViewModel>();
+
+        /// <summary>
+        /// DBC文件及指令配置
+        /// </summary>
+        public SelectDBCViewModel SelectDBC => ServiceLocator.Current.GetInstance<SelectDBCViewModel>();
+
+        
 
 
         /// <summary>

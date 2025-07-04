@@ -117,10 +117,13 @@ namespace IMX.ATS.Manual
             //};
             foreach (var item in GlobalModel.DicDeviceInfo)
             {
-                if (!item.Value.Config.EnableManual)
+                if(item.Value.DeviceOperate==null){ continue; }
+
+                if (!item.Value.Config.EnableManual|| !item.Value.DeviceOperate.IsInitOK)
                 {
                     continue;
                 }
+                
                 OperationViews.Add(new OperateViewModel()
                 {
                     Name = $"{item.Value.Config.DeviceType.GetDescription()}[{ item.Value.Config.DeviceModel}]",

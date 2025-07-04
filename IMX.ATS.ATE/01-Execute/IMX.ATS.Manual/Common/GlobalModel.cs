@@ -3,6 +3,7 @@ using IMX.Device.Base;
 using IMX.Device.Base.DriveOperate;
 using IMX.Device.Common;
 using IMX.Function.Base;
+using Piggy.VehicleBus.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,9 @@ namespace IMX.ATS.Manual
              /// 用户信息
              /// </summary>
         public static UserInfo UserInfo { get; set; } = new UserInfo();
+
+
+        public static CANThread CANThread { get; set; }=new CANThread();
 
         /// <summary>
         /// 工装初始化状态
@@ -189,4 +193,36 @@ namespace IMX.ATS.Manual
         /// </summary>
         public int DelayTime { get; set; } = 100;
     }
+
+
+    public class CANThread
+    {
+        /// <summary>
+        /// DBC配置信息
+        /// </summary>
+        public  Test_DBCConfig TestDBCconfig { get; set; } 
+
+        /// <summary>
+        /// DBC文件
+        /// </summary>
+        public  Test_DBCFileInfo TestDBCFile { get; set; }
+
+        /// <summary>
+        /// CAN上报列表
+        /// </summary>
+        public List<CANDataInfo> LisReadSignals_CAN { get; set; }
+
+        /// <summary>
+        /// CAN下发列表
+        /// </summary>
+        public Dictionary<CANDataInfo, double> DicSendSignals_CAN { get; set; }
+
+        /// <summary>
+        /// 下发消息周期及发送帧格式
+        /// </summary>
+        public Dictionary<uint, (uint, FrameFormat)> DicMessageSet { get; set; }
+
+    }
+
+
 }

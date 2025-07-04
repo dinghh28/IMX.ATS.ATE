@@ -24,7 +24,7 @@
 #endregion << 版 本 注 释 >>
 
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.CommandWpf;
 using H.WPF.Framework;
 using IMX.Device.Base.DeviceInerfaces;
 using IMX.Function.Base;

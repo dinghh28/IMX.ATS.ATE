@@ -62,6 +62,34 @@
   <PropertyGroup>
     <StartupObject>IMX.ATS.Manual.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ATE|AnyCPU'">
+    <OutputPath>bin\ATE\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ATE|x64'">
+    <OutputPath>bin\x64\ATE\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ATE|x86'">
+    <OutputPath>bin\x86\ATE\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CommonServiceLocator.2.0.7\lib\net48\CommonServiceLocator.dll</HintPath>
@@ -113,8 +141,7 @@
     <Reference Include="IMX.Logger">
       <HintPath>..\..\Library\IMX.Logger\IMX.Logger.dll</HintPath>
     </Reference>
-    <Reference Include="IMX.WPF.Resource, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="IMX.WPF.Resource">
       <HintPath>..\..\Library\IMX.WPF.Resource\IMX.WPF.Resource.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors">
@@ -127,6 +154,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Library\VehicleBus\Piggy.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Piggy.VehicleBus.Common, Version=1.6.4.1, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.119.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
@@ -207,13 +235,21 @@
     <Compile Include="Manual\View\ManualViewWaterBox.xaml.cs">
       <DependentUpon>ManualViewWaterBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\CanInfoViewModel.cs" />
     <Compile Include="ViewModel\ManualViewModel.cs" />
     <Compile Include="ViewModel\MonitorViewModel.cs" />
+    <Compile Include="ViewModel\SelectDBCViewModel.cs" />
+    <Compile Include="View\CanInfoView.xaml.cs">
+      <DependentUpon>CanInfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ManualView.xaml.cs">
       <DependentUpon>ManualView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MonitorView.xaml.cs">
       <DependentUpon>MonitorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SelectDBCView.xaml.cs">
+      <DependentUpon>SelectDBCView.xaml</DependentUpon>
     </Compile>
     <Page Include="Manual\View\ManualViewACSource.xaml">
       <SubType>Designer</SubType>
@@ -267,6 +303,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\CanInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DeviceInitView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -297,6 +337,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MonitorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SelectDBCView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -333,9 +377,21 @@
       <Project>{9AE13287-0976-4264-8210-0DC86E77FDE9}</Project>
       <Name>IMX.DB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\03-Common\IMX.ATE.Common\IMX.ATE.Common.csproj">
+      <Project>{62BA9FB9-3475-4241-AA00-0AAADF4BBB61}</Project>
+      <Name>IMX.ATE.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\03-Common\IMX.ATE.Framework\IMX.ATE.Framework.csproj">
+      <Project>{05D26BEE-0051-4E45-B4C6-E2BB01B24212}</Project>
+      <Name>IMX.ATE.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\04-Resource\IMX.ATE.Converts\IMX.ATE.Converts.csproj">
       <Project>{e097f188-c3fc-4f85-8710-e384ee3d3c75}</Project>
       <Name>IMX.ATE.Converts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IMX.ATS.DBCConfig\IMX.ATS.DBCConfig.csproj">
+      <Project>{a3bbfc39-d54b-44a2-b9ae-c83b874ad3ce}</Project>
+      <Name>IMX.ATS.DBCConfig</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

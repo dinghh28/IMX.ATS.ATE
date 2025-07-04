@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:IMX.ATS.Manual"
-         xmlns:converter="clr-namespace:IMX.ATE.Converts;assembly=IMX.ATE.Converts" 
-        mc:Ignorable="d"
-        Title="DeviceInitView"  Height="500" Width="450"
+        xmlns:converter="clr-namespace:IMX.ATE.Converts;assembly=IMX.ATE.Converts" 
+        d:DataContext="{d:DesignInstance Type=local:DeviceInitViewModel}"
+        mc:Ignorable="d"  Height="500" Width="450"
          FontFamily="Microsoft YaHei" FontWeight="ExtraLight" Foreground="#333"
         WindowStyle="None" AllowsTransparency="True"  WindowStartupLocation="CenterScreen" Background="#FFF6F7FC"
         ResizeMode="NoResize"  x:Name="Win">

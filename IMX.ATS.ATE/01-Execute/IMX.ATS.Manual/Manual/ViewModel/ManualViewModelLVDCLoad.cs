@@ -76,7 +76,7 @@ namespace IMX.ATS.Manual
             }
         }
 
-        private Opaerate_Mode runModeType;
+        private Opaerate_Mode runModeType = Opaerate_Mode.CC;
         /// <summary>
         /// 当前运行模式
         /// </summary>
@@ -87,13 +87,13 @@ namespace IMX.ATS.Manual
             {
                 if (Set(nameof(RunModeType), ref runModeType, value))
                 {
-                    EnableSlope = value == Opaerate_Mode.CC ? Visibility.Visible : Visibility.Collapsed;
-                    EnableILimit = value == Opaerate_Mode.CC ? Visibility.Collapsed : Visibility.Visible;
+                    EnableSlope = (value == Opaerate_Mode.CC) ? Visibility.Visible : Visibility.Collapsed;
+                    EnableILimit = (value == Opaerate_Mode.CC) ? Visibility.Collapsed : Visibility.Visible;
                     switch (value)
                     {
-                        case Opaerate_Mode.CC: LoadUnit = "A"; break;
-                        case Opaerate_Mode.CV: LoadUnit = "V"; break;
-                        case Opaerate_Mode.CR: LoadUnit = "Ω"; break;
+                        case Opaerate_Mode.CC: LoadUnit = "A"; limtUnit = "A"; break;
+                        case Opaerate_Mode.CV: LoadUnit = "V"; limtUnit = "A"; break;
+                        case Opaerate_Mode.CR: LoadUnit = "Ω"; limtUnit = "Ω"; break;
                         default: break;
                     }
                 }
@@ -112,7 +112,7 @@ namespace IMX.ATS.Manual
         }
 
 
-        private Visibility enableILimit;
+        private Visibility enableILimit = Visibility.Collapsed;
 
         /// <summary>
         /// 限定电流参数显示
@@ -123,7 +123,7 @@ namespace IMX.ATS.Manual
             set => Set(nameof(EnableILimit), ref enableILimit, value);
         }
 
-        private Visibility enableSlope;
+        private Visibility enableSlope = Visibility.Visible;
 
         /// <summary>
         /// 斜率显示
@@ -197,6 +197,18 @@ namespace IMX.ATS.Manual
             get => loadUnit;
             set => Set(nameof(LoadUnit), ref loadUnit, value);
         }
+
+        private string limtUnit = "A";
+
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string LimtUnit
+        {
+            get => limtUnit;
+            set => Set(nameof(LimtUnit), ref limtUnit, value);
+        }
+
 
         //private string iLimitUnit = "A";
 

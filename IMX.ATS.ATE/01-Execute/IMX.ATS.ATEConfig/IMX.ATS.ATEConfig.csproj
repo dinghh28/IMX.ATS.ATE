@@ -417,6 +417,10 @@
       <Project>{05D26BEE-0051-4E45-B4C6-E2BB01B24212}</Project>
       <Name>IMX.ATE.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\IMX.ATS.Manual\IMX.ATS.Manual.csproj">
+      <Project>{6d7c1f7d-44c4-4aa2-badf-22cef6dcedeb}</Project>
+      <Name>IMX.ATS.Manual</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
@@ -451,9 +455,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf">
       <Version>1.1.122</Version>
-    </PackageReference>
-    <PackageReference Include="MvvmLightLibs">
-      <Version>5.4.1.1</Version>
     </PackageReference>
     <PackageReference Include="SQLite">
       <Version>3.13.0</Version>

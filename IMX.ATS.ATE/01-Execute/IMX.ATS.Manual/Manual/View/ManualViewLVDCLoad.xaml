@@ -128,7 +128,7 @@
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Column="0" Content="限制值：" VerticalAlignment="Center"/>
                                         <TextBox Grid.Column="1" Text="{Binding Set_LimValue, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="30"/>
-                                        <Label Content="{Binding LoadUnit}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                        <Label Content="{Binding LimtUnit}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left"/>
 
                                     </Grid>
                                 </Grid>

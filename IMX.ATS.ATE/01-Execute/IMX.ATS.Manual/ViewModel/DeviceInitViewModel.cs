@@ -26,6 +26,7 @@
 using GalaSoft.MvvmLight;
 using H.WPF.Framework;
 using IMX.Common;
+using IMX.DB;
 using IMX.Device.Base;
 using IMX.Device.Base.DriveOperate;
 using IMX.Device.Common;
@@ -42,6 +43,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
+using Application = System.Windows.Application;
 
 namespace IMX.ATS.Manual
 {
@@ -367,7 +370,7 @@ namespace IMX.ATS.Manual
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.GetMessage(), "系统配置文件获取异常");
+                System.Windows.Forms.MessageBox.Show(ex.GetMessage(), "系统配置文件获取异常");
                 SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(DeviceInitViewModel), nameof(ReadConfig), ex);
                 return OperateResult.Excepted(ex);
             }
@@ -448,31 +451,31 @@ namespace IMX.ATS.Manual
                                  dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
                              });
 
-                             //开启设备实时监控
-                             if (!GlobalModel.DicDeviceThreads.TryGetValue(item.Key, out DeviceThread thread))
-                             {
-                                 thread = new DeviceThread
-                                 {
-                                     ThreadName = item.Key,
-                                     IsStratCommunication = true,
-                                     DeviceOperate = result.Data,
-                                     DeviceAddress = item.Key,
-                                     DeviceType = item.Value.Args.DeviceType,
-                                     DelayTime = item.Value.Drive.DriveConfig.BeforeReadDelayMS,
-                                     IsProduct = item.Key.Contains("PRODUCT"),
-                                     ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
-                                 };
+                             ////开启设备实时监控
+                             //if (!GlobalModel.DicDeviceThreads.TryGetValue(item.Key, out DeviceThread thread))
+                             //{
+                             //    thread = new DeviceThread
+                             //    {
+                             //        ThreadName = item.Key,
+                             //        IsStratCommunication = true,
+                             //        DeviceOperate = result.Data,
+                             //        DeviceAddress = item.Key,
+                             //        DeviceType = item.Value.Args.DeviceType,
+                             //        DelayTime = item.Value.Drive.DriveConfig.BeforeReadDelayMS,
+                             //        IsProduct = item.Key.Contains("PRODUCT"),
+                             //        ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
+                             //    };
 
-                                 GlobalModel.DicDeviceThreads.Add(item.Key, thread);
-                             }
+                             //    GlobalModel.DicDeviceThreads.Add(item.Key, thread);
+                             //}
 
-                             if (item.Value.Drive.DriveConfig.CommunicationType == Device.Common.DriveType.USB)
-                             {
-                                 thread.DelayTime = 500;
-                             }
+                             //if (item.Value.Drive.DriveConfig.CommunicationType == Device.Common.DriveType.USB)
+                             //{
+                             //    thread.DelayTime = 500;
+                             //}
 
-                             thread.DeviceOperate = result.Data;
-                             thread.IsStratCommunication = true;
+                             //thread.DeviceOperate = result.Data;
+                             //thread.IsStratCommunication = true;
 
 
                              //if (!thread.IsRunning)
@@ -507,6 +510,7 @@ namespace IMX.ATS.Manual
                                  dicInitInfo[item.Key].DeviceSate = ResultState.FAIL;
                              });
                          });
+
 
                         //.ThenAnd(result => result.Data.Device_ReadAll()
                         //.ConvertTo(result.Data))
@@ -559,6 +563,23 @@ namespace IMX.ATS.Manual
                 try
                 {
                     var deviceinfo = GlobalModel.DicDeviceInfo[item.Key];
+
+                    if (item.Key == "Product")
+                    {
+                        OperateResult result = GlobalModel.DicDeviceOperate[deviceinfo.DeviceOperate].UnregisterDevice(deviceinfo.DeviceOperate);
+
+                        if (GlobalModel.DicDeviceOperate[deviceinfo.DeviceOperate].CanRemove)
+                        {
+                            GlobalModel.DicDeviceDrives.Remove(deviceinfo.DeviceOperate.DeviceConfig.DriveConfig.ResourceString);
+                        }
+                        GlobalModel.DicDeviceOperate.Remove(deviceinfo.DeviceOperate);
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                        });
+                        Thread.Sleep(100);
+                        continue;
+                    }
 
                     deviceinfo.DeviceOperate.Close().And(deviceinfo.DeviceOperate.UnInit())
                         .And(deviceinfo.Drive.UnregisterDevice(deviceinfo.DeviceOperate))
@@ -652,7 +673,7 @@ namespace IMX.ATS.Manual
                 {
                     relayoperate?.SateLedContrcl(LightType.ERROR);
 
-                    System.Windows.Forms.MessageBox.Show(ErrorStr, "设备初始化异常");
+                    System.Windows.Forms.MessageBox.Show(ErrorStr, "设备初始化异常", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, System.Windows.Forms.MessageBoxOptions.DefaultDesktopOnly);
                 }
                 else
                 {

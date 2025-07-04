@@ -663,22 +663,22 @@ namespace IMX.ATS.Manual
         {
             if (IsInit)
             {
-                Relay_ZS4Bit_Operate relayoperate = null;
-                if (GlobalModel.DicDeviceInfo.TryGetValue("Relay", out DeviceInfo_ALL relay))
-                {
-                    relayoperate = (relay?.DeviceOperate as Relay_ZS4Bit_Operate);
-                }
+                //Relay_ZS4Bit_Operate relayoperate = null;
+                //if (GlobalModel.DicDeviceInfo.TryGetValue("Relay", out DeviceInfo_ALL relay))
+                //{
+                //    relayoperate = (relay?.DeviceOperate as Relay_ZS4Bit_Operate);
+                //}
 
                 if (!string.IsNullOrEmpty(ErrorStr))
                 {
-                    relayoperate?.SateLedContrcl(LightType.ERROR);
+                    //relayoperate?.SateLedContrcl(LightType.ERROR);
 
                     System.Windows.Forms.MessageBox.Show(ErrorStr, "设备初始化异常", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, System.Windows.Forms.MessageBoxOptions.DefaultDesktopOnly);
                 }
-                else
-                {
-                    relayoperate?.SateLedContrcl(LightType.DEFALT);
-                }
+                //else
+                //{
+                //    relayoperate?.SateLedContrcl(LightType.DEFALT);
+                //}
 
                 ErrorStr = string.Empty;
                 Application.Current.Dispatcher.Invoke(new Action(() =>

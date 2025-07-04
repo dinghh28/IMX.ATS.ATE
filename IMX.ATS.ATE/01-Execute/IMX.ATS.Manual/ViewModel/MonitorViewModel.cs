@@ -147,6 +147,7 @@ namespace IMX.ATS.Manual
                 {
                     if (device.IsReceiveData)
                     {
+                        
                         var operateResult = device.DeviceOperate.Device_ReadAll()
                             .AttachIfFailed(result =>
                             {
@@ -183,7 +184,7 @@ namespace IMX.ATS.Manual
                     }
                     else
                     {
-                        Thread.Sleep(0);
+                        Thread.Sleep(100);
                     }
                 }
                 catch (Exception ex)
@@ -317,18 +318,20 @@ namespace IMX.ATS.Manual
             {
                 if (thread.Value.IsRunning)
                 {
-                    thread.Value.IsRunning = false;
+                    //thread.Value.IsRunning = false;
                     thread.Value.IsReceiveData = false;
                     thread.Value.IsStratCommunication = false;
                 }
             }
-            Thread.Sleep(500);
+            Thread.Sleep(5000);
             GlobalModel.DicDeviceThreads.Clear();
 
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                Window mainwindow = ContentControlManager.GetWindow<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
-                mainwindow.Show();
+                ContentControlManager.Show<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
+                //Window mainwindow = ContentControlManager.GetWindow<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
+                //mainwindow.Show();
+                Thread.Sleep(100);
                 //base.WindowClosedExecute(obj);
             }));
 

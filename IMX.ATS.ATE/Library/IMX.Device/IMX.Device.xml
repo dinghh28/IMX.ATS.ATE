@@ -2088,6 +2088,54 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetMessageCycleTime(System.Collections.Generic.Dictionary{System.UInt32,System.UInt32})">
+            <summary>
+            设置消息循环周期
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetMessageCycleTimeANDFrameFormat(System.Collections.Generic.Dictionary{System.UInt32,System.ValueTuple{System.UInt32,Piggy.VehicleBus.Common.FrameFormat}})">
+            <summary>
+            设置消息循环周期及其帧格式
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetMessageFrameFormat(System.Collections.Generic.Dictionary{System.UInt32,Piggy.VehicleBus.Common.FrameFormat})">
+            <summary>
+            设置消息帧格式
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
+            <summary>
+            设置自定义下发报文(自动清空当前已存在自定义报文)
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
+            <summary>
+            添加自定义报文(覆盖)
+            </summary>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
+            <summary>
+            添加自定义报文(覆盖)
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.ClearCustomMessage">
+            <summary>
+            清除自定义报文下发列表
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.LockMessages">
             <summary>
             锁定接收发送信号
@@ -2157,6 +2205,20 @@
             <summary>
             设置交互器发送信号
             </summary>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalInitValue(System.Collections.Generic.Dictionary{IMX.Device.Common.CANSignalInfo,System.Double})">
+            <summary>
+            设置发送信号初始值
+            </summary>
+            <param name="values"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalInitValue(System.Collections.Generic.Dictionary{IMX.Device.Common.CANDataInfo,System.Double})">
+            <summary>
+            设置发送信号初始值
+            </summary>
+            <param name="values"></param>
+            <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.SetSendSignalValue(System.String,System.Double)">
             <summary>
@@ -2243,27 +2305,6 @@
             <summary>
             计算信号下发值
             </summary>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.SetCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
-            <summary>
-            设置自定义下发报文(自动清空当前已存在自定义报文)
-            </summary>
-            <param name="messages"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(Piggy.VehicleBus.Common.CustomMessage)">
-            <summary>
-            添加自定义报文(覆盖)
-            </summary>
-            <param name="message"></param>
-            <returns></returns>
-        </member>
-        <member name="M:IMX.Device.Product.Product_CAN_Operate.AddCustomMessage(System.Collections.Generic.List{Piggy.VehicleBus.Common.CustomMessage})">
-            <summary>
-            添加自定义报文(覆盖)
-            </summary>
-            <param name="messages"></param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Operate.Close">
@@ -2357,6 +2398,27 @@
             设置报文接收状态
             </summary>
             <param name="isStart">是否开启报文接收</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetMessageCycleTime(System.Collections.Generic.Dictionary{System.UInt32,System.UInt32})">
+            <summary>
+            设置消息循环周期
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetMessageCycleTimeANDFrameFormat(System.Collections.Generic.Dictionary{System.UInt32,System.ValueTuple{System.UInt32,Piggy.VehicleBus.Common.FrameFormat}})">
+            <summary>
+            设置消息循环周期及其帧格式
+            </summary>
+            <param name="messages"></param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetMessageFrameFormat(System.Collections.Generic.Dictionary{System.UInt32,Piggy.VehicleBus.Common.FrameFormat})">
+            <summary>
+            设置消息帧格式
+            </summary>
+            <param name="messages"></param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.LockMessages">
@@ -2533,6 +2595,21 @@
             </summary>
             <param name="signal">发送信号</param>
             <param name="value">设置值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetSendSignalInitValue(IMX.Device.Common.CANSignalInfo,System.Double)">
+            <summary>
+            设置发送信号初始值
+            </summary>
+            <param name="signal">发送信号</param>
+            <param name="value">设置值</param>
+            <returns></returns>
+        </member>
+        <member name="M:IMX.Device.Product.Product_CAN_Warp.SetSendSignalInitValue(System.Collections.Generic.Dictionary{IMX.Device.Common.CANSignalInfo,System.Double})">
+            <summary>
+            设置发送信号初始值
+            </summary>
+            <param name="values"></param>
             <returns></returns>
         </member>
         <member name="M:IMX.Device.Product.Product_CAN_Warp.CalcMessageValue">

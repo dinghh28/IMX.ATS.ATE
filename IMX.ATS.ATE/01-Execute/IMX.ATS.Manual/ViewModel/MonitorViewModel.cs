@@ -1,5 +1,7 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
+using IMX.ATS.DBCConfig;
 using IMX.Common;
 using IMX.Device.Common;
 using IMX.Logger;
@@ -147,7 +149,7 @@ namespace IMX.ATS.Manual
                 {
                     if (device.IsReceiveData)
                     {
-                        
+
                         var operateResult = device.DeviceOperate.Device_ReadAll()
                             .AttachIfFailed(result =>
                             {
@@ -328,13 +330,12 @@ namespace IMX.ATS.Manual
 
             Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                ContentControlManager.Show<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
-                //Window mainwindow = ContentControlManager.GetWindow<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
-                //mainwindow.Show();
+                //ContentControlManager.Show<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
+                Window mainwindow = ContentControlManager.GetWindow<DeviceInitView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Init);
+                mainwindow.Show();
                 Thread.Sleep(100);
                 //base.WindowClosedExecute(obj);
             }));
-
 
             base.WindowClosedExecute(obj);
         }
@@ -382,7 +383,7 @@ namespace IMX.ATS.Manual
 
     }
 
-    public class ModRealtimedata
+    public class ModRealtimedata : ViewModelBase
     {
         /// <summary>
         /// 设备名称

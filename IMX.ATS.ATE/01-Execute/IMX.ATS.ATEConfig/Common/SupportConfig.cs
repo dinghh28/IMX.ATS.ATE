@@ -1227,7 +1227,7 @@ namespace IMX.ATS.ATEConfig
             {"输出效率（DCDC））", new ProcessConfig_EX
                                 {
                                     Name = "输出效率（DCDC）",
-                                    UseCustomData = false,
+                                    UseCalculate = true,
                                     Test_ReadData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电电压",},
@@ -1278,7 +1278,7 @@ namespace IMX.ATS.ATEConfig
             {"输入电压精度（DCDC）", new ProcessConfig_EX
                                 {
                                     Name = "输入电压精度（DCDC）",
-                                    UseCustomData = false,
+                                    UseCalculate = true,
                                     Test_ReadData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电电压",},
@@ -1329,7 +1329,7 @@ namespace IMX.ATS.ATEConfig
             {"输出电压精度（DCDC）", new ProcessConfig_EX
                                 {
                                     Name = "输出电压精度（DCDC）",
-                                    UseCustomData = false,
+                                    UseCalculate = true,
                                     Test_ReadData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电电压",},
@@ -1380,7 +1380,7 @@ namespace IMX.ATS.ATEConfig
             {"输入电流精度（DCDC）", new ProcessConfig_EX
                                 {
                                     Name = "输入电流精度（DCDC）",
-                                    UseCustomData = false,
+                                    UseCalculate = true,
                                     Test_ReadData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电电压",},
@@ -1432,7 +1432,7 @@ namespace IMX.ATS.ATEConfig
             {"输出电流精度（DCDC）", new ProcessConfig_EX
                                 {
                                     Name = "输出电流精度（DCDC）",
-                                    UseCustomData = false,
+                                    UseCalculate = true,
                                     Test_ReadData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电电压",},

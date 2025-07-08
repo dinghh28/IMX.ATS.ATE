@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
+using IMX.ATS.Common;
 using IMX.DB;
 using IMX.DB.Model;
 using Super.Zoo.Framework;
@@ -76,6 +77,37 @@ namespace IMX.ATS.UserManage
             set => Set(nameof(ProjectLevel), ref projectLevel, value);
         }
 
+        private bool dbc;
+        /// <summary>
+        /// DBC配置权限
+        /// </summary>
+        public bool DBC
+        {
+            get => dbc;
+            set => Set(nameof(DBC), ref dbc, value);
+        }
+
+        private bool manual;
+        /// <summary>
+        /// 手动操作权限
+        /// </summary>
+        public bool Manual
+        {
+            get => manual;
+            set => Set(nameof(Manual), ref manual, value);
+        }
+
+
+        private bool deviceconfig;
+        /// <summary>
+        /// 串口配置权限
+        /// </summary>
+        public bool DeviceConfig
+        {
+            get => deviceconfig;
+            set => Set(nameof(DeviceConfig), ref deviceconfig, value);
+        }
+
         #endregion
 
         #region 界面绑定指令
@@ -98,7 +130,12 @@ namespace IMX.ATS.UserManage
         {
             try
             {
-                int privilege = (TestLevel ? 1 : 0) + (ProjectLevel ? 2 : 0) + (DataLevel ? 4 : 0) + (UserLevel ? 8 : 0);
+                int privilege = (TestLevel ? (int)UserPermissions.ATE : 0)
+                            + (DataLevel ? (int)UserPermissions.DIOS : 0)
+                            + (UserLevel ? (int)UserPermissions.UserManage : 0)
+                            + (DBC ? (int)UserPermissions.DBCConfig : 0)
+                            + (DeviceConfig ? (int)UserPermissions.DeviceConfig : 0)
+                            + (Manual ? (int)UserPermissions.Manual : 0);
                 UserInfo user = new UserInfo() { UserName = UserName, Password = "111111", Privilege = privilege };
                 //OperateResult resu = DBOperate.Default.Init();
                 OperateResult result = DBOperate.Default.AddNewUser(user);
@@ -125,6 +162,9 @@ namespace IMX.ATS.UserManage
             ProjectLevel = false;
             UserLevel = false;
             DataLevel = false;
+            DeviceConfig = false;
+            Manual = false;
+            DBC = false;
             base.WindowClosedExecute(obj);
         }
         #endregion

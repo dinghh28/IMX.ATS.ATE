@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:IMX.ATS.UserManage" 
         d:DataContext="{d:DesignInstance Type=local:NewUserViewModel}"
         mc:Ignorable="d"
-        Title="NewUserView" Height="250" Width="400" WindowStyle="None" WindowStartupLocation="CenterScreen"
+        Title="NewUserView" Height="350" Width="400" WindowStyle="None" WindowStartupLocation="CenterScreen"
         MouseLeftButtonDown="Border_MouseLeftButtonDown" Name="Window">
 
     <Window.Resources>
@@ -59,10 +59,13 @@
                 <TextBox Grid.Row="1" Grid.Column="1" Text="111111" />-->
                 <Label Grid.Row="1" Grid.Column="0" Content="用户权限：" Width="100" VerticalAlignment="Center"/>
                 <WrapPanel Grid.Row="1" Grid.Column="1"  Orientation="Horizontal"  HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <CheckBox Content="测试权限" IsChecked="{Binding TestLevel}" Width="95" Margin="5"/>
-                    <CheckBox Content="数据查询权限" IsChecked="{Binding DataLevel}" Width="95"  Margin="5"/>
-                    <CheckBox Content="方案配置权限" IsChecked="{Binding ProjectLevel}" Width="95" Margin="5"/>
-                    <CheckBox Content="用户管理权限" IsChecked="{Binding UserLevel}" Width="95" Margin="5"/>
+                    <CheckBox Content="测试权限" IsChecked="{Binding TestLevel}" Width="95" Margin="10,5"/>
+                    <CheckBox Content="方案配置权限" IsChecked="{Binding ProjectLevel}" Width="95" Margin="10,5"/>
+                    <CheckBox Content="DBC配置权限" IsChecked="{Binding DBC}" Width="95" Margin="10,5"/>
+                    <CheckBox Content="数据查询权限" IsChecked="{Binding DataLevel}" Width="95"  Margin="10,5"/>
+                    <CheckBox Content="手动调试权限" IsChecked="{Binding Manual}" Width="95" Margin="10,5"/>
+                    <CheckBox Content="驱动配置权限" IsChecked="{Binding DeviceConfig}" Width="95" Margin="10,5"/>
+                    <CheckBox Content="用户管理权限" IsChecked="{Binding UserLevel}" Width="95" Margin="10,5"/>
                 </WrapPanel>
                 <Button Grid.Row="2"  Grid.Column="0"  Content="增加用户" Height="25" Width="100"  Command="{Binding AddNewUserCommond}" HorizontalAlignment="Right"/>
                 <Button Grid.Row="2"  Grid.Column="1"  Content="取   消" Height="25" Width="100"  Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Window}"/>

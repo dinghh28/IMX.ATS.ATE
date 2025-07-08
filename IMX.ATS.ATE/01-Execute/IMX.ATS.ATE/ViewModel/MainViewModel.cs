@@ -471,6 +471,7 @@ namespace IMX.ATS.ATE
                 return;
             }
 
+            GlobalModel.ProjectInfo = result.Data;
 
             var result1 = DBOperate.Default.GetProgramme(GlobalModel.ProjectInfo.Id);
 
@@ -479,6 +480,14 @@ namespace IMX.ATS.ATE
                 MessageBox.Show("项目试验阶段获取失败");
                 return;
             }
+
+            if (result1.Data.Test_FlowNames == null || result1.Data.Test_FlowNames.Count < 1)
+            {
+                MessageBox.Show("当前项目未配置试验项或未完成试验方案配置，无法进行自动测试");
+                return;
+            }
+
+
 
             ProcessInfos.Clear();
             IsSelectAll = false;
@@ -1017,7 +1026,9 @@ namespace IMX.ATS.ATE
                 SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(MainViewModel), nameof(TestStart), ex);
             }
             Thread.Sleep(1000);
+            //Thread thread = new Thread(() => { TestRun(monitor); }) { IsBackground = true };
 
+            //new Thread(TestRun(monitor)) { IsBackground = true}.Start();
             monitor.OprateThread.Start(monitor);
 
             ContentName = "运行试验中...";
@@ -1600,7 +1611,7 @@ namespace IMX.ATS.ATE
                                 //{
                                 //    count = -1;
                                 //}
-                                while (count-- > 0)
+                                while (count-- >= 0)
                                 {
                                     Thread.Sleep(stepfuntion.StepFrequency);
                                     if (stepfuntion.StepOutCheck(data))
@@ -1610,7 +1621,11 @@ namespace IMX.ATS.ATE
                                     }
                                     stepfuntion.SetStep(operate);
                                 }
-
+                                if (stepfuntion.DelayAfterRun > 0) 
+                                {
+                                    Thread.Sleep(stepfuntion.DelayAfterRun);
+                                }
+                                
                                 Application.Current.Dispatcher.Invoke(new Action(() =>
                                 {
                                     step.Result = ResultState.SUCCESS;
@@ -3451,13 +3466,16 @@ namespace IMX.ATS.ATE
         /// </summary>
         /// <param name="operate">采样系统操作句柄</param>
         /// <returns></returns>
-        private OperateResult CANUnint(IDeviceOperate operate)
+        private OperateResult CANUnint(Product_CAN_Operate operate)
         {
             try
             {
                 //lock (GlobalModel.DicDeviceOperate)
                 //{
-                    OperateResult result = GlobalModel.DicDeviceOperate[operate].UnregisterDevice(operate);
+
+                OperateResult result = operate.StopCommunication()
+                    .And(operate.Close())
+                    .And(GlobalModel.DicDeviceOperate[operate].UnregisterDevice(operate));
 
                     if (GlobalModel.DicDeviceOperate[operate].CanRemove)
                     {
@@ -3467,21 +3485,6 @@ namespace IMX.ATS.ATE
                     GlobalModel.DicDeviceOperate.Remove(operate);
 
                     return result;
-
-
-                //return GlobalModel.DicDeviceOperate[operate].UnregisterDevice(operate)
-                //    .AttachIfSucceed(result =>
-                //    {
-                //        if (GlobalModel.DicDeviceOperate[operate].CanRemove)
-                //        {
-                //            GlobalModel.DicDeviceDrives.Remove(operate.DeviceConfig.DriveConfig.ResourceString);
-                //        }
-                //        GlobalModel.DicDeviceOperate.Remove(operate);
-                //        operate?.Dispose();
-                //        //operate = null;
-                //    });
-                //}
-
             }
             catch (Exception ex)
             {

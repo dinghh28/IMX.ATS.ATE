@@ -38,6 +38,7 @@ using System.Windows;
 using IMX.Function.ViewModel.Model;
 using System.Collections.ObjectModel;
 using IMX.Common;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -215,7 +216,6 @@ namespace IMX.ATS.ATEConfig
                     UseCustomData = config.UseCustomData,
                     UseCalculateData = config.UseCalculate,
                     Test_CalculateData = calculatedata,
-                    UpdateOperator = GlobalModel.UserInfo?.UserName,
                 });
 
                 if (!DbRtl)

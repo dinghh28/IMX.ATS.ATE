@@ -4,36 +4,35 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:IMX.ATS.Manual"
-      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-      xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
-      xmlns:converter="clr-namespace:IMX.WPF.Resource.Converters;assembly=IMX.WPF.Resource" 
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       d:DataContext="{d:DesignInstance Type=local:MonitorViewModel}"
-      mc:Ignorable="d"  x:Name="Window"
+      mc:Ignorable="d"  x:Name="Win" WindowStyle="None"
       d:DesignHeight="450" d:DesignWidth="800">
     <Window.DataContext>
         <Binding Path="Monitor" Source="{StaticResource Locator}"/>
     </Window.DataContext>
-    <i1:Interaction.Triggers>
-        <i1:EventTrigger EventName="Loaded">
-            <i1:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Window}"/>
-        </i1:EventTrigger>
-        <i1:EventTrigger EventName="Closed">
-            <i1:InvokeCommandAction Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Window}"/>
-        </i1:EventTrigger>
-    </i1:Interaction.Triggers>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>
+        <!--<i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Win}"/>
+        </i:EventTrigger>-->
+    </i:Interaction.Triggers>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
-                <ResourceDictionary>
+                <!--<ResourceDictionary>
                     <converter:InReangeConverer x:Key="InReangeValue"/>
-                </ResourceDictionary>
+                </ResourceDictionary>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
             <RowDefinition Height="0.5*"/>
             <RowDefinition Height="5*"/>
             <RowDefinition Height="10*"/>
@@ -42,18 +41,29 @@
             <ColumnDefinition  Width="auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>-->
+        <Grid Grid.Row="0" Margin="10,5">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
+                <Label Content="调试平台" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
+               
+            </StackPanel>
 
-        <Grid Grid.Row="0" Grid.Column="1" >
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                <Button Content="&#xe721;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMin}" CommandParameter="{Binding ElementName=Win}"/>
+                <Button Content="&#xe720;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>
+                <Button Content="&#xe71f;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Win}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1" >
             <Button Content="配置CAN设备参数" HorizontalAlignment="Right" Width="150" Command="{Binding ShowCanInit}"/>
         </Grid>
-        <ScrollViewer Grid.Column="0" Grid.Row="1"  VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Column="0" Grid.Row="2"  VerticalScrollBarVisibility="Auto">
             <ContentControl Content="{Binding  DeviceManual}"/> <!--Visibility="{Binding ManualShow}"/>-->
         </ScrollViewer>
         <Line StrokeThickness="1"/>
         <!--<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button Content="{Binding BtnShow}" Command="{Binding ShowManual}" Style="{StaticResource ResourceKey=ControlButtonStyle}" ToolTip="设备操作" Cursor="Hand"/>
         </StackPanel>-->
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" IsDeferredScrollingEnabled="True">
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" IsDeferredScrollingEnabled="True">
             <Grid>
                 <ItemsControl ItemsSource="{Binding Realtimedatas}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                     <ItemsControl.ItemsPanel>

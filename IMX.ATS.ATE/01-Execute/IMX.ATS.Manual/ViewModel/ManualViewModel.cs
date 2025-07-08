@@ -83,11 +83,44 @@ namespace IMX.ATS.Manual
 
         #region 公有方法
 
+        public void AddOperateView(string description, DeviceInfo_ALL device)
+        {
+            try
+            {
+                OperationViews.Add(new OperateViewModel()
+                {
+                    Name = $"{device.Config.DeviceType.GetDescription()}[{device.Config.DeviceModel}]",
+                    VisibilityEnable = device.Config.EnableManual ? Visibility.Visible : Visibility.Collapsed,
+                    Description = description.ToString(),
+                    SelectView = new RelayCommand<object>(DoNavChange)
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        public void RemoveOperateView(string description)
+        {
+            try
+            {
+                OperationViews.Remove(OperationViews.First(x=>x.Description==description));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
         #endregion
 
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
+            
             //base.WindowLoadedExecute(obj);
         }
 
@@ -119,18 +152,20 @@ namespace IMX.ATS.Manual
             {
                 if (item.Value.DeviceOperate == null) continue;
 
-                if (!item.Value.Config.EnableManual||!item.Value.DeviceOperate.IsInitOK)
+                if (!item.Value.Config.EnableManual || !item.Value.DeviceOperate.IsInitOK)
                 {
                     continue;
                 }
-                
-                OperationViews.Add(new OperateViewModel()
-                {
-                    Name = $"{item.Value.Config.DeviceType.GetDescription()}[{ item.Value.Config.DeviceModel}]",
-                    VisibilityEnable = item.Value.Config.EnableManual ? Visibility.Visible : Visibility.Collapsed,
-                    Description = item.Key.ToString(),
-                    SelectView = new RelayCommand<object>(DoNavChange)
-                });
+
+                AddOperateView(item.Key.ToString(), item.Value);
+
+                //OperationViews.Add(new OperateViewModel()
+                //{
+                //    Name = $"{item.Value.Config.DeviceType.GetDescription()}[{ item.Value.Config.DeviceModel}]",
+                //    VisibilityEnable = item.Value.Config.EnableManual ? Visibility.Visible : Visibility.Collapsed,
+                //    Description = item.Key.ToString(),
+                //    SelectView = new RelayCommand<object>(DoNavChange)
+                //});
             }
         }
 

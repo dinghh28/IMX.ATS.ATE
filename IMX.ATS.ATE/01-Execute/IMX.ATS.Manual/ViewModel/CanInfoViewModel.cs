@@ -23,6 +23,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
+using IMX.ATS.DBCConfig;
+using System.Xml.Linq;
 
 namespace IMX.ATS.Manual
 {
@@ -201,7 +203,7 @@ namespace IMX.ATS.Manual
                         return;
                     }
 
-                    if (candeviceInfo.DeviceOperate.IsInitOK)
+                    if (candeviceInfo.DeviceOperate != null && candeviceInfo.DeviceOperate.IsInitOK)
                     {
                         Application.Current.Dispatcher.Invoke(() =>
                         {
@@ -337,18 +339,20 @@ namespace IMX.ATS.Manual
                     });
                     GlobalModel.DicDeviceThreads["Product"].DelayTime = 1000;
 
-                    GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = true;
+                    //GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = true;
 
-                    if (!GlobalModel.DicDeviceThreads["Product"].IsRunning)
-                    {
-                        ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(GlobalModel.DicDeviceThreads["Product"]);
-                        Thread.Sleep(100);
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            Messagestrs.Add($"[{DateTime.Now}]--CAN设备通讯线程加载成功");
-                        });
+                    //if (!GlobalModel.DicDeviceThreads["Product"].IsRunning)
+                    //{
+                    //    ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(GlobalModel.DicDeviceThreads["Product"]);
+                    //    Thread.Sleep(100);
+                    //    Application.Current.Dispatcher.Invoke(() =>
+                    //    {
+                    //        Messagestrs.Add($"[{DateTime.Now}]--CAN设备通讯线程加载成功");
+                    //    });
 
-                    }
+                    //}
+
+                    ((ViewModelLocator)Application.Current.FindResource("Locator")).Manual.AddOperateView("Product", GlobalModel.DicDeviceInfo["Product"]);
 
                 }
             }
@@ -401,6 +405,7 @@ namespace IMX.ATS.Manual
                     Messagestrs.Add($"[{DateTime.Now}]--CAN设备卸载成功");
                 });
 
+                ((ViewModelLocator)Application.Current.FindResource("Locator")).Manual.RemoveOperateView("Product");
 
                 //if (!GlobalModel.DicDeviceInfo.TryGetValue("Product", out var candeviceInfo))
                 //{

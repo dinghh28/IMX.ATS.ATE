@@ -151,6 +151,7 @@ namespace IMX.ATS.Manual
             if ((deviceInfo.DeviceOperate as Product_CAN_Operate).IsInitOK)
             {
                 var rlt = issend ? (deviceInfo.DeviceOperate as Product_CAN_Operate).StartCommunication() : (deviceInfo.DeviceOperate as Product_CAN_Operate).StopCommunication();
+
             }
 
             OperationName = issend ? "停止发送" : "发送指令";
@@ -176,6 +177,13 @@ namespace IMX.ATS.Manual
             if ((deviceInfo.DeviceOperate as Product_CAN_Operate).IsInitOK)
             {
                 var rlt = (deviceInfo.DeviceOperate as Product_CAN_Operate).SetReceiveState(isrecvice);
+
+                GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = isrecvice;
+
+                if (!GlobalModel.DicDeviceThreads["Product"].IsRunning)
+                {
+                    ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(GlobalModel.DicDeviceThreads["Product"]);
+                }
             }
 
             RevOperationName = isrecvice ? "停止接收" : "接收报文";

@@ -220,41 +220,48 @@ namespace IMX.ATS.Manual
             //{
             //    thread.IsReceiveData = false;
             //}
-
-            if (thread.DeviceAddress != null)
+            try
             {
-                if (dicDeviceData.ContainsKey(thread.DeviceAddress))
+                if (thread.DeviceAddress != null)
                 {
-                    dicDeviceData.Remove(thread.DeviceAddress);
+                    if (dicDeviceData.ContainsKey(thread.DeviceAddress))
+                    {
+                        dicDeviceData.Remove(thread.DeviceAddress);
+                    }
                 }
-            }
 
-            var lists = Realtimedatas.ToList().Find(x => x.TypeName == thread.DeviceAddress);
+                var lists = Realtimedatas.ToList().Find(x => x.TypeName == thread.DeviceAddress);
 
-            if (lists == null)
-            {
-                lists = new ModRealtimedata
+                if (lists == null)
                 {
-                    TypeName = thread.DeviceAddress,
-                    DeviceType = thread.DeviceType.ToString(),
-                    //Datas = result.Data
-                    Datas = new ObservableCollection<ModDeviceReadData>(),
-                };
-                Realtimedatas.Add(lists);
-            }
-            dicDeviceData.Add(thread.DeviceAddress, lists);
+                    lists = new ModRealtimedata
+                    {
+                        TypeName = thread.DeviceAddress,
+                        DeviceType = thread.DeviceType.ToString(),
+                        //Datas = result.Data
+                        Datas = new ObservableCollection<ModDeviceReadData>(),
+                    };
+                    Realtimedatas.Add(lists);
+                }
+                dicDeviceData.Add(thread.DeviceAddress, lists);
 
-            if (!dicDeviceType.ContainsKey(thread.DeviceAddress))
+                if (!dicDeviceType.ContainsKey(thread.DeviceAddress))
+                {
+                    dicDeviceType.Add(thread.DeviceAddress, thread.DeviceType.ToString().ToUpper());
+                }
+                //dicLastDeviceData.Add(thread.DeviceAddress, lists.Datas.ToList());
+
+                thread.OprateThread = new Thread(RefreshDeviceData) { IsBackground = true };
+
+                thread.ThreadID = Guid.NewGuid().ToString();
+
+                thread.OprateThread.Start(thread);
+            }
+            catch (Exception ex)
             {
-                dicDeviceType.Add(thread.DeviceAddress, thread.DeviceType.ToString().ToUpper());
+                MessageBox.Show(ex.Message);
             }
-            //dicLastDeviceData.Add(thread.DeviceAddress, lists.Datas.ToList());
 
-            thread.OprateThread = new Thread(RefreshDeviceData) { IsBackground = true };
-
-            thread.ThreadID = Guid.NewGuid().ToString();
-
-            thread.OprateThread.Start(thread);
 
 
         }
@@ -263,45 +270,53 @@ namespace IMX.ATS.Manual
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
-            foreach (var item in GlobalModel.DicDeviceInfo)
+            try
             {
-                if (item.Value.DeviceOperate == null) { continue; }
+                foreach (var item in GlobalModel.DicDeviceInfo)
+                {
+                    if (item.Value.DeviceOperate == null) { continue; }
 
-                if (!item.Value.Config.EnableMonitor || !item.Value.DeviceOperate.IsInitOK)
-                {
-                    continue;
-                }
-                //开启设备实时监控
-                if (!GlobalModel.DicDeviceThreads.TryGetValue(item.Key, out DeviceThread thread))
-                {
-                    thread = new DeviceThread
+                    if (!item.Value.Config.EnableMonitor || !item.Value.DeviceOperate.IsInitOK)
                     {
-                        ThreadName = item.Key,
-                        IsStratCommunication = true,
-                        DeviceOperate = item.Value.DeviceOperate,
-                        DeviceAddress = $"{item.Value.Config.DeviceType.GetDescription()}[{item.Value.Config.DeviceModel}]",
-                        DeviceType = item.Value.Args.DeviceType,
-                        DelayTime = item.Value.Drive.DriveConfig.BeforeReadDelayMS,
-                        IsProduct = item.Key.Contains("PRODUCT"),
-                        ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
-                    };
+                        continue;
+                    }
+                    //开启设备实时监控
+                    if (!GlobalModel.DicDeviceThreads.TryGetValue(item.Key, out DeviceThread thread))
+                    {
+                        thread = new DeviceThread
+                        {
+                            ThreadName = item.Key,
+                            IsStratCommunication = true,
+                            DeviceOperate = item.Value.DeviceOperate,
+                            DeviceAddress = $"{item.Value.Config.DeviceType.GetDescription()}[{item.Value.Config.DeviceModel}]",
+                            DeviceType = item.Value.Args.DeviceType,
+                            DelayTime = item.Value.Drive.DriveConfig.BeforeReadDelayMS,
+                            IsProduct = item.Key.Contains("PRODUCT"),
+                            ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
+                        };
 
-                    GlobalModel.DicDeviceThreads.Add(item.Key, thread);
+                        GlobalModel.DicDeviceThreads.Add(item.Key, thread);
+                    }
+
+                    if (item.Value.Drive.DriveConfig.CommunicationType == Device.Common.DriveType.USB)
+                    {
+                        thread.DelayTime = 500;
+                    }
+
+                    thread.DeviceOperate = item.Value.DeviceOperate;
+                    thread.IsStratCommunication = true;
+
+                    if (!thread.IsRunning)
+                    {
+                        StartRefresh(thread);
+                    }
+
                 }
 
-                if (item.Value.Drive.DriveConfig.CommunicationType == Device.Common.DriveType.USB)
-                {
-                    thread.DelayTime = 500;
-                }
-
-                thread.DeviceOperate = item.Value.DeviceOperate;
-                thread.IsStratCommunication = true;
-
-                if (!thread.IsRunning)
-                {
-                    StartRefresh(thread);
-                }
-
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
             //foreach (var thread in GlobalModel.DicDeviceThreads)

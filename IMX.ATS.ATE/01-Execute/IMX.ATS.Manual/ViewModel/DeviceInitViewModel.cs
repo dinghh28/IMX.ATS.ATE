@@ -483,7 +483,7 @@ namespace IMX.ATS.Manual
                              //    ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(thread);
                              //}
 
-                             
+
                          })
 
                          .AttachIfFailed(result1 =>
@@ -564,22 +564,22 @@ namespace IMX.ATS.Manual
                 {
                     var deviceinfo = GlobalModel.DicDeviceInfo[item.Key];
 
-                    if (item.Key == "Product")
-                    {
-                        OperateResult result = GlobalModel.DicDeviceOperate[deviceinfo.DeviceOperate].UnregisterDevice(deviceinfo.DeviceOperate);
+                    //if (item.Key == "Product")
+                    //{
+                    //    OperateResult result = GlobalModel.DicDeviceOperate[deviceinfo.DeviceOperate].UnregisterDevice(deviceinfo.DeviceOperate);
 
-                        if (GlobalModel.DicDeviceOperate[deviceinfo.DeviceOperate].CanRemove)
-                        {
-                            GlobalModel.DicDeviceDrives.Remove(deviceinfo.DeviceOperate.DeviceConfig.DriveConfig.ResourceString);
-                        }
-                        GlobalModel.DicDeviceOperate.Remove(deviceinfo.DeviceOperate);
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
-                        });
-                        Thread.Sleep(100);
-                        continue;
-                    }
+                    //    if (GlobalModel.DicDeviceOperate[deviceinfo.DeviceOperate].CanRemove)
+                    //    {
+                    //        GlobalModel.DicDeviceDrives.Remove(deviceinfo.DeviceOperate.DeviceConfig.DriveConfig.ResourceString);
+                    //    }
+                    //    GlobalModel.DicDeviceOperate.Remove(deviceinfo.DeviceOperate);
+                    //    Application.Current.Dispatcher.Invoke(() =>
+                    //    {
+                    //        dicInitInfo[item.Key].DeviceSate = ResultState.SUCCESS;
+                    //    });
+                    //    Thread.Sleep(100);
+                    //    continue;
+                    //}
 
                     deviceinfo.DeviceOperate.Close().And(deviceinfo.DeviceOperate.UnInit())
                         .And(deviceinfo.Drive.UnregisterDevice(deviceinfo.DeviceOperate))
@@ -606,6 +606,19 @@ namespace IMX.ATS.Manual
                     SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, nameof(DeviceInitViewModel), nameof(CabinetUnInit), ex);
                 }
             }
+
+            if (GlobalModel.DicDeviceInfo["Product"].DeviceOperate != null && GlobalModel.DicDeviceInfo["Product"].DeviceOperate.IsInitOK)
+            {
+                OperateResult result = GlobalModel.DicDeviceInfo["Product"].Drive.UnregisterDevice(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
+
+                if (GlobalModel.DicDeviceInfo["Product"].Drive.CanRemove)
+                {
+                    GlobalModel.DicDeviceDrives.Remove(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.DeviceConfig.DriveConfig.ResourceString);
+                }
+
+            }
+
+
             Thread.Sleep(1000);
             WindowClosedExecute(window);
         }

@@ -120,7 +120,7 @@ namespace IMX.ATS.Manual
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
         {
-            
+
             //base.WindowLoadedExecute(obj);
         }
 

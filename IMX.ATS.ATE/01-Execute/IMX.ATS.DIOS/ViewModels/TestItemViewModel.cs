@@ -23,6 +23,7 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
 using IMX.Common;
@@ -38,6 +39,8 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace IMX.ATS.DIOS
 {
@@ -46,6 +49,48 @@ namespace IMX.ATS.DIOS
         #region 公共属性
 
         #region 界面绑定属性
+
+        #region 进度条属性
+        private Visibility proBarVisily = Visibility.Hidden;
+        /// <summary>
+        /// 进度条显示状态
+        /// </summary>
+        public Visibility ProBarVisily
+        {
+            get => proBarVisily;
+            set => Set(nameof(ProBarVisily), ref proBarVisily, value);
+        }
+
+        private int proBarValue;
+        /// <summary>
+        /// 当前进度
+        /// </summary>
+        public int ProBarValue
+        {
+            get => proBarValue;
+            set => Set(nameof(ProBarValue), ref proBarValue, value);
+        }
+
+        private int proBarMaxValue;
+        /// <summary>
+        /// 进度完成值
+        /// </summary>
+        public int ProBarMaxValue
+        {
+            get => proBarMaxValue;
+            set => Set(nameof(ProBarMaxValue), ref proBarMaxValue, value);
+        }
+
+        private string proBarText;
+        /// <summary>
+        /// 进度条显示文本
+        /// </summary>
+        public string ProBarText
+        {
+            get => proBarText;
+            set => Set(nameof(ProBarText), ref proBarText, value);
+        }
+        #endregion
 
         #region 检索条件
         private string flowname = string.Empty;
@@ -70,11 +115,11 @@ namespace IMX.ATS.DIOS
 
         #endregion
 
-        private ObservableCollection<Test_ItemInfo> datas = new ObservableCollection<Test_ItemInfo>();
+        private ObservableCollection<TestItemModel> datas = new ObservableCollection<TestItemModel>();
         /// <summary>
         /// 测试项数据列表
         /// </summary>
-        public ObservableCollection<Test_ItemInfo> Datas
+        public ObservableCollection<TestItemModel> Datas
         {
             get => datas;
             set => Set(nameof(Datas), ref datas, value);
@@ -96,7 +141,22 @@ namespace IMX.ATS.DIOS
 
         public RelayCommand OpenDatas => new RelayCommand(DatasWindowOpen);
 
+        /// <summary>
+        /// 全选指令
+        /// </summary>
+        public RelayCommand<string> SelectAllCommand => new RelayCommand<string>(SelectAll);
 
+        private void SelectAll(string obj)
+        {
+            if (obj == "C")
+            {
+                SelectAll();
+            }
+            else if (obj == "U")
+            {
+                UnSelectAll();
+            }
+        }
         #endregion
 
         #endregion
@@ -107,9 +167,56 @@ namespace IMX.ATS.DIOS
         /// 数据源（原始数据库内容，为检索原始列表）
         /// </summary>
         private ObservableCollection<Test_ItemInfo> datasources = new ObservableCollection<Test_ItemInfo>();
+
+        private List<int> selectindexs = new List<int>();
         #endregion
 
         #region 私有方法
+
+        #region 全选
+        private void SelectAll()
+        {
+            Datas.ToList().FindAll(model => model.IsSelect = true);
+            for (int i = 0; i < Datas.Count; i++)
+            { selectindexs.Add(i); }
+        }
+
+        private void UnSelectAll()
+        {
+            Datas.ToList().FindAll(model => model.IsSelect = false);
+            selectindexs.Clear();
+        }
+        #endregion
+
+        #region 导出方案
+        private void MulExport() 
+        {
+            if (Datas == null || Datas.Count < 1)
+            {
+                return;
+            }
+
+            List<long> indexes = new List<long>();
+            List<DateTime> Starttimes = new List<DateTime>();
+            List<DateTime> stoptimes = new List<DateTime>();
+            Datas.ToList().FindAll(x => x.IsSelect == true).ForEach(x =>
+            {
+                indexes.Add(x.Data.Id);
+                Starttimes.Add(x.Data.CreateTime);
+                stoptimes.Add(x.Data.UpdateTime);
+            });
+
+            if (indexes.Count == 0) return;
+
+            DialogResult dr = System.Windows.Forms.MessageBox.Show("是否导出所选" + indexes.Count + "项的测试数据？", "询问", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (dr == DialogResult.No) return;
+
+            //设置进度条控件属性
+            proBarValue = 0;
+            proBarMaxValue = indexes.Count;
+        }
+        #endregion
         /// <summary>
         /// 检索测试项
         /// </summary>
@@ -121,7 +228,11 @@ namespace IMX.ATS.DIOS
                 Datas.Clear();
                 for (int i = 0; i < datasources.Count; i++)
                 {
-                    Datas.Add(datasources[i]);
+                    Datas.Add(new TestItemModel 
+                    {
+                        IsSelect = false,
+                        Data = datasources[i]
+                    });
                 }
             }
             else if (string.IsNullOrEmpty(FlowName))
@@ -132,7 +243,11 @@ namespace IMX.ATS.DIOS
                         Datas.Clear();
                         for (int i = 0; i < result.Data.Count; i++)
                         {
-                            Datas.Add(result.Data[i]);
+                            Datas.Add(new TestItemModel
+                            {
+                                IsSelect = false,
+                                Data = result.Data[i]
+                            });
                         }
                     })
                     .AttachIfFailed(result =>
@@ -148,7 +263,11 @@ namespace IMX.ATS.DIOS
                             Datas.Clear();
                             for (int i = 0; i < result.Data.Count; i++)
                             {
-                                Datas.Add(result.Data[i]);
+                                Datas.Add(new TestItemModel
+                                {
+                                    IsSelect = false,
+                                    Data = result.Data[i]
+                                });
                             }
                         })
                         .AttachIfFailed(result =>
@@ -169,7 +288,7 @@ namespace IMX.ATS.DIOS
             }
             int index = SelectIndex;
 
-            Test_ItemInfo item = Datas[index];
+            Test_ItemInfo item = Datas[index].Data;
 
            var result =  DBOperate.Default.GetTestDataCount(item.Id, item.CreateTime, item.UpdateTime.AddSeconds(1));
 
@@ -184,7 +303,6 @@ namespace IMX.ATS.DIOS
             var view = new TestDatasView
             {
               DataContext = model,
-              Topmost = true,
             };
             view.Show();
         }
@@ -207,7 +325,12 @@ namespace IMX.ATS.DIOS
                 {
                     for (int i = 0; i < result.Data.Count; i++)
                     {
-                        Datas.Add(result.Data[i]);
+                        TestItemModel testinfomodel = new TestItemModel
+                        {
+                            IsSelect = false,
+                            Data = result.Data[i],
+                        };
+                        Datas.Add(testinfomodel);
                         datasources.Add(result.Data[i]);
                     }
                 })
@@ -228,6 +351,32 @@ namespace IMX.ATS.DIOS
         #region 构造方法
         public TestItemViewModel() { }
         #endregion
+    }
 
+    /// <summary>
+    /// 测试项页面展示类
+    /// </summary>
+    public class TestItemModel :ViewModelBase
+    {
+        private bool isselect = false;
+        /// <summary>
+        /// 当前选中状态
+        /// </summary>
+        public bool IsSelect
+        {
+            get => isselect;
+            set => Set(nameof(IsSelect), ref isselect, value);
+        }
+
+
+        private Test_ItemInfo data;
+        /// <summary>
+        /// 测试项数据列表
+        /// </summary>
+        public Test_ItemInfo Data
+        {
+            get => data;
+            set => Set(nameof(Data), ref data, value);
+        }
     }
 }

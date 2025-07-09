@@ -373,7 +373,7 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_ProjectInfo>().ToList();
+                var items = Sqlite.Select<Test_ProjectInfo>().Where(x => !x.IsDeleted).ToList();
                 return OperateResult<List<Test_ProjectInfo>>.Succeed(items);
             }
             catch (Exception ex)
@@ -1672,7 +1672,9 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id && x.IsDeleted == false).ToList(x => x.FunctionName);
+                var items = Sqlite.Select<Test_Process>()
+                    .Where(x => x.ProjectID == id && x.IsDeleted == false)
+                    .ToList(x => x.FunctionName);
 
                 return OperateResult<List<string>>.Succeed(items);
             }
@@ -1757,7 +1759,9 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_Process>().Where(x => x.ProjectID == id && x.FunctionName == funcname).ToOne(x => x.Test_Flows) ?? new List<ModTestProcess>();
+                var items = Sqlite.Select<Test_Process>()
+                    .Where(x => x.ProjectID == id && !x.IsDeleted && x.FunctionName == funcname)
+                    .ToOne(x => x.Test_Flows) ?? new List<ModTestProcess>();
 
                 return OperateResult<List<ModTestProcess>>.Succeed(items);
             }
@@ -1885,6 +1889,8 @@ namespace IMX.DB
                 $"    Test_Process\n" +
                 $"WHERE\n" +
                 $"    ProjectID = {id}\n" +
+                $"AND\n"+
+                $"    IsDeleted = false\n" +
                 $"    AND\n" +
                 $"    (\n";
 
@@ -2000,6 +2006,60 @@ namespace IMX.DB
             {
                 LastError = ex.GetMessage();
                 Logger.Error(nameof(DBOperate), nameof(DeleteProcess), LastError);
+                return OperateResult.Excepted(ex);
+            }
+        }
+
+        /// <summary>
+        /// 试验项计算和自定义部分调试
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="funcname"></param>
+        /// <param name="usecalculate"></param>
+        /// <param name="calculatedata"></param>
+        /// <param name="usecostomread"></param>
+        /// <param name="costomreaddata"></param>
+        /// <returns></returns>
+        public OperateResult UpdateTestProccessSaveData(
+            int id, 
+            string funcname, 
+            bool usecalculate,
+            List<ModTestDataInfo> calculatedata,
+            bool usecostomread,
+            List<ModTestDataInfo> costomreaddata)
+        {
+            if (!IsInitOK)
+            {
+                LastError = $"数据库未初始化";
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
+                return OperateResult.Failed(LastError);
+            }
+
+            try
+            {
+                int row = Sqlite.Update<Test_Process>()
+                            .Where(x => x.ProjectID == id && x.FunctionName == funcname)
+                            .Set(x => x.UseCalculateData, usecalculate)
+                            .Set(x => x.Test_CalculateData, calculatedata)
+                            .Set(x => x.UseCustomData, usecostomread)
+                            .Set(x => x.Test_CustomData, costomreaddata)
+                            .Set(x => x.UpdateTime, DateTime.Now)
+                            .Set(x => x.UpdateOperator, UpdateOperator)
+                            .ExecuteAffrows();
+
+                if (row < 1)
+                {
+                    LastError = $"测试项 【{funcname}】 存储数据 未实际发生变更";
+                    Logger.Error(nameof(DBOperate), nameof(UpdateProcess), LastError);
+                    return OperateResult.Failed(LastError);
+                }
+
+                return OperateResult.Succeed();
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.GetMessage();
+                Logger.Error(nameof(DBOperate), nameof(InsertTestProccess), LastError);
                 return OperateResult.Excepted(ex);
             }
         }

@@ -47,6 +47,9 @@ using MessageBox = System.Windows.Forms.MessageBox;
 using FastDeepCloner;
 using Force.DeepCloner;
 using IMX.Common;
+using Application = System.Windows.Application;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using IMX.Logger;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -205,10 +208,6 @@ namespace IMX.ATS.ATEConfig
         /// 试验方案删除指令
         /// </summary>
         public RelayCommand Delete => new RelayCommand(DeleteTestFlow);
-
-
-
-
         #endregion
 
         /// <summary>
@@ -578,6 +577,7 @@ namespace IMX.ATS.ATEConfig
         {
             if (string.IsNullOrEmpty(SolutionName))
             {
+                FunctionInfos.Clear();
                 return;
             }
 
@@ -660,7 +660,19 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         private void UpdataedTestFlow()
         {
-            if (System.Windows.MessageBox.Show($"是否更新当前【{SolutionName}】测试流程！", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel) return;
+            if (FunctionInfos.Count < 1)
+            {
+                MessageBox.Show("请先配置测试项步骤再保存", "无法更新保存测试项");
+                return;
+            }
+
+            if (string.IsNullOrEmpty(SolutionName))
+            {
+                MessageBox.Show("请选择需要保存的测试项", "无法更新保存测试项");
+                return;
+            }
+
+            if (MessageBox.Show($"是否更新当前【{SolutionName}】测试流程！", "提示", MessageBoxButtons.OKCancel) == DialogResult.Cancel) return;
 
             List<ModTestProcess> mod = new List<ModTestProcess>();
 
@@ -685,29 +697,64 @@ namespace IMX.ATS.ATEConfig
             }
 
             #region 调试数据存储
-            //var config = SupportConfig.DicProcessConfig[SolutionName];
+#if DEBUG
+            var config = SupportConfig.DicProcessConfig[SolutionName];
 
-            //List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
-            //List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
-            //List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
-            //List<ModTestDataInfo> prosetdata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
+            List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
+            List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> prosetdata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> costomreaddata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> calculatedata = new List<ModTestDataInfo>();
+
+            for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+            {
+                proreaddata.Add(new ModTestDataInfo { Name = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i].Custom_Name });
+            }
+
+            for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCSendSignals.Count; i++)
+            {
+                var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
+                if (signal.Custom_Name != signal.Signal_Name)
+                {
+                    prosetdata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
+                }
+            }
+
+            if (config.UseCustomData)
+            {
+                costomreaddata.AddRange(config.Test_CustomData);
+            }
+
+            if (config.UseCalculate)
+            {
+                calculatedata.AddRange(config.Test_CalculateData);
+                if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+                {
+                    calculatedata.AddRange(config.Test_CalculateDataEX);
+                }
+            }
+
+
+            if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+            {
+                eupreaddata.AddRange(config.Test_ReadData_EX);
+                eupsetdata.AddRange(config.Test_SetData_Ex);
+            }
+
+            DBOperate.Default.UpdateTestProccessSaveData(projectid, SolutionName,
+                eupreaddata, eupsetdata,
+                proreaddata, prosetdata,
+                config.UseCalculate, calculatedata,
+                config.UseCustomData, costomreaddata);
+#endif
+#endregion
+
+            //#region 调试计算值和用户自定义上报信息状态存储
+            //var config = SupportConfig.DicProcessConfig[SolutionName];
             //List<ModTestDataInfo> costomreaddata = new List<ModTestDataInfo>();
             //List<ModTestDataInfo> calculatedata = new List<ModTestDataInfo>();
-
-            //for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
-            //{
-            //    proreaddata.Add(new ModTestDataInfo { Name = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i].Custom_Name });
-            //}
-
-            //for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCSendSignals.Count; i++)
-            //{
-            //    var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
-            //    if (signal.Custom_Name != signal.Signal_Name)
-            //    {
-            //        prosetdata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
-            //    }
-            //}
-
             //if (config.UseCustomData)
             //{
             //    costomreaddata.AddRange(config.Test_CustomData);
@@ -716,31 +763,27 @@ namespace IMX.ATS.ATEConfig
             //if (config.UseCalculate)
             //{
             //    calculatedata.AddRange(config.Test_CalculateData);
-            //    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+            //    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
             //    {
             //        calculatedata.AddRange(config.Test_CalculateDataEX);
             //    }
             //}
 
-
-            //if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
-            //    || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
-            //{
-            //    eupreaddata.AddRange(config.Test_ReadData_EX);
-            //    eupsetdata.AddRange(config.Test_SetData_Ex);
-            //}
-
             //DBOperate.Default.UpdateTestProccessSaveData(projectid, SolutionName,
-            //    eupreaddata, eupsetdata,
-            //    proreaddata, prosetdata,
             //    config.UseCalculate, calculatedata,
             //    config.UseCustomData, costomreaddata);
-            #endregion
+            //#endregion
 
             DBOperate.Default.UpdateProcess(projectid, SolutionName, mod)
             
                              .AttachIfSucceed(result =>
                              {
+                                 var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).TestProgramme;
+                                 if (!model.ProcessNames.Contains(SolutionName))
+                                 {
+                                     model.ProcessNames.Add(SolutionName);
+                                 }
+
                                  MessageBox.Show($"配置信息保存成功");
                              })
                              .AttachIfFailed(result =>
@@ -762,7 +805,7 @@ namespace IMX.ATS.ATEConfig
                 {
                     model.IsOpen = false;
                 }
-                if (model.IsOpen) 
+                if (model.IsOpen)
                 {
                     MessageBox.Show($"界面已打，请勿重复操作！", "界面提示", MessageBoxButtons.OK, MessageBoxIcon.Information); return;
                 }
@@ -778,6 +821,202 @@ namespace IMX.ATS.ATEConfig
                 newwindow.Show();
 
             }));
+        }
+
+        /// <summary>
+        /// 保存测试项
+        /// </summary>
+        /// <param name="SchemeName">测试项名称</param>
+        /// <returns></returns>
+        private OperateResult SaveScheme(string SchemeName, List<ModTestProcess> mod)
+        {
+            try
+            {
+                int id = GlobalModel.Test_ProjectInfo.Id;
+                //List<string> SchemeNames = SolutionNames.ToList();
+
+                //List<ModTestProcess> mod = new List<ModTestProcess>();
+
+                //for (int i = 0; i < FunctionInfos?.Count; i++)
+                //{
+                //    FunctionInfo item = FunctionInfos[i];
+                //    OperateResult<string> result = item.Model.Func.Config.ToJson();
+
+                //    mod.Add(new ModTestProcess
+                //    {
+
+                //        Step = item.Step,
+                //        CustomName = item.CutomFuncName,
+                //        Description = item.Content,
+                //        FuntionName = item.FunctionName,
+                //        Type = item.ModType.ToString(),
+                //        Funtion = result ? result.Data : string.Empty,
+                //    });
+                //}
+
+                var config = SupportConfig.DicProcessConfig[SchemeName];
+                #region 试验存储数据加载
+                List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
+                List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
+                List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
+                List<ModTestDataInfo> prosetdata = new List<ModTestDataInfo>();
+                List<ModTestDataInfo> costomreaddata = new List<ModTestDataInfo>();
+                List<ModTestDataInfo> calculatedata = new List<ModTestDataInfo>();
+
+                for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+                {
+                    proreaddata.Add(new ModTestDataInfo { Name = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i].Custom_Name });
+                }
+
+                for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCSendSignals.Count; i++)
+                {
+                    var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
+                    if (signal.Custom_Name != signal.Signal_Name)
+                    {
+                        proreaddata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
+                    }
+                }
+
+                if (config.UseCustomData)
+                {
+                    costomreaddata.AddRange(config.Test_CustomData);
+                }
+
+                if (config.UseCalculate)
+                {
+                    calculatedata.AddRange(config.Test_CalculateData);
+                    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+                    {
+                        calculatedata.AddRange(config.Test_CalculateDataEX);
+                    }
+                }
+
+                if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+                {
+                    eupreaddata.AddRange(config.Test_ReadData_EX);
+                    eupsetdata.AddRange(config.Test_SetData_Ex);
+                }
+                #endregion
+
+                return DBOperate.Default.InsertTestProccess(new Test_Process
+                {
+                    ProjectID = id,
+                    FunctionName = SchemeName,
+                    Description = SchemeName,
+                    Test_Flows = mod,
+                    Test_ReadData_Euq = eupreaddata,
+                    Test_ReadData_Pro = proreaddata,
+                    Test_SetData_Euq = eupsetdata,
+                    Test_SetData_Pro = prosetdata,
+                    Test_CustomData = costomreaddata,
+                    UseCustomData = config.UseCustomData,
+                    UseCalculateData = config.UseCalculate,
+                    Test_CalculateData = calculatedata,
+                });
+                //return DBOperate.Default.InsertTestProccess(new Test_Process
+                //{
+                //    ProjectID = id,
+                //    FunctionName = SchemeName,
+                //    Test_Flows = mod,
+
+                //    //UpdateOperator = GlobalModel.UserInfo?.UserName,
+                //});
+            }
+            catch (Exception ex)
+            {
+                SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, "ATE导入", nameof(SaveScheme), ex);
+                return OperateResult.Failed(ex.GetMessage());
+            }
+        }
+
+        /// <summary>
+        /// 删除流程
+        /// </summary>
+        private void DeleteTestFlow()
+        {
+            if (MessageBox.Show($"确认是否删除【{SolutionName}】试验项", "删除试验项", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                DBOperate.Default.DeleteProcess(projectid, SolutionName)
+                 .AttachIfSucceed(result =>
+                 {
+                     MessageBox.Show($"【{SolutionName}】试验项删除成功");
+                     GetTestSolutions();
+                     var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).TestProgramme;
+                     model.ProcessNames.Remove(SolutionName);
+                 })
+                 .AttachIfFailed(result =>
+                 {
+                     MessageBox.Show($"试验项删除成功:{result.Message}", "异常");
+                 });
+            }
+        }
+#endregion
+
+        #region 导入/导出测试项
+
+        /// <summary>
+        /// 导入流程
+        /// </summary>
+        private void ImportTestFlow()
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    InitialDirectory = Environment.CurrentDirectory,
+                    Filter = "ATE配置文件 (*.ATE)|*.ATE"
+                };
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string souname = openFileDialog.FileName.Split('_')[1];
+
+                    if (SolutionNames.Contains(souname))
+                    {
+                        MessageBox.Show("测试项已存在，请勿重复导入", "导入试验项配置失败");
+                        return;
+                    }
+
+                    if (!SupportConfig.TestTestProcess.Contains(souname))
+                    {
+                        MessageBox.Show("该测试项目不符合需求，请确认后重新导入", "导入试验项配置失败");
+                        return;
+                    }
+
+                    string filePath = openFileDialog.FileName;
+                    string infos = System.IO.File.ReadAllText(filePath);
+                    GlobalModel.NowProcessName = souname;
+                    var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
+                    //for (int i = 0; i < functions?.Count; i++)
+                    //{
+                    //    CreatFunction(functions[i]);
+                    //}
+                    SaveScheme(souname,functions).AttachIfSucceed(result =>
+                    {
+                        DicDescription.Add(souname, souname);
+                        SolutionNames.Add(souname);
+                        SolutionName = souname;
+                        GlobalModel.NowProcessName = souname;
+                        //var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).TestProgramme;
+                        //model.ProcessNames.Add(souname);
+
+                        //Thread.Sleep(100);
+                        //FunctionInfos.Clear();
+                        //var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
+                        //for (int i = 0; i < functions?.Count; i++)
+                        //{
+                        //    CreatFunction(functions[i]);
+                        //}
+
+                        MessageBox.Show($"{souname} 已导入共{functions?.Count}步配置\r\n请确认步骤中的产品指令下发模板是否于当前项目一致，确认完成后进行更新保存", "配置导入完成");
+                    }).AttachIfFailed(result => { MessageBox.Show(result.Message, "配置导入失败"); });
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"ATE配置文件本地导入异常:{ex.GetMessage()}", "导入配置异常");
+            }
         }
 
         /// <summary>
@@ -834,137 +1073,9 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show($"ATE配置文件本地写入异常:{ex.GetMessage()}", "导出配置异常");
             }
         }
-
-        /// <summary>
-        /// 导入流程
-        /// </summary>
-        private void ImportTestFlow()
-        {
-            try
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog
-                {
-                    InitialDirectory = Environment.CurrentDirectory,
-                    Filter = "ATE配置文件 (*.ATE)|*.ATE"
-                };
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string souname = openFileDialog.FileName.Split('_')[1];
-
-                    if (SolutionNames.Contains(souname))
-                    {
-                        //List<string> repeatname = SolutionNames.ToList().FindAll(x => x.Contains(souname));
-
-                        //for (int i = 1; i <= repeatname?.Count; i++)
-                        //{
-                        //    if (!repeatname.Contains($"{souname}_{i}"))
-                        //    {
-                        //        souname = $"{souname}_{i}";
-                        //        break;
-                        //    }
-                        //}
-
-                        MessageBox.Show("测试项已存在，请勿重复导入","导入试验项配置失败");
-                    }
-
-                    if (!SupportConfig.TestTestProcess.Contains(souname)) 
-                    {
-                        MessageBox.Show("该测试项目不符合需求，请确认后重新导入", "导入试验项配置失败");
-                    }
-
-                    string filePath = openFileDialog.FileName;
-                    string infos = System.IO.File.ReadAllText(filePath);
-                    FunctionInfos.Clear();
-                    var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
-                    for (int i = 0; i < functions?.Count; i++)
-                    {
-                        CreatFunction(functions[i]);
-                    }
-
-                    SaveScheme(souname).AttachIfSucceed(result =>
-                    {
-                        SolutionNames.Add(souname);
-                        SolutionName = souname;
-                        MessageBox.Show($"{souname} 已导入共{functions?.Count}步配置", "配置导入完成");
-                    }).AttachIfFailed(result => { MessageBox.Show(result.Message, "配置导入失败"); })
-                        ;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"ATE配置文件本地导入异常:{ex.GetMessage()}", "导入配置异常");
-            }
-        }
-
-        /// <summary>
-        /// 保存测试项
-        /// </summary>
-        /// <param name="SchemeName">测试项名称</param>
-        /// <returns></returns>
-        private OperateResult SaveScheme(string SchemeName)
-        {
-            try
-            {
-                int id = GlobalModel.Test_ProjectInfo.Id;
-                //List<string> SchemeNames = SolutionNames.ToList();
-
-                List<ModTestProcess> mod = new List<ModTestProcess>();
-
-                for (int i = 0; i < FunctionInfos?.Count; i++)
-                {
-                    FunctionInfo item = FunctionInfos[i];
-                    OperateResult<string> result = item.Model.Func.Config.ToJson();
-
-                    mod.Add(new ModTestProcess
-                    {
-
-                        Step = item.Step,
-                        CustomName = item.CutomFuncName,
-                        Description = item.Content,
-                        FuntionName = item.FunctionName,
-                        Type = item.ModType.ToString(),
-                        Funtion = result ? result.Data : string.Empty,
-                    });
-                }
-
-                return DBOperate.Default.InsertTestProccess(new Test_Process
-                {
-                    ProjectID = id,
-                    FunctionName = SchemeName,
-                    Test_Flows = mod,
-
-                    //UpdateOperator = GlobalModel.UserInfo?.UserName,
-                });
-            }
-            catch (Exception ex)
-            {
-                return OperateResult.Excepted(ex);
-            }
-        }
-
-        /// <summary>
-        /// 删除流程
-        /// </summary>
-        private void DeleteTestFlow()
-        {
-            if (MessageBox.Show($"确认是否删除【{SolutionName}】试验项", "删除试验项", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
-            {
-                DBOperate.Default.DeleteProcess(projectid, SolutionName)
-                 .AttachIfSucceed(result =>
-                 {
-                     MessageBox.Show($"【{SolutionName}】试验项删除成功");
-                     GetTestSolutions();
-                 })
-                 .AttachIfFailed(result =>
-                 {
-                     MessageBox.Show($"试验项删除成功:{result.Message}", "异常");
-                 });
-            }
-        }
         #endregion
 
-        #endregion
+#endregion
 
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)

@@ -89,10 +89,12 @@
                                     <!--IsChecked="{Binding DataContext.IsSelectAll,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource AncestorType=Window, AncestorLevel=1 }}">-->
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Checked">
-                                            <i:InvokeCommandAction  Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}},Path= DataContext.SelectAllCommand }"/>
+                                            <i:InvokeCommandAction  Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}},Path= DataContext.SelectAllCommand }"
+                                                                    CommandParameter="C"/>
                                         </i:EventTrigger>
                                         <i:EventTrigger EventName="Unchecked">
-                                            <i:InvokeCommandAction Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}},Path= DataContext.SelectAllCommand }"/>
+                                            <i:InvokeCommandAction Command="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}},Path= DataContext.SelectAllCommand }"
+                                                                   CommandParameter="U"/>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </CheckBox>
@@ -105,21 +107,24 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="测试项名称" IsReadOnly="True"
-                                            Binding="{Binding FlowName}"/>
+                                            Binding="{Binding Data.FlowName}"/>
                         <DataGridTextColumn Header="试验开始时间" IsReadOnly="True"
-                                            Binding="{Binding CreateTime}"/>
+                                            Binding="{Binding Data.CreateTime}"/>
                         <DataGridTextColumn Header="试验结束时间" IsReadOnly="True"
-                                            Binding="{Binding UpdateTime}"/>
+                                            Binding="{Binding Data.UpdateTime}"/>
                         <DataGridTextColumn Header="试验实际运行时间" IsReadOnly="True"
-                                            Binding="{Binding ActualRunTime}"/>
+                                            Binding="{Binding Data.ActualRunTime}"/>
                         <DataGridTextColumn Header="操作人员" IsReadOnly="True"
-                                            Binding="{Binding Operator}"/>
+                                            Binding="{Binding Data.Operator}"/>
                         <DataGridTextColumn Header="试验结果" IsReadOnly="True"
-                                            Binding="{Binding Result, Converter={StaticResource IconConverter}}"/>
+                                            Binding="{Binding Data.Result, Converter={StaticResource IconConverter}}"/>
                         <DataGridTextColumn Header="故障信息" IsReadOnly="True"
-                                            Binding="{Binding ErrorInfo}"/>
+                                            Binding="{Binding Data.ErrorInfo}"/>
                     </DataGrid.Columns>
                 </DataGrid>
+                <ProgressBar Grid.Row="2" Width="300" Height="20" IsIndeterminate="True" Minimum="0"  ToolTip="{Binding ProBarText}" 
+                Value="{Binding ProBarValue}" Visibility="{Binding ProBarVisily}" Maximum="{Binding ProBarMaxValue}"/>
+                <TextBlock  Grid.Column="2" Text="{Binding ProBarText}" Visibility="{Binding ProBarVisily}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Grid>
 
         </GroupBox>

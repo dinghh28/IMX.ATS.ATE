@@ -373,7 +373,7 @@ namespace IMX.DB
             }
             try
             {
-                var items = Sqlite.Select<Test_ProjectInfo>().ToList();
+                var items = Sqlite.Select<Test_ProjectInfo>().Where(x => !x.IsDeleted).ToList();
                 return OperateResult<List<Test_ProjectInfo>>.Succeed(items);
             }
             catch (Exception ex)
@@ -1889,6 +1889,8 @@ namespace IMX.DB
                 $"    Test_Process\n" +
                 $"WHERE\n" +
                 $"    ProjectID = {id}\n" +
+                $"AND\n"+
+                $"    IsDeleted = false\n" +
                 $"    AND\n" +
                 $"    (\n";
 

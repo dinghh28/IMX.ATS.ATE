@@ -1224,7 +1224,7 @@ namespace IMX.ATS.ATEConfig
             },
             #endregion
             #region 输出效率（DCDC）
-            {"输出效率（DCDC））", new ProcessConfig_EX
+            {"输出效率（DCDC）", new ProcessConfig_EX
                                 {
                                     Name = "输出效率（DCDC）",
                                     UseCalculate = true,

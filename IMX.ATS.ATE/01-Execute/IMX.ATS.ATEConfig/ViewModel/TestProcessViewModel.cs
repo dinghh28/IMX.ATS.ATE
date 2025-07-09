@@ -49,6 +49,7 @@ using Force.DeepCloner;
 using IMX.Common;
 using Application = System.Windows.Application;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using IMX.Logger;
 
 namespace IMX.ATS.ATEConfig
 {
@@ -576,6 +577,7 @@ namespace IMX.ATS.ATEConfig
         {
             if (string.IsNullOrEmpty(SolutionName))
             {
+                FunctionInfos.Clear();
                 return;
             }
 
@@ -695,57 +697,59 @@ namespace IMX.ATS.ATEConfig
             }
 
             #region 调试数据存储
-            //var config = SupportConfig.DicProcessConfig[SolutionName];
+#if DEBUG
+            var config = SupportConfig.DicProcessConfig[SolutionName];
 
-            //List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
-            //List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
-            //List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
-            //List<ModTestDataInfo> prosetdata = new List<ModTestDataInfo>();
-            //List<ModTestDataInfo> costomreaddata = new List<ModTestDataInfo>();
-            //List<ModTestDataInfo> calculatedata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;
+            List<ModTestDataInfo> eupsetdata = config.Test_SetData_Euq;
+            List<ModTestDataInfo> proreaddata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> prosetdata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> costomreaddata = new List<ModTestDataInfo>();
+            List<ModTestDataInfo> calculatedata = new List<ModTestDataInfo>();
 
-            //for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
-            //{
-            //    proreaddata.Add(new ModTestDataInfo { Name = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i].Custom_Name });
-            //}
+            for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+            {
+                proreaddata.Add(new ModTestDataInfo { Name = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i].Custom_Name });
+            }
 
-            //for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCSendSignals.Count; i++)
-            //{
-            //    var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
-            //    if (signal.Custom_Name != signal.Signal_Name)
-            //    {
-            //        prosetdata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
-            //    }
-            //}
+            for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCSendSignals.Count; i++)
+            {
+                var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
+                if (signal.Custom_Name != signal.Signal_Name)
+                {
+                    prosetdata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
+                }
+            }
 
-            //if (config.UseCustomData)
-            //{
-            //    costomreaddata.AddRange(config.Test_CustomData);
-            //}
+            if (config.UseCustomData)
+            {
+                costomreaddata.AddRange(config.Test_CustomData);
+            }
 
-            //if (config.UseCalculate)
-            //{
-            //    calculatedata.AddRange(config.Test_CalculateData);
-            //    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
-            //    {
-            //        calculatedata.AddRange(config.Test_CalculateDataEX);
-            //    }
-            //}
+            if (config.UseCalculate)
+            {
+                calculatedata.AddRange(config.Test_CalculateData);
+                if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three)
+                {
+                    calculatedata.AddRange(config.Test_CalculateDataEX);
+                }
+            }
 
 
-            //if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
-            //    || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
-            //{
-            //    eupreaddata.AddRange(config.Test_ReadData_EX);
-            //    eupsetdata.AddRange(config.Test_SetData_Ex);
-            //}
+            if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+            {
+                eupreaddata.AddRange(config.Test_ReadData_EX);
+                eupsetdata.AddRange(config.Test_SetData_Ex);
+            }
 
-            //DBOperate.Default.UpdateTestProccessSaveData(projectid, SolutionName,
-            //    eupreaddata, eupsetdata,
-            //    proreaddata, prosetdata,
-            //    config.UseCalculate, calculatedata,
-            //    config.UseCustomData, costomreaddata);
-            #endregion
+            DBOperate.Default.UpdateTestProccessSaveData(projectid, SolutionName,
+                eupreaddata, eupsetdata,
+                proreaddata, prosetdata,
+                config.UseCalculate, calculatedata,
+                config.UseCustomData, costomreaddata);
+#endif
+#endregion
 
             //#region 调试计算值和用户自定义上报信息状态存储
             //var config = SupportConfig.DicProcessConfig[SolutionName];
@@ -824,31 +828,31 @@ namespace IMX.ATS.ATEConfig
         /// </summary>
         /// <param name="SchemeName">测试项名称</param>
         /// <returns></returns>
-        private OperateResult SaveScheme(string SchemeName)
+        private OperateResult SaveScheme(string SchemeName, List<ModTestProcess> mod)
         {
             try
             {
                 int id = GlobalModel.Test_ProjectInfo.Id;
                 //List<string> SchemeNames = SolutionNames.ToList();
 
-                List<ModTestProcess> mod = new List<ModTestProcess>();
+                //List<ModTestProcess> mod = new List<ModTestProcess>();
 
-                for (int i = 0; i < FunctionInfos?.Count; i++)
-                {
-                    FunctionInfo item = FunctionInfos[i];
-                    OperateResult<string> result = item.Model.Func.Config.ToJson();
+                //for (int i = 0; i < FunctionInfos?.Count; i++)
+                //{
+                //    FunctionInfo item = FunctionInfos[i];
+                //    OperateResult<string> result = item.Model.Func.Config.ToJson();
 
-                    mod.Add(new ModTestProcess
-                    {
+                //    mod.Add(new ModTestProcess
+                //    {
 
-                        Step = item.Step,
-                        CustomName = item.CutomFuncName,
-                        Description = item.Content,
-                        FuntionName = item.FunctionName,
-                        Type = item.ModType.ToString(),
-                        Funtion = result ? result.Data : string.Empty,
-                    });
-                }
+                //        Step = item.Step,
+                //        CustomName = item.CutomFuncName,
+                //        Description = item.Content,
+                //        FuntionName = item.FunctionName,
+                //        Type = item.ModType.ToString(),
+                //        Funtion = result ? result.Data : string.Empty,
+                //    });
+                //}
 
                 var config = SupportConfig.DicProcessConfig[SchemeName];
                 #region 试验存储数据加载
@@ -921,7 +925,8 @@ namespace IMX.ATS.ATEConfig
             }
             catch (Exception ex)
             {
-                return OperateResult.Excepted(ex);
+                SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, "ATE导入", nameof(SaveScheme), ex);
+                return OperateResult.Failed(ex.GetMessage());
             }
         }
 
@@ -946,7 +951,7 @@ namespace IMX.ATS.ATEConfig
                  });
             }
         }
-        #endregion
+#endregion
 
         #region 导入/导出测试项
 
@@ -982,7 +987,12 @@ namespace IMX.ATS.ATEConfig
                     string filePath = openFileDialog.FileName;
                     string infos = System.IO.File.ReadAllText(filePath);
                     GlobalModel.NowProcessName = souname;
-                    SaveScheme(souname).AttachIfSucceed(result =>
+                    var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
+                    //for (int i = 0; i < functions?.Count; i++)
+                    //{
+                    //    CreatFunction(functions[i]);
+                    //}
+                    SaveScheme(souname,functions).AttachIfSucceed(result =>
                     {
                         DicDescription.Add(souname, souname);
                         SolutionNames.Add(souname);
@@ -991,15 +1001,15 @@ namespace IMX.ATS.ATEConfig
                         //var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).TestProgramme;
                         //model.ProcessNames.Add(souname);
 
-                        Thread.Sleep(100);
-                        FunctionInfos.Clear();
-                        var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
-                        for (int i = 0; i < functions?.Count; i++)
-                        {
-                            CreatFunction(functions[i]);
-                        }
+                        //Thread.Sleep(100);
+                        //FunctionInfos.Clear();
+                        //var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
+                        //for (int i = 0; i < functions?.Count; i++)
+                        //{
+                        //    CreatFunction(functions[i]);
+                        //}
 
-                        MessageBox.Show($"{souname} 已导入共{functions?.Count}步配置", "配置导入完成");
+                        MessageBox.Show($"{souname} 已导入共{functions?.Count}步配置\r\n请确认步骤中的产品指令下发模板是否于当前项目一致，确认完成后进行更新保存", "配置导入完成");
                     }).AttachIfFailed(result => { MessageBox.Show(result.Message, "配置导入失败"); });
                 }
             }
@@ -1065,7 +1075,7 @@ namespace IMX.ATS.ATEConfig
         }
         #endregion
 
-        #endregion
+#endregion
 
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)

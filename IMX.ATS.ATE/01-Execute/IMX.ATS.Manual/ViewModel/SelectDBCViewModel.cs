@@ -186,6 +186,7 @@ namespace IMX.ATS.Manual
                 GlobalModel.CANThread.DicMessageSet = dicsendmessages;
                 GlobalModel.CANThread.DicSendSignals_CAN = dicsendsignal;
 
+                ((ViewModelLocator)Application.Current.FindResource("Locator")).Product.LoadSendMessage();
                 WindowClosedExecute(Win);
 
             }

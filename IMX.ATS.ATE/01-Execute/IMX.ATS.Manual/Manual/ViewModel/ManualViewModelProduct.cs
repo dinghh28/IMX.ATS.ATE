@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using H.WPF.Framework;
 using IMX.Device.Base;
 using IMX.Device.Base.DeviceInerfaces;
@@ -251,6 +252,34 @@ namespace IMX.ATS.Manual
                 });
         }
 
+        public void LoadSendMessage()
+        {
+            if (GlobalModel.CANThread.TestDBCconfig.Test_DBCSendSignals == null)
+            {
+                MessageBox.Show($"产品下发信号为空！");
+                return;
+            }
+
+            SendSignals.Clear();
+            foreach (var signal in GlobalModel.CANThread.TestDBCconfig.Test_DBCSendSignals)
+            {
+                SendSignals.Add(new SendSignalModel
+                {
+                    IsSelected=false,
+                    DBCSignal=new DBCSendSignal
+                    {
+                        CustomName = signal.Custom_Name,
+                        MessageName = signal.MessageName,
+                        MessageID = signal.Message_ID,
+                        SignalName = signal.Signal_Name,
+                        SignalValue = signal.SignalInitValue,
+                    }
+                });
+
+            }
+
+        }
+
         //private void GetCommunicationState(string state, bool issend)
         //{
         //    if (issend)
@@ -344,8 +373,11 @@ namespace IMX.ATS.Manual
 
         protected override void WindowLoadedExecute(object obj)
         {
+            //LoadSendMessage();
             //base.WindowLoadedExecute(obj);
         }
+
+
 
         protected override void WindowClosedExecute(object obj)
         {
@@ -355,6 +387,10 @@ namespace IMX.ATS.Manual
         #endregion
 
         #region 构造函数
+        public ManualViewModelProduct()
+        {
+
+        }
 
         #endregion
     }

@@ -5,6 +5,7 @@ using IMX.ATS.DBCConfig;
 using IMX.Common;
 using IMX.Device.Common;
 using IMX.Logger;
+using IMX.WPF.Resource;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;
@@ -61,6 +62,16 @@ namespace IMX.ATS.Manual
             get => btnShow;
             set => Set(nameof(BtnShow), ref btnShow, value);
         }
+
+        private Visibility closeStrShow = Visibility.Collapsed;
+
+        //关闭蒙版
+        public Visibility CloseStrShow
+        {
+            get => closeStrShow;
+            set => Set(nameof(CloseStrShow), ref closeStrShow, value);
+        }
+
         #endregion
 
         #region 界面绑定指令
@@ -108,6 +119,11 @@ namespace IMX.ATS.Manual
         /// </summary>
         private Dictionary<string, string> dicDeviceType = new Dictionary<string, string>();
 
+        /// <summary>
+        /// 当前窗口
+        /// </summary>
+        private Window Win = null;
+
         #endregion
 
         #region 私有方法
@@ -153,6 +169,8 @@ namespace IMX.ATS.Manual
                         var operateResult = device.DeviceOperate.Device_ReadAll()
                             .AttachIfFailed(result =>
                             {
+                                dicDeviceData[device.DeviceAddress].Enableshow = Visibility.Visible ;
+                                dicDeviceData[device.DeviceAddress].Messagestr = $"设备通讯异常！";
                                 //SuperDHHLoggerManager.Error(LoggerType.THREAD, nameof(MonitorViewModel), nameof(RefreshDeviceData), $"【{device.ThreadName}-{device.ThreadID}】{result.Message}");
                             })
                             .AttachIfSucceed(result =>
@@ -236,6 +254,8 @@ namespace IMX.ATS.Manual
                 {
                     lists = new ModRealtimedata
                     {
+                        Enableshow = thread.IsEnableShow? Visibility.Visible : Visibility.Collapsed,
+                        Messagestr=thread.MessageLog,
                         TypeName = thread.DeviceAddress,
                         DeviceType = thread.DeviceType.ToString(),
                         //Datas = result.Data
@@ -276,10 +296,11 @@ namespace IMX.ATS.Manual
                 {
                     if (item.Value.DeviceOperate == null) { continue; }
 
-                    if (!item.Value.Config.EnableMonitor || !item.Value.DeviceOperate.IsInitOK)
+                    if (!item.Value.Config.EnableMonitor)// || !item.Value.DeviceOperate.IsInitOK)
                     {
                         continue;
                     }
+                   
                     //开启设备实时监控
                     if (!GlobalModel.DicDeviceThreads.TryGetValue(item.Key, out DeviceThread thread))
                     {
@@ -293,7 +314,9 @@ namespace IMX.ATS.Manual
                             DelayTime = item.Value.Drive.DriveConfig.BeforeReadDelayMS,
                             IsProduct = item.Key.Contains("PRODUCT"),
                             ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
-                        };
+                            MessageLog=item.Value.MessageStr,
+                            IsEnableShow=item.Value.IsEnableShow,
+    };
 
                         GlobalModel.DicDeviceThreads.Add(item.Key, thread);
                     }
@@ -319,6 +342,15 @@ namespace IMX.ATS.Manual
                 MessageBox.Show(ex.Message);
             }
 
+            if (!(obj is Window win))
+            {
+                return;
+            }
+
+            //获取当前窗
+            Win = win;
+            WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(Win);
+
             //foreach (var thread in GlobalModel.DicDeviceThreads)
             //{
             //    if (!thread.Value.IsRunning)
@@ -331,6 +363,11 @@ namespace IMX.ATS.Manual
 
         protected override void WindowClosedExecute(object obj)
         {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                CloseStrShow = Visibility.Visible;
+            }));
+
             foreach (var thread in GlobalModel.DicDeviceThreads)
             {
                 if (thread.Value.IsRunning)
@@ -351,6 +388,8 @@ namespace IMX.ATS.Manual
                 Thread.Sleep(100);
                 //base.WindowClosedExecute(obj);
             }));
+
+            WindowLeftDown_MoveEvent.LeftDown_MoveEventUnRegister(Win);
 
             base.WindowClosedExecute(obj);
         }
@@ -411,9 +450,20 @@ namespace IMX.ATS.Manual
         public string DeviceType { get; set; }
 
         /// <summary>
+        /// 初始化异常显示蒙版
+        /// </summary>
+        public Visibility Enableshow { get; set; }= Visibility.Collapsed;
+
+        /// <summary>
+        /// 初始化异常信息
+        /// </summary>
+        public string Messagestr { get; set; }
+
+        /// <summary>
         /// 读取数据
         /// </summary>
         public ObservableCollection<ModDeviceReadData> Datas { get; set; }
+
 
         /// <summary>
         /// 清除当前数据

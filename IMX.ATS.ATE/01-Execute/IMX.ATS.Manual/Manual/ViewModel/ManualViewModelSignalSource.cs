@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -113,6 +114,8 @@ namespace IMX.ATS.Manual
                 InfoString = $"设置\n [输出频率]{Set_FreqValue}\n [输出幅度]{Set_AmplValue}\n [输出占空比]{Set_DutyValue}成功";
 
                 SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelAnalogAignals), nameof(SetedValues), InfoString);
+
+                //Thread.Sleep(200);
 
                 if (OperateType != SetOutPutState.Null)
                 {

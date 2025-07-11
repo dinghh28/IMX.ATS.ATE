@@ -20,7 +20,7 @@ namespace IMX.ATS.Manual
         public static UserInfo UserInfo { get; set; } = new UserInfo();
 
 
-        public static CANThread CANThread { get; set; }=new CANThread();
+        public static CANThread CANThread { get; set; } = new CANThread();
 
         /// <summary>
         /// 工装初始化状态
@@ -62,6 +62,9 @@ namespace IMX.ATS.Manual
         public DriveOperate Drive { get; set; }
 
         public SysteamSupportDeviceConfigInfo Config { get; set; }
+
+        public string MessageStr { get; set; }
+        public bool IsEnableShow { get; set; }
     }
 
     /// <summary>
@@ -136,6 +139,16 @@ namespace IMX.ATS.Manual
         public string ThreadID { get; set; }
 
         /// <summary>
+        /// 初始化异常显示
+        /// </summary>
+        public bool IsEnableShow { get; set; }
+
+        /// <summary>
+        /// 初始化异常信息
+        /// </summary>
+        public string MessageLog { get; set; }
+
+        /// <summary>
         /// 是否开启线程通讯
         /// </summary>
         public bool IsStratCommunication { get; set; } = false;
@@ -200,12 +213,12 @@ namespace IMX.ATS.Manual
         /// <summary>
         /// DBC配置信息
         /// </summary>
-        public  Test_DBCConfig TestDBCconfig { get; set; } 
+        public Test_DBCConfig TestDBCconfig { get; set; }
 
         /// <summary>
         /// DBC文件
         /// </summary>
-        public  Test_DBCFileInfo TestDBCFile { get; set; }
+        public Test_DBCFileInfo TestDBCFile { get; set; }
 
         /// <summary>
         /// CAN上报列表

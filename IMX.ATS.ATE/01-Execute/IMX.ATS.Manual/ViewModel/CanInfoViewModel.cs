@@ -354,6 +354,8 @@ namespace IMX.ATS.Manual
 
                     ((ViewModelLocator)Application.Current.FindResource("Locator")).Manual.AddOperateView("Product", GlobalModel.DicDeviceInfo["Product"]);
 
+
+                    ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(GlobalModel.DicDeviceThreads["Product"]);
                 }
             }
             catch (Exception ex)

@@ -4,7 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:IMX.ATS.Manual"
-      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+      xmlns:converter="clr-namespace:IMX.WPF.Resource.Converters;assembly=IMX.WPF.Resource"
       d:DataContext="{d:DesignInstance Type=local:MonitorViewModel}"
       mc:Ignorable="d"  x:Name="Win" WindowStyle="None"
       d:DesignHeight="450" d:DesignWidth="800">
@@ -23,28 +24,23 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
-                <!--<ResourceDictionary>
+                <ResourceDictionary>
                     <converter:InReangeConverer x:Key="InReangeValue"/>
-                </ResourceDictionary>-->
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"/>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="10*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <!--<Grid.ColumnDefinitions>
-            <ColumnDefinition  Width="auto"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>-->
         <Grid Grid.Row="0" Margin="10,5">
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
                 <Label Content="调试平台" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
-               
+
             </StackPanel>
 
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
@@ -53,100 +49,125 @@
                 <Button Content="&#xe71f;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Win}"/>
             </StackPanel>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="1" >
-            <Button Content="配置CAN设备参数" HorizontalAlignment="Right" Width="150" Command="{Binding ShowCanInit}"/>
-        </Grid>
-        <ScrollViewer Grid.Column="0" Grid.Row="2"  VerticalScrollBarVisibility="Auto">
-            <ContentControl Content="{Binding  DeviceManual}"/> <!--Visibility="{Binding ManualShow}"/>-->
-        </ScrollViewer>
-        <Line StrokeThickness="1"/>
-        <!--<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Border Grid.Row="1" Background="Black" Opacity="0.2" Visibility="{Binding CloseStrShow}">
+            <Label Content="正在关闭调试平台" Foreground="White" FontSize="15" FontWeight="Bold"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-50,20,0,0"/>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="5*"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+            <!--<Grid.ColumnDefinitions>
+            <ColumnDefinition  Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>-->
+
+            <Grid Grid.Row="0" Grid.Column="1" >
+                <Button Content="配置CAN设备参数" HorizontalAlignment="Right" Width="150" Command="{Binding ShowCanInit}"/>
+            </Grid>
+            <ScrollViewer Grid.Column="0" Grid.Row="1"  VerticalScrollBarVisibility="Auto">
+                <ContentControl Content="{Binding  DeviceManual}"/>
+                <!--Visibility="{Binding ManualShow}"/>-->
+            </ScrollViewer>
+            <Line StrokeThickness="2" />
+            <!--<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button Content="{Binding BtnShow}" Command="{Binding ShowManual}" Style="{StaticResource ResourceKey=ControlButtonStyle}" ToolTip="设备操作" Cursor="Hand"/>
         </StackPanel>-->
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" IsDeferredScrollingEnabled="True">
-            <Grid>
-                <ItemsControl ItemsSource="{Binding Realtimedatas}" VirtualizingStackPanel.VirtualizationMode="Recycling">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <GroupBox Header="{Binding TypeName}" Margin="20">
-                                <DataGrid ItemsSource="{Binding  Datas}" 
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" IsDeferredScrollingEnabled="True">
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding Realtimedatas}" VirtualizingStackPanel.VirtualizationMode="Recycling">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <GroupBox Header="{Binding TypeName}" Margin="20">
+                                    <Grid>
+                                        <Border Grid.Row="1" Background="Black" Opacity="0.2" Visibility="{Binding Enableshow}" Panel.ZIndex="1">
+                                            <Label Content="{Binding Messagestr}" Foreground="White" FontSize="15" FontWeight="Bold"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-50,20,0,0" Focusable="True"/>
+                                        </Border>
+                                        <DataGrid ItemsSource="{Binding  Datas}" 
                                   AutoGenerateColumns="False" IsReadOnly="True" ScrollViewer.VerticalScrollBarVisibility="Auto" 
                                   HeadersVisibility="Column" Background="Transparent" BorderBrush="Transparent" Margin="5" CanUserResizeColumns="False" GridLinesVisibility="None"
                                          VirtualizingStackPanel.VirtualizationMode="Recycling" >
-                                    <DataGrid.ColumnHeaderStyle>
-                                        <Style TargetType="DataGridColumnHeader">
-                                            <Setter Property="SeparatorBrush" Value="Transparent"/>
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Setter Property="FontSize" Value="14"/>
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                            <Setter Property="VerticalAlignment" Value="Center"/>
-                                            <Setter Property="Height" Value="30"/>
-                                            <Setter Property="BorderBrush" Value="Transparent"/>
-                                        </Style>
-                                    </DataGrid.ColumnHeaderStyle>
+                                            <DataGrid.ColumnHeaderStyle>
+                                                <Style TargetType="DataGridColumnHeader">
+                                                    <Setter Property="SeparatorBrush" Value="Transparent"/>
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Setter Property="FontSize" Value="14"/>
+                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    <Setter Property="Height" Value="30"/>
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                </Style>
+                                            </DataGrid.ColumnHeaderStyle>
 
-                                    <DataGrid.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Setter Property="BorderBrush" Value="Transparent"/>
-                                            <Setter Property="BorderThickness" Value="0"/>
-                                            <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="DataGridCell">
-                                                        <Border BorderBrush="Transparent" Background="Transparent">
-                                                            <ContentPresenter VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsSelected" Value="True">
-                                                                <Setter Property="Foreground" Value="Black"/>
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </DataGrid.CellStyle>
+                                            <DataGrid.CellStyle>
+                                                <Style TargetType="DataGridCell">
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                    <Setter Property="BorderThickness" Value="0"/>
+                                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="DataGridCell">
+                                                                <Border BorderBrush="Transparent" Background="Transparent">
+                                                                    <ContentPresenter VerticalAlignment="Center"/>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                        <Setter Property="Foreground" Value="Black"/>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DataGrid.CellStyle>
 
-                                    <DataGrid.RowStyle>
-                                        <Style TargetType="DataGridRow">
-                                            <Setter Property="BorderBrush" Value="Transparent"/>
-                                            <Setter Property="Height" Value="30"/>
-                                            <Setter Property="BorderThickness" Value="0"/>
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="DataGridRow">
-                                                        <Grid>
-                                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
-                                                            <DataGridCellsPresenter/>
+                                            <DataGrid.RowStyle>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                                    <Setter Property="Height" Value="30"/>
+                                                    <Setter Property="BorderThickness" Value="0"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="DataGridRow">
+                                                                <Grid>
+                                                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"/>
+                                                                    <DataGridCellsPresenter/>
 
-                                                        </Grid>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </DataGrid.RowStyle>
+                                                                </Grid>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </DataGrid.RowStyle>
 
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="数据名称" Binding="{Binding  DataInfo.Name}" Width="150"/>
-                                        <DataGridTemplateColumn Header="实时数据" Width="100">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding  DataInfo.Value,Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left"  TextAlignment="Center" Foreground="{Binding Path=IsInRange,Converter={StaticResource ResourceKey=InReangeValue}}"/>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </GroupBox>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Grid>
-        </ScrollViewer>
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="数据名称" Binding="{Binding  DataInfo.Name}" Width="150"/>
+                                                <DataGridTemplateColumn Header="实时数据" Width="100">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding  DataInfo.Value,Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left"  TextAlignment="Center" Foreground="{Binding Path=IsInRange,Converter={StaticResource ResourceKey=InReangeValue}}"/>
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Grid>
+
+                                </GroupBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
     </Grid>
+
 </Window>

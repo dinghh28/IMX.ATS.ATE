@@ -39,6 +39,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -431,6 +432,9 @@ namespace IMX.ATS.Manual
                         {
                             ErrorStr += $"{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result.Message}\r\n";
                             GlobalModel.CabinetSate = false;
+                            item.Value.MessageStr= result.Message;
+                            item.Value.IsEnableShow = false;
+
                             Thread.Sleep(10);
                             Application.Current.Dispatcher.Invoke(() =>
                            {
@@ -444,6 +448,7 @@ namespace IMX.ATS.Manual
                          {
                              item.Value.DeviceOperate = result.Data;
                              item.Value.Drive = GlobalModel.DicDeviceDrives[item.Value.Args.DriveConfig.ResourceString];
+                             item.Value.IsEnableShow = false;
 
                              Thread.Sleep(10);
                              Application.Current.Dispatcher.Invoke(() =>
@@ -504,6 +509,8 @@ namespace IMX.ATS.Manual
 #endif
                              ErrorStr += $"[{dicInitInfo[item.Key].Describe}设备初始化失败\r\n{result1.Message}\r\n]";
                              GlobalModel.CabinetSate = false;
+                             item.Value.MessageStr = result.Message;
+                             item.Value.IsEnableShow = false;
                              Thread.Sleep(10);
                              Application.Current.Dispatcher.Invoke(() =>
                              {

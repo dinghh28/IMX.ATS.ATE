@@ -9,7 +9,7 @@
              d:DataContext="{d:DesignInstance Type=local:CanInfoViewModel}"
              mc:Ignorable="d" WindowStyle="None"   BorderThickness="1"
              ResizeMode="NoResize" Focusable="False"
-              x:Name="Win"
+             x:Name="Win"
              Height="400" Width="600">
     <Window.Resources>
         <ResourceDictionary>
@@ -87,9 +87,9 @@
                      MinLines="2"  Width="180"/>
             <Button Grid.Column="2" Content="选择配置" Command="{Binding ChangeDBC}" Width="80" Height="35" Margin="40,0,0,0"/>
         </Grid>
-        <Border Grid.Row="3" BorderThickness="0,1,0,0" BorderBrush="Black" Width="500">
+        <Border Grid.Row="3" BorderThickness="0" BorderBrush="Black" Width="520" >
             <Grid>
-                <ListBox ItemsSource="{Binding Messagestrs}" >
+                <ListBox ItemsSource="{Binding Messagestrs}" BorderThickness="1">
 
                 </ListBox>
             </Grid>

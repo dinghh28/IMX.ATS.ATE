@@ -42,7 +42,7 @@ namespace IMX.ATS.Manual
         #region 属性
 
 
-        private CCResMode ccResMode = CCResMode.Res_100;
+        private CCResMode ccResMode = CCResMode.Res_220;
 
         public CCResMode CCResMode
         {

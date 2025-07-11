@@ -84,7 +84,7 @@ namespace IMX.ATS.ATEConfig
                 {
                     GlobalModel.NowProcessName = value;
                     SelectSolution();
-                    
+
                 }
             }
         }
@@ -220,7 +220,7 @@ namespace IMX.ATS.ATEConfig
         private int projectid = -1;
         private string projectname = "";
 
-
+        private string filename = "";
         #endregion
 
         #region 私有方法
@@ -235,8 +235,10 @@ namespace IMX.ATS.ATEConfig
                 SolutionNames.Clear();
                 DBOperate.Default.GetProcessNaemAndDescription(projectid).AttachIfSucceed(result =>
                 {
-                    if (result.Data.Count<1)
+                    if (result.Data.Count < 1)
                     {
+                        DicDescription.Clear();
+                        SolutionNames.Clear();
                         return;
                     }
                     DicDescription = result.Data;
@@ -377,7 +379,7 @@ namespace IMX.ATS.ATEConfig
                         {
                             return;
                         }
-                        FunctionInfoIndex = index == 0 ? index : index - 1;
+                        FunctionInfoIndex = index;//== 0 ? index : index - 1;
                         ReNumber();
                         Thread.Sleep(10);
                     }
@@ -422,7 +424,7 @@ namespace IMX.ATS.ATEConfig
                     }
                     break;
                 case "CLEAR":
-                    if (MessageBox.Show($"是否清空当前测试项【{SolutionName}】操作步骤","清空提示",MessageBoxButtons.OKCancel)!=DialogResult.OK) 
+                    if (MessageBox.Show($"是否清空当前测试项【{SolutionName}】操作步骤", "清空提示", MessageBoxButtons.OKCancel) != DialogResult.OK)
                     {
                         return;
                     }
@@ -509,7 +511,7 @@ namespace IMX.ATS.ATEConfig
 
             IFunViewModel funmodel = null;
 
-            if (type == FuncitonType.CustomRevData && !SupportConfig.DicProcessConfig[GlobalModel.NowProcessName].UseCustomData) 
+            if (type == FuncitonType.CustomRevData && !SupportConfig.DicProcessConfig[GlobalModel.NowProcessName].UseCustomData)
             {
                 MessageBox.Show("当前测试项不支持自定义上报信息指令");
                 return;
@@ -528,7 +530,7 @@ namespace IMX.ATS.ATEConfig
                 funmodel = rlt.Data;
 
                 var viewmodel = FunctionInfos.LastOrDefault(x => x.ModType == rlt.Data.SupportFuncitonType);
-                if (viewmodel != null) 
+                if (viewmodel != null)
                 {
                     var configrlt = viewmodel.Model.Func.Config.ToJson();
                     if (!configrlt)
@@ -678,12 +680,12 @@ namespace IMX.ATS.ATEConfig
 
             foreach (var item in FunctionInfos)
             {
-                OperateResult<string> result =  OperateResult<string>.Succeed(string.Empty);
+                OperateResult<string> result = OperateResult<string>.Succeed(string.Empty);
                 if (item.ModType != FuncitonType.Startup && item.ModType != FuncitonType.Shutdown)
                 {
                     result = item.Model.Func.Config.ToJson();
                 }
-               
+
 
                 mod.Add(new ModTestProcess
                 {
@@ -749,7 +751,7 @@ namespace IMX.ATS.ATEConfig
                 config.UseCalculate, calculatedata,
                 config.UseCustomData, costomreaddata);
 #endif
-#endregion
+            #endregion
 
             //#region 调试计算值和用户自定义上报信息状态存储
             //var config = SupportConfig.DicProcessConfig[SolutionName];
@@ -775,7 +777,7 @@ namespace IMX.ATS.ATEConfig
             //#endregion
 
             DBOperate.Default.UpdateProcess(projectid, SolutionName, mod)
-            
+
                              .AttachIfSucceed(result =>
                              {
                                  var model = ((ViewModelLocator)Application.Current.FindResource("Locator")).TestProgramme;
@@ -951,7 +953,7 @@ namespace IMX.ATS.ATEConfig
                  });
             }
         }
-#endregion
+        #endregion
 
         #region 导入/导出测试项
 
@@ -962,11 +964,25 @@ namespace IMX.ATS.ATEConfig
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog
+                OpenFileDialog openFileDialog;
+                if (string.IsNullOrEmpty(filename))
                 {
-                    InitialDirectory = Environment.CurrentDirectory,
-                    Filter = "ATE配置文件 (*.ATE)|*.ATE"
-                };
+                    openFileDialog = new OpenFileDialog
+                    {
+                        InitialDirectory = Environment.CurrentDirectory,
+                        Filter = "ATE配置文件 (*.ATE)|*.ATE"
+                    };
+
+                }
+                else
+                {
+                    openFileDialog = new OpenFileDialog
+                    {
+                        FileName = filename,
+                        Filter = "ATE配置文件 (*.ATE)|*.ATE"
+                    };
+                }
+
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -984,15 +1000,15 @@ namespace IMX.ATS.ATEConfig
                         return;
                     }
 
-                    string filePath = openFileDialog.FileName;
-                    string infos = System.IO.File.ReadAllText(filePath);
+                    filename = openFileDialog.FileName;
+                    string infos = System.IO.File.ReadAllText(filename);
                     GlobalModel.NowProcessName = souname;
                     var functions = JsonConvert.DeserializeObject<List<ModTestProcess>>(infos);
                     //for (int i = 0; i < functions?.Count; i++)
                     //{
                     //    CreatFunction(functions[i]);
                     //}
-                    SaveScheme(souname,functions).AttachIfSucceed(result =>
+                    SaveScheme(souname, functions).AttachIfSucceed(result =>
                     {
                         DicDescription.Add(souname, souname);
                         SolutionNames.Add(souname);
@@ -1075,7 +1091,7 @@ namespace IMX.ATS.ATEConfig
         }
         #endregion
 
-#endregion
+        #endregion
 
         #region 保护方法
         protected override void WindowLoadedExecute(object obj)
@@ -1084,7 +1100,7 @@ namespace IMX.ATS.ATEConfig
             {
                 GlobalModel.NowProcessName = SolutionName;
             }
-            
+
             //base.WindowLoadedExecute(obj);
         }
 

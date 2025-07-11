@@ -3391,7 +3391,7 @@ namespace IMX.DB
         //}
 
 
-        public OperateResult<List<Test_DataInfo>> GetTestData(int itemid, DateTime StratTime, DateTime StopTime)
+        public OperateResult<List<Test_DataInfo>> GetTestData(long itemid, DateTime StratTime, DateTime StopTime)
         {
             if (!IsInitOK)
             {

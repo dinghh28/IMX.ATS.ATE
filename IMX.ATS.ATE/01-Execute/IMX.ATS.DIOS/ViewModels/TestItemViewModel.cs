@@ -23,20 +23,27 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+using Aspose.Cells;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
 using IMX.Common;
 using IMX.DB;
 using IMX.DB.Model;
+using IMX.Logger;
 using Super.Zoo.Framework;
 using Super.Zoo.Framework.Debugger;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -139,6 +146,15 @@ namespace IMX.ATS.DIOS
         #region 界面绑定指令
         public RelayCommand Search => new RelayCommand(SearchItem);
 
+        public RelayCommand Export => new RelayCommand(MulExport);
+
+        public RelayCommand Clear => new RelayCommand(() =>
+        {
+            FlowName = string.Empty;
+            ResultIndex = -1;
+            SearchItem();
+        });
+
         public RelayCommand OpenDatas => new RelayCommand(DatasWindowOpen);
 
         /// <summary>
@@ -189,7 +205,7 @@ namespace IMX.ATS.DIOS
         #endregion
 
         #region 导出方案
-        private void MulExport() 
+        private void MulExport()
         {
             if (Datas == null || Datas.Count < 1)
             {
@@ -199,8 +215,10 @@ namespace IMX.ATS.DIOS
             List<long> indexes = new List<long>();
             List<DateTime> Starttimes = new List<DateTime>();
             List<DateTime> stoptimes = new List<DateTime>();
+            List<Test_ItemInfo> itemInfos = new List<Test_ItemInfo>();
             Datas.ToList().FindAll(x => x.IsSelect == true).ForEach(x =>
             {
+                itemInfos.Add(x.Data);
                 indexes.Add(x.Data.Id);
                 Starttimes.Add(x.Data.CreateTime);
                 stoptimes.Add(x.Data.UpdateTime);
@@ -214,7 +232,235 @@ namespace IMX.ATS.DIOS
 
             //设置进度条控件属性
             proBarValue = 0;
-            proBarMaxValue = indexes.Count;
+            proBarMaxValue = itemInfos.Count;
+            string selectedFolderPath = AppDomain.CurrentDomain.BaseDirectory;
+            using (var folderBrowserDialog = new FolderBrowserDialog())
+            {
+                // 设置对话框属性
+                folderBrowserDialog.Description = "请选择要操作的文件夹";
+                folderBrowserDialog.SelectedPath = selectedFolderPath; // 设置初始文件夹路径
+                folderBrowserDialog.ShowNewFolderButton = true; // 显示“新建文件夹”按钮
+
+                // 显示对话框并等待用户选择文件夹
+                DialogResult result = folderBrowserDialog.ShowDialog();
+
+                // 检查用户是否点击了“确定”按钮
+                if (result == DialogResult.OK)
+                {
+                    // 获取用户选择的文件夹路径
+                    selectedFolderPath = folderBrowserDialog.SelectedPath;
+                }
+            };
+
+            string dirpath = Path.Combine(selectedFolderPath, $"{itemInfos[0].ProductSN}_{itemInfos[0].ProjectName}");
+
+            if (!Directory.Exists(dirpath))
+            {
+                Directory.CreateDirectory(dirpath);
+            }
+
+            Task.Run(async () =>
+            {
+                ProBarVisily = Visibility.Visible;
+                await Task.Run(() =>
+                {
+
+
+                    for (int i = 0; i < itemInfos.Count; i++)
+                    {
+                            DataTable table = new DataTable();
+                            var itemdata = itemInfos[i];
+                            var datatableresult =
+                            DBOperate.Default.GetTestData(itemdata.Id, itemdata.CreateTime, itemdata.UpdateTime)
+                            .ThenAnd(result => GetDataTableStructure(result.Data)
+                            .AttachIfSucceed(result1 =>
+                            {
+                                table = result1.Data;
+                            }).ConvertTo(result.Data));
+
+                            if (!datatableresult)
+                            {
+                                ProBarVisily = Visibility.Hidden;
+                            MessageBox.Show($"测试项【{itemdata.FlowName}】数据获取异常","数据导出失败");
+                                return;
+                            }
+                         var exresult =  ExcelExport(itemdata, JsonToDataTableConverter(table, datatableresult.Data), dirpath);
+                        if (!exresult)
+                        {
+                            ProBarVisily = Visibility.Hidden;
+                            MessageBox.Show($"测试项【{itemdata.FlowName}】数据导出Excel文件失败", "数据导出失败");
+                            return;
+                        }
+                        ProBarValue = i;
+                    }
+                    
+                    //ExcelExport(Datas[0].Data, new DataTable());.AttachIfSucceed(result =>
+                    //{
+                    //    MessageBox.Show($"数据导出完成！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //})
+                    //.AttachIfFailed(result =>
+                    //{
+                    //    MessageBox.Show($"测试数据导出失败：{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Question);
+                    //});
+
+                    //if (result)
+                    //{ System.Windows.Forms.MessageBox.Show("数据导出完成"); }
+                    ProBarVisily = Visibility.Hidden;
+
+                    System.Windows.Forms.MessageBox.Show("数据导出完成");
+                });
+
+            });
+        }
+
+        /// <summary>
+        /// 创建测试数据表结构
+        /// </summary>
+        private OperateResult<DataTable> GetDataTableStructure(List<Test_DataInfo> value)
+        {
+            try
+            {
+                if (value.Count < 1)
+                {
+                    return OperateResult<DataTable>.Failed(null, "未检索到相关数据");
+                }
+                DataTable table = new DataTable();
+
+                table.Columns.Add("ID");
+                table.Columns.Add("记录时间");
+
+                //table.Columns.Add("产品编号");
+                //table.Columns.Add("试验项名称");
+                table.Columns.Add("步骤序号");
+                table.Columns.Add("步骤名称");
+                // 遍历并添加列到DataTable  
+                value[0].Pro_Data.ForEach(token => table.Columns.Add(token.Name));
+                value[0].Pro_SetData.ForEach(token => table.Columns.Add(token.Name));
+
+                // 遍历并添加列到DataTable  
+                value[0].Euq_Data.ForEach(token => table.Columns.Add(token.Name));
+                value[0].Euq_SetData.ForEach(token => table.Columns.Add(token.Name));
+
+                if (value[0].EX_Data.Count > 1)
+                {
+                    value[0].EX_Data.ForEach(token => table.Columns.Add(token.Name));
+                }
+
+
+                table.Columns.Add("试验结果");
+                table.Columns.Add("异常信息");
+
+                return OperateResult<DataTable>.Succeed(table);
+            }
+            catch (Exception ex)
+            {
+                return OperateResult<DataTable>.Failed(null, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 加载测试表中的测试数据
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private DataTable JsonToDataTableConverter(DataTable datastructtable, List<Test_DataInfo> value)
+        {
+            var table = datastructtable.Clone();
+
+            value.ForEach(x =>
+            {
+                DataRow row = table.NewRow();
+                row["ID"] = table.Rows.Count + 1;
+                //row["产品编号"] = x.ProductSN;
+                //row["记录时间"] = x.RecordTime;
+                row["记录时间"] = x.CreateTime;//.ToString("yyyy/MM/dd HH:mm:ss.fff");
+
+                //row["试验项名称"] = x.FlowName;
+
+                row["步骤序号"] = x.StepIndex;
+
+                row["步骤名称"] = x.StepName;
+
+                x.Pro_Data.ForEach(y =>
+                {
+                    row[y.Name] = Math.Round(y.Value, 3);
+                });
+                x.Pro_SetData.ForEach(y => row[y.Name] = Math.Round(y.Value, 3));
+                x.Euq_Data.ForEach(y =>
+                {
+                    row[y.Name] = Math.Round(y.Value, 3);
+                });
+                x.Euq_SetData.ForEach(y =>
+                {
+                    row[y.Name] = Math.Round(y.Value, 3);
+                });
+
+                if (x.EX_Data.Count > 1)
+                {
+                    x.EX_Data.ForEach(y => { row[y.Name] = Math.Round(y.Value, 3); });
+                }
+
+
+                row["试验结果"] = x.Result == ResultState.SUCCESS ? "OK" : "NG";
+                row["异常信息"] = x.ErrorInfo;
+                table.Rows.Add(row);
+            });
+
+            return table;
+        }
+
+        /// <summary>
+        /// Excel格式文件导出
+        /// </summary>
+        /// <param name="item">试验条目</param>
+        /// <param name="datas">测试数据</param>
+        private OperateResult ExcelExport(Test_ItemInfo item, DataTable datas, string path)
+        {
+            string errMsg = "";
+            string fileName = "IMX.ATS.DIOS.Resource.ExcelTemp.IMX.ATS.Resource.Templet.xlsx";
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName);
+
+            using (stream)
+            {
+                try
+                {
+                    Workbook workbook = new Workbook(stream);
+
+                    Worksheet worksheet = workbook.Worksheets[0];
+                    #region Title
+                    worksheet.Cells["B1"].Value = item.ProjectName;
+                    worksheet.Cells["B3"].Value = item.ProductSN;
+                    worksheet.Cells["E2"].Value = item.FlowName;
+                    Aspose.Cells.Style resultstle = workbook.Styles[workbook.Styles.Add()];
+                    resultstle.Font.Color = item.Result == ResultState.SUCCESS ? Color.Green : Color.Red;
+                    worksheet.Cells["H2"].SetStyle(resultstle);
+                    worksheet.Cells["H2"].Value = item.Result.ToString();
+
+
+                    worksheet.Cells["I2"].PutValue(item.CreateTime.ToString("yyyy/MM/dd HH:mm:ss"));
+                    worksheet.Cells["J2"].PutValue(item.UpdateTime.ToString("yyyy/MM/dd HH:mm:ss"));
+                    worksheet.Cells["I4"].PutValue(item.ActualRunTime);
+                    worksheet.Cells["J4"].PutValue(item.Operator);
+                    worksheet.Cells["K2"].PutValue(item.ErrorInfo);
+                    #endregion
+                    Thread.Sleep(10);
+                    #region 测试数据
+                    ImportTableOptions tableOptions = new ImportTableOptions();
+                    tableOptions.IsFieldNameShown = true;
+                    worksheet.Cells.ImportData(datas, 6, 0, tableOptions);
+                    #endregion
+                    Thread.Sleep(10);
+                    workbook.Save(Path.Combine(path, $"{item.FlowName}_{item.CreateTime:yyyyMMddHHmmss}.xlsx"));
+                    Thread.Sleep(100);
+                }
+                catch (Exception ex)
+                {
+                    SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, nameof(DIOS),"Excel格式文件导出",ex);
+                    return OperateResult.Excepted(ex);
+                }
+            };
+
+            return OperateResult.Succeed();
         }
         #endregion
         /// <summary>

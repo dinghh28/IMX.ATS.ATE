@@ -856,6 +856,232 @@ namespace IMX.ATS.ATEConfig
                                 }
             },
             #endregion
+            #region 启动输出过冲
+            {"启动输出过冲", new ProcessConfig_EX
+                {
+                    Name = "启动输出过冲",
+                    UseCustomData = true,
+                    UseCalculate = true,
+                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                    },
+                    Test_SetData_Euq = new List<ModTestDataInfo>
+                    {
+                        new() { Name="稳压源输出电压",},
+                        new() { Name="交流源A相输出电压",},
+                        new() { Name="交流源输出频率",},
+                        new() { Name="交流源启动相位角",},
+                        new() { Name="高压源输出电压",},
+                        new() { Name="负载电压",},
+                        new() { Name="负载电流",},
+                    },
+                    Test_CustomData = new List<ModTestDataInfo>()
+                    {
+                        new ModTestDataInfo{ Name = "输出电压峰值"},
+                        new ModTestDataInfo{ Name = "输出电流峰值"},
+                    },
+                    Test_ReadData_EX = new List<ModTestDataInfo>
+                    {
+                        new() { Name="B相电压",},
+                        new() { Name="B相电流",},
+                        new() { Name="B相频率",},
+                        new() { Name="C相电压",},
+                        new() { Name="C相电流",},
+                        new() { Name="C相频率",},
+                    },
+                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                    {
+                        new() { Name="交流源B相输出电压",},
+                        new() { Name="交流源C相输出电压",},
+                    },
+                    Test_CalculateData = new List<ModTestDataInfo>
+                    {
+                        new() { Name="启动过冲百分比(限压)",},
+                        new() { Name="启动过冲百分比(限流)",},
+                    },
+                }
+            },
+            #endregion
+            #region 输出抛载响应
+            {"输出抛载响应", new ProcessConfig_EX
+                {
+                    Name = "输出抛载响应",
+                    UseCustomData = true,
+                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                    },
+                    Test_SetData_Euq = new List<ModTestDataInfo>
+                    {
+                        new() { Name="稳压源输出电压",},
+                        new() { Name="交流源A相输出电压",},
+                        new() { Name="交流源输出频率",},
+                        new() { Name="交流源启动相位角",},
+                        new() { Name="高压源输出电压",},
+                        new() { Name="负载电压",},
+                        new() { Name="负载电流",},
+                    },
+                    Test_CustomData = new List<ModTestDataInfo>()
+                    {
+                        new ModTestDataInfo{ Name = "输出电压峰值"},
+                    },
+                    Test_ReadData_EX = new List<ModTestDataInfo>
+                    {
+                        new() { Name="B相电压",},
+                        new() { Name="B相电流",},
+                        new() { Name="B相频率",},
+                        new() { Name="C相电压",},
+                        new() { Name="C相电流",},
+                        new() { Name="C相频率",},
+                    },
+                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                    {
+                        new() { Name="交流源B相输出电压",},
+                        new() { Name="交流源C相输出电压",},
+                    },
+                }
+            },
+            #endregion
+            #region 输出电压误差
+            {"输出电压误差", new ProcessConfig_EX
+                                {
+                                    Name = "输出电压误差",
+                                    UseCalculate = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    //Test_ReadData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出瞬时电压",},
+                                    //    new() { Name="OBC输出瞬时电流",},
+                                    //    new() { Name="OBC输出瞬时功率",},
+                                    //},
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流源A相设置电压",},
+                                        new() { Name="交流源设置频率",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="负载拉载模式",},
+                                        new() { Name="负载拉载值",},
+                                        new() { Name="负载限制值",},
+                                    },
+                                    //Test_SetData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出电压",},
+                                    //    new() { Name="OBC输出最大电流",},
+                                    //},
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相输出电压",},
+                                        new() { Name="交流源C相输出电压",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="输出电压精度",},
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 输出电压误差
+            {"输出电流误差", new ProcessConfig_EX
+                                {
+                                    Name = "输出电流误差",
+                                    UseCalculate = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    //Test_ReadData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出瞬时电压",},
+                                    //    new() { Name="OBC输出瞬时电流",},
+                                    //    new() { Name="OBC输出瞬时功率",},
+                                    //},
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流源A相设置电压",},
+                                        new() { Name="交流源设置频率",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="负载拉载模式",},
+                                        new() { Name="负载拉载值",},
+                                        new() { Name="负载限制值",},
+                                    },
+                                    //Test_SetData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出电压",},
+                                    //    new() { Name="OBC输出最大电流",},
+                                    //},
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相输出电压",},
+                                        new() { Name="交流源C相输出电压",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="输出电流精度",},
+                                        new() { Name="输出电流误差",},
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
             #region 三相
             #region 三相交流相位不平衡
             {"三相交流相位不平衡", new ProcessConfig_EX
@@ -1058,9 +1284,6 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="辅电电压",},
                                         new() { Name="辅电电流",},
-                                        new() { Name="A相电压",},
-                                        new() { Name="A相电流",},
-                                        new() { Name="A相频率",},
                                         new() { Name="HVDC电压",},
                                         new() { Name="HVDC电流",},
                                         new() { Name="HVDC功率",},
@@ -1068,41 +1291,21 @@ namespace IMX.ATS.ATEConfig
                                         new() { Name="LVDC电流",},
                                         new() { Name="LVDC功率",},
                                     },
-                                    //Test_ReadData_Pro = new List<ModTestDataInfo>()
-                                    //{
-                                    //    new() { Name="OBC输出瞬时电压",},
-                                    //    new() { Name="OBC输出瞬时电流",},
-                                    //    new() { Name="OBC输出瞬时功率",},
-                                    //},
                                     Test_SetData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电设置电压",},
-                                        new() { Name="交流源A相设置电压",},
-                                        new() { Name="交流源设置频率",},
                                         new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
                                         new() { Name="低压负载设置模式",},
                                         new() { Name="低压负载设置拉载值",},
                                         new() { Name="低压负载设置限制值",},
                                     },
-                                    //Test_SetData_Pro = new List<ModTestDataInfo>()
-                                    //{
-                                    //    new() { Name="OBC输出电压",},
-                                    //    new() { Name="OBC输出最大电流",},
-                                    //},
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
                                     {
-                                        new() { Name="B相电压",},
-                                        new() { Name="B相电流",},
-                                        new() { Name="B相频率",},
-                                        new() { Name="C相电压",},
-                                        new() { Name="C相电流",},
-                                        new() { Name="C相频率",},
                                     },
                                     Test_SetData_Ex = new List<ModTestDataInfo>()
                                     {
-                                        new() { Name="交流源B相设置电压",},
-                                        new() { Name="交流源C相设置电压",},
                                     },
                                 }
             },
@@ -1116,9 +1319,6 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="辅电电压",},
                                         new() { Name="辅电电流",},
-                                        new() { Name="A相电压",},
-                                        new() { Name="A相电流",},
-                                        new() { Name="A相频率",},
                                         new() { Name="HVDC电压",},
                                         new() { Name="HVDC电流",},
                                         new() { Name="HVDC功率",},
@@ -1135,9 +1335,8 @@ namespace IMX.ATS.ATEConfig
                                     Test_SetData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电设置电压",},
-                                        new() { Name="交流源A相设置电压",},
-                                        new() { Name="交流源设置频率",},
                                         new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
                                         new() { Name="低压负载设置模式",},
                                         new() { Name="低压负载设置拉载值",},
                                         new() { Name="低压负载设置限制值",},
@@ -1150,17 +1349,9 @@ namespace IMX.ATS.ATEConfig
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
                                     {
-                                        new() { Name="B相电压",},
-                                        new() { Name="B相电流",},
-                                        new() { Name="B相频率",},
-                                        new() { Name="C相电压",},
-                                        new() { Name="C相电流",},
-                                        new() { Name="C相频率",},
                                     },
                                     Test_SetData_Ex = new List<ModTestDataInfo>()
                                     {
-                                        new() { Name="交流源B相设置电压",},
-                                        new() { Name="交流源C相设置电压",},
                                     },
                                 }
             },
@@ -1174,9 +1365,6 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="辅电电压",},
                                         new() { Name="辅电电流",},
-                                        new() { Name="A相电压",},
-                                        new() { Name="A相电流",},
-                                        new() { Name="A相频率",},
                                         new() { Name="HVDC电压",},
                                         new() { Name="HVDC电流",},
                                         new() { Name="HVDC功率",},
@@ -1184,41 +1372,21 @@ namespace IMX.ATS.ATEConfig
                                         new() { Name="LVDC电流",},
                                         new() { Name="LVDC功率",},
                                     },
-                                    //Test_ReadData_Pro = new List<ModTestDataInfo>()
-                                    //{
-                                    //    new() { Name="OBC输出瞬时电压",},
-                                    //    new() { Name="OBC输出瞬时电流",},
-                                    //    new() { Name="OBC输出瞬时功率",},
-                                    //},
                                     Test_SetData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电设置电压",},
-                                        new() { Name="交流源A相设置电压",},
-                                        new() { Name="交流源设置频率",},
                                         new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
                                         new() { Name="低压负载设置模式",},
                                         new() { Name="低压负载设置拉载值",},
                                         new() { Name="低压负载设置限制值",},
                                     },
-                                    //Test_SetData_Pro = new List<ModTestDataInfo>()
-                                    //{
-                                    //    new() { Name="OBC输出电压",},
-                                    //    new() { Name="OBC输出最大电流",},
-                                    //},
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
                                     {
-                                        new() { Name="B相电压",},
-                                        new() { Name="B相电流",},
-                                        new() { Name="B相频率",},
-                                        new() { Name="C相电压",},
-                                        new() { Name="C相电流",},
-                                        new() { Name="C相频率",},
                                     },
                                     Test_SetData_Ex = new List<ModTestDataInfo>()
                                     {
-                                        new() { Name="交流源B相设置电压",},
-                                        new() { Name="交流源C相设置电压",},
                                     },
                                 }
             },
@@ -1232,9 +1400,6 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="辅电电压",},
                                         new() { Name="辅电电流",},
-                                        new() { Name="A相电压",},
-                                        new() { Name="A相电流",},
-                                        new() { Name="A相频率",},
                                         new() { Name="HVDC电压",},
                                         new() { Name="HVDC电流",},
                                         new() { Name="HVDC功率",},
@@ -1245,9 +1410,8 @@ namespace IMX.ATS.ATEConfig
                                     Test_SetData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电设置电压",},
-                                        new() { Name="交流源A相设置电压",},
-                                        new() { Name="交流源设置频率",},
                                         new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
                                         new() { Name="低压负载设置模式",},
                                         new() { Name="低压负载设置拉载值",},
                                         new() { Name="低压负载设置限制值",},
@@ -1255,17 +1419,9 @@ namespace IMX.ATS.ATEConfig
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
                                     {
-                                        new() { Name="B相电压",},
-                                        new() { Name="B相电流",},
-                                        new() { Name="B相频率",},
-                                        new() { Name="C相电压",},
-                                        new() { Name="C相电流",},
-                                        new() { Name="C相频率",},
                                     },
                                     Test_SetData_Ex = new List<ModTestDataInfo>()
                                     {
-                                        new() { Name="交流源B相设置电压",},
-                                        new() { Name="交流源C相设置电压",},
                                     },
                                     Test_CalculateData = new List<ModTestDataInfo>()
                                     {
@@ -1334,9 +1490,6 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="辅电电压",},
                                         new() { Name="辅电电流",},
-                                        new() { Name="A相电压",},
-                                        new() { Name="A相电流",},
-                                        new() { Name="A相频率",},
                                         new() { Name="HVDC电压",},
                                         new() { Name="HVDC电流",},
                                         new() { Name="HVDC功率",},
@@ -1347,9 +1500,8 @@ namespace IMX.ATS.ATEConfig
                                     Test_SetData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电设置电压",},
-                                        new() { Name="交流源A相设置电压",},
-                                        new() { Name="交流源设置频率",},
                                         new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
                                         new() { Name="低压负载设置模式",},
                                         new() { Name="低压负载设置拉载值",},
                                         new() { Name="低压负载设置限制值",},
@@ -1357,17 +1509,9 @@ namespace IMX.ATS.ATEConfig
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
                                     {
-                                        new() { Name="B相电压",},
-                                        new() { Name="B相电流",},
-                                        new() { Name="B相频率",},
-                                        new() { Name="C相电压",},
-                                        new() { Name="C相电流",},
-                                        new() { Name="C相频率",},
                                     },
                                     Test_SetData_Ex = new List<ModTestDataInfo>()
                                     {
-                                        new() { Name="交流源B相设置电压",},
-                                        new() { Name="交流源C相设置电压",},
                                     },
                                     Test_CalculateData = new List<ModTestDataInfo>()
                                     {
@@ -1385,9 +1529,6 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="辅电电压",},
                                         new() { Name="辅电电流",},
-                                        new() { Name="A相电压",},
-                                        new() { Name="A相电流",},
-                                        new() { Name="A相频率",},
                                         new() { Name="HVDC电压",},
                                         new() { Name="HVDC电流",},
                                         new() { Name="HVDC功率",},
@@ -1398,9 +1539,8 @@ namespace IMX.ATS.ATEConfig
                                     Test_SetData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电设置电压",},
-                                        new() { Name="交流源A相设置电压",},
-                                        new() { Name="交流源设置频率",},
                                         new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
                                         new() { Name="低压负载设置模式",},
                                         new() { Name="低压负载设置拉载值",},
                                         new() { Name="低压负载设置限制值",},
@@ -1408,17 +1548,9 @@ namespace IMX.ATS.ATEConfig
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
                                     {
-                                        new() { Name="B相电压",},
-                                        new() { Name="B相电流",},
-                                        new() { Name="B相频率",},
-                                        new() { Name="C相电压",},
-                                        new() { Name="C相电流",},
-                                        new() { Name="C相频率",},
                                     },
                                     Test_SetData_Ex = new List<ModTestDataInfo>()
                                     {
-                                        new() { Name="交流源B相设置电压",},
-                                        new() { Name="交流源C相设置电压",},
                                     },
                                     Test_CalculateData = new List<ModTestDataInfo>()
                                     {
@@ -1437,9 +1569,6 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="辅电电压",},
                                         new() { Name="辅电电流",},
-                                        new() { Name="A相电压",},
-                                        new() { Name="A相电流",},
-                                        new() { Name="A相频率",},
                                         new() { Name="HVDC电压",},
                                         new() { Name="HVDC电流",},
                                         new() { Name="HVDC功率",},
@@ -1450,9 +1579,8 @@ namespace IMX.ATS.ATEConfig
                                     Test_SetData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电设置电压",},
-                                        new() { Name="交流源A相设置电压",},
-                                        new() { Name="交流源设置频率",},
                                         new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
                                         new() { Name="低压负载设置模式",},
                                         new() { Name="低压负载设置拉载值",},
                                         new() { Name="低压负载设置限制值",},
@@ -1460,22 +1588,323 @@ namespace IMX.ATS.ATEConfig
                                     Test_CustomData = new List<ModTestDataInfo>(),
                                     Test_ReadData_EX = new List<ModTestDataInfo>
                                     {
-                                        new() { Name="B相电压",},
-                                        new() { Name="B相电流",},
-                                        new() { Name="B相频率",},
-                                        new() { Name="C相电压",},
-                                        new() { Name="C相电流",},
-                                        new() { Name="C相频率",},
                                     },
                                     Test_SetData_Ex = new List<ModTestDataInfo>()
                                     {
-                                        new() { Name="交流源B相设置电压",},
-                                        new() { Name="交流源C相设置电压",},
                                     },
                                     Test_CalculateData = new List<ModTestDataInfo>()
                                     {
                                         new() { Name="输出电流精度(DCDC)",},
                                         new() { Name="输出电流误差(DCDC)",},
+                                    },
+                                }
+            },
+            #endregion
+            #region 输入过压保护（DCDC）
+            {"输入过压保护（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "输入过压保护（DCDC）",
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    { },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {},
+                                }
+            },
+            #endregion
+            #region 输入欠压保护（DCDC）
+            {"输入欠压保护（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "输入欠压保护（DCDC）",
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    { },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {},
+                                }
+            },
+            #endregion
+            #region 输出过压保护（DCDC）
+            {"输出过压保护（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "输出过压保护（DCDC）",
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="辅电设置电流",},
+                                        new() { Name="倒灌电源设置电压",},
+                                        new() { Name="倒灌电源设置电流",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    { },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {},
+                                }
+            },
+            #endregion
+            #region 输出欠压保护（DCDC）
+            {"输出欠压保护（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "输出欠压保护（DCDC）",
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    { },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {},
+                                }
+            },
+            #endregion
+            #region 输出短路保护（DCDC）
+            {"输出短路保护（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "输出短路保护（DCDC）",
+                                    UseCustomData = false,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 动态响应时间（DCDC）
+            {"动态响应时间（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "动态响应时间（DCDC）",
+                                    UseCustomData = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="输出电压响应时间",},
+                                    },
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 抛载试验（DCDC）
+            {"抛载试验（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "抛载试验（DCDC）",
+                                    UseCustomData = false,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 直流供电电压（DCDC）
+            {"直流供电电压（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "直流供电电压（DCDC）",
+                                    UseCustomData = false,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 工作电流（DCDC）
+            {"工作电流（DCDC）", new ProcessConfig_EX
+                                {
+                                    Name = "工作电流（DCDC）",
+                                    UseCustomData = false,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="LVDC电压",},
+                                        new() { Name="LVDC电流",},
+                                        new() { Name="LVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="低压负载设置模式",},
+                                        new() { Name="低压负载设置拉载值",},
+                                        new() { Name="低压负载设置限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
                                     },
                                 }
             },

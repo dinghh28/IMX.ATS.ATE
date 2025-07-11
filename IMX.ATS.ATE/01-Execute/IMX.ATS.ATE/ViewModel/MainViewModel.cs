@@ -1251,10 +1251,18 @@ namespace IMX.ATS.ATE
 #pragma warning restore CS0219 // 变量已被赋值，但从未使用过它的值
             string errorstr = string.Empty;
 
+            Test_ProjectItemInfo projectItemInfo = new Test_ProjectItemInfo
+            {
+                ProductSN = ProductSN,
+                ProjectName = thread.ProjectInfo.ProjectName,
+                ProjectID = thread.ProjectInfo.Id,
+                ProjectSN = thread.ProjectInfo.ProjectSN,
+            };
+
             Test_ItemInfo testinfo = new Test_ItemInfo
             {
                 ProductSN = ProductSN,
-                ProjectName = SelectedProductName,
+                ProjectName = thread.ProjectInfo.ProjectName,
                 ProjectID = thread.ProjectInfo.Id,
                 Operator = UserName,
             };
@@ -1269,13 +1277,7 @@ namespace IMX.ATS.ATE
             test_Data.ProductSN = ProductSN;
             test_Data.ProjectName = SelectedProductName;
 
-            Test_ProjectItemInfo projectItemInfo = new Test_ProjectItemInfo
-            {
-                ProductSN = ProductSN,
-                ProjectName = thread.ProjectInfo.ProjectName,
-                ProjectID = thread.ProjectInfo.Id,
-                ProjectSN = thread.ProjectInfo.ProjectSN,
-            };
+
 
             SavaProjectItem(SupportConfig.DataSavePath, projectItemInfo);
             #region 试验方案执行
@@ -3718,6 +3720,15 @@ namespace IMX.ATS.ATE
                             break;
                         #endregion
 
+                        #region 充电效率
+                        case "OBC充电效率":
+                            data1 = acquisition.DicReadInfo["HVDC功率"].DataInfo.Value;
+                            data2 = acquisition.DicReadInfo["交流测总功率"].DataInfo.Value;
+
+                            data.Value = data2 == 0 ? 0 : data1 / data2 * 100;
+                            break;
+                        #endregion
+
                         #region HVDC电压/输入电压(DCDC)检测
                         case "产品HVDC电压精度":
                         case "输入电压精度(DCDC)":
@@ -3777,95 +3788,13 @@ namespace IMX.ATS.ATE
                             data.Value = data2 - data1;
                             break;
                         #endregion
+
                         default:
                             data.Value = -255;
                             break;
                     }
                 }
             }
-        }
-        #endregion
-
-        #region 界面测试
-        private void TestThread()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                ObservableCollection<ExecuteStepInfo> stepinfo = new ObservableCollection<ExecuteStepInfo>();
-
-                ExecuteInfo functioninfo = new ExecuteInfo
-                {
-                    Index = i + 1,
-                    Result = ResultState.UNACCOMPLISHED,
-                    StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                    StepInfos = stepinfo,
-                    FunctionName = "test1",
-                };
-
-
-                Application.Current.Dispatcher.Invoke(new Action(() =>
-                {
-                    ATEExecuteInfos.Add(functioninfo);
-                }));
-                Thread.Sleep(100);
-                for (int k = 0; k < 5; k++)
-                {
-                    ExecuteStepInfo step = new ExecuteStepInfo
-                    {
-                        Result = ResultState.UNACCOMPLISHED,
-                        ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                        StepName = "KL30上电",
-                    };
-
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
-                    {
-                        stepinfo.Add(step);
-                    }));
-                    Thread.Sleep(500);
-                    Application.Current.Dispatcher.Invoke(new Action(() =>
-                    {
-                        step.Result = ResultState.SUCCESS;
-                    }));
-                }
-
-
-                //Application.Current.Dispatcher.Invoke(new Action(() =>
-                //{
-                //    ATEExecuteInfos.Add(new ExecuteInfo {
-                //    Index = i + 1,
-                //    FunctionName = "硬件唤醒测试",
-                //    Result = ResultState.FAIL,
-                //    StartTime = DateTime.Now.ToString("HH:mm:ss"),
-                //    StepInfos = new ObservableCollection<ExecuteStepInfo> {
-                //                new ExecuteStepInfo {
-                //                    StepName = "KL30上电",
-                //                    ExecuteTime = DateTime.Now.ToString("HH:mm:ss"),
-                //                    Limit_Lower = "11",
-                //                    Limit_Upper = "12.5",
-                //                    Result = ResultState.FAIL,
-                //                },
-                //                new ExecuteStepInfo {
-                //                    StepName = "KL15导通",
-                //                    ExecuteTime = DateTime.Now.AddMinutes(1).ToString("HH:mm:ss"),
-                //                    Limit_Lower = "1",
-                //                    Limit_Upper = "1",
-                //                    Result = ResultState.FAIL,
-                //                },
-                //                 new ExecuteStepInfo {
-                //                    StepName = "样品通讯上报",
-                //                    ExecuteTime = DateTime.Now.AddMinutes(2).ToString("HH:mm:ss"),
-                //                    Limit_Lower = string.Empty,
-                //                    Limit_Upper = string.Empty,
-                //                    Result = ResultState.FAIL,
-                //                },
-                //            }
-
-                //    });
-                //}));
-
-                //Thread.Sleep(1000);
-            }
-
         }
         #endregion
 

@@ -54,6 +54,9 @@
                     FontFamily="{StaticResource iconfont}"
                     Background="Green"
                     Height="80"
+                    Width="30"
+                    ToolTip="返回项目信息查询页"
+                    Cursor="Hand"
                     Visibility="{Binding LeftBtnVis}"
                     Command="{Binding Change}" CommandParameter="Project"/>
                 <Button 
@@ -63,6 +66,9 @@
                     FontFamily="{StaticResource iconfont}"
                     Background="Green"
                     Height="80"
+                    Width="30"
+                    ToolTip="返回测试项查询页"
+                    Cursor="Hand"
                     Visibility="{Binding RightBtnVis}"
                     Command="{Binding Change}" CommandParameter="Item"/>
                 <ContentControl Content="{Binding MainContent}"/>

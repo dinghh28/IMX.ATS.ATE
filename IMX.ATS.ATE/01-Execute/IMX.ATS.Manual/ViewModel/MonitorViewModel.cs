@@ -316,7 +316,7 @@ namespace IMX.ATS.Manual
                             ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
                             MessageLog=item.Value.MessageStr,
                             IsEnableShow=item.Value.IsEnableShow,
-    };
+                        };
 
                         GlobalModel.DicDeviceThreads.Add(item.Key, thread);
                     }

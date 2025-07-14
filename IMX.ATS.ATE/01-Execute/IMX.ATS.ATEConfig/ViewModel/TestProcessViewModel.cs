@@ -379,7 +379,7 @@ namespace IMX.ATS.ATEConfig
                         {
                             return;
                         }
-                        FunctionInfoIndex = index;//== 0 ? index : index - 1;
+                        FunctionInfoIndex = index == (FunctionInfos.Count - 1) ? index : index - 1;
                         ReNumber();
                         Thread.Sleep(10);
                     }
@@ -400,25 +400,42 @@ namespace IMX.ATS.ATEConfig
 
                         FuncitonType flowitemtag = SelectedTestFlowItem.Tag;
 
-                        var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
-
-                        if (!rlt)
+                        if (flowitemtag == FuncitonType.Startup || flowitemtag == FuncitonType.Shutdown)
                         {
-                            MessageBox.Show($"操作无法添加:{rlt.Message}");
-                            return;
+                            FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
+                            {
+                                Step = FunctionInfos.Count + 1,
+                                //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
+                                //FunctionName = obj.ToString(),
+                                CutomFuncName = SelectedTestFlowItem.Name,
+                                FunctionName = flowitemtag.ToString(),
+                                ModType = flowitemtag,
+                                Model = null,
+                            });
+                        }
+                        else
+                        {
+                            var rlt = FunViewModel.Create(SupportConfig.DicTestFlowItems[flowitemtag]);
+
+                            if (!rlt)
+                            {
+                                MessageBox.Show($"操作无法添加:{rlt.Message}");
+                                return;
+                            }
+
+                            FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
+                            {
+                                Step = FunctionInfos.Count + 1,
+                                //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
+                                //FunctionName = obj.ToString(),
+                                CutomFuncName = SelectedTestFlowItem.Name,
+                                FunctionName = flowitemtag.ToString(),
+                                ModType = rlt.Data.SupportFuncitonType,
+                                Model = rlt.Data
+                            });
                         }
 
-                        FunctionInfos.Insert(FunctionInfoIndex, new FunctionInfo
-                        {
-                            Step = FunctionInfos.Count + 1,
-                            //CutomFuncName = SupportConfig.DicTestFlowItems[flowitemtag],
-                            //FunctionName = obj.ToString(),
-                            CutomFuncName = SelectedTestFlowItem.Name,
-                            FunctionName = flowitemtag.ToString(),
-                            ModType = rlt.Data.SupportFuncitonType,
-                            Model = rlt.Data
-                        });
-
+                        Thread.Sleep(20);
                         ReNumber();
                         Thread.Sleep(10);
                     }

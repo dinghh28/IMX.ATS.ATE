@@ -36,8 +36,8 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Grid Grid.Row="1" Margin="0,5,0,0">
+        <ScrollViewer Grid.Row="1" Margin="0,5,0,0" VerticalScrollBarVisibility="Auto">
             <ContentControl Content="{Binding Content}"/>
-        </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

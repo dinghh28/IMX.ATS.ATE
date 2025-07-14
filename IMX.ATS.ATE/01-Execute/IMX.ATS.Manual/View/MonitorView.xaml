@@ -67,10 +67,10 @@
             <Grid Grid.Row="0" Grid.Column="1" >
                 <Button Content="配置CAN设备参数" HorizontalAlignment="Right" Width="150" Command="{Binding ShowCanInit}"/>
             </Grid>
-            <ScrollViewer Grid.Column="0" Grid.Row="1"  VerticalScrollBarVisibility="Auto">
+            <Grid Grid.Row="1" Grid.Column="0"   >
                 <ContentControl Content="{Binding  DeviceManual}"/>
                 <!--Visibility="{Binding ManualShow}"/>-->
-            </ScrollViewer>
+            </Grid>
             <Line StrokeThickness="2" />
             <!--<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button Content="{Binding BtnShow}" Command="{Binding ShowManual}" Style="{StaticResource ResourceKey=ControlButtonStyle}" ToolTip="设备操作" Cursor="Hand"/>

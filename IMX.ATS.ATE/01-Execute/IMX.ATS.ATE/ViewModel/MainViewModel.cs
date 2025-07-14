@@ -3820,30 +3820,30 @@ namespace IMX.ATS.ATE
                 DBOperate.Default.Init();
             }
 
-            DBOperate.Default.GetProjectName_Dic()
-                .AttachIfSucceed(result =>
-                {
-                    dicProject.Clear();
-                    dicProject = result.Data;
+            //DBOperate.Default.GetProjectName_Dic()
+            //    .AttachIfSucceed(result =>
+            //    {
+            //        dicProject.Clear();
+            //        dicProject = result.Data;
 
-                    ProdectNames.Clear();
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        foreach (var item in result.Data)
-                        {
-                            ProdectNames.Add(item.Key);
-                        }
-                        //for (int i = 0; i < result.Data.Count; i++)
-                        //{
-                        //    string name = result.Data[i];
-                        //    ProdectNames.Add(name);
-                        //}
-                    });
-                })
-                .AttachIfFailed(result =>
-                {
-                    MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
-                }); ;
+            //        ProdectNames.Clear();
+            //        Application.Current.Dispatcher.Invoke(() =>
+            //        {
+            //            foreach (var item in result.Data)
+            //            {
+            //                ProdectNames.Add(item.Key);
+            //            }
+            //            //for (int i = 0; i < result.Data.Count; i++)
+            //            //{
+            //            //    string name = result.Data[i];
+            //            //    ProdectNames.Add(name);
+            //            //}
+            //        });
+            //    })
+            //    .AttachIfFailed(result =>
+            //    {
+            //        MessageBox.Show($"项目信息获取失败,请重启操作平台\r\n{result.Message}", "项目信息");
+            //    }); ;
 
             //DBOperate.Default.GetProjectNames()
             //    .AttachIfSucceed(result =>

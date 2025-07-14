@@ -509,6 +509,7 @@ namespace IMX.DB
             try
             {
                 var items = Sqlite.Select<Test_ProjectInfo>()
+                    .Where(x=>!x.IsDeleted)
                     .OrderBy(x=>x.Id)
                     .Distinct()
                     .ToDictionary(x=>x.ProjectName, x=>x.Id);

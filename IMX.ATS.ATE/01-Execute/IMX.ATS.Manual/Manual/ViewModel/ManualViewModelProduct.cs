@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -179,12 +180,70 @@ namespace IMX.ATS.Manual
             {
                 var rlt = (deviceInfo.DeviceOperate as Product_CAN_Operate).SetReceiveState(isrecvice);
 
-                GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = isrecvice;
-
-                if (!GlobalModel.DicDeviceThreads["Product"].IsRunning)
+                if (isrecvice)
                 {
-                    ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(GlobalModel.DicDeviceThreads["Product"]);
+                    if (!GlobalModel.DicDeviceThreads.ContainsKey("Product"))
+                    {
+                        GlobalModel.DicDeviceThreads.Add("Product", new DeviceThread
+                        {
+                            ThreadName = "Product",
+                            IsStratCommunication = true,
+                            DeviceOperate = GlobalModel.DicDeviceInfo["Product"].DeviceOperate,
+                            DeviceAddress = $"{GlobalModel.DicDeviceInfo["Product"].Config.DeviceType.GetDescription()}[{GlobalModel.DicDeviceInfo["Product"].Config.DeviceModel}]",
+                            DeviceType = GlobalModel.DicDeviceInfo["Product"].Args.DeviceType,
+                            DelayTime = GlobalModel.DicDeviceInfo["Product"].Drive.DriveConfig.BeforeReadDelayMS,
+                            IsProduct = true,
+                            ProductIndex = 0,//Convert.ToInt32(item.Key.Split('_')[1]),
+                            IsReceiveData = true,
+                        });
+                        GlobalModel.DicDeviceThreads["Product"].DelayTime = 1000;
+
+                        //GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = isrecvice;
+
+                        //GlobalModel.DicDeviceThreads["Product"].IsReceiveData = isrecvice;
+
+                        if (!GlobalModel.DicDeviceThreads["Product"].IsRunning)
+                        {
+                            ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(GlobalModel.DicDeviceThreads["Product"]);
+                        }
+
+
+                    }
+                    else
+                    {
+                        if (GlobalModel.DicDeviceThreads["Product"].IsStratCommunication)
+                        {
+                            MessageBox.Show($"产品数据刷新线程启动成功！");
+
+                        }
+                        //else
+                        //{
+                        //    GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = isrecvice;
+
+                        //    GlobalModel.DicDeviceThreads["Product"].IsReceiveData = isrecvice;
+
+                        //    if (!GlobalModel.DicDeviceThreads["Product"].IsRunning)
+                        //    {
+                        //        ((ViewModelLocator)Application.Current.FindResource("Locator")).Monitor.StartRefresh(GlobalModel.DicDeviceThreads["Product"]);
+                        //    }
+                        //}
+                    }
+
                 }
+                else
+                {
+                    GlobalModel.DicDeviceThreads["Product"].IsReceiveData = false;
+
+
+                    GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = false;
+
+
+                    Thread.Sleep(100);
+
+                    GlobalModel.DicDeviceThreads.Remove("Product");
+
+                }
+
             }
 
             RevOperationName = isrecvice ? "停止接收" : "接收报文";
@@ -265,8 +324,8 @@ namespace IMX.ATS.Manual
             {
                 SendSignals.Add(new SendSignalModel
                 {
-                    IsSelected=false,
-                    DBCSignal=new DBCSendSignal
+                    IsSelected = false,
+                    DBCSignal = new DBCSendSignal
                     {
                         CustomName = signal.Custom_Name,
                         MessageName = signal.MessageName,

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Super.Zoo.Framework;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -7,23 +8,26 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Threading;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace IMX.ATS.DIOS
 {
     /// <summary>
     /// App.xaml 的交互逻辑
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         public App()
         {
-            System.AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             DispatcherUnhandledException += App_DispatcherUnhandledException;
 
-            System.Threading.Tasks.TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
+            ResigerGetMessageEvent();
         }
 
         private Mutex mutex;
@@ -56,19 +60,39 @@ namespace IMX.ATS.DIOS
             mutex?.Close();
             mutex?.Dispose();
         }
+
         private void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
+            //ResigerGetMessageEvent();
+            //MessageBox.Show(e.Exception.GetMessage(), "软件异常 - 异步线程", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //ExceptionExtends.ResetGetMessageEvent();
             return;
         }
 
         private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            return;
+            //ResigerGetMessageEvent();
+            MessageBox.Show(e.Exception.GetMessage(), "软件异常 - UI线程", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //ExceptionExtends.ResetGetMessageEvent();
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            return;
+            // ResigerGetMessageEvent();
+            MessageBox.Show((e.ExceptionObject as Exception).GetMessage(), "软件异常 - 非UI线程", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //ExceptionExtends.ResetGetMessageEvent();
+        }
+
+        private static void ResigerGetMessageEvent()
+        {
+            ExceptionExtends.ResigerGetMessageEvent(
+                ex =>
+                $"<| 异常方法 |> {ex.TargetSite}{Environment.NewLine}" +
+                $"<| 异常来源 |> {ex.Source}{Environment.NewLine}" +
+                $"<| 异常类型 |> {ex.GetType().Name}{Environment.NewLine}" +
+                $"<| 异常信息 |> {ex.Message}{Environment.NewLine}" +
+                $"<| 堆栈调用 |> {Environment.NewLine}{ex.StackTrace}"
+            );
         }
     }
 }

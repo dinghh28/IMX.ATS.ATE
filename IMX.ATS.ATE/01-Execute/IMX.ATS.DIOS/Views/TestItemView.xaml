@@ -79,7 +79,7 @@
                           VerticalScrollBarVisibility="Visible">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="PreviewMouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding OpenDatas}"/>
+                            <i:InvokeCommandAction Command="{Binding OpenDatas}" CommandParameter="{Binding ElementName=Win}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <DataGrid.Columns>

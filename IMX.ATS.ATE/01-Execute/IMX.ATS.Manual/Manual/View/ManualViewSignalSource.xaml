@@ -86,25 +86,33 @@
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Content="频率：" VerticalAlignment="Center"/>
                                     <TextBox Grid.Column="1" Text="{Binding Set_FreqValue, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="30"/>
+                                    <Label Grid.Column="2" Content="Hz" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                 </Grid>
                                 <Grid Grid.Column="1" Margin="40,0,20,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Content="幅度：" VerticalAlignment="Center"/>
                                     <TextBox Grid.Column="1" Text="{Binding Set_AmplValue, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="30"/>
+                                    <Label Grid.Column="2" Content="V" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
                                 </Grid>
                                 <Grid Grid.Column="2" Margin="40,0,20,0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Content="占空比：" VerticalAlignment="Center"/>
                                     <TextBox Grid.Column="1" Text="{Binding Set_DutyValue, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="80" Height="30"/>
+                                    <Label Grid.Column="2" Content="%" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+
                                 </Grid>
                             </Grid>
                         </GroupBox>

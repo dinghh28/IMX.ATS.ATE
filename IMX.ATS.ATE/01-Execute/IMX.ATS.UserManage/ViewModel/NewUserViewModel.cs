@@ -49,6 +49,7 @@ namespace IMX.ATS.UserManage
             get => testLevel;
             set => Set(nameof(TestLevel), ref testLevel, value);
         }
+
         private bool userLevel;
         /// <summary>
         /// 用户管理权限
@@ -58,6 +59,7 @@ namespace IMX.ATS.UserManage
             get => userLevel;
             set => Set(nameof(UserLevel), ref userLevel, value);
         }
+
         private bool dataLevel;
         /// <summary>
         /// 数据查询权限
@@ -67,6 +69,7 @@ namespace IMX.ATS.UserManage
             get => dataLevel;
             set => Set(nameof(DataLevel), ref dataLevel, value);
         }
+
         private bool projectLevel;
         /// <summary>
         /// 方案配置权限
@@ -131,6 +134,7 @@ namespace IMX.ATS.UserManage
             try
             {
                 int privilege = (TestLevel ? (int)UserPermissions.ATE : 0)
+                            +(ProjectLevel ? (int)UserPermissions.ATEConfig : 0)
                             + (DataLevel ? (int)UserPermissions.DIOS : 0)
                             + (UserLevel ? (int)UserPermissions.UserManage : 0)
                             + (DBC ? (int)UserPermissions.DBCConfig : 0)

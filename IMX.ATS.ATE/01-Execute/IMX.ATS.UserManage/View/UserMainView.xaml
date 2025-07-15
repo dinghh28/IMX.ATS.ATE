@@ -42,6 +42,7 @@
                     <!--<TextBlock Text="{Binding UserName}" FontSize="15" VerticalAlignment="Center"/>-->
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" >
+                    <Button Content="&#xe720;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Window}" />
                     <Button Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Window}" />
                 </StackPanel>
             </Grid>

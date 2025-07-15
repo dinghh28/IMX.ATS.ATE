@@ -17,7 +17,7 @@ using System.Windows.Input;
 
 namespace IMX.ATS.UserManage
 {
-    public class UserMainViewModel : ExtendViewModelBase
+    public class UserMainViewModel : WindowViewModelBaseEx
     {
         #region 公共属性
 
@@ -345,6 +345,7 @@ namespace IMX.ATS.UserManage
             try
             {
                 int privilege = (TestLevel ? (int)UserPermissions.ATE : 0)
+                            + (ProjectLevel ? (int)UserPermissions.ATEConfig : 0)
                             + (DataLevel ? (int)UserPermissions.DIOS : 0)
                             + (UserLevel ? (int)UserPermissions.UserManage : 0)
                             + (DBC ? (int)UserPermissions.DBCConfig : 0)

@@ -125,8 +125,6 @@ namespace IMX.ATS.DIOS
                 return;
             }
 
-            base.WindowMaxExecute(obj);
-            Thread.Sleep(5);
             WindowLeftDown_MoveEvent.LeftDown_MoveEventRegister(win);
             
            
@@ -136,7 +134,10 @@ namespace IMX.ATS.DIOS
             }
 
             MainContent = ContentControlManager.GetControl<TestProjectItemView>(((ViewModelLocator)Application.Current.FindResource("Locator")).Project);
+            Thread.Sleep(5);
 
+            base.WindowMaxExecute(obj);
+            
             //base.WindowLoadedExecute(obj);
         }
 

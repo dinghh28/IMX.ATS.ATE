@@ -55,6 +55,9 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0" Grid.Column="0" Content="用户名:" Width="100" VerticalAlignment="Center"/>
                 <TextBox Grid.Row="0" Grid.Column="2"  Text="{Binding UserName}" />
+                <StackPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                    <TextBlock Text="默认初始密码为：111111" Margin="0,0,0,15" Foreground="Red"/>
+                </StackPanel>
                 <!--<Label Grid.Row="1" Grid.Column="0" Content="用户初始密码：" Width="100" VerticalAlignment="Center"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Text="111111" />-->
                 <Label Grid.Row="1" Grid.Column="0" Content="用户权限：" Width="100" VerticalAlignment="Center"/>

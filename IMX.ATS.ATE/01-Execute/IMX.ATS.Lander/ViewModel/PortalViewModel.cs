@@ -439,7 +439,7 @@ namespace IMX.ATS.Lander
                         {
                             if (!process.HasExited)
                             {
-                                MessageBox.Show("请先关闭手动操作平台后，再开启测试平台");
+                                MessageBox.Show("请先关闭手动操作平台后，再开启测试平台", "测试平台无法打开");
                                 return;
                             }
                         }
@@ -450,7 +450,7 @@ namespace IMX.ATS.Lander
                         {
                             if (!process.HasExited)
                             {
-                                MessageBox.Show("请先关闭手动操作平台后，再开启测试平台");
+                                MessageBox.Show("请先关闭测试平台后，再开启手动平台","手动操作平台无法打开");
                                 return;
                             }
                         }

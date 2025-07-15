@@ -301,7 +301,7 @@ namespace IMX.ATS.ATEConfig
             {
                 listProcessNames.Add(item.SelectedName);
             }
-            if (listProcessNames.Contains(" "))
+            if (listProcessNames.Any(string.IsNullOrEmpty))
             {
                 MessageBox.Show($"试验方案保存异常：\r\n试验方案中存在不存在项目，请重新配置试验项", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
@@ -401,10 +401,12 @@ namespace IMX.ATS.ATEConfig
 
             if (!GlobalModel.IsNewProject)
             {
+
                 //获取试验方案阶段
                 DBOperate.Default.GetProgrammeName(projectid)
                    .AttachIfSucceed(result =>
                    {
+                       List<string> names = new List<string>();
                        if (result.Data != null)
                        {
                            Test_Programme test_Programme = result.Data;
@@ -437,33 +439,36 @@ namespace IMX.ATS.ATEConfig
 
                                }
                            }
+
+                           
                            if (test_Programme.TestOff_FlowNames.Count > 0)
                            {
-                               //EPowerOffProcessNames.Clear();
-                               List<string> names = new List<string>();
                                for (int i = 0; i < test_Programme.TestOff_FlowNames.Count; i++)
                                {
                                    if (lispoweroffprocessnames.Contains(test_Programme.TestOff_FlowNames[i]))
                                    {
                                        names.Add(test_Programme.TestOff_FlowNames[i]);
-                                       //test_Programme.TestOff_FlowNames.RemoveAt(i);
                                    }
-                                   //EPowerOffProcessNames.Add(test_Programme.TestOff_FlowNames[i]);
-                               }
-
-                               names.AddRange(lispoweroffprocessnames);
-                               names = names.Distinct().ToList();
-                               //List<string> names = EPowerOffProcessNames.Distinct().ToList();
-                               EPowerOffProcessNames.Clear();
-
-                               for (int i = 0; i < names.Count; i++)
-                               {
-                                   EPowerOffProcessNames.Add(names[i]);
                                }
                            }
 
+                           //names.AddRange(lispoweroffprocessnames);
+                           //names = names.Distinct().ToList();
+                           //EPowerOffProcessNames.Clear();
 
+                           //for (int i = 0; i < names.Count; i++)
+                           //{
+                           //    EPowerOffProcessNames.Add(names[i]);
+                           //}
                        }
+                           names.AddRange(lispoweroffprocessnames);
+                           names = names.Distinct().ToList();
+                           EPowerOffProcessNames.Clear();
+
+                           for (int i = 0; i < names.Count; i++)
+                           {
+                               EPowerOffProcessNames.Add(names[i]);
+                           }
 
                    }).AttachIfFailed(result =>
                    {

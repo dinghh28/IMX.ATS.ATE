@@ -47,6 +47,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace IMX.ATS.DIOS
@@ -155,7 +156,7 @@ namespace IMX.ATS.DIOS
             SearchItem();
         });
 
-        public RelayCommand OpenDatas => new RelayCommand(DatasWindowOpen);
+        public RelayCommand<object> OpenDatas => new RelayCommand<object>(DatasWindowOpen);
 
         /// <summary>
         /// 全选指令
@@ -526,12 +527,14 @@ namespace IMX.ATS.DIOS
         /// <summary>
         /// 打开数据展示界面窗口
         /// </summary>
-        private void DatasWindowOpen()
+        private void DatasWindowOpen(object obj)
         {
+
             if (SelectIndex == -1)
             {
                 return;
             }
+
             int index = SelectIndex;
 
             Test_ItemInfo item = Datas[index].Data;
@@ -550,6 +553,11 @@ namespace IMX.ATS.DIOS
             {
               DataContext = model,
             };
+            Window win = System.Windows.Application.Current.MainWindow;
+            WindowInteropHelper itemview = new WindowInteropHelper(win);
+            WindowInteropHelper dataview = new WindowInteropHelper(view);
+            itemview.Owner = IntPtr.Zero;
+            dataview.Owner = itemview.Handle;
             view.Show();
         }
         #endregion

@@ -111,7 +111,7 @@ namespace IMX.DB.Model
                     return actualruntime = 0;
                 }
 
-                actualruntime = CreateTime.Ticks - UpdateTime.Ticks;
+                actualruntime = UpdateTime.Ticks - CreateTime.Ticks;
 
                 return actualruntime;
             }

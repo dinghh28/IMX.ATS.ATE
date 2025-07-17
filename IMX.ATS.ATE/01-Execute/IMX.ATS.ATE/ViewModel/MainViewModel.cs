@@ -413,6 +413,10 @@ namespace IMX.ATS.ATE
         /// </summary>
         private void ClearErrorLED()
         {
+            if (relayoperate_4 == null)
+            {
+                return;
+            }
             lock (relayoperate_4)
             {
                 if (IsTestRuning)
@@ -426,7 +430,7 @@ namespace IMX.ATS.ATE
             }
 
             Thread.Sleep(100);
-            IsFocuse = true;
+            //IsFocuse = true;
             //MessageBox.Show($"故障指示灯已清除");
         }
 
@@ -1486,7 +1490,7 @@ namespace IMX.ATS.ATE
                                 test_Data.StepName = config.SupportFuncitonType.GetDescription();
                                 test_Data.FlowName = flowname;
                                 test_Data.StepIndex = j + 1;
-
+                                test_Data.Euq_DeviceRead = new List<ModDeviceReadData>();
                                 test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
                                 for (int k = 0; k < resultconfig?.Datas?.Count; k++)
                                 {
@@ -1675,6 +1679,8 @@ namespace IMX.ATS.ATE
                             test_Data.StepName = config.SupportFuncitonType.GetDescription();
                             test_Data.FlowName = flowname;
                             test_Data.StepIndex = j + 1;
+                            
+                            test_Data.Pro_DeviceRead = new List<ModDeviceReadData>();
                             test_Data.Euq_DeviceRead = new List<ModDeviceReadData>();
                             for (int k = 0; k < resultconfig?.Datas?.Count; k++)
                             {
@@ -3756,6 +3762,29 @@ namespace IMX.ATS.ATE
                             break;
                         #endregion
 
+                        #region 输出电压误差
+                        case "输出电压精度":
+                            data2 = acquisition.DicReadInfo["HVDC电压"].DataInfo.Value;
+                            data1 = product.DicSetInfo["OBC设置输出电压"].DataInfo.Value;
+
+                            data.Value = data1 == 0 ? 100 : (data2 - data1) / data1 * 100;
+                            break;
+                        #endregion
+
+                        #region 输出电流误差
+                        case "输出电流精度":
+                            data2 = acquisition.DicReadInfo["HVDC电流"].DataInfo.Value;
+                            data1 = product.DicSetInfo["OBC设置输出电流"].DataInfo.Value;
+
+                            data.Value = data1 == 0 ? 100 : (data2 - data1) / data1 * 100;
+                            break;
+                        case "输出电流误差":
+                            data2 = acquisition.DicReadInfo["HVDC电流"].DataInfo.Value;
+                            data1 = product.DicSetInfo["OBC设置输出电流"].DataInfo.Value;
+
+                            data.Value = data2 - data1;
+                            break;
+                        #endregion
                         #region 输出效率(DCDC)
                         case "输出效率(DCDC)":
                             data1 = acquisition.DicReadInfo["LVDC功率"].DataInfo.Value;

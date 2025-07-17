@@ -1,7 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using H.WPF.Framework;
-using IMX.ATS.DBCConfig;
 using IMX.Common;
 using IMX.Device.Common;
 using IMX.Logger;

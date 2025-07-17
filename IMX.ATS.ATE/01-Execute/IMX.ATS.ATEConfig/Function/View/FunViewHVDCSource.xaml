@@ -86,7 +86,7 @@
                                     <CheckBox    Content="电压步进模式"
                                                  VerticalContentAlignment="Center"
                                                  HorizontalAlignment="Left"
-                                                 IsChecked="{Binding Set_StepModel, Mode=TwoWay}" Width="100"/>
+                                                 IsChecked="{Binding Set_StepModel, Mode=TwoWay}" Width="120"/>
                                 </Grid>
                                 <Grid Grid.Column="2">
                                     <Grid.ColumnDefinitions>

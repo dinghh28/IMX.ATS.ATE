@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Media.TextFormatting;
 using System.Windows.Media;
 using System.Collections.ObjectModel;
-using IMX.ATS.DBCConfig;
 using System.Xml.Linq;
 
 namespace IMX.ATS.Manual
@@ -374,7 +373,36 @@ namespace IMX.ATS.Manual
         {
             try
             {
-                OperateResult result = GlobalModel.DicDeviceInfo["Product"].Drive.UnregisterDevice(GlobalModel.DicDeviceInfo["Product"].DeviceOperate);
+                if (!GlobalModel.DicDeviceThreads.TryGetValue("Product", out DeviceThread thread))
+                {
+                    MessageBox.Show("CAN设备未初始化");
+                    return;
+                }
+
+                thread.IsReceiveData = false;
+                Thread.Sleep(100);
+
+                thread.IsStratCommunication = false;
+                //Thread.Sleep(200);
+
+                int timeout = 1 * 60 * 10;
+
+                while (timeout-- > 0)
+                {
+                    if (thread.IsRunning) 
+                    {
+                        break;
+                    }
+
+                    Thread.Sleep(100);
+                }
+
+                var product = GlobalModel.DicDeviceInfo["Product"];
+
+                var operate = product.DeviceOperate as Product_CAN_Operate;
+                OperateResult result = operate.StopCommunication()
+                    .And(operate.Close())
+                    .And(product.Drive.UnregisterDevice(operate));
                 //OperateResult result = GlobalModel.DicDeviceOperate[operate].UnregisterDevice(operate);
 
                 if (!result)
@@ -383,20 +411,17 @@ namespace IMX.ATS.Manual
                     {
                         Messagestrs.Add($"[{DateTime.Now}]--CAN设备卸载失败:{result.Message}");
                     });
+                    return;
                 }
 
-                if (GlobalModel.DicDeviceInfo["Product"].Drive.CanRemove)
+                if (product.Drive.CanRemove)
                 {
-                    GlobalModel.DicDeviceDrives.Remove(GlobalModel.DicDeviceInfo["Product"].DeviceOperate.DeviceConfig.DriveConfig.ResourceString);
+                    GlobalModel.DicDeviceDrives.Remove(product.DeviceOperate.DeviceConfig.DriveConfig.ResourceString);
                 }
 
                 Thread.Sleep(100);
 
-                GlobalModel.DicDeviceThreads["Product"].IsReceiveData = false;
-                Thread.Sleep(100);
 
-                GlobalModel.DicDeviceThreads["Product"].IsStratCommunication = false;
-                Thread.Sleep(100);
 
                 GlobalModel.DicDeviceThreads.Remove("Product");
 

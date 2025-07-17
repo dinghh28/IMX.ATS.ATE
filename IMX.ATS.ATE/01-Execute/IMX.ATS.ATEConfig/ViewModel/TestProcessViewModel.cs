@@ -349,6 +349,7 @@ namespace IMX.ATS.ATEConfig
                         FunctionInfos.Insert(index - 1, FunctionInfos[index]);
                         FunctionInfos.RemoveAt(index + 1);
                         FunctionInfoIndex = index - 1;
+                        Thread.Sleep(10);
                         ReNumber();
                         Thread.Sleep(10);
                     }
@@ -364,6 +365,7 @@ namespace IMX.ATS.ATEConfig
                         FunctionInfos.Insert(index + 2, FunctionInfos[index]);
                         FunctionInfos.RemoveAt(index);
                         FunctionInfoIndex = index + 1;
+                        Thread.Sleep(10);
                         ReNumber();
                         Thread.Sleep(10);
                     }
@@ -379,7 +381,9 @@ namespace IMX.ATS.ATEConfig
                         {
                             return;
                         }
-                        FunctionInfoIndex = index == (FunctionInfos.Count - 1) ? index : index - 1;
+                    //FunctionInfoIndex = index == (FunctionInfos.Count - 1) ? index : index - 1;
+                    FunctionInfoIndex = index;
+                        Thread.Sleep(10);
                         ReNumber();
                         Thread.Sleep(10);
                     }

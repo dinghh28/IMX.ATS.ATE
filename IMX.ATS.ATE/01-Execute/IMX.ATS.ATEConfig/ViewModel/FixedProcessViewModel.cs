@@ -747,6 +747,7 @@ namespace IMX.ATS.ATEConfig
                         FunctionInfos.Insert(index - 1, FunctionInfos[index]);
                         FunctionInfos.RemoveAt(index + 1);
                         FunctionInfoIndex = index - 1;
+                        Thread.Sleep(10);
                         ReNumber();
                         Thread.Sleep(10);
                     }
@@ -758,17 +759,33 @@ namespace IMX.ATS.ATEConfig
                         FunctionInfos.Insert(index + 2, FunctionInfos[index]);
                         FunctionInfos.RemoveAt(index);
                         FunctionInfoIndex = index + 1;
+                        Thread.Sleep(10);
                         ReNumber();
                         Thread.Sleep(10);
                     }
                     break;
                     case "DELETE":
                     {
-                        FunctionInfos.RemoveAt(index);
-                        for (int i = index; i < FunctionInfos.Count; i++)
+                        if (FunctionInfos.Count < 1)
                         {
-                            FunctionInfos[i].Step = i + 1;
+                            return;
                         }
+                        FunctionInfos.RemoveAt(index);
+                        if (FunctionInfos.Count < 1)
+                        {
+                            return;
+                        }
+                        FunctionInfoIndex = index;
+                        //FunctionInfoIndex = index == (FunctionInfos.Count - 1) ? index : index - 1;
+                        Thread.Sleep(10);
+                        ReNumber();
+                        Thread.Sleep(10);
+
+                        //FunctionInfos.RemoveAt(index);
+                        //for (int i = index; i < FunctionInfos.Count; i++)
+                        //{
+                        //    FunctionInfos[i].Step = i + 1;
+                        //}
                     }
                     break;
                     case "INSERT":
@@ -805,7 +822,7 @@ namespace IMX.ATS.ATEConfig
                             ModType = rlt.Data.SupportFuncitonType,
                             Model = rlt.Data
                         });
-
+                        Thread.Sleep(10);
                         ReNumber();
                         Thread.Sleep(10);
                     }

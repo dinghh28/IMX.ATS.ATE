@@ -389,10 +389,6 @@
       <Project>{e097f188-c3fc-4f85-8710-e384ee3d3c75}</Project>
       <Name>IMX.ATE.Converts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\IMX.ATS.DBCConfig\IMX.ATS.DBCConfig.csproj">
-      <Project>{a3bbfc39-d54b-44a2-b9ae-c83b874ad3ce}</Project>
-      <Name>IMX.ATS.DBCConfig</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

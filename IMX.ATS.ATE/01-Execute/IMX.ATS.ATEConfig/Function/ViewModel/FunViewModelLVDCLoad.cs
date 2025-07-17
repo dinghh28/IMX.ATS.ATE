@@ -217,11 +217,12 @@ namespace IMX.ATS.ATEConfig.Function
                     EnableSetLoadValue = false;
                     EnableSetStepValue = false;
                     Set_StepModel = false;
-                    EnableSetValue = false;
+                    //EnableSetValue = false;
                 }
                 else
                 {
                     EnableSetLoadValue = true;
+                    //EnableSetValue = true;
                 }
                 return set_shortstate = (Func.Config as FunConfig_LVDCLoad).Set_ShortState;
             }
@@ -236,11 +237,12 @@ namespace IMX.ATS.ATEConfig.Function
                         EnableSetLoadValue = false;
                         EnableSetStepValue = false;
                         Set_StepModel = false;
-                        EnableSetValue = false;
+                        //EnableSetValue = false;
                     }
                     else
                     {
                         EnableSetLoadValue = true;
+                        //EnableSetValue = true;
                     }
                 }
             }
@@ -256,13 +258,78 @@ namespace IMX.ATS.ATEConfig.Function
         {
             get
             {
-                return setmodel = (Func.Config as FunConfig_LVDCLoad).Set_Model;
+                if ((Func.Config as FunConfig_LVDCLoad).Set_Model == Opaerate_Mode.NULL)
+                {
+                    (Func.Config as FunConfig_LVDCLoad).Set_Model = setmodel;
+                }
+                else
+                {
+                    setmodel = (Func.Config as FunConfig_LVDCLoad).Set_Model;
+                }
+                switch (setmodel)
+                {
+                    case Opaerate_Mode.CC:
+                        Unit = "A";
+                        ParamUnit = "A/us";
+                        ParamName = "上升斜率：";
+                        LimtUnit = "V";
+                        ParamEnable = true;
+                        break;
+                    case Opaerate_Mode.CV:
+                        Unit = "V";
+                        ParamUnit = "A";
+                        ParamName = "限制电流：";
+                        LimtUnit = "A";
+                        ParamEnable = false;
+                        break;
+                    case Opaerate_Mode.CR:
+                        Unit = "欧";
+                        ParamUnit = "A/us";
+                        ParamName = "上升斜率：";
+                        LimtUnit = "V";
+                        ParamEnable = false;
+                        break;
+                    case Opaerate_Mode.CP:
+                    case Opaerate_Mode.NULL:
+                    default:
+                        break;
+                }
+
+                return setmodel;
             }
             set
             {
                 if (Set(nameof(SetModel), ref setmodel, value))
                 {
                     (Func.Config as FunConfig_LVDCLoad).Set_Model = value;
+                    switch (value)
+                    {
+                        case Opaerate_Mode.CC:
+                            Unit = "A";
+                            ParamUnit = "A/us";
+                            ParamName = "上升斜率：";
+                            LimtUnit = "V";
+                            ParamEnable = true;
+                            break;
+                        case Opaerate_Mode.CV:
+                            Unit = "V";
+                            ParamUnit = "A";
+                            ParamName = "限制电流：";
+                            LimtUnit = "A";
+                            ParamEnable = false;
+                            break;
+                        case Opaerate_Mode.CR:
+                            Unit = "欧";
+                            ParamUnit = "A/us";
+                            ParamName = "上升斜率：";
+                            LimtUnit = "V";
+                            ParamEnable = false;
+                            break;
+                        case Opaerate_Mode.CP:
+                        case Opaerate_Mode.NULL:
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -331,6 +398,60 @@ namespace IMX.ATS.ATEConfig.Function
                 }
             }
         }
+
+        #region 界面呈现变更
+        private string unit = "A";
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string Unit
+        {
+            get => unit;
+            set => Set(nameof(Unit), ref unit, value);
+        }
+
+        private string limtunit = "A";
+        /// <summary>
+        /// 上限值值单位
+        /// </summary>
+        public string LimtUnit
+        {
+            get => limtunit;
+            set => Set(nameof(LimtUnit), ref limtunit, value);
+        }
+
+        private bool paramenable;
+        /// <summary>
+        /// 额外参数使能
+        /// </summary>
+        public bool ParamEnable
+        {
+            get => paramenable;
+            set => Set(nameof(ParamEnable), ref paramenable, value);
+        }
+
+        private string paramunit = "A/us";
+        /// <summary>
+        /// 各模式下参数单位
+        /// </summary>
+        public string ParamUnit
+        {
+            get => paramunit;
+            set => Set(nameof(ParamUnit), ref paramunit, value);
+        }
+
+        private string paramName;
+
+        /// <summary>
+        /// 拉载值单位
+        /// </summary>
+        public string ParamName
+        {
+            get => paramName;
+            set => Set(nameof(ParamName), ref paramName, value);
+        }
+        #endregion
+
         #endregion
 
         #region 界面绑定指令

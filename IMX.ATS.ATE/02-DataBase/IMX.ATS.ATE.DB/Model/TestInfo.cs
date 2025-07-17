@@ -106,7 +106,7 @@ namespace IMX.DB.Model
                     return actualruntime = 0;
                 }
 
-                if (CreateTime.Ticks - UpdateTime.Ticks < 0)
+                if (UpdateTime.Ticks - CreateTime.Ticks < 0)
                 {
                     return actualruntime = 0;
                 }

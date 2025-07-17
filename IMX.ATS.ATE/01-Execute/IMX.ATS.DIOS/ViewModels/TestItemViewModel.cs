@@ -147,7 +147,7 @@ namespace IMX.ATS.DIOS
         #region 界面绑定指令
         public RelayCommand Search => new RelayCommand(SearchItem);
 
-        public RelayCommand Export => new RelayCommand(MulExport);
+        public RelayCommand<string> Export => new RelayCommand<string>(MulExport);
 
         public RelayCommand Clear => new RelayCommand(() =>
         {
@@ -206,7 +206,7 @@ namespace IMX.ATS.DIOS
         #endregion
 
         #region 导出方案
-        private void MulExport()
+        private void MulExport(string obj)
         {
             if (Datas == null || Datas.Count < 1)
             {
@@ -253,22 +253,24 @@ namespace IMX.ATS.DIOS
                 }
             };
 
-            string dirpath = Path.Combine(selectedFolderPath, $"{itemInfos[0].ProductSN}_{itemInfos[0].ProjectName}");
-
-            if (!Directory.Exists(dirpath))
+            if (obj == "DATA")
             {
-                Directory.CreateDirectory(dirpath);
-            }
+                string dirpath = Path.Combine(selectedFolderPath, $"{itemInfos[0].ProductSN}_{itemInfos[0].ProjectName}");
 
-            Task.Run(async () =>
-            {
-                ProBarVisily = Visibility.Visible;
-                await Task.Run(() =>
+                if (!Directory.Exists(dirpath))
                 {
+                    Directory.CreateDirectory(dirpath);
+                }
 
-
-                    for (int i = 0; i < itemInfos.Count; i++)
+                Task.Run(async () =>
+                {
+                    ProBarVisily = Visibility.Visible;
+                    await Task.Run(() =>
                     {
+
+
+                        for (int i = 0; i < itemInfos.Count; i++)
+                        {
                             DataTable table = new DataTable();
                             var itemdata = itemInfos[i];
                             var datatableresult =
@@ -282,36 +284,76 @@ namespace IMX.ATS.DIOS
                             if (!datatableresult)
                             {
                                 ProBarVisily = Visibility.Hidden;
-                            MessageBox.Show($"测试项【{itemdata.FlowName}】数据获取异常","数据导出失败");
+                                MessageBox.Show($"测试项【{itemdata.FlowName}】数据获取异常", "数据导出失败");
                                 return;
                             }
-                         var exresult =  ExcelExport(itemdata, JsonToDataTableConverter(table, datatableresult.Data), dirpath);
-                        if (!exresult)
-                        {
-                            ProBarVisily = Visibility.Hidden;
-                            MessageBox.Show($"测试项【{itemdata.FlowName}】数据导出Excel文件失败", "数据导出失败");
-                            return;
+                            var exresult = ExcelExport(itemdata, JsonToDataTableConverter(table, datatableresult.Data), dirpath);
+                            if (!exresult)
+                            {
+                                ProBarVisily = Visibility.Hidden;
+                                MessageBox.Show($"测试项【{itemdata.FlowName}】数据导出Excel文件失败", "数据导出失败");
+                                return;
+                            }
+                            ProBarValue = i;
                         }
-                        ProBarValue = i;
-                    }
-                    
-                    //ExcelExport(Datas[0].Data, new DataTable());.AttachIfSucceed(result =>
-                    //{
-                    //    MessageBox.Show($"数据导出完成！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //})
-                    //.AttachIfFailed(result =>
-                    //{
-                    //    MessageBox.Show($"测试数据导出失败：{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Question);
-                    //});
 
-                    //if (result)
-                    //{ System.Windows.Forms.MessageBox.Show("数据导出完成"); }
-                    ProBarVisily = Visibility.Hidden;
+                        //ExcelExport(Datas[0].Data, new DataTable());.AttachIfSucceed(result =>
+                        //{
+                        //    MessageBox.Show($"数据导出完成！", "成功", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        //})
+                        //.AttachIfFailed(result =>
+                        //{
+                        //    MessageBox.Show($"测试数据导出失败：{result.Message}", "失败", MessageBoxButtons.OK, MessageBoxIcon.Question);
+                        //});
 
-                    System.Windows.Forms.MessageBox.Show("数据导出完成");
+                        //if (result)
+                        //{ System.Windows.Forms.MessageBox.Show("数据导出完成"); }
+                        ProBarVisily = Visibility.Hidden;
+
+                        MessageBox.Show("数据导出完成");
+                    });
+
                 });
+            }
+            else
+            {
+                string dirpath = Path.Combine(selectedFolderPath, $"{itemInfos[0].ProductSN}_{itemInfos[0].ProjectName}报告");
 
-            });
+                if (!Directory.Exists(dirpath))
+                {
+                    Directory.CreateDirectory(dirpath);
+                }
+
+                Task.Run(async () => 
+                {
+                    ProBarVisily = Visibility.Visible;
+                    await Task.Run(() => 
+                    {
+                        for (int i = 0; i < itemInfos.Count; i++)
+                        {
+                            var itemdata = itemInfos[i];
+                           var dataresult =  DBOperate.Default.GetTestData(itemdata.Id, itemdata.CreateTime, itemdata.UpdateTime);
+                            if (!dataresult)
+                            {
+                                ProBarVisily = Visibility.Hidden;
+                                MessageBox.Show($"测试项【{itemdata.FlowName}】数据获取异常", "报告导出失败");
+                                return;
+                            }
+                            var exresult = ExcelExport_Report(itemdata, dataresult.Data, dirpath);
+                            if (!exresult)
+                            {
+                                ProBarVisily = Visibility.Hidden;
+                                MessageBox.Show($"测试项【{itemdata.FlowName}】数据导出Excel报告文件失败", "报告导出失败");
+                                return;
+                            }
+                            ProBarValue = i;
+                        }
+                        ProBarVisily = Visibility.Hidden;
+
+                        MessageBox.Show("报告导出完成");
+                    });
+                });
+            }
         }
 
         /// <summary>
@@ -456,9 +498,124 @@ namespace IMX.ATS.DIOS
                 }
                 catch (Exception ex)
                 {
-                    SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, nameof(DIOS),"Excel格式文件导出",ex);
+                    SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, "试验详细数据","Excel格式文件导出",ex);
                     return OperateResult.Excepted(ex);
                 }
+            };
+
+            return OperateResult.Succeed();
+        }
+
+        private OperateResult ExcelExport_Report(Test_ItemInfo item, List<Test_DataInfo> data, string path) 
+        {
+            string errMsg = "";
+            string fileName = "IMX.ATS.DIOS.Resource.ExcelTemp.ATEReportTemp.xlsx";
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName);
+
+            using (stream) 
+            {
+                try
+                {
+                    Workbook workbook = new Workbook(stream);
+
+                    Worksheet worksheet = workbook.Worksheets[0];
+
+                    #region Title
+                    worksheet.Cells["A2"].Value = item.ProjectName;
+                    worksheet.Cells["C2"].Value = item.ProductSN;
+                    worksheet.Cells["F2"].Value = item.FlowName;
+                    #region 测试结果样式
+                    Aspose.Cells.Style resultstle = workbook.Styles[workbook.Styles.Add()];
+                    resultstle.HorizontalAlignment = TextAlignmentType.Center;
+                    resultstle.Font.Color = item.Result == ResultState.SUCCESS ? Color.Green : Color.Red;
+                    worksheet.Cells["I2"].SetStyle(resultstle);
+                    #endregion
+                    worksheet.Cells["I2"].Value = item.Result.ToString();
+
+
+                    worksheet.Cells["A5"].PutValue(item.CreateTime.ToString("yyyy/MM/dd HH:mm:ss"));
+                    worksheet.Cells["C5"].PutValue(item.UpdateTime.ToString("yyyy/MM/dd HH:mm:ss"));
+                    worksheet.Cells["F5"].PutValue(item.ActualRunTime);
+                    worksheet.Cells["I5"].PutValue(item.Operator);
+                    worksheet.Cells["K2"].PutValue(item.ErrorInfo);
+                    #endregion
+
+                    Thread.Sleep(10);
+                    #region 测试数据
+
+                    int count = 1;
+                    int rowstratindex = 0;
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        Test_DataInfo testdata = data[i];
+                        if (string.IsNullOrEmpty(testdata.StepName)) { continue; }
+                        
+                        int rownum = 7 + rowstratindex + count;
+                        int rowcount = 7 + rowstratindex + count;
+                       
+                        for (int j = 0; j < testdata.Euq_DeviceRead.Count; j++)
+                        {
+                            var readdata = testdata.Euq_DeviceRead[j];
+                            //int index = rownum + j;
+                            worksheet.Cells.Merge(rowcount - 1, 4, 1, 3);
+                            worksheet.Cells[$"E{rowcount}"].Value = readdata.DataInfo.Name;
+
+                            worksheet.Cells.Merge(rowcount - 1, 7, 1, 2);
+                            worksheet.Cells[$"H{rowcount}"].Value = readdata.DataInfo.Value;
+
+                            worksheet.Cells.Merge(rowcount - 1, 9, 1, 2);
+                            worksheet.Cells[$"J{rowcount}"].Value = readdata.Limits_Upper;
+
+                            worksheet.Cells.Merge(rowcount - 1, 11, 1, 2);
+                            worksheet.Cells[$"L{rowcount}"].Value = readdata.Limits_Lower;
+
+                            worksheet.Cells.Merge(rowcount - 1, 13, 1, 2);
+                            worksheet.Cells[$"N{rowcount}"].Value = readdata.Judgment.GetDescription();
+                            Aspose.Cells.Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
+                            dataresultstle.Font.Color = readdata.IsInRange ? Color.Green : Color.Red;
+                            dataresultstle.HorizontalAlignment = TextAlignmentType.Center;
+                            worksheet.Cells[$"P{rowcount}"].SetStyle(dataresultstle);
+                            worksheet.Cells[$"P{rowcount}"].Value = readdata.IsInRange?"PASS":"FAIL";
+                            rowcount++;
+                        }
+
+                        for (int j = 0; j < testdata.Pro_DeviceRead.Count; j++)
+                        {
+                            var readdata = testdata.Pro_DeviceRead[j];
+                            //int index = rowcount + j;
+                            worksheet.Cells[$"E{rowcount}"].Value = readdata.DataInfo.Name;
+                            worksheet.Cells[$"H{rowcount}"].Value = readdata.DataInfo.Value;
+                            worksheet.Cells[$"J{rowcount}"].Value = readdata.Limits_Upper;
+                            worksheet.Cells[$"L{rowcount}"].Value = readdata.Limits_Lower;
+                            worksheet.Cells[$"N{rowcount}"].Value = readdata.Judgment.GetDescription();
+                            Aspose.Cells.Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
+                            dataresultstle.Font.Color = readdata.IsInRange ? Color.Green : Color.Red;
+                            worksheet.Cells[$"P{rowcount}"].SetStyle(dataresultstle);
+                            worksheet.Cells[$"P{rowcount}"].Value = readdata.IsInRange ? "PASS" : "FAIL";
+                            rowcount++;
+                        }
+
+                        count = testdata.Euq_DeviceRead.Count + testdata.Pro_DeviceRead.Count;
+                        if (count < 1)
+                        {
+                            continue;
+                        }
+                        worksheet.Cells.Merge(rownum - 1, 0, count, 4);
+                        worksheet.Cells[$"A{rownum}"].Value = testdata.StepName;
+                        rowstratindex++;
+                    }
+                    #endregion
+                    Thread.Sleep(10);
+                    workbook.Save(Path.Combine(path, $"{item.FlowName}_{item.CreateTime:yyyyMMddHHmmss}.xlsx"));
+                    Thread.Sleep(100);
+
+                }
+                catch (Exception ex)
+                {
+                    SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, "试验报告数据", "Excel格式报告文件导出", ex);
+                    return OperateResult.Excepted(ex);
+                }
+
             };
 
             return OperateResult.Succeed();

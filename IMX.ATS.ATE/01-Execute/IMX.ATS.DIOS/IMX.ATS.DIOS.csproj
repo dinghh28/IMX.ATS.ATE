@@ -404,6 +404,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <EmbeddedResource Include="Resource\ExcelTemp\IMX.ATS.Resource.Templet.xlsx" />
+    <EmbeddedResource Include="Resource\ExcelTemp\ATEReportTemp.xlsx" />
     <None Include="Resource\Image\1_新能先锋文字LOGO.pdf" />
     <Resource Include="Resource\Fonts\iconfont.ttf" />
   </ItemGroup>

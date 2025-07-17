@@ -64,7 +64,10 @@
                             Orientation="Horizontal">
                     <Button Content="检索" Command="{Binding Search}" Margin="20,0,0,0" Width="80" Height="30"/>
                     <Button Content="清除条件" Command="{Binding Clear}" Margin="20,0,0,0" Width="80" Height="30"/>
-                    <Button Content="导出数据" Command="{Binding Export}" Margin="20,0,0,0" Width="80" Height="30"/>
+                    <Button Content="导出数据" Command="{Binding Export}" CommandParameter="DATA"
+                            Margin="20,0,0,0" Width="80" Height="30"/>
+                    <Button Content="导出报告" Command="{Binding Export}" CommandParameter="REPORT"
+                            Margin="20,0,0,0" Width="80" Height="30"/>
                 </StackPanel>
 
                 <DataGrid Grid.Row="1"                         

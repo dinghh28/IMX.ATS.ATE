@@ -432,7 +432,11 @@ namespace IMX.ATS.Manual
                     Messagestrs.Add($"[{DateTime.Now}]--CAN设备卸载成功");
                 });
 
+
                 ((ViewModelLocator)Application.Current.FindResource("Locator")).Manual.RemoveOperateView("Product");
+
+                ((ViewModelLocator)Application.Current.FindResource("Locator")).Product.SendSignals.Clear();
+
 
                 //if (!GlobalModel.DicDeviceInfo.TryGetValue("Product", out var candeviceInfo))
                 //{

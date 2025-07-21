@@ -39,14 +39,23 @@ namespace IMX.ATS.Manual
 
         private FrameworkElement content;
         /// <summary>
-        /// 方案各配置界面
+        /// 设备各配置界面
         /// </summary>
         public FrameworkElement Content
         {
             get => content;
             set => Set(nameof(Content), ref content, value);
         }
-
+        private Visibility showContent;
+        /// <summary>
+        /// 显示各配置界面
+        /// </summary>
+        public Visibility ShowContent
+        {
+            get => showContent;
+            set => Set(nameof(ShowContent), ref showContent, value);
+        }
+        
 
         private ObservableCollection<OperateViewModel> operationViews = new ObservableCollection<OperateViewModel>();
 
@@ -87,6 +96,7 @@ namespace IMX.ATS.Manual
         {
             try
             {
+                ShowContent = Visibility.Visible;
                 OperationViews.Add(new OperateViewModel()
                 {
                     Name = $"{device.Config.DeviceType.GetDescription()}[{device.Config.DeviceModel}]",
@@ -107,6 +117,15 @@ namespace IMX.ATS.Manual
             try
             {
                 OperationViews.Remove(OperationViews.First(x=>x.Description==description));
+                if (OperationViews.Count() == 0)
+                {
+                    ShowContent = Visibility.Collapsed;
+                }
+                else
+                {
+                    ShowContent = Visibility.Visible;
+                    DoNavChange(OperationViews[0].Description);
+                }
             }
             catch (Exception ex)
             {

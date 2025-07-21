@@ -164,11 +164,10 @@ namespace IMX.ATS.Manual
                 {
                     if (device.IsReceiveData)
                     {
-
                         var operateResult = device.DeviceOperate.Device_ReadAll()
                             .AttachIfFailed(result =>
                             {
-                                dicDeviceData[device.DeviceAddress].Enableshow = Visibility.Visible ;
+                                dicDeviceData[device.DeviceAddress].Enableshow = Visibility.Visible;
                                 dicDeviceData[device.DeviceAddress].Messagestr = $"设备通讯异常！";
                                 //SuperDHHLoggerManager.Error(LoggerType.THREAD, nameof(MonitorViewModel), nameof(RefreshDeviceData), $"【{device.ThreadName}-{device.ThreadID}】{result.Message}");
                             })
@@ -248,7 +247,6 @@ namespace IMX.ATS.Manual
                 }
 
                 var lists = Realtimedatas.ToList().Find(x => x.TypeName == thread.DeviceAddress);
-
                 if (lists == null)
                 {
                     lists = new ModRealtimedata

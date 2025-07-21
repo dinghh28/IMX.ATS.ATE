@@ -24,27 +24,20 @@
     <GroupBox Header="产品下发指令手动操作">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="50"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid >
                 <!--<StackPanel>
                     <TextBlock Text="01-样机操作"/>
                 </StackPanel>-->
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <!--<Label Grid.Column="0" Content="当前操作样机：" VerticalAlignment="Center" HorizontalAlignment="Center"/>-->
                     <!--<ComboBox Grid.Column="1"  Height="35"  ItemsSource="{Binding ProductIndexs}" SelectedValue="{Binding ProductIndex}" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
                     <Button Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="保存指令" Height="35" Width="100" Command="{Binding SaveMessage}" Margin="10,0,0,0"/>
                     <Button Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{Binding OperationName}" Height="35" Width="100" Command="{Binding OperateMessage}" Margin="10,0,0,0"/>
                     <!--<Button Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center" Content="{Binding RevOperationName}" Height="35" Width="100" Command="{Binding OperateRevMessage}" Margin="10,0,0,0"/>-->
-                </Grid>
+                </StackPanel>
             </Grid>
             <Grid Grid.Row="1" >
                 <DataGrid   Name="dataGridSendMessage"  ItemsSource="{Binding  SendSignals}" AutoGenerateColumns="False" CanUserResizeColumns="True"  CanUserSortColumns="False" RowHeaderWidth="0" CanUserAddRows="False" 

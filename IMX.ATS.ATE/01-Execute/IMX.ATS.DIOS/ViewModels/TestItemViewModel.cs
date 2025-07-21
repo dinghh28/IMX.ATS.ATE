@@ -49,6 +49,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Interop;
 using MessageBox = System.Windows.Forms.MessageBox;
+using Style = Aspose.Cells.Style;
 
 namespace IMX.ATS.DIOS
 {
@@ -251,7 +252,8 @@ namespace IMX.ATS.DIOS
                     // 获取用户选择的文件夹路径
                     selectedFolderPath = folderBrowserDialog.SelectedPath;
                 }
-            };
+            }
+            ;
 
             if (obj == "DATA")
             {
@@ -324,15 +326,15 @@ namespace IMX.ATS.DIOS
                     Directory.CreateDirectory(dirpath);
                 }
 
-                Task.Run(async () => 
+                Task.Run(async () =>
                 {
                     ProBarVisily = Visibility.Visible;
-                    await Task.Run(() => 
+                    await Task.Run(() =>
                     {
                         for (int i = 0; i < itemInfos.Count; i++)
                         {
                             var itemdata = itemInfos[i];
-                           var dataresult =  DBOperate.Default.GetTestData(itemdata.Id, itemdata.CreateTime, itemdata.UpdateTime);
+                            var dataresult = DBOperate.Default.GetTestData(itemdata.Id, itemdata.CreateTime, itemdata.UpdateTime);
                             if (!dataresult)
                             {
                                 ProBarVisily = Visibility.Hidden;
@@ -457,6 +459,7 @@ namespace IMX.ATS.DIOS
         /// </summary>
         /// <param name="item">试验条目</param>
         /// <param name="datas">测试数据</param>
+        /// <param name="path">存储路径</param>
         private OperateResult ExcelExport(Test_ItemInfo item, DataTable datas, string path)
         {
             string errMsg = "";
@@ -498,21 +501,29 @@ namespace IMX.ATS.DIOS
                 }
                 catch (Exception ex)
                 {
-                    SuperDHHLoggerManager.Exception( LoggerType.FROMLOG, "试验详细数据","Excel格式文件导出",ex);
+                    SuperDHHLoggerManager.Exception(LoggerType.FROMLOG, "试验详细数据", "Excel格式文件导出", ex);
                     return OperateResult.Excepted(ex);
                 }
-            };
+            }
+            ;
 
             return OperateResult.Succeed();
         }
 
-        private OperateResult ExcelExport_Report(Test_ItemInfo item, List<Test_DataInfo> data, string path) 
+        /// <summary>
+        /// Excel格式文件导出
+        /// </summary>
+        /// <param name="item">试验条目</param>
+        /// <param name="data">测试数据</param>
+        /// <param name="path">存储路径</param>
+        /// <returns></returns>
+        private OperateResult ExcelExport_Report(Test_ItemInfo item, List<Test_DataInfo> data, string path)
         {
             string errMsg = "";
             string fileName = "IMX.ATS.DIOS.Resource.ExcelTemp.ATEReportTemp.xlsx";
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(fileName);
 
-            using (stream) 
+            using (stream)
             {
                 try
                 {
@@ -530,12 +541,12 @@ namespace IMX.ATS.DIOS
                     resultstle.Font.Color = item.Result == ResultState.SUCCESS ? Color.Green : Color.Red;
                     worksheet.Cells["I2"].SetStyle(resultstle);
                     #endregion
-                    worksheet.Cells["I2"].Value = item.Result.ToString();
+                    worksheet.Cells["I2"].Value = item.Result == ResultState.SUCCESS ? "OK" : "NG";
 
 
                     worksheet.Cells["A5"].PutValue(item.CreateTime.ToString("yyyy/MM/dd HH:mm:ss"));
                     worksheet.Cells["C5"].PutValue(item.UpdateTime.ToString("yyyy/MM/dd HH:mm:ss"));
-                    worksheet.Cells["F5"].PutValue(item.ActualRunTime);
+                    worksheet.Cells["F5"].PutValue($"{Math.Round(new TimeSpan(item.ActualRunTime).TotalMinutes, 3)} 分钟");
                     worksheet.Cells["I5"].PutValue(item.Operator);
                     worksheet.Cells["K2"].PutValue(item.ErrorInfo);
                     #endregion
@@ -543,39 +554,58 @@ namespace IMX.ATS.DIOS
                     Thread.Sleep(10);
                     #region 测试数据
 
-                    int count = 1;
+                    int count = 0;
                     int rowstratindex = 0;
                     for (int i = 0; i < data.Count; i++)
                     {
                         Test_DataInfo testdata = data[i];
                         if (string.IsNullOrEmpty(testdata.StepName)) { continue; }
-                        
-                        int rownum = 7 + rowstratindex + count;
-                        int rowcount = 7 + rowstratindex + count;
-                       
+
+                        int rownum = 8 + rowstratindex;
+                        int rowcount = 8 + rowstratindex;
+
                         for (int j = 0; j < testdata.Euq_DeviceRead.Count; j++)
                         {
                             var readdata = testdata.Euq_DeviceRead[j];
                             //int index = rownum + j;
                             worksheet.Cells.Merge(rowcount - 1, 4, 1, 3);
                             worksheet.Cells[$"E{rowcount}"].Value = readdata.DataInfo.Name;
-
                             worksheet.Cells.Merge(rowcount - 1, 7, 1, 2);
                             worksheet.Cells[$"H{rowcount}"].Value = readdata.DataInfo.Value;
 
                             worksheet.Cells.Merge(rowcount - 1, 9, 1, 2);
-                            worksheet.Cells[$"J{rowcount}"].Value = readdata.Limits_Upper;
+                            if (readdata.Limits_Upper == double.PositiveInfinity)
+                            {
+                                worksheet.Cells[$"J{rowcount}"].Value = "-";
+                            }
+                            else
+                            {
+                                worksheet.Cells[$"J{rowcount}"].Value = readdata.Limits_Upper;
+                            }
 
                             worksheet.Cells.Merge(rowcount - 1, 11, 1, 2);
-                            worksheet.Cells[$"L{rowcount}"].Value = readdata.Limits_Lower;
+                            if (readdata.Limits_Lower == double.NegativeInfinity)
+                            {
+                                worksheet.Cells[$"L{rowcount}"].Value = "-";
+                            }
+                            else
+                            {
+                                worksheet.Cells[$"L{rowcount}"].Value = readdata.Limits_Lower;
+                            }
+                            
 
                             worksheet.Cells.Merge(rowcount - 1, 13, 1, 2);
                             worksheet.Cells[$"N{rowcount}"].Value = readdata.Judgment.GetDescription();
                             Aspose.Cells.Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
                             dataresultstle.Font.Color = readdata.IsInRange ? Color.Green : Color.Red;
-                            dataresultstle.HorizontalAlignment = TextAlignmentType.Center;
+                            dataresultstle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.HorizontalAlignment = TextAlignmentType.Left;
+                            dataresultstle.VerticalAlignment = TextAlignmentType.Center;
                             worksheet.Cells[$"P{rowcount}"].SetStyle(dataresultstle);
-                            worksheet.Cells[$"P{rowcount}"].Value = readdata.IsInRange?"PASS":"FAIL";
+                            worksheet.Cells[$"P{rowcount}"].Value = readdata.IsInRange ? "PASS" : "FAIL";
                             rowcount++;
                         }
 
@@ -588,8 +618,15 @@ namespace IMX.ATS.DIOS
                             worksheet.Cells[$"J{rowcount}"].Value = readdata.Limits_Upper;
                             worksheet.Cells[$"L{rowcount}"].Value = readdata.Limits_Lower;
                             worksheet.Cells[$"N{rowcount}"].Value = readdata.Judgment.GetDescription();
-                            Aspose.Cells.Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
+                            //判断结果
+                            Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
                             dataresultstle.Font.Color = readdata.IsInRange ? Color.Green : Color.Red;
+                            dataresultstle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                            dataresultstle.HorizontalAlignment = TextAlignmentType.Left;
+                            dataresultstle.VerticalAlignment = TextAlignmentType.Center;
                             worksheet.Cells[$"P{rowcount}"].SetStyle(dataresultstle);
                             worksheet.Cells[$"P{rowcount}"].Value = readdata.IsInRange ? "PASS" : "FAIL";
                             rowcount++;
@@ -602,7 +639,21 @@ namespace IMX.ATS.DIOS
                         }
                         worksheet.Cells.Merge(rownum - 1, 0, count, 4);
                         worksheet.Cells[$"A{rownum}"].Value = testdata.StepName;
-                        rowstratindex++;
+                        //选择区域
+                        Range descRange = worksheet.Cells.CreateRange(rownum - 1, 0, count, 15);
+                        //设置格式
+                        Style descStyle = workbook.Styles[workbook.Styles.Add()];
+                        descStyle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
+                        descStyle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
+                        descStyle.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
+                        descStyle.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;
+                        descStyle.HorizontalAlignment = TextAlignmentType.Left;
+                        descStyle.VerticalAlignment = TextAlignmentType.Center;
+                        
+                        descRange.ApplyStyle(descStyle, new StyleFlag { All = true });
+
+                        rowstratindex += count;
+
                     }
                     #endregion
                     Thread.Sleep(10);
@@ -616,7 +667,8 @@ namespace IMX.ATS.DIOS
                     return OperateResult.Excepted(ex);
                 }
 
-            };
+            }
+            ;
 
             return OperateResult.Succeed();
         }
@@ -632,7 +684,7 @@ namespace IMX.ATS.DIOS
                 Datas.Clear();
                 for (int i = 0; i < datasources.Count; i++)
                 {
-                    Datas.Add(new TestItemModel 
+                    Datas.Add(new TestItemModel
                     {
                         IsSelect = false,
                         Data = datasources[i]
@@ -696,19 +748,19 @@ namespace IMX.ATS.DIOS
 
             Test_ItemInfo item = Datas[index].Data;
 
-           var result =  DBOperate.Default.GetTestDataCount(item.Id, item.CreateTime, item.UpdateTime.AddSeconds(1));
+            var result = DBOperate.Default.GetTestDataCount(item.Id, item.CreateTime, item.UpdateTime.AddSeconds(1));
 
             if (!result)
             {
-                MessageBox.Show(result.Message,"实验数据查询异常");
+                MessageBox.Show(result.Message, "实验数据查询异常");
                 return;
             }
 
-            var model = new TestDatasViewModel($"{item.ProjectName}-{item.FlowName}",item.Id,item.CreateTime, item.UpdateTime, result.Data);
+            var model = new TestDatasViewModel($"{item.ProjectName}-{item.FlowName}", item.Id, item.CreateTime, item.UpdateTime, result.Data);
 
             var view = new TestDatasView
             {
-              DataContext = model,
+                DataContext = model,
             };
             Window win = System.Windows.Application.Current.MainWindow;
             WindowInteropHelper itemview = new WindowInteropHelper(win);
@@ -767,7 +819,7 @@ namespace IMX.ATS.DIOS
     /// <summary>
     /// 测试项页面展示类
     /// </summary>
-    public class TestItemModel :ViewModelBase
+    public class TestItemModel : ViewModelBase
     {
         private bool isselect = false;
         /// <summary>

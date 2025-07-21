@@ -329,6 +329,7 @@
     </ApplicationDefinition>
     <Compile Include="Common\GlobalModel.cs" />
     <Compile Include="Locator\ViewModelLocator.cs" />
+    <Compile Include="Resource\Converter\TitckToMinConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TestDatasViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />

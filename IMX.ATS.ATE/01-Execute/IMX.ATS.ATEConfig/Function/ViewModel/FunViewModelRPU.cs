@@ -24,12 +24,15 @@
 #endregion << 版 本 注 释 >>
 
 using H.WPF.Framework;
+using IMX.Common;
 using IMX.Function;
 using IMX.Function.Base;
 using IMX.Function.ViewModel;
+using IMX.Function.ViewModel.Model;
 using Super.Zoo.Framework;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,11 +42,92 @@ namespace IMX.ATS.ATEConfig.Function
     /// <summary>
     /// 倒灌电源流程配置模板类
     /// </summary>
-    public class FunViewModelRPU : FunViewModel
+    public class FunViewModelRPU : SteppingFunViewModel
     {
 
         #region 公共属性
-        public override TestFunction Func { get; set; } = TestFunction.Create(FuncitonType.RPU);
+        private TestFunction func = TestFunction.Create(FuncitonType.RPU);
+        public override TestFunction Func
+        {
+            get => func;
+            set
+            {
+                func = value;
+                FunConfig_RPU config = value.Config as FunConfig_RPU;
+
+                StepValues.Clear();
+
+                ObservableCollection<string> CondNames = new ObservableCollection<string>();
+                ObservableCollection<ModDeviceReadData> CondValues = new ObservableCollection<ModDeviceReadData>();
+
+                if (ConditionValues.Count < 1)
+                {
+                    if (!SupportConfig.DicProcessConfig.TryGetValue(GlobalModel.NowProcessName, out ProcessConfig_EX processconfig))
+                    {
+                        return;
+                    }
+
+
+                    for (int i = 0; i < processconfig.Test_ReadData_Euq.Count; i++)
+                    {
+                        var data = processconfig.Test_ReadData_Euq[i];
+                        ConditionValues.Add(new ModDeviceReadData
+                        {
+                            DataInfo = data,
+                        });
+                    }
+
+                    if (GlobalModel.NowElectricity == ATE.Common.Electricity.Three
+                        || GlobalModel.NowElectricity == ATE.Common.Electricity.ThreeANDInversion)
+                    {
+                        for (int i = 0; i < processconfig.Test_ReadData_EX.Count; i++)
+                        {
+                            var data = processconfig.Test_ReadData_EX[i];
+                            ConditionValues.Add(new ModDeviceReadData
+                            {
+                                DataInfo = data,
+                            });
+                        }
+                    }
+
+                    for (int i = 0; i < GlobalModel.TestDBCconfig.Test_DBCReceiveSignals.Count; i++)
+                    {
+                        var data = GlobalModel.TestDBCconfig.Test_DBCReceiveSignals[i];
+                        ConditionValues.Add(new ModDeviceReadData
+                        {
+                            DataInfo = new ModTestDataInfo { Name = data.Custom_Name },
+                        });
+                    }
+                }
+
+                for (int i = 0; i < ConditionValues.Count; i++)
+                {
+                    CondNames.Add(ConditionValues[i].DataInfo.Name);
+                    CondValues.Add(ConditionValues[i]);
+                }
+
+                config.Values ??= [];
+
+                for (int i = 0; i < config.Values.Count; i++)
+                {
+                    int findindex = CondNames.ToList().FindIndex(n => n == config.Values[i].Value.DataInfo.Name);
+                    if (findindex == -1)
+                    {
+                        continue;
+                    }
+
+                    var configvalue = new StepValue
+                    {
+                        ConditionValue = config.Values[i],
+                        ConditionValues = CondValues,
+                        ConditionNames = CondNames,
+                        ConditionIndex = findindex,
+                    };
+
+                    StepValues.Add(configvalue);
+                }
+            }
+        }
 
         public override FuncitonType SupportFuncitonType =>  FuncitonType.RPU;
 

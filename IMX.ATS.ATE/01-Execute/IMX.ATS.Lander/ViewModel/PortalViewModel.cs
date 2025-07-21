@@ -337,6 +337,24 @@ namespace IMX.ATS.Lander
 
         protected override void WindowClosedExecute(object obj)
         {
+            if (dicProcess.TryGetValue("ATE", out Process ateprocess))
+            {
+                if (!ateprocess.HasExited)
+                {
+                    MessageBox.Show("测试平台未关闭，无法关闭门户界面。请确保试验暂停，平台关闭,设备复位后再关闭该窗口");
+                    return;
+                }
+            }
+
+            if (dicProcess.TryGetValue("Manual", out Process manualprocess))
+            {
+                if (!manualprocess.HasExited)
+                {
+                    MessageBox.Show("手动调试平台未关闭，无法关闭门户界面。请确手动调试平台关闭,设备复位后再关闭该窗口");
+                    return;
+                }
+            }
+
             if (MessageBox.Show("是否关闭门户界面，这将关闭所有已打开功能界面", "门户界面关闭提醒", MessageBoxButton.YesNo) != MessageBoxResult.Yes)
             {
                 return;

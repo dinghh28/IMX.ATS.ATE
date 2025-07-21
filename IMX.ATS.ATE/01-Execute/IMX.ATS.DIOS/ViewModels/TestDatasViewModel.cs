@@ -224,6 +224,8 @@ namespace IMX.ATS.DIOS
                 table.Columns.Add("试验项名称");
                 table.Columns.Add("步骤序号");
                 table.Columns.Add("步骤名称");
+                table.Columns.Add("数据记录类型");
+
                 // 遍历并添加列到DataTable  
                 value[0].Pro_Data.ForEach(token => table.Columns.Add(token.Name));
                 value[0].Pro_SetData.ForEach(token => table.Columns.Add(token.Name));
@@ -272,6 +274,8 @@ namespace IMX.ATS.DIOS
                 row["步骤序号"] = x.StepIndex;
 
                 row["步骤名称"] = x.StepName;
+
+                row["数据记录类型"] = x.DataType.GetDescription();
 
                 x.Pro_Data.ForEach(y =>
                 {

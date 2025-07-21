@@ -2065,7 +2065,7 @@ namespace IMX.DB
             }
         }
 
-#if DEBUG
+#if !DEBUG
         /// <summary>
         /// 试验项插入功能调试
         /// </summary>

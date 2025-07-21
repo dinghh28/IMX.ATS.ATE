@@ -29,6 +29,7 @@
                 <ResourceDictionary>
                     <converter:EnumDescriptionConverter x:Key="EnumValue"/>
                     <localconverter:ResultConverter x:Key="IconConverter"/>
+                    <localconverter:TitckToMinConverter x:Key="TitckConverter"/>
                 </ResourceDictionary>
                 <ResourceDictionary Source="pack://application:,,,/IMX.WPF.Resource;component/DefaultStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -115,8 +116,8 @@
                                             Binding="{Binding Data.CreateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
                         <DataGridTextColumn Header="试验结束时间" IsReadOnly="True"
                                             Binding="{Binding Data.UpdateTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"/>
-                        <DataGridTextColumn Header="试验实际运行时间" IsReadOnly="True"
-                                            Binding="{Binding Data.ActualRunTime}"/>
+                        <DataGridTextColumn Header="试验实际运行时间(分钟)" IsReadOnly="True"
+                                            Binding="{Binding Data.ActualRunTime,Converter={StaticResource TitckConverter}}"/>
                         <DataGridTextColumn Header="操作人员" IsReadOnly="True"
                                             Binding="{Binding Data.Operator}"/>
                         <DataGridTextColumn Header="试验结果" IsReadOnly="True"

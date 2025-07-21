@@ -182,6 +182,11 @@ namespace IMX.DB.Model
         public int StepIndex { get; set; }
 
         /// <summary>
+        /// 记录数据类型
+        /// </summary>
+        public RecordDataType DataType { get; set; } = RecordDataType.NORMAL;
+
+        /// <summary>
         /// 产品数据
         /// </summary>
         [JsonMap]

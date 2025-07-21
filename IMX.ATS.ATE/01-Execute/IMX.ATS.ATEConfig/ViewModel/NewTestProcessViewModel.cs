@@ -176,7 +176,7 @@ namespace IMX.ATS.ATEConfig
                     var signal = GlobalModel.TestDBCconfig.Test_DBCSendSignals[i];
                     if (signal.Custom_Name != signal.Signal_Name)
                     {
-                        proreaddata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
+                        prosetdata.Add(new ModTestDataInfo { Name = signal.Custom_Name });
                     }
                 }
 

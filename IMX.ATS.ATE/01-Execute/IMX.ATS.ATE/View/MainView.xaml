@@ -22,7 +22,7 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding WindowLoaded}" CommandParameter="{Binding ElementName=Win}"/>
-            <i:InvokeCommandAction Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>
+            <!--<i:InvokeCommandAction Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>-->
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Window.Resources>

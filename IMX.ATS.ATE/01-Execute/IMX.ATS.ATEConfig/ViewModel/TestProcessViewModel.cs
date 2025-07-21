@@ -720,7 +720,7 @@ namespace IMX.ATS.ATEConfig
             }
 
             #region 调试数据存储
-#if DEBUG
+#if !DEBUG
             var config = SupportConfig.DicProcessConfig[SolutionName];
 
             List<ModTestDataInfo> eupreaddata = config.Test_ReadData_Euq;

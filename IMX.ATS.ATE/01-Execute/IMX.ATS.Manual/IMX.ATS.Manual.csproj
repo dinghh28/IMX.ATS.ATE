@@ -133,7 +133,7 @@
     </Reference>
     <Reference Include="IMX.Device.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Library\IMX.Device\IMX.Device.Common.dll</HintPath>
+      <HintPath>..\..\Library\IMX.Device.Common\IMX.Device.Common.dll</HintPath>
     </Reference>
     <Reference Include="IMX.Function">
       <HintPath>..\..\Library\IMX.Function\IMX.Function.dll</HintPath>

@@ -40,23 +40,22 @@
         <Grid Grid.Row="0" Margin="10,5">
             <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal">
                 <Label Content="调试平台" VerticalAlignment="Center" FontWeight="Bold" FontSize="18"/>
-
             </StackPanel>
-
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
                 <Button Content="&#xe721;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMin}" CommandParameter="{Binding ElementName=Win}"/>
                 <Button Content="&#xe720;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowMax}" CommandParameter="{Binding ElementName=Win}"/>
                 <Button Content="&#xe71f;" Style="{StaticResource ControlButtonStyle}" Command="{Binding WindowClose}" CommandParameter="{Binding ElementName=Win}"/>
             </StackPanel>
         </Grid>
-        <Border Grid.Row="1" Background="Black" Opacity="0.2" Visibility="{Binding CloseStrShow}">
+        <!--<Border Grid.Row="1" Background="Black" Opacity="0.2" Visibility="{Binding CloseStrShow}">
             <Label Content="正在关闭调试平台" Foreground="White" FontSize="15" FontWeight="Bold"
                                VerticalAlignment="Center" HorizontalAlignment="Center" Margin="-50,20,0,0"/>
-        </Border>
-        <Grid Grid.Row="1">
+        </Border>-->
+        <Grid Grid.Row="1" > 
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.5*"/>
-                <RowDefinition Height="5*"/>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="0.05*"/>
                 <RowDefinition Height="10*"/>
             </Grid.RowDefinitions>
             <!--<Grid.ColumnDefinitions>
@@ -71,11 +70,12 @@
                 <ContentControl Content="{Binding  DeviceManual}"/>
                 <!--Visibility="{Binding ManualShow}"/>-->
             </Grid>
-            <Line StrokeThickness="2" />
             <!--<StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center">
             <Button Content="{Binding BtnShow}" Command="{Binding ShowManual}" Style="{StaticResource ResourceKey=ControlButtonStyle}" ToolTip="设备操作" Cursor="Hand"/>
         </StackPanel>-->
-            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" IsDeferredScrollingEnabled="True">
+            <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch" />
+
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" IsDeferredScrollingEnabled="True">
                 <Grid>
                     <ItemsControl ItemsSource="{Binding Realtimedatas}" VirtualizingStackPanel.VirtualizationMode="Recycling">
                         <ItemsControl.ItemsPanel>
@@ -85,7 +85,7 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <GroupBox Header="{Binding TypeName}" Margin="20">
+                                <GroupBox Header="{Binding TypeName}" Margin="20" Height="250" ScrollViewer.VerticalScrollBarVisibility="Auto">
                                     <Grid>
                                         <Border Grid.Row="1" Background="Black" Opacity="0.2" Visibility="{Binding Enableshow}" Panel.ZIndex="1">
                                             <Label Content="{Binding Messagestr}" Foreground="White" FontSize="15" FontWeight="Bold"

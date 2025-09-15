@@ -88,6 +88,11 @@
                         <Button Content="新增试验流程" Margin="10,0" FontSize="15" Height="35" Width="150" Command="{Binding AddProcess}"/>
                         <Button Content="删除试验流程" Margin="10,0" FontSize="15" Height="35" Width="150"  Command="{Binding DeletProcess}"/>
                     </WrapPanel>
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button Content="上移" Height="35" Width="60" Margin="5" Command="{Binding ChangeProcess}" CommandParameter="UP"/>
+                        <Button Content="下移" Height="35" Width="60" Margin="5" Command="{Binding ChangeProcess}" CommandParameter="DOWN"/>
+                        <Button Content="插入" Height="35" Width="60" Margin="5,5,30,5" Command="{Binding ChangeProcess}" CommandParameter="INSERT"/>
+                    </StackPanel>
 
                     <!--<StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right">
             <Button Content="保存方案" Margin="10,0"  Height="35" Width="150"  FontSize="15" Command="{Binding SaveProgramme}"/>
@@ -95,16 +100,18 @@
 
                     <ListBox Grid.Row="1" 
                  ItemsSource="{Binding  SelectedProcessNames}" 
-                 SelectedIndex="{Binding SelectedIndex}">
+                 SelectedIndex="{Binding SelectedIndex}" d:ItemsSource="{d:SampleData ItemCount=5}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Grid Width="800"  Background="{Binding NameColor}">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="250"/>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="试验项名称："/>
-                                    <ComboBox Grid.Column="2" ItemsSource="{Binding  ProcessNames}" SelectedItem="{Binding SelectedName}"/>
+                                    <ComboBox Grid.Column="1" ItemsSource="{Binding  ProcessNames}" SelectedItem="{Binding SelectedName}"/>
+                                    <Label Grid.Column="2" Content="{Binding Describe}"  Margin="50,0,0,0"/>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

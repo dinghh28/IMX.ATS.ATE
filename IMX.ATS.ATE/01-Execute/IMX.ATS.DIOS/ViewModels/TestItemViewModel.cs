@@ -491,7 +491,10 @@ namespace IMX.ATS.DIOS
                     #endregion
                     Thread.Sleep(10);
                     #region 测试数据
-                    ImportTableOptions tableOptions = new ImportTableOptions();
+                    ImportTableOptions tableOptions = new ImportTableOptions() 
+                    {
+                        TotalRows = datas.Rows.Count + 1,
+                    };
                     tableOptions.IsFieldNameShown = true;
                     worksheet.Cells.ImportData(datas, 6, 0, tableOptions);
                     #endregion
@@ -574,7 +577,7 @@ namespace IMX.ATS.DIOS
                             worksheet.Cells[$"H{rowcount}"].Value = readdata.DataInfo.Value;
 
                             worksheet.Cells.Merge(rowcount - 1, 9, 1, 2);
-                            if (readdata.Limits_Upper == double.PositiveInfinity)
+                            if (readdata.Limits_Upper == double.PositiveInfinity || readdata.Limits_Upper == double.NegativeInfinity)
                             {
                                 worksheet.Cells[$"J{rowcount}"].Value = "-";
                             }
@@ -584,7 +587,7 @@ namespace IMX.ATS.DIOS
                             }
 
                             worksheet.Cells.Merge(rowcount - 1, 11, 1, 2);
-                            if (readdata.Limits_Lower == double.NegativeInfinity)
+                            if (readdata.Limits_Lower == double.PositiveInfinity || readdata.Limits_Lower == double.NegativeInfinity)
                             {
                                 worksheet.Cells[$"L{rowcount}"].Value = "-";
                             }
@@ -596,7 +599,7 @@ namespace IMX.ATS.DIOS
 
                             worksheet.Cells.Merge(rowcount - 1, 13, 1, 2);
                             worksheet.Cells[$"N{rowcount}"].Value = readdata.Judgment.GetDescription();
-                            Aspose.Cells.Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
+                            Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
                             dataresultstle.Font.Color = readdata.IsInRange ? Color.Green : Color.Red;
                             dataresultstle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
                             dataresultstle.Borders[BorderType.BottomBorder].LineStyle = CellBorderType.Thin;
@@ -612,13 +615,34 @@ namespace IMX.ATS.DIOS
                         for (int j = 0; j < testdata.Pro_DeviceRead.Count; j++)
                         {
                             var readdata = testdata.Pro_DeviceRead[j];
-                            //int index = rowcount + j;
+                            worksheet.Cells.Merge(rowcount - 1, 4, 1, 3);
                             worksheet.Cells[$"E{rowcount}"].Value = readdata.DataInfo.Name;
+                            worksheet.Cells.Merge(rowcount - 1, 7, 1, 2);
                             worksheet.Cells[$"H{rowcount}"].Value = readdata.DataInfo.Value;
-                            worksheet.Cells[$"J{rowcount}"].Value = readdata.Limits_Upper;
-                            worksheet.Cells[$"L{rowcount}"].Value = readdata.Limits_Lower;
+
+                            worksheet.Cells.Merge(rowcount - 1, 9, 1, 2);
+                            if (readdata.Limits_Upper == double.PositiveInfinity || readdata.Limits_Upper == double.NegativeInfinity)
+                            {
+                                worksheet.Cells[$"J{rowcount}"].Value = "-";
+                            }
+                            else
+                            {
+                                worksheet.Cells[$"J{rowcount}"].Value = readdata.Limits_Upper;
+                            }
+
+                            worksheet.Cells.Merge(rowcount - 1, 11, 1, 2);
+                            if (readdata.Limits_Lower == double.PositiveInfinity || readdata.Limits_Lower == double.NegativeInfinity)
+                            {
+                                worksheet.Cells[$"L{rowcount}"].Value = "-";
+                            }
+                            else
+                            {
+                                worksheet.Cells[$"L{rowcount}"].Value = readdata.Limits_Lower;
+                            }
+
+
+                            worksheet.Cells.Merge(rowcount - 1, 13, 1, 2);
                             worksheet.Cells[$"N{rowcount}"].Value = readdata.Judgment.GetDescription();
-                            //判断结果
                             Style dataresultstle = workbook.Styles[workbook.Styles.Add()];
                             dataresultstle.Font.Color = readdata.IsInRange ? Color.Green : Color.Red;
                             dataresultstle.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;

@@ -70,7 +70,7 @@ namespace IMX.ATS.ATEConfig.Function
             }
         }
 
-        private double dutycycle;
+        private double dutycycle = 0;
         /// <summary>
         /// 设置CP占空比
         /// </summary>
@@ -86,7 +86,7 @@ namespace IMX.ATS.ATEConfig.Function
             }
         }
 
-        private double frequency;
+        private double frequency = 0;
         /// <summary>
         /// 设置CP频率
         /// </summary>

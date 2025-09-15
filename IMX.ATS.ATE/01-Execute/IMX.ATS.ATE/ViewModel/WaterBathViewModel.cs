@@ -35,7 +35,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace IMX.ATS.ATE
 {
@@ -150,7 +150,32 @@ namespace IMX.ATS.ATE
                 .AttachIfFailed(result => { MessageBox.Show(result.Message, "温箱参数设置失败"); });
         }
         #endregion
+        #region 公共方法
+        public void WaterBathThread()
+        {
+            int reflashcount = 0;
+            while (GlobalModel.IsWinOpen)
+            {
+                if (WaterBath==null && !WaterBath.IsInitOK)
+                {
+                    break;
+                }
 
+                WaterBath.Device_ReadAll();
+
+                if (++reflashcount >= WaterBath.DeviceConfig.RefreshTime)
+                {
+                    Application.Current.Dispatcher.Invoke(new Action(() =>
+                    {
+                        for (int i = 0; i < WaterBath.ReadInfos.Count; i++)
+                        {
+                            ActualtDatas[i].Value = WaterBath.ReadInfos[i].DataInfo.Value;
+                        }
+                    }));
+                }
+            }
+        }
+        #endregion
 
         #region 构造方法
         public WaterBathViewModel() 

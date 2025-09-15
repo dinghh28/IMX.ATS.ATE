@@ -120,7 +120,7 @@ namespace IMX.DB
                 catch (Exception ex)
                 {
                     IsInitOK = false;
-
+                    sqliteLazy = null;
                     LastError = ex.GetMessage();
                     Logger.Error(nameof(DBOperate), nameof(Init), LastError);
                     return OperateResult.Excepted(ex);
@@ -657,14 +657,14 @@ namespace IMX.DB
 
             try
             {
-                var affrows = Sqlite.Update<Test_ProjectInfo>()
-                    .Set(x=>x.CanSendDBC, cansend)
-                    .Where(x=>x.DBCConfigID == dbcid)
+                var affrows = Sqlite.Update<Test_DBCConfig>()
+                    .Set(x=>x.EnableUseSend, cansend)
+                    .Where(x=>x.Id == dbcid)
                     .ExecuteAffrows();
 
                 if (affrows < 1)
                 {
-                    LastError = $"DBC配置未与项目同步，请注意产品指令下发模板配置内容";
+                    LastError = $"DBC配置项不存在，请先完成DBC配置项创建操作！";
                     Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
                     return OperateResult.Failed(LastError);
                 }
@@ -690,7 +690,7 @@ namespace IMX.DB
             if (!IsInitOK)
             {
                 LastError = $"数据库未初始化";
-                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState_Singleton), LastError);
                 return OperateResult.Failed(LastError);
             }
 
@@ -706,7 +706,7 @@ namespace IMX.DB
                 if (affrows < 1)
                 {
                     LastError = $"DBC配置未与项目同步，请注意产品指令下发模板配置内容";
-                    Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                    Logger.Error(nameof(DBOperate), nameof(SetDBCSendState_Singleton), LastError);
                     return OperateResult.Failed(LastError);
                 }
 
@@ -715,7 +715,7 @@ namespace IMX.DB
             catch (Exception ex)
             {
                 LastError = ex.GetMessage();
-                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState), LastError);
+                Logger.Error(nameof(DBOperate), nameof(SetDBCSendState_Singleton), LastError);
                 return OperateResult.Excepted(ex);
             }
         }
@@ -3406,7 +3406,7 @@ namespace IMX.DB
                 //var ufos = Sqlite.GetGuidRepository<Test_DataInfo>(null, oldname => tablename);
                 var items = Sqlite
                     .Select<Test_DataInfo>()
-                    .Where(x => x.TestItemID == itemid && x.CreateTime >= StratTime && StopTime >= x.CreateTime).ToList();
+                    .Where(x => x.TestItemID == itemid && x.CreateTime >= StratTime && StopTime.AddSeconds(1) >= x.CreateTime).ToList();
                 //var items = Sqlite.Select<Test_DataInfo>().Where(x => x.TestItemID == itemid).ToList();
 
                 return OperateResult<List<Test_DataInfo>>.Succeed(items);
@@ -3565,6 +3565,7 @@ namespace IMX.DB
             {
                 Disposed = true;
                 Sqlite?.Dispose();
+                sqliteLazy = null;
                 GC.SuppressFinalize(this);
             }
         }

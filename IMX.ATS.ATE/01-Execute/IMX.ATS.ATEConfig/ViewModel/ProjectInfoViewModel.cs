@@ -190,7 +190,7 @@ namespace IMX.ATS.ATEConfig
         /// <summary>
         /// CAN支持波特率列表
         /// </summary>
-        public List<string> BaudRates => new List<string> { "5Kbps", "10Kbps", "20Kbps", "50Kbps", "100Kbps", "125Kbps", "250Kbps", "500Kbps", "800Kbps", "1000Kbps" };
+        public List<string> BaudRates => new List<string> { "5Kbps", "10Kbps", "20Kbps", "50Kbps", "100Kbps", "125Kbps", "250Kbps", "500Kbps", "800Kbps", "1000Kbps", "2Mbps", "5Mbps", "10Mbps" };
 
         private string baudrate;
         /// <summary>

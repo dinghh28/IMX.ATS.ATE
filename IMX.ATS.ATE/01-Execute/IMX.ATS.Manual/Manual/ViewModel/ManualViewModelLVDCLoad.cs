@@ -269,34 +269,6 @@ namespace IMX.ATS.Manual
                     $"[上升斜率]{Set_RiseSploeValue}\n" +
                     $"[下降斜率]{Set_DownSploeValue}";
 
-                //if (RunModeType == Opaerate_Mode.CC)
-                //{
-                //    result = operate.SetValue(RunModeType, Set_LoadValue, Set_LimValue, Set_RiseSploeValue, Set_DownSploeValue);
-
-                //    //result = operate.SetModel(RunModeType)
-                //    //    .And(operate.SetLoadValue(Set_LoadValue))
-                //    //    .And(operate.SetParameters(Set_UpLimValue, Set_LimValue))
-                //    //    .And(operate.SetCurrSLEW_POSitive(Set_RiseSploeValue))
-                //    //    .And(operate.SetCurrSLEW_NEGative(Set_DownSploeValue));
-                //    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
-                //        $"[拉载值]{Set_LoadValue}\n" +
-                //        $"[上限值]{Set_UpLimValue}\n" +
-                //        $"[上升斜率]{Set_RiseSploeValue}\n" +
-                //        $"[下降斜率]{Set_DownSploeValue}";
-                //}
-                //else
-                //{
-                //    result = operate.SetValue(RunModeType, Set_LoadValue, Set_LimValue, Set_RiseSploeValue, Set_DownSploeValue);
-
-                //    //result = operate.SetModel(RunModeType)
-                //    //    .And(operate.SetLoadValue(Set_LoadValue))
-                //    //    .And(operate.SetParameters(Set_UpLimValue, Set_LimValue));
-                //    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
-                //        $"[拉载值]{Set_LoadValue}\n" +
-                //        $"[上限值]{Set_UpLimValue}\n" +
-                //        $"[限定电流值]{set_LimValue}";
-                //}
-
                 if (!result)
                 {
                     MessageBox.Show($"设备参数设置异常：【{result.Message}】");

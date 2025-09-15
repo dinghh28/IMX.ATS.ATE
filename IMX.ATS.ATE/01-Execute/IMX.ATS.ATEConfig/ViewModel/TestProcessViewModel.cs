@@ -382,8 +382,9 @@ namespace IMX.ATS.ATEConfig
                             return;
                         }
                     //FunctionInfoIndex = index == (FunctionInfos.Count - 1) ? index : index - 1;
-                    FunctionInfoIndex = index;
-                        Thread.Sleep(10);
+                    FunctionInfoIndex = index >= FunctionInfos.Count ? index - 1 : index;
+
+                    Thread.Sleep(10);
                         ReNumber();
                         Thread.Sleep(10);
                     }
@@ -498,7 +499,6 @@ namespace IMX.ATS.ATEConfig
                 MessageBox.Show(ex.GetMessage());
                 return;
             }
-
         }
 
         /// <summary>
@@ -508,6 +508,12 @@ namespace IMX.ATS.ATEConfig
         private void AddFunction(object obj)
         {
             //FuncitonType type = (FuncitonType)Enum.Parse(typeof(FuncitonType), value: obj.ToString());
+
+            if (string.IsNullOrEmpty(SolutionName)) 
+            {
+                MessageBox.Show("请先选择需要配置的试验项，再进行步骤添加");
+                return;
+            }
 
             if (!Enum.TryParse(obj.ToString(), out FuncitonType type))
             {
@@ -1085,7 +1091,18 @@ namespace IMX.ATS.ATEConfig
                     List<ModTestProcess> mod = new List<ModTestProcess>();
                     foreach (var item in FunctionInfos)
                     {
-                        OperateResult<string> result = item.Model.Func.Config.ToJson();
+
+                        string modelstring = string.Empty;
+                        if (item.FunctionName != "Startup" && item.FunctionName != "Shutdown") 
+                        {
+                            OperateResult<string> result = item.Model.Func.Config.ToJson();
+                            if (!result)
+                            {
+                                MessageBox.Show($"JSON错误:{result.Message}");
+                                return;
+                            }
+                            modelstring = result.Data;
+                        }
 
                         mod.Add(new ModTestProcess
                         {
@@ -1094,7 +1111,7 @@ namespace IMX.ATS.ATEConfig
                             CustomName = item.CutomFuncName,
                             FuntionName = item.FunctionName,
                             Type = item.ModType.ToString(),
-                            Funtion = result ? result.Data : string.Empty,
+                            Funtion = modelstring,
                         });
                     }
 

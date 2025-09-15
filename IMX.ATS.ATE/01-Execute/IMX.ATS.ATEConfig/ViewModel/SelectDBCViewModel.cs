@@ -164,6 +164,7 @@ namespace IMX.ATS.ATEConfig
             }
 
             GlobalModel.TestDBCconfig_Change = SearchDBCConfigInfos[SelectedIndex].Config;
+
             WindowClosedExecute(Win);
         }
         #endregion

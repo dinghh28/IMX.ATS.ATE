@@ -40,16 +40,18 @@ namespace IMX.ATS.ATEConfig
             {FuncitonType.HVDCSource, typeof(FunViewModelHVDCSource) },
             {FuncitonType.POPUP, typeof(FunViewModelPOPUP) },
             {FuncitonType.Product , typeof(FunViewModelProduct)},
-            //{FuncitonType.ACSource , typeof(FunViewModelACSource)},
             {FuncitonType.ACSourceLoad , typeof(FunViewModelACSourceLoad)},
             {FuncitonType.DCLoad , typeof(FunViewModelDCLoad)},
             {FuncitonType.LVDCLoad , typeof(FunViewModelLVDCLoad)},
+            {FuncitonType.SignalSource , typeof(FunViewModelSignalSource)},
+            {FuncitonType.AnalogAignals , typeof(FunViewModelAnalogAignals)},
             {FuncitonType.EquipmentResult, typeof(FunViewModelEquipmentResult)},
             {FuncitonType.ProductResult, typeof(FunViewModelProductResult)},
             { FuncitonType.Shutdown, null},
             { FuncitonType.Startup, null},
             { FuncitonType.CustomMessage, typeof(FunViewModelCustomMessage)}, 
             { FuncitonType.CustomRevData, typeof(FunViewModelCustomRevData)},
+            { FuncitonType.Return, typeof(FunViewModelReturn)},
         };
 
         /// <summary>
@@ -67,7 +69,6 @@ namespace IMX.ATS.ATEConfig
             {"输入电压范围", new ProcessConfig_EX
                                 {
                                     Name = "输入电压范围",
-                                    UseCustomData = false,
                                     Test_ReadData_Euq = new List<ModTestDataInfo>
                                     {
                                         new() { Name="辅电电压",},
@@ -1383,6 +1384,172 @@ namespace IMX.ATS.ATEConfig
                                 }
             },
             #endregion
+            #region 电源断开
+            {"电源断开", new ProcessConfig_EX
+                                {
+                                    Name = "电源断开",
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流源A相设置电压",},
+                                        new() { Name="交流源设置频率",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="负载拉载模式",},
+                                        new() { Name="负载拉载值",},
+                                        new() { Name="负载限制值",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相设置电压",},
+                                        new() { Name="交流源C相设置电压",},
+                                    },
+                                }
+            },
+            #endregion
+            #region CC检测
+            {"CC检测", new ProcessConfig_EX
+                                {
+                                    Name = "CC检测",
+                                    UseCalculate = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流源A相设置电压",},
+                                        new() { Name="交流源设置频率",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="负载拉载模式",},
+                                        new() { Name="负载拉载值",},
+                                        new() { Name="负载限制值",},
+                                        new() { Name="CC设置电阻",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相设置电压",},
+                                        new() { Name="交流源C相设置电压",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="CC阻值检测精度",},
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region CP检测
+            {"CP检测", new ProcessConfig_EX
+                                {
+                                    Name = "CP检测",
+                                    UseCalculate = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                        new() { Name="信号发生器频率",},
+                                        new() { Name="信号发生器幅度",},
+                                        new() { Name="信号发生器占空比",},
+                                    },
+                                    //Test_ReadData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出瞬时电压",},
+                                    //    new() { Name="OBC输出瞬时电流",},
+                                    //    new() { Name="OBC输出瞬时功率",},
+                                    //},
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流源A相设置电压",},
+                                        new() { Name="交流源设置频率",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                        new() { Name="负载拉载模式",},
+                                        new() { Name="负载拉载值",},
+                                        new() { Name="负载限制值",},
+                                        new() { Name="信号发生器设置频率",},
+                                        new() { Name="信号发生器设置幅度",},
+                                        new() { Name="信号发生器设置占空比",},
+                                    },
+                                    //Test_SetData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出电压",},
+                                    //    new() { Name="OBC输出最大电流",},
+                                    //},
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流源B相输出电压",},
+                                        new() { Name="交流源C相输出电压",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="频率检测精度",},
+                                        new() { Name="占空比检测精度",},
+                                        new() { Name="幅值检测误差",},
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
             #region 三相
             #region 三相交流相位不平衡
             {"三相交流相位不平衡", new ProcessConfig_EX
@@ -1515,9 +1682,9 @@ namespace IMX.ATS.ATEConfig
 
             #region 逆变
             #region 输入电压范围（逆变）
-            {"输入电压范围（逆变）", new ProcessConfig_EX
+            {"输入电压范围(逆变)", new ProcessConfig_EX
                                 {
-                                    Name = "输入电压范围（逆变）",
+                                    Name = "输入电压范围(逆变)",
                                     UseCustomData = false,
                                     IsInversion = true,
                                     Test_ReadData_Euq = new List<ModTestDataInfo>
@@ -1569,6 +1736,444 @@ namespace IMX.ATS.ATEConfig
                                     {
                                         new() { Name="交流负载B相设置拉载值",},
                                         new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                }
+            },
+            #endregion
+            #region 交流输出电压精度（逆变）
+            {"交流输出电压精度(逆变)", new ProcessConfig_EX
+                                {
+                                    Name = "交流输出电压精度(逆变)",
+                                    UseCustomData = false,
+                                    UseCalculate = true,
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相有功功率"},
+                                        new() { Name="A相功率因数"},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    //Test_ReadData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出瞬时电压",},
+                                    //    new() { Name="OBC输出瞬时电流",},
+                                    //    new() { Name="OBC输出瞬时功率",},
+                                    //},
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流负载设置拉载模式",},
+                                        new() { Name="交流负载A相设置拉载值",},
+                                        new() { Name="高压源设置电压",},
+                                    },
+                                    //Test_SetData_Pro = new List<ModTestDataInfo>()
+                                    //{
+                                    //    new() { Name="OBC输出电压",},
+                                    //    new() { Name="OBC输出最大电流",},
+                                    //},
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相有功功率"},
+                                        new() { Name="B相功率因数"},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相有功功率"},
+                                        new() { Name="C相功率因数"},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流负载B相设置拉载值",},
+                                        new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="A相交流输出电压精度",},
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="B相交流输出电压精度",},
+                                        new() { Name="C相交流输出电压精度",},
+                                    },
+                                }
+            },
+            #endregion
+            #region 交流输出频率（逆变）
+            {"交流输出频率(逆变)", new ProcessConfig_EX
+                                {
+                                    Name = "交流输出频率(逆变)",
+                                    UseCustomData = false,
+                                    UseCalculate = true,
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相有功功率"},
+                                        new() { Name="A相功率因数"},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流负载设置拉载模式",},
+                                        new() { Name="交流负载A相设置拉载值",},
+                                        new() { Name="高压源设置电压",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相有功功率"},
+                                        new() { Name="B相功率因数"},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相有功功率"},
+                                        new() { Name="C相功率因数"},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流负载B相设置拉载值",},
+                                        new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流输出频率误差",},
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 放电效率（逆变）
+            {"放电效率(逆变)", new ProcessConfig_EX
+                                {
+                                    Name = "放电效率(逆变)",
+                                    UseCustomData = false,
+                                    UseCalculate = true,
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相有功功率"},
+                                        new() { Name="A相功率因数"},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流负载设置拉载模式",},
+                                        new() { Name="交流负载A相设置拉载值",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相有功功率"},
+                                        new() { Name="B相功率因数"},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相有功功率"},
+                                        new() { Name="C相功率因数"},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流负载B相设置拉载值",},
+                                        new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="放电效率(逆变)",},
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 空载损耗（逆变）
+            {"空载损耗(逆变)", new ProcessConfig_EX
+                                {
+                                    Name = "空载损耗(逆变)",
+                                    UseCustomData = false,
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                        
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 输入过压保护（逆变）
+            {"输入过压保护(逆变)", new ProcessConfig_EX
+                                {
+                                    Name = "输入过压保护(逆变)",
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相有功功率"},
+                                        new() { Name="A相功率因数"},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流负载设置拉载模式",},
+                                        new() { Name="交流负载A相设置拉载值",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相有功功率"},
+                                        new() { Name="B相功率因数"},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相有功功率"},
+                                        new() { Name="C相功率因数"},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流负载B相设置拉载值",},
+                                        new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 输入欠压保护（逆变）
+            {"输入欠压保护(逆变)", new ProcessConfig_EX
+                                {
+                                    Name = "输入欠压保护(逆变)",
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相有功功率"},
+                                        new() { Name="A相功率因数"},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流负载设置拉载模式",},
+                                        new() { Name="交流负载A相设置拉载值",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相有功功率"},
+                                        new() { Name="B相功率因数"},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相有功功率"},
+                                        new() { Name="C相功率因数"},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流负载B相设置拉载值",},
+                                        new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 输出限流保护（逆变）
+            {"输出限流保护(逆变)", new ProcessConfig_EX
+                                {
+                                    Name = "输出限流保护(逆变)",
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相有功功率"},
+                                        new() { Name="A相功率因数"},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流负载设置拉载模式",},
+                                        new() { Name="交流负载A相设置拉载值",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相有功功率"},
+                                        new() { Name="B相功率因数"},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相有功功率"},
+                                        new() { Name="C相功率因数"},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流负载B相设置拉载值",},
+                                        new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                }
+            },
+            #endregion
+            #region 交流输出直流分量
+            {"交流输出直流分量", new ProcessConfig_EX
+                                {
+                                    Name = "交流输出直流分量",
+                                    IsInversion = true,
+                                    Test_ReadData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电电压",},
+                                        new() { Name="辅电电流",},
+                                        new() { Name="A相电压",},
+                                        new() { Name="A相电流",},
+                                        new() { Name="A相电流直流分量",},
+                                        new() { Name="A相频率",},
+                                        new() { Name="A相有功功率"},
+                                        new() { Name="A相功率因数"},
+                                        new() { Name="HVDC电压",},
+                                        new() { Name="HVDC电流",},
+                                        new() { Name="HVDC功率",},
+                                    },
+                                    Test_SetData_Euq = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="辅电设置电压",},
+                                        new() { Name="交流负载设置拉载模式",},
+                                        new() { Name="交流负载A相设置拉载值",},
+                                        new() { Name="高压源设置电压",},
+                                        new() { Name="高压源设置电流",},
+                                    },
+                                    Test_CustomData = new List<ModTestDataInfo>(),
+                                    Test_ReadData_EX = new List<ModTestDataInfo>
+                                    {
+                                        new() { Name="B相电压",},
+                                        new() { Name="B相电流",},
+                                        new() { Name="B相电流直流分量",},
+                                        new() { Name="B相频率",},
+                                        new() { Name="B相有功功率"},
+                                        new() { Name="B相功率因数"},
+                                        new() { Name="C相电压",},
+                                        new() { Name="C相电流",},
+                                        new() { Name="C相电流直流分量",},
+                                        new() { Name="C相频率",},
+                                        new() { Name="C相有功功率"},
+                                        new() { Name="C相功率因数"},
+                                    },
+                                    Test_SetData_Ex = new List<ModTestDataInfo>()
+                                    {
+                                        new() { Name="交流负载B相设置拉载值",},
+                                        new() { Name="交流负载C相设置拉载值",},
+                                    },
+                                    Test_CalculateData = new List<ModTestDataInfo>()
+                                    {
+                                    },
+                                    Test_CalculateDataEX = new List<ModTestDataInfo>()
+                                    {
                                     },
                                 }
             },

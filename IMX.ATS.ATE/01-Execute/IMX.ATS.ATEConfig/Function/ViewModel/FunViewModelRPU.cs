@@ -74,6 +74,7 @@ namespace IMX.ATS.ATEConfig.Function
                         ConditionValues.Add(new ModDeviceReadData
                         {
                             DataInfo = data,
+                            DeviceTypename = "Acquisition",
                         });
                     }
 
@@ -86,6 +87,7 @@ namespace IMX.ATS.ATEConfig.Function
                             ConditionValues.Add(new ModDeviceReadData
                             {
                                 DataInfo = data,
+                                DeviceTypename = "Acquisition",
                             });
                         }
                     }
@@ -96,6 +98,7 @@ namespace IMX.ATS.ATEConfig.Function
                         ConditionValues.Add(new ModDeviceReadData
                         {
                             DataInfo = new ModTestDataInfo { Name = data.Custom_Name },
+                            DeviceTypename = "Product",
                         });
                     }
                 }

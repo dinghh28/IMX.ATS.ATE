@@ -27,5 +27,10 @@ namespace IMX.DB
         /// </summary>
         [Description("步进记录")]
         STEPPING,
+        /// <summary>
+        /// 条件跳转
+        /// </summary>
+        [Description("条件跳转")]
+        RETURN,
     }
 }

@@ -203,7 +203,8 @@
                              IsChecked="{Binding Electricity, 
                                          Mode=TwoWay, 
                                          Converter={StaticResource RadioBtConvter},
-                                         ConverterParameter={x:Static electricity:Electricity.Three}}"/>
+                                         ConverterParameter={x:Static electricity:Electricity.Three}}"
+                             Margin="0,0,30,0"/>
                 <RadioButton Content="三相电带逆变" 
                              GroupName="electricity"
                              IsChecked="{Binding Electricity, 

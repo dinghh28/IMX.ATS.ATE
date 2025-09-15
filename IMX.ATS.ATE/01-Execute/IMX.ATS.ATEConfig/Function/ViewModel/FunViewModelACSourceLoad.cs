@@ -32,6 +32,7 @@ using IMX.Function;
 using IMX.Function.Base;
 using IMX.Function.ViewModel;
 using IMX.Function.ViewModel.Model;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -152,7 +153,14 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public DeviceOperatMode DeviceMode
         {
-            get => devicemode = (Func.Config as FunConfig_ACSourceLoad).DeviceMode;
+            get 
+            {
+                var mode = (Func.Config as FunConfig_ACSourceLoad).DeviceMode;
+                VoltShow = mode == DeviceOperatMode.VOLT ? Visibility.Visible : Visibility.Collapsed;
+                LoadShow = mode == DeviceOperatMode.LOAD ? Visibility.Visible : Visibility.Collapsed;
+                devicemode = mode;
+                return devicemode;
+            }
             set
             {
                 if (Set(nameof(DeviceMode), ref devicemode, value))
@@ -170,7 +178,18 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public Phase_Mode PhaseMode
         {
-            get => phasemode = (Func.Config as FunConfig_ACSourceLoad).PhaseMode;
+            get 
+            {
+                Phase_Mode mode = (Func.Config as FunConfig_ACSourceLoad).PhaseMode;
+                if (mode == Phase_Mode.ONE)
+                {
+                    Balance = true;
+                }
+                Thread.Sleep(10);
+                EnableBalance = mode == Phase_Mode.THREE;
+                phasemode = mode;
+                return phasemode;
+            } 
             set 
             {
                 if (Set(nameof(PhaseMode), ref phasemode, value)) 
@@ -193,7 +212,21 @@ namespace IMX.ATS.ATEConfig.Function
         /// </summary>
         public bool Balance
         {
-            get => balance = (Func.Config as FunConfig_ACSourceLoad).Balance;
+            get 
+            {
+                balance = (Func.Config as FunConfig_ACSourceLoad).Balance;
+                if (!balance)
+                {
+                    Set_StepModel = false;
+                }
+                Thread.Sleep(5);
+                CanUseStep = balance;
+
+                BCShow = balance ? Visibility.Collapsed : Visibility.Visible;
+                SetShow = balance ? Visibility.Visible : Visibility.Collapsed;
+                EnableSetBlanceValue = !balance;
+                return balance;
+            }
             set 
             {
                 if (Set(nameof(Balance), ref balance, value))
@@ -210,7 +243,6 @@ namespace IMX.ATS.ATEConfig.Function
                     BCShow = value ? Visibility.Collapsed : Visibility.Visible;
                     SetShow = value ? Visibility.Visible : Visibility.Collapsed;
                     EnableSetBlanceValue = !value;
-                    
                 }
             }
         }
@@ -423,40 +455,39 @@ namespace IMX.ATS.ATEConfig.Function
             get 
             {
                 opaeratemode = (Func.Config as FunConfig_ACSourceLoad).OpaerateMode;
-                //switch (opaeratemode)
-                //{
-                //    case Opaerate_Mode.CC:
-                //        if (LoadUnit!="A")
-                //        {
-                //            LoadUnit = "A";
-                //        }
-                //        break;
-                //    case Opaerate_Mode.CV:
-                //        if (LoadUnit != "V")
-                //        {
-                //            LoadUnit = "V";
-                //        }
-                //        break;
-                //    case Opaerate_Mode.CR:
-                //        if (LoadUnit != "欧")
-                //        {
-                //            LoadUnit = "欧";
-                //        }
-                //        break;
-                //    case Opaerate_Mode.CP:
-                //        if (LoadUnit != "kW")
-                //        {
-                //            LoadUnit = "kW";
-                //        }
-                //        break;
-                //    case Opaerate_Mode.NULL:
-                //    default:
-                //        if (LoadUnit != "A")
-                //        {
-                //            LoadUnit = "A";
-                //        }
-                //        break;
-                //}
+                switch (opaeratemode)
+                {
+                    case Opaerate_Mode.CC:
+                        if (LoadUnit != "A")
+                        {
+                            LoadUnit = "A";
+                        }
+                        LoadExShow = Visibility.Visible;
+                        break;
+                    case Opaerate_Mode.CR:
+                        if (LoadUnit != "欧")
+                        {
+                            LoadUnit = "欧";
+                        }
+                        LoadExShow = Visibility.Collapsed;
+                        break;
+                    case Opaerate_Mode.CP:
+                        if (LoadUnit != "kW")
+                        {
+                            LoadUnit = "kW";
+                        }
+                        LoadExShow = Visibility.Visible;
+                        break;
+                    case Opaerate_Mode.CV:
+                    case Opaerate_Mode.NULL:
+                    default:
+                        if (LoadUnit != "A")
+                        {
+                            LoadUnit = "A";
+                        }
+                        LoadExShow = Visibility.Collapsed;
+                        break;
+                }
                 return opaeratemode;
             } 
             set

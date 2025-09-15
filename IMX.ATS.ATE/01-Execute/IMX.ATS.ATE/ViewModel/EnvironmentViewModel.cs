@@ -75,6 +75,8 @@ namespace IMX.ATS.ATE
         public void StartCommunication() 
         {
             new Thread(Incubator.IncubatorThread) { IsBackground = true }.Start();
+
+            new Thread(WaterBath.WaterBathThread) { IsBackground = true }.Start();
         }
         #endregion
 

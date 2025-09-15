@@ -227,7 +227,7 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Label Grid.Column="0" Content="上限值：" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                    <TextBox Grid.Column="1" Text="{Binding Set_LoadValue}" Height="35" Width="80"/>
+                                    <TextBox Grid.Column="1" Text="{Binding SetLimit}" Height="35" Width="80"/>
                                     <Label  Grid.Column="2" 
                                             Content="{Binding LimtUnit}"
                                             VerticalAlignment="Center" HorizontalAlignment="Left"/>

@@ -220,7 +220,7 @@ namespace IMX.ATS.DBCConfig
                 }
                 #endregion
 
-
+                FreshFixedSignal();
 
                 #region 下发信号绑定系统变量
                 Dictionary<int, string> dicfixedsignals = new Dictionary<int, string>();
@@ -240,13 +240,13 @@ namespace IMX.ATS.DBCConfig
                     //}
 
                     if (string.IsNullOrEmpty(name))
-                    {                   
-                        MessageBox.Show($"变量 【{systeamname}】 未绑定信号，请绑定后再保存");
-                        return;
-
+                    {
+                        //MessageBox.Show($"变量 【{systeamname}】 未绑定信号，请绑定后再保存");
+                        //return;
+                        continue;
                     }
 
-                    if (dicfixedsignalsname.TryGetValue(name, out string signalname))
+                    if (dicfixedsignalsname.TryGetValue(name, out string signalname) && string.IsNullOrEmpty(signalname))
                     //if (dicfixedsignals.TryGetValue(index, out string signalname))
                     {
                         MessageBox.Show($"变量 【{systeamname}】 与变量 【{signalname}】 重复绑定信号，请确认后再保存");
@@ -279,6 +279,9 @@ namespace IMX.ATS.DBCConfig
                     });
                 }
                 #endregion
+
+                GlobalModel.Test_DBC.Test_DBCSendSignals = dbcconfigs;
+                GlobalModel.Test_DBC.Test_DBCSendMessages = messageinfos;
 
                 DBOperate.Default.UpdateSendSignals(GlobalModel.Test_DBC.Id, dbcconfigs,messageinfos)
                     .And(DBOperate.Default.SetDBCSendState(GlobalModel.Test_DBC.Id, false))
@@ -515,6 +518,7 @@ namespace IMX.ATS.DBCConfig
 
             SignalConfig config = new()
             {
+                Index = lis_signal.Count,
                 MessageName = selectedsignal.TagText,
                 Signal_Name = selectedsignal.Name,
                 Message_ID = selectedsignal.Tag,
@@ -620,13 +624,41 @@ namespace IMX.ATS.DBCConfig
         #endregion
 
         /// <summary>
+        /// 刷新系统固定信号index
+        /// </summary>
+        private void FreshFixedSignal()
+        {
+            try
+            {
+
+                for (int i = 0; i < FixedSignalConfigs?.Count; i++)
+                {
+                    if (FixedSignalConfigs[i].SelectedSignalValue == "")
+                    { continue; }
+                    for (int j = 0; j < lis_signal?.Count; j++)
+                    {
+                        if (lis_signal[j].Signal_Name == FixedSignalConfigs[i].SelectedSignalValue)
+                        {
+                            FixedSignalConfigs[i].SelectedSignalIndex = lis_signal[j].Index;
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.GetMessage(), "信号绑定刷新失败");
+                return;
+            }
+
+        }
+
+        /// <summary>
         /// 添加系统固定信号
         /// </summary>
         private void AddFixedSignal()
         {
             InitSignal();
-
-
 
             if (!GlobalModel.IsNew && GlobalModel.Test_DBC != null && GlobalModel.Test_DBC.Test_DBCSendSignals.Count > 0) 
             {
@@ -658,8 +690,10 @@ namespace IMX.ATS.DBCConfig
                     for (int i = 0; i < sendsignals.Count; i++)
                     {
                         var sendsignal = sendsignals[i];
+                        
                         SignalConfig config = new()
                         {
+                            Index = i,
                             MessageName = sendsignal.MessageName,
                             CustomName = sendsignal.Custom_Name,
                             Signal_Name = sendsignal.Signal_Name,
@@ -670,7 +704,7 @@ namespace IMX.ATS.DBCConfig
                         lis_signal.Add(config);
                         dic_signalname.Add(sendsignal.Signal_Name, config);
                         dic_messageconfig[sendsignal.Message_ID].Signals.Add(config);
-                        if (sendsignal.Signal_Name!= sendsignal.Custom_Name)
+                        if (sendsignal.Signal_Name != sendsignal.Custom_Name)
                         {
                             fixindex.Add(sendsignal.Custom_Name, i);
                             //SendFixedSignalConfig fix = new SendFixedSignalConfig 
@@ -689,6 +723,11 @@ namespace IMX.ATS.DBCConfig
                         int index = -1;
                         if (!fixindex.TryGetValue(SupportConfig.LisRegularSendSignals[i], out int name))
                         {
+                            FixedSignalConfigs.Add(new SendFixedSignalConfig
+                            {
+                                Signals = lis_signal,
+                                SysteamName = SupportConfig.LisRegularSendSignals[i],
+                            });
                             continue;
                         }
 

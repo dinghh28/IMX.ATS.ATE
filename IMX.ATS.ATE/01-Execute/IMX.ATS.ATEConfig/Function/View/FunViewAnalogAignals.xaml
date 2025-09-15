@@ -47,7 +47,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <GroupBox Header="01-CP设置" Grid.Row="0" Margin="5">
+                <!--<GroupBox Header="01-CP设置" Grid.Row="0" Margin="5">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -101,9 +101,9 @@
                         </Grid>
                     </Grid>
                     
-                </GroupBox>
+                </GroupBox>-->
 
-                <GroupBox Header="02-CC设置" Grid.Row="1" Margin="5">
+                <GroupBox Header="01-CC设置" Grid.Row="0" Margin="5">
                     <Grid>
                         <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="100"/>

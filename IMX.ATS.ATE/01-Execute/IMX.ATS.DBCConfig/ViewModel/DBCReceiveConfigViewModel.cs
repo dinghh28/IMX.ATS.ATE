@@ -294,8 +294,9 @@ namespace IMX.ATS.DBCConfig
                     var signalConfig = SignalConfigs[i];
                     if (!signalConfig.IsConfiged)
                     {
-                        MessageBox.Show($"【{signalConfig.Config.CustomName}】\r\n未配置信号，请完成配置后再保存","上报信号保存失败");
-                        return;
+                        //MessageBox.Show($"【{signalConfig.Config.CustomName}】\r\n未配置信号，请完成配置后再保存","上报信号保存失败");
+                        //return;
+                        continue;
                     }
 
                     var config = signalConfig.Config;
@@ -618,43 +619,6 @@ namespace IMX.ATS.DBCConfig
                         SignalConfigs.Add(config);
                     });
                 }
-
-                //if (GlobalModel.Test_DBC.Electricity == ATE.Common.Electricity.Single)
-                //{
-                //    SupportConfig.LisRegularSignals_Single.ForEach(signal =>
-                //    {
-                //        var config = new DBCSignalConfig
-                //        {
-                //            Config = new SignalConfig
-                //            {
-                //                Info = new Test_DBCInfo { Custom_Name = signal, IsRegular = true }
-                //            },
-                //            IsRegularConfig = true,
-                //            AddSignal = new RelayCommand(SelectedSignal),
-                //            RemoveSignal = new RelayCommand(RevomeSignal)
-                //        };
-
-                //        SignalConfigs.Add(config);
-                //    });
-                //}
-                //else
-                //{
-                //    SupportConfig.LisRegularSignals_Three.ForEach(signal =>
-                //    {
-                //        var config = new DBCSignalConfig
-                //        {
-                //            Config = new SignalConfig
-                //            {
-                //                Info = new Test_DBCInfo { Custom_Name = signal, IsRegular = true }
-                //            },
-                //            IsRegularConfig = true,
-                //            AddSignal = new RelayCommand(SelectedSignal),
-                //            RemoveSignal = new RelayCommand(RevomeSignal)
-                //        };
-
-                //        SignalConfigs.Add(config);
-                //    });
-                //}
             }
         }
         #endregion

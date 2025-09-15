@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IMX.ATS.ATEConfig.Function
@@ -155,7 +156,82 @@ namespace IMX.ATS.ATEConfig.Function
                 }
             }
         }
+        #region 超时设置
+        private bool enbletimeout;
+        /// <summary>
+        /// 超时跳出
+        /// </summary>
+        public bool EnbleTimeOut
+        {
+            get => enbletimeout = (Func.Config as FunConfig_Return).EnbleTimeOut;
+            set
+            {
+                if (Set(nameof(EnbleTimeOut), ref enbletimeout, value))
+                {
+                    (Func.Config as FunConfig_Return).EnbleTimeOut = value;
+                    TimeOut = value;
+                }
+            }
+        }
+        private bool timeout;
+        /// <summary>
+        /// 界面超时使能
+        /// </summary>
+        public bool TimeOut
+        {
+            get => timeout;
+            set => Set(nameof(TimeOut), ref timeout, value, true);
+        }
 
+        private uint hour;
+        /// <summary>
+        /// 超时时间-小时
+        /// </summary>
+        public uint Hour
+        {
+            get => hour = (Func.Config as FunConfig_Return).Hour;
+            set
+            {
+                if (Set(nameof(Hour), ref hour, value))
+                {
+                    (Func.Config as FunConfig_Return).Hour = value;
+                }
+            }
+        }
+
+        private uint minute;
+        /// <summary>
+        /// 超时时间-分钟
+        /// </summary>
+        public uint Minute
+        {
+            get => minute = (Func.Config as FunConfig_Return).Minute;
+            set
+            {
+                if (Set(nameof(Minute), ref minute, value))
+                {
+                    (Func.Config as FunConfig_Return).Minute = value;
+                }
+            }
+        }
+
+        private uint second;
+        /// <summary>
+        /// 超时时间-秒
+        /// </summary>
+        public uint Second
+        {
+            get => second = (Func.Config as FunConfig_Return).Second;
+            set
+            {
+                if (Set(nameof(Second), ref second, value))
+                {
+                    (Func.Config as FunConfig_Return).Second = value;
+                }
+            }
+        }
+
+        #endregion
         #endregion
 
         #region 界面绑定指令

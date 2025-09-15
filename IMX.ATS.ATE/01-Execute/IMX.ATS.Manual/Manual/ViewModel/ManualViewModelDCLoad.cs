@@ -264,16 +264,7 @@ namespace IMX.ATS.Manual
                 }
 
                 string InfoString = string.Empty;
-                if (Set_ShortState == DeviceOutPutState.ON)
-                {
-                    operate.SetShort(Set_ShortState).AttachIfFailed(result => { MessageBox.Show($"设备短路设置异常：【{result.Message}】"); })
-                        .AttachIfSucceed(result =>
-                        {
-                            InfoString = $"设备短路设置成功";
-                            SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelDCLoad), nameof(SetedValues), InfoString);
-                        });
-                    return;
-                }
+
 
                 OperateResult result = operate.SetValue(RunModeType, Set_LoadValue, Set_LimValue, Set_RiseSploeValue, Set_DownSploeValue);
 
@@ -282,32 +273,6 @@ namespace IMX.ATS.Manual
                     $"[限制值]{Set_LimValue}\n" +
                     $"[上升斜率]{Set_RiseSploeValue}\n" +
                     $"[下降斜率]{Set_DownSploeValue}";
-
-                //if (RunModeType == Opaerate_Mode.CC)
-                //{
-
-                //    result = operate.SetModel(RunModeType)
-                //        .And(operate.SetLoadValue(Set_LoadValue))
-                //        .And(operate.SetParameters(Set_UpLimValue, Set_LimValue))
-                //        .And(operate.SetCurrSLEW_POSitive(Set_RiseSploeValue))
-                //        .And(operate.SetCurrSLEW_NEGative(Set_DownSploeValue));
-                //    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
-                //        $"[拉载值]{Set_LoadValue}\n" +
-                //        $"[拉载上限值]{Set_UpLimValue}\n" +
-                //        $"[限制电流值]{Set_LimValue}\n" +
-                //        $"[上升斜率]{Set_RiseSploeValue}\n" +
-                //        $"[下降斜率]{Set_DownSploeValue}";
-                //}
-                //else
-                //{
-                //    result = operate.SetModel(RunModeType)
-                //        .And(operate.SetLoadValue(Set_LoadValue))
-                //        .And(operate.SetParameters(Set_UpLimValue, Set_LimValue));
-                //    InfoString = $"设置\n[拉载模式]{RunModeType}\n" +
-                //        $"[拉载值]{Set_LoadValue}\n" +
-                //        $"[拉载上限值]{Set_UpLimValue}\n" +
-                //        $"[限制电流值]{set_LimValue}";
-                //}
 
                 if (!result)
                 {
@@ -325,8 +290,16 @@ namespace IMX.ATS.Manual
 
                     InfoString = OperateType == SetOutPutState.ON ? "打开" : "关闭";
 
-                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelDCLoad), nameof(SetedValues), $"设备已{InfoString}");
+                    SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelLVDCLoad), nameof(SetedValues), $"设备已{InfoString}");
                 }
+
+
+                operate.SetShort(Set_ShortState).AttachIfFailed(result => { MessageBox.Show($"设备短路设置异常：【{result.Message}】"); })
+                    .AttachIfSucceed(result =>
+                    {
+                        InfoString = $"设备短路设置成功";
+                        SuperDHHLoggerManager.Info(LoggerType.TESTLOG, nameof(ManualViewModelDCLoad), nameof(SetedValues), InfoString);
+                    });
             }
             catch (Exception ex)
             {

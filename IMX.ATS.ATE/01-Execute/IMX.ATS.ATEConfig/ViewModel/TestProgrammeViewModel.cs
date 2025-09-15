@@ -186,6 +186,12 @@ namespace IMX.ATS.ATEConfig
         public RelayCommand DeletProcess => new RelayCommand(Delet);
 
         /// <summary>
+        /// 调整试验流程
+        /// </summary>
+        public RelayCommand<object> ChangeProcess => new RelayCommand<object>(Changed);
+
+
+        /// <summary>
         /// 上移下电试验流程
         /// </summary>
         public RelayCommand UpProcess => new RelayCommand(Up);
@@ -238,14 +244,21 @@ namespace IMX.ATS.ATEConfig
             "产品通讯卸载",
         };
 
+        /// <summary>
+        /// 测试项名称，描述
+        /// </summary>
+        private Dictionary<string,string> dicProcessNaemAndDescription = new Dictionary<string, string>();
         #endregion
 
         #region 私有方法
+
+        #region 试验项配配置
         private void Add()
         {
             SelectedProcessNames.Add(new TestProcessNameModel
             {
-                ProcessNames = ProcessNames
+                ProcessNames = ProcessNames,
+                DicProcessDescribe = dicProcessNaemAndDescription,
             });
         }
 
@@ -269,6 +282,49 @@ namespace IMX.ATS.ATEConfig
             }
         }
 
+        private void Changed(object obj) 
+        {
+            string key = (obj as string).ToUpper();
+            int index = SelectedIndex;
+            if (index < 0)
+            {
+                return;
+            }
+
+            switch (key)
+            {
+                case "UP":
+                    if (index == 0)
+                    {
+                        return;
+                    }
+
+                    SelectedProcessNames.Insert(index - 1, SelectedProcessNames[index]);
+                    SelectedProcessNames.RemoveAt(index + 1);
+                    SelectedIndex = index - 1;
+                    break;
+                case "DOWN":
+                    if (index == SelectedProcessNames.Count - 1)
+                    {
+                        return;
+                    }
+                    SelectedProcessNames.Insert(index + 2, SelectedProcessNames[index]);
+                    SelectedProcessNames.RemoveAt(index);
+                    SelectedIndex = index + 1;
+                    break;
+                case "INSERT":
+                    SelectedProcessNames.Insert(index, new TestProcessNameModel 
+                    {
+                        ProcessNames = ProcessNames
+                    });
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
+
+        #region 紧急下电调整
         private void Up()
         {
             int index = PowerOffIndex;
@@ -293,6 +349,7 @@ namespace IMX.ATS.ATEConfig
             EPowerOffProcessNames.RemoveAt(index);
             PowerOffIndex = index + 1;
         }
+        #endregion
 
         private void Save()
         {
@@ -387,17 +444,27 @@ namespace IMX.ATS.ATEConfig
             
             // = ((ViewModelLocator)System.Windows.Application.Current.FindResource("Locator")).Main.ProjectInfo.Id;
             ProcessNames.Clear();
-            DBOperate.Default.GetProcessName(projectid)
-            .AttachIfSucceed(result =>
-            {
-                for (int i = 0; i < result.Data.Count; i++)
+            //DBOperate.Default.GetProcessName(projectid)
+            //.AttachIfSucceed(result =>
+            //{
+            //    for (int i = 0; i < result.Data.Count; i++)
+            //    {
+            //        ProcessNames.Add(result.Data[i]);
+            //    }
+            //}).AttachIfFailed(result =>
+            //{
+            //    MessageBox.Show($"无法获取当前项目流程：\r\n{result.Message}", "项目流程获取异常");
+            //});
+            dicProcessNaemAndDescription.Clear();
+            DBOperate.Default.GetProcessNaemAndDescription(projectid)
+                .AttachIfSucceed(result => 
                 {
-                    ProcessNames.Add(result.Data[i]);
-                }
-            }).AttachIfFailed(result =>
-            {
-                MessageBox.Show($"无法获取当前项目流程：\r\n{result.Message}", "项目流程获取异常");
-            });
+                    foreach (var process in result.Data) 
+                    {
+                        dicProcessNaemAndDescription.Add(process.Key, process.Value);
+                        ProcessNames.Add(process.Key);
+                    } 
+                });
 
             if (!GlobalModel.IsNewProject)
             {
@@ -419,9 +486,10 @@ namespace IMX.ATS.ATEConfig
                                    {
                                        SelectedProcessNames.Add(new TestProcessNameModel
                                        {
+                                           DicProcessDescribe = dicProcessNaemAndDescription,
                                            ProcessNames = ProcessNames,
                                            SelectedName = result.Data.Test_FlowNames[i],
-
+                                           
                                            //NameColor = new SolidColorBrush(Colors.Transparent)
                                        });
                                    }
@@ -429,6 +497,7 @@ namespace IMX.ATS.ATEConfig
                                    {
                                        SelectedProcessNames.Add(new TestProcessNameModel
                                        {
+                                           DicProcessDescribe = dicProcessNaemAndDescription,
                                            ProcessNames = ProcessNames,
                                            SelectedName = " ",
 
@@ -517,6 +586,11 @@ namespace IMX.ATS.ATEConfig
 
     public class TestProcessNameModel : ViewModelBase
     {
+        /// <summary>
+        /// 项目描述字典
+        /// </summary>
+        public Dictionary<string, string> DicProcessDescribe { get; set; } = new Dictionary<string, string>();
+
         private ObservableCollection<string> processnames;
         /// <summary>
         /// 流程列表
@@ -539,15 +613,33 @@ namespace IMX.ATS.ATEConfig
             {
                 if (Set(nameof(SelectedName), ref selectedname, value))
                 {
-                    if (ProcessNames.Contains(value))
-                    { NameColor = new SolidColorBrush(Colors.Transparent); }
-                    else
-                    { NameColor = new SolidColorBrush(Colors.Red); }
+                    if (string.IsNullOrEmpty(value) || !DicProcessDescribe.TryGetValue(value, out string prodescribe))
+                    {
+                        NameColor = new SolidColorBrush(Colors.Red);
+                        return;
+                    }
+
+                    NameColor = new SolidColorBrush(Colors.Transparent);
+                    Describe = prodescribe;
+                    //if (ProcessNames.Contains(value))
+                    //{
+                    //    NameColor = new SolidColorBrush(Colors.Transparent);
+                    //}
+                    //else
+                    //{ NameColor = new SolidColorBrush(Colors.Red); }
                 }
             }
         }
 
-
+        private string describe;
+        /// <summary>
+        /// 项目描述
+        /// </summary>
+        public string Describe
+        {
+            get => describe;
+            set => Set(nameof(Describe), ref describe, value);
+        }
 
         private Brush nameColor = new SolidColorBrush(Colors.Transparent);
         /// <summary>

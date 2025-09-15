@@ -807,10 +807,36 @@
             是否记录判定期间数据
             </summary>
         </member>
+        <member name="F:IMX.Function.FunConfig_Return.EnbleTimeOut">
+            <summary>
+            是否设置超时跳出
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_Return.Hour">
+            <summary>
+            超时时间-小时
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_Return.Minute">
+            <summary>
+            超时时间-分钟
+            </summary>
+        </member>
+        <member name="F:IMX.Function.FunConfig_Return.Second">
+            <summary>
+            超时时间-秒
+            </summary>
+        </member>
         <member name="M:IMX.Function.FunConfig_Return.Execut_ExceptStep(System.Object)">
             <inheritdoc/>
         </member>
         <member name="M:IMX.Function.FunConfig_Return.SetStep(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_Return.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="M:IMX.Function.FunConfig_Return.#ctor(Super.Zoo.Framework.Logger.ILogger)">
             <inheritdoc/>
         </member>
         <member name="T:IMX.Function.FunConfig_SignalSource">
